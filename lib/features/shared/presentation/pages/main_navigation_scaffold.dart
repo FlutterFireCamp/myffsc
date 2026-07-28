@@ -70,29 +70,33 @@ class MainNavigationScaffold extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: AppColors.firebaseOrange.withValues(alpha: 0.15),
+                  color: AppColors.alertRed.withValues(alpha: 0.18),
                   shape: BoxShape.circle,
+                  border: Border.all(
+                    color: AppColors.alertRed.withValues(alpha: 0.5),
+                    width: 1.5,
+                  ),
                 ),
-                child: AppIcons.tests(color: AppColors.firebaseOrange, size: AppSizes.iconMd),
+                child: AppIcons.tests(color: AppColors.alertRed, size: AppSizes.iconLg),
               ),
               activeIcon: Container(
-                padding: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: AppColors.firebaseOrange,
+                  color: AppColors.alertRed,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.firebaseOrange.withValues(alpha: 0.4),
-                      blurRadius: 8,
-                      spreadRadius: 1,
+                      color: AppColors.alertRed.withValues(alpha: 0.5),
+                      blurRadius: 10,
+                      spreadRadius: 2,
                     ),
                   ],
                 ),
-                child: AppIcons.tests(color: AppColors.ultraDark, size: AppSizes.iconMd),
+                child: AppIcons.tests(color: Colors.white, size: AppSizes.iconLg),
               ),
-              label: "Tests",
+              label: "",
             ),
             BottomNavigationBarItem(
               icon: AppIcons.announcements(color: AppColors.textMuted, size: AppSizes.iconLg),
