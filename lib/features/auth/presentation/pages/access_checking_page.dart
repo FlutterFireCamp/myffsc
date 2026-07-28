@@ -80,30 +80,25 @@ class AccessCheckingPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 3.h),
+                SizedBox(height: 4.h),
 
-                // Access Verification Container (Identical dimensions to Login Box)
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.card,
-                    borderRadius: AppRadius.circular20,
-                    border: Border.all(color: AppColors.borderSubtle),
-                  ),
+                // Access Verification Section (No card box, thin progress bar)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
                   child: Column(
                     children: [
                       SizedBox(
-                        width: double.infinity,
+                        width: 55.w,
                         child: ClipRRect(
                           borderRadius: AppRadius.circular8,
                           child: const LinearProgressIndicator(
-                            minHeight: 5,
+                            minHeight: 2,
                             backgroundColor: AppColors.ultraDark,
                             valueColor: AlwaysStoppedAnimation<Color>(AppColors.skyBlue),
                           ),
                         ),
                       ),
-                      SizedBox(height: 2.5.h),
+                      SizedBox(height: 2.h),
                       Text(
                         "Vérification de votre accès...",
                         textAlign: TextAlign.center,
