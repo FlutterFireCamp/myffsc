@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_icons.dart';
+import '../../../../core/core.dart';
 import '../../domain/entities/user_entity.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -57,10 +56,7 @@ class UnauthorizedPage extends StatelessWidget {
               SizedBox(height: 3.h),
               Text(
                 "Accès Non Autorisé",
-                style: TextStyle(
-                  fontFamily: 'Outfit',
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
+                style: AppTextStyles.h2.copyWith(
                   color: AppColors.errorText,
                 ),
               ),
@@ -68,12 +64,7 @@ class UnauthorizedPage extends StatelessWidget {
               Text(
                 "Votre compte ($emailText) n'a pas la permission d'accéder au portail My FFSC.",
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'Outfit',
-                  fontSize: 11.sp,
-                  color: AppColors.textSecondary,
-                  height: 1.4,
-                ),
+                style: AppTextStyles.bodyMedium,
               ),
               SizedBox(height: 3.h),
 
@@ -83,7 +74,7 @@ class UnauthorizedPage extends StatelessWidget {
                 padding: EdgeInsets.all(5.w),
                 decoration: BoxDecoration(
                   color: AppColors.card,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: AppRadius.circular16,
                   border: Border.all(color: AppColors.borderSubtle),
                 ),
                 child: Column(
@@ -93,25 +84,18 @@ class UnauthorizedPage extends StatelessWidget {
                       children: [
                         Text(
                           "Statut Actuel :",
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 11.sp,
-                            color: AppColors.textMuted,
-                          ),
+                          style: AppTextStyles.bodyMedium,
                         ),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
                           decoration: BoxDecoration(
                             color: AppColors.warningAmber.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: AppRadius.circular8,
                             border: Border.all(color: AppColors.warningAmber),
                           ),
                           child: Text(
                             statusText,
-                            style: TextStyle(
-                              fontFamily: 'Outfit',
-                              fontSize: 10.sp,
-                              fontWeight: FontWeight.w600,
+                            style: AppTextStyles.badgeSmall.copyWith(
                               color: AppColors.warningAmber,
                             ),
                           ),
@@ -124,12 +108,7 @@ class UnauthorizedPage extends StatelessWidget {
                     Text(
                       "Si vous êtes un apprenant sélectionné pour cette cohorte du FlutterFire Summer Camp, veuillez contacter les mentors sur Discord ou WhatsApp pour faire valider votre accès.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 10.sp,
-                        color: AppColors.textSecondary,
-                        height: 1.4,
-                      ),
+                      style: AppTextStyles.bodySmall,
                     ),
                   ],
                 ),
@@ -144,16 +123,14 @@ class UnauthorizedPage extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 8.w),
                   side: const BorderSide(color: AppColors.borderSubtle),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: AppRadius.circular14,
                   ),
                 ),
                 icon: AppIcons.logout(color: AppColors.textSecondary, size: 20),
                 label: Text(
                   "Se déconnecter",
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 12.sp,
+                  style: AppTextStyles.button.copyWith(
                     color: AppColors.textPrimary,
                   ),
                 ),

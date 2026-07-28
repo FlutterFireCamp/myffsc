@@ -58,33 +58,26 @@ class LoginPage extends StatelessWidget {
                                 children: [
                                   TextSpan(
                                     text: "Flutter",
-                                    style: AppTextStyles.h1.copyWith(
-                                      fontSize: 25.sp,
-                                      fontWeight: FontWeight.bold,
+                                    style: AppTextStyles.heroTitle.copyWith(
                                       color: const Color(0xFF0288D1),
                                     ),
                                   ),
                                   TextSpan(
                                     text: "Fire\n",
-                                    style: AppTextStyles.h1.copyWith(
-                                      fontSize: 25.sp,
-                                      fontWeight: FontWeight.bold,
+                                    style: AppTextStyles.heroTitle.copyWith(
                                       color: AppColors.firebaseOrange,
                                     ),
                                   ),
                                   TextSpan(
                                     text: "Summer ",
-                                    style: AppTextStyles.h2.copyWith(
-                                      fontSize: 20.sp,
+                                    style: AppTextStyles.heroSubtitle.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: const Color(0xFFFFCA28),
                                     ),
                                   ),
                                   TextSpan(
                                     text: "Camp 💙☀️",
-                                    style: AppTextStyles.h2.copyWith(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.normal,
+                                    style: AppTextStyles.heroSubtitle.copyWith(
                                       color: AppColors.textPrimary,
                                     ),
                                   ),

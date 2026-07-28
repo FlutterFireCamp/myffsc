@@ -9,7 +9,21 @@ class AppTextStyles {
 
   static const String fontFamily = 'Outfit';
 
-  // --- Headings ---
+  // --- Headings & Hero Titles ---
+  static TextStyle get heroTitle => TextStyle(
+        fontFamily: fontFamily,
+        fontSize: 25.sp,
+        fontWeight: FontWeight.bold,
+        color: AppColors.textPrimary,
+      );
+
+  static TextStyle get heroSubtitle => TextStyle(
+        fontFamily: fontFamily,
+        fontSize: 20.sp,
+        fontWeight: FontWeight.normal,
+        color: AppColors.textPrimary,
+      );
+
   static TextStyle get h1 => TextStyle(
         fontFamily: fontFamily,
         fontSize: 23.sp,
