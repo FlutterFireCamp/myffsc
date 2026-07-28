@@ -26,7 +26,7 @@ void main() {
     });
 
     test('should fail authorization if status is pending', () {
-      final pendingUser = UserModel(
+      const pendingUser = UserModel(
         id: 'user_456',
         name: 'Marie Curie',
         email: 'marie@example.com',
