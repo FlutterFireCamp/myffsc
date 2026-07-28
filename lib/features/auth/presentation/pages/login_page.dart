@@ -54,22 +54,13 @@ class LoginPage extends StatelessWidget {
                   ),
                   SizedBox(height: 3.h),
                   Text(
-                    "My FFSC 💙☀️",
+                    "FlutterFire Summer Camp 💙☀️",
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Outfit',
-                      fontSize: 24.sp,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
-                    ),
-                  ),
-                  SizedBox(height: 1.h),
-                  Text(
-                    "FlutterFire Summer Camp",
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.skyBlue,
                     ),
                   ),
                   SizedBox(height: 1.5.h),
