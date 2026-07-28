@@ -118,7 +118,17 @@ class ProfilePage extends StatelessWidget {
             subtitle: "Se déconnecter du compte Google",
             isDestructive: true,
             onTap: () {
-              context.read<AuthBloc>().add(SignOutRequested());
+              AppConfirmationDialog.show(
+                context,
+                title: "Déconnexion",
+                message: "Êtes-vous sûr de vouloir vous déconnecter du Portail Apprenant FFSC ?",
+                confirmText: "Se déconnecter",
+                cancelText: "Annuler",
+                isDestructive: true,
+                onConfirm: () {
+                  context.read<AuthBloc>().add(SignOutRequested());
+                },
+              );
             },
           ),
         ],

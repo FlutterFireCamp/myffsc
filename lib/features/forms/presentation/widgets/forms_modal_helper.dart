@@ -56,10 +56,20 @@ class FormsModalHelper {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.pop(bottomSheetContext);
-                    AppSnackBar.showSuccess(
+                    AppConfirmationDialog.show(
                       context,
-                      "Feedback transmis à l'équipe pédagogique avec succès !",
+                      title: "Transmettre le Feedback",
+                      message: "Voulez-vous envoyer ce feedback à l'équipe pédagogique ?",
+                      confirmText: "Envoyer",
+                      cancelText: "Annuler",
+                      isDestructive: false,
+                      onConfirm: () {
+                        Navigator.pop(bottomSheetContext);
+                        AppSnackBar.showSuccess(
+                          context,
+                          "Feedback transmis à l'équipe pédagogique avec succès !",
+                        );
+                      },
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -160,10 +170,20 @@ class FormsModalHelper {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.pop(bottomSheetContext);
-                    AppSnackBar.showSuccess(
+                    AppConfirmationDialog.show(
                       context,
-                      "Signalement anonyme transmis en toute confidentialité.",
+                      title: "Signalement d'Abus",
+                      message: "Confirmez-vous l'envoi de ce signalement anonyme ?",
+                      confirmText: "Envoyer",
+                      cancelText: "Annuler",
+                      isDestructive: true,
+                      onConfirm: () {
+                        Navigator.pop(bottomSheetContext);
+                        AppSnackBar.showSuccess(
+                          context,
+                          "Signalement anonyme transmis en toute confidentialité.",
+                        );
+                      },
                     );
                   },
                   style: ElevatedButton.styleFrom(
