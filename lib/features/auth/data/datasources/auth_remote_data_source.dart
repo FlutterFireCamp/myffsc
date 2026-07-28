@@ -69,11 +69,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
-      final authClient = googleUser.authorizationClient;
-      final clientAuth = await authClient.authorizationForScopes([]);
+      String? accessToken;
+
+      try {
+        final authClient = googleUser.authorizationClient;
+        final clientAuth = await authClient.authorizationForScopes(['email', 'profile']);
+        accessToken = clientAuth?.accessToken;
+      } catch (e) {
+        dev.log('Could not retrieve accessToken for scopes: $e', name: 'AUTH_REMOTE_DS');
+      }
 
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: clientAuth?.accessToken,
+        accessToken: accessToken,
         idToken: googleAuth.idToken,
       );
 

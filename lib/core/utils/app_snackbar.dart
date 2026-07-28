@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 
 class AppSnackBar {
@@ -8,34 +7,26 @@ class AppSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        elevation: 4,
+        elevation: 6,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: BorderSide(color: AppColors.errorText.withValues(alpha: 0.4)),
         ),
-        backgroundColor: AppColors.card,
+        backgroundColor: const Color(0xFF7F1D1D), // Dark Red
         content: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: AppColors.errorText.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.error_outline_rounded,
-                color: AppColors.errorText,
-                size: 20,
-              ),
+            const Icon(
+              Icons.error_outline_rounded,
+              color: Colors.white,
+              size: 22,
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 _sanitizeErrorMessage(message),
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textPrimary,
+                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -51,34 +42,26 @@ class AppSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        elevation: 4,
+        elevation: 6,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
-          side: const BorderSide(color: AppColors.correctBorder),
         ),
-        backgroundColor: AppColors.card,
+        backgroundColor: const Color(0xFF065F46), // Dark Emerald / Green
         content: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: const BoxDecoration(
-                color: AppColors.correctContainer,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.check_circle_outline_rounded,
-                color: AppColors.correctText,
-                size: 20,
-              ),
+            const Icon(
+              Icons.check_circle_outline_rounded,
+              color: Colors.white,
+              size: 22,
             ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 message,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textPrimary,
+                  color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
               ),
