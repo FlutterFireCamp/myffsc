@@ -33,11 +33,10 @@ class _FormsPageState extends State<FormsPage> {
       appBar: AppBar(
         title: const Text("Formulaires & Soumissions"),
       ),
-      body: SingleChildScrollView(
+      body: ListView(
+        primary: false,
         padding: EdgeInsets.all(4.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        children: [
             // Banner
             Container(
               width: double.infinity,
@@ -238,7 +237,6 @@ class _FormsPageState extends State<FormsPage> {
             SizedBox(height: 10.h),
           ],
         ),
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => FormsModalHelper.showFormsSelectionSheet(context),
         backgroundColor: AppColors.skyBlue,

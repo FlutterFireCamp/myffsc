@@ -40,8 +40,6 @@ class DashboardPage extends StatelessWidget {
 
     void handlePrograms() => context.go('/programs');
     void handleAnnouncements() => context.go('/announcements');
-    void handleForms() => context.go('/forms');
-    void handleTests() => context.go('/tests');
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -99,183 +97,157 @@ class DashboardPage extends StatelessWidget {
           ),
         ],
       ),
-      body: SingleChildScrollView(
+      body: ListView(
+        primary: false,
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Banner Immersion Progress
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(5.w),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppColors.flutterBlue, AppColors.ultraDark],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: AppRadius.circular20,
-                border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
+        children: [
+          // Banner Immersion Progress
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(5.w),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [AppColors.flutterBlue, AppColors.ultraDark],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.skyBlue.withValues(alpha: 0.2),
-                          borderRadius: AppRadius.circular8,
-                        ),
-                        child: Text(
-                          _getLevelName(currentUser.level),
-                          style: AppTextStyles.badge,
-                        ),
+              borderRadius: AppRadius.circular20,
+              border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.skyBlue.withValues(alpha: 0.2),
+                        borderRadius: AppRadius.circular8,
                       ),
-                      AppIcons.badge(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                      child: Text(
+                        _getLevelName(currentUser.level),
+                        style: AppTextStyles.badge,
+                      ),
+                    ),
+                    AppIcons.badge(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                  ],
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  "Immersion Totale & Mentorat",
+                  style: AppTextStyles.h2,
+                ),
+                SizedBox(height: 0.8.h),
+                Text(
+                  "3 mois pour propulser les futurs leaders de la tech en Afrique Francophone.",
+                  style: AppTextStyles.bodyMedium,
+                ),
+                SizedBox(height: 2.h),
+                ElevatedButton.icon(
+                  onPressed: handlePrograms,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.skyBlue,
+                    foregroundColor: AppColors.ultraDark,
+                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.4.h),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: AppRadius.circular10,
+                    ),
+                  ),
+                  icon: AppIcons.programs(size: AppSizes.iconMd, color: AppColors.ultraDark),
+                  label: Text(
+                    "Accéder aux Cours",
+                    style: AppTextStyles.buttonSmall.copyWith(color: AppColors.ultraDark),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 3.h),
+
+          // Next Live Session Card
+          Text(
+            "Prochaine Session Live",
+            style: AppTextStyles.titleLarge,
+          ),
+          SizedBox(height: 1.5.h),
+          Container(
+            padding: EdgeInsets.all(4.w),
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: AppRadius.circular16,
+              border: Border.all(color: AppColors.borderSubtle),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(3.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.actionBlue.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: AppIcons.video(color: AppColors.actionBlue, size: 26),
+                ),
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Architecture Clean & BLoC Pattern",
+                        style: AppTextStyles.titleMedium,
+                      ),
+                      SizedBox(height: 0.5.h),
+                      Row(
+                        children: [
+                          AppIcons.calendar(size: AppSizes.iconSm, color: AppColors.textMuted),
+                          SizedBox(width: 1.w),
+                          Text(
+                            "Mercredi 18:00 GMT • Mentor FFSC",
+                            style: AppTextStyles.bodySmall,
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                  SizedBox(height: 2.h),
-                  Text(
-                    "Immersion Totale & Mentorat",
-                    style: AppTextStyles.h2,
-                  ),
-                  SizedBox(height: 0.8.h),
-                  Text(
-                    "3 mois pour propulser les futurs leaders de la tech en Afrique Francophone.",
-                    style: AppTextStyles.bodyMedium,
-                  ),
-                  SizedBox(height: 2.h),
-                  ElevatedButton.icon(
-                    onPressed: handlePrograms,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.skyBlue,
-                      foregroundColor: AppColors.ultraDark,
-                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.4.h),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: AppRadius.circular10,
-                      ),
-                    ),
-                    icon: AppIcons.programs(size: AppSizes.iconMd, color: AppColors.ultraDark),
-                    label: Text(
-                      "Accéder aux Cours",
-                      style: AppTextStyles.buttonSmall.copyWith(color: AppColors.ultraDark),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 3.h),
-
-            // Next Live Session Card
-            Text(
-              "Prochaine Session Live",
-              style: AppTextStyles.h3,
-            ),
-            SizedBox(height: 1.5.h),
-            Container(
-              padding: EdgeInsets.all(4.w),
-              decoration: BoxDecoration(
-                color: AppColors.card,
-                borderRadius: AppRadius.circular16,
-                border: Border.all(color: AppColors.borderSubtle),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(3.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.actionBlue.withValues(alpha: 0.15),
-                      shape: BoxShape.circle,
-                    ),
-                    child: AppIcons.video(color: AppColors.actionBlue, size: 26),
-                  ),
-                  SizedBox(width: 4.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Architecture Clean & BLoC Pattern",
-                          style: AppTextStyles.titleMedium,
-                        ),
-                        SizedBox(height: 0.5.h),
-                        Row(
-                          children: [
-                            AppIcons.calendar(size: AppSizes.iconSm, color: AppColors.textMuted),
-                            SizedBox(width: 1.w),
-                            Text(
-                              "Mercredi 18:00 GMT • Mentor FFSC",
-                              style: AppTextStyles.bodySmall,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 3.h),
-
-            // Quick Actions Grid
-            Text(
-              "Aujourd'hui dans le Camp",
-              style: AppTextStyles.h3,
-            ),
-            SizedBox(height: 1.5.h),
-            Row(
-              children: [
-                Expanded(
-                  child: _QuickActionCard(
-                    title: "Annonces",
-                    subtitle: "Fil d'actualité",
-                    icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
-                    backgroundColor: AppColors.skyBlue,
-                    onTap: handleAnnouncements,
-                  ),
-                ),
-                SizedBox(width: 3.w),
-                Expanded(
-                  child: _QuickActionCard(
-                    title: "Formulaires",
-                    subtitle: "Soumissions & Rendu",
-                    icon: AppIcons.forms(color: AppColors.firebaseOrange, size: AppSizes.iconLg),
-                    backgroundColor: AppColors.firebaseOrange,
-                    onTap: handleForms,
-                  ),
                 ),
               ],
             ),
-            SizedBox(height: 1.5.h),
-            Row(
-              children: [
-                Expanded(
-                  child: _QuickActionCard(
-                    title: "Tests & Quiz",
-                    subtitle: "Évaluation",
-                    icon: AppIcons.tests(color: AppColors.correctBorder, size: AppSizes.iconLg),
-                    backgroundColor: AppColors.correctBorder,
-                    onTap: handleTests,
-                  ),
+          ),
+          SizedBox(height: 3.h),
+
+          // Quick Actions Grid (Programmes & Annonces)
+          Text(
+            "Aujourd'hui dans le Camp",
+            style: AppTextStyles.titleLarge,
+          ),
+          SizedBox(height: 1.5.h),
+          Row(
+            children: [
+              Expanded(
+                child: _QuickActionCard(
+                  title: "Programmes",
+                  subtitle: "Syllabus complet & cours",
+                  icon: AppIcons.programs(color: AppColors.actionBlue, size: AppSizes.iconLg),
+                  backgroundColor: AppColors.actionBlue,
+                  onTap: handlePrograms,
                 ),
-                SizedBox(width: 3.w),
-                Expanded(
-                  child: _QuickActionCard(
-                    title: "Programme",
-                    subtitle: "Syllabus complet",
-                    icon: AppIcons.programs(color: AppColors.actionBlue, size: AppSizes.iconLg),
-                    backgroundColor: AppColors.actionBlue,
-                    onTap: handlePrograms,
-                  ),
+              ),
+              SizedBox(width: 3.w),
+              Expanded(
+                child: _QuickActionCard(
+                  title: "Annonces",
+                  subtitle: "Fil d'actualité",
+                  icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                  backgroundColor: AppColors.skyBlue,
+                  onTap: handleAnnouncements,
                 ),
-              ],
-            ),
-            SizedBox(height: 4.h),
-          ],
-        ),
+              ),
+            ],
+          ),
+          SizedBox(height: 4.h),
+        ],
       ),
     );
   }
