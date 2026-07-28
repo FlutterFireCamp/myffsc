@@ -44,13 +44,6 @@ class LoginPage extends StatelessWidget {
                       shape: BoxShape.circle,
                       color: AppColors.card,
                       border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.5), width: 2),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: AppColors.skyGlow,
-                          blurRadius: 24,
-                          spreadRadius: 4,
-                        ),
-                      ],
                     ),
                     child: ClipOval(
                       child: Image.asset(
@@ -114,7 +107,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         SizedBox(height: 1.h),
                         Text(
-                          "Connectez-vous avec votre compte Google pré-autorisé.",
+                          "Connectez-vous avec votre compte Google du programme.",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontFamily: 'Outfit',

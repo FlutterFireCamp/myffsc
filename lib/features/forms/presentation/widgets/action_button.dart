@@ -28,8 +28,7 @@ class ActionButton extends StatelessWidget {
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
       color: bg,
-      elevation: 6,
-      shadowColor: bg.withValues(alpha: 0.4),
+      elevation: 2,
       child: IconButton(
         onPressed: onPressed,
         icon: icon,
@@ -47,13 +46,6 @@ class ActionButton extends StatelessWidget {
               color: AppColors.card,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(color: AppColors.borderSubtle),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
-                ),
-              ],
             ),
             child: Text(
               label!,

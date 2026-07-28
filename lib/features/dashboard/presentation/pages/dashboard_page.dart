@@ -140,13 +140,6 @@ class DashboardPage extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
-                boxShadow: const [
-                  BoxShadow(
-                    color: AppColors.skyGlow,
-                    blurRadius: 16,
-                    spreadRadius: 1,
-                  ),
-                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

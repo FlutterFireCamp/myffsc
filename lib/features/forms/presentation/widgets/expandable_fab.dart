@@ -82,8 +82,7 @@ class _ExpandableFabState extends State<ExpandableFab>
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
           color: AppColors.card,
-          elevation: 6,
-          shadowColor: AppColors.skyGlow,
+          elevation: 2,
           child: InkWell(
             onTap: _toggle,
             child: const Padding(
@@ -139,7 +138,7 @@ class _ExpandableFabState extends State<ExpandableFab>
             onPressed: _toggle,
             backgroundColor: AppColors.skyBlue,
             foregroundColor: AppColors.ultraDark,
-            elevation: 6,
+            elevation: 2,
             shape: const CircleBorder(),
             child: const Icon(AppIcons.forms, size: 24),
           ),

@@ -46,13 +46,6 @@ class UnauthorizedPage extends StatelessWidget {
                   shape: BoxShape.circle,
                   color: AppColors.incorrectContainer,
                   border: Border.all(color: AppColors.incorrectBorder, width: 2),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: AppColors.incorrectContainer,
-                      blurRadius: 20,
-                      spreadRadius: 2,
-                    ),
-                  ],
                 ),
                 child: Center(
                   child: Icon(

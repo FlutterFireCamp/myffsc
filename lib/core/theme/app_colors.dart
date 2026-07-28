@@ -12,7 +12,6 @@ class AppColors {
   static const Color flutterBlue = Color(0xFF02569B);
   static const Color skyBlue = Color(0xFF38BDF8); // Sky 400
   static const Color actionBlue = Color(0xFF3B82F6); // Blue 500
-  static const Color skyGlow = Color.fromRGBO(56, 189, 248, 0.25);
 
   // Les Jaunes & Oranges (Accents Firebase & Compteurs)
   static const Color firebaseOrange = Color(0xFFF57C00);
