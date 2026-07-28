@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -45,16 +46,30 @@ class RoutesConfig {
       final isLoggingIn = location == RoutePaths.login;
       final isUnauthorized = location == RoutePaths.unauthorized;
 
+      dev.log(
+        'GoRouter evaluating redirect -> Path: $location, AuthState: ${authState.runtimeType}',
+        name: 'ROUTER',
+      );
+
       if (authState is UnauthenticatedState || authState is AuthErrorState) {
-        return isLoggingIn ? null : RoutePaths.login;
+        if (!isLoggingIn) {
+          dev.log('Redirecting unauthenticated user to ${RoutePaths.login}', name: 'ROUTER');
+          return RoutePaths.login;
+        }
+        return null;
       }
 
       if (authState is UnauthorizedState) {
-        return isUnauthorized ? null : RoutePaths.unauthorized;
+        if (!isUnauthorized) {
+          dev.log('Redirecting unauthorized user to ${RoutePaths.unauthorized}', name: 'ROUTER');
+          return RoutePaths.unauthorized;
+        }
+        return null;
       }
 
       if (authState is AuthenticatedState) {
         if (isLoggingIn || isUnauthorized || location == '/') {
+          dev.log('Redirecting authenticated user to ${RoutePaths.dashboard}', name: 'ROUTER');
           return RoutePaths.dashboard;
         }
       }

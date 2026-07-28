@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/user_entity.dart';
@@ -14,7 +15,13 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final user = await remoteDataSource.signInWithGoogle();
       return Right(user);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      dev.log(
+        'AuthRepository.signInWithGoogle failed',
+        name: 'AUTH_REPOSITORY',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return Left(AuthFailure(e.toString()));
     }
   }
@@ -24,7 +31,13 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final user = await remoteDataSource.getCurrentUser();
       return Right(user);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      dev.log(
+        'AuthRepository.getCurrentUser failed',
+        name: 'AUTH_REPOSITORY',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return Left(ServerFailure(e.toString()));
     }
   }
@@ -34,7 +47,13 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       await remoteDataSource.signOut();
       return const Right(null);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      dev.log(
+        'AuthRepository.signOut failed',
+        name: 'AUTH_REPOSITORY',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return Left(ServerFailure(e.toString()));
     }
   }

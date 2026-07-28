@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
@@ -12,6 +13,8 @@ import '../../features/auth/presentation/bloc/auth_bloc.dart';
 final sl = GetIt.instance;
 
 Future<void> initInjector() async {
+  dev.log('Initializing Dependency Injection Container...', name: 'DI_CONTAINER');
+
   // External
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn());
@@ -44,4 +47,6 @@ Future<void> initInjector() async {
       signOutUseCase: sl(),
     ),
   );
+
+  dev.log('Dependency Injection Container initialized successfully', name: 'DI_CONTAINER');
 }
