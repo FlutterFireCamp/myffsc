@@ -13,17 +13,17 @@
 
 ## 📸 Aperçu & Fonctionnalités
 
-- 🔐 **Authentication Google & Protection** : Authentification via Google Provider avec vérification en arrière-plan du rôle (`role: student`) et du statut (`status: accepted`). Les utilisateurs non autorisés sont redirigés vers un écran d'accès restreint.
-- 🖼️ **Synchronisation automatique de la photo Google** : Lors de la première connexion, la photo de profil Google (`photoUrl`) est synchronisée directement dans le document Firestore de l'apprenant.
-- ⚡ **Dashboard dynamique** : Salutation personnalisée (`Salut, {First_name} 👋🏾`), suivi de la progression par niveaux (Niveaux 1 à 4), résumé des points FFSC et lien vers la prochaine session live.
-- 📚 **Programme d'Immersion** : Détail des modules et accès direct aux liens de sessions Meet live ou aux replays vidéo.
+- 🔐 **Authentification & Contrôle d'Accès** : Authentification sécurisée via Google Sign-In avec vérification automatique des autorisations de l'apprenant. Les comptes non autorisés sont automatiquement redirigés vers un écran d'accès restreint.
+- 🖼️ **Gestion de Profil & Avatar** : Synchronisation automatique de la photo de profil utilisateur lors de la première connexion pour une expérience personnalisée.
+- ⚡ **Dashboard dynamique** : Salutation personnalisée (`Salut, {First_name} 👋🏾`), suivi de la progression par niveaux (Niveaux 1 à 4), résumé des points FFSC et accès direct à la prochaine session live.
+- 📚 **Programme d'Immersion** : Consultation des modules de formation et accès direct aux liens de sessions Meet live ou aux replays vidéo.
 - 📢 **Annonces du Camp** : Fil d'actualité en temps réel filtré par priorité (Urgent, Important, Info) et par niveau.
 - 📝 **Hub de Formulaires (Expandable FAB)** : Floating Action Button extensible permettant de soumettre :
   - 🚀 Standups hebdomadaires
   - 💻 Rendu de projets / liens GitHub
   - 💬 Feedback & mentorat
   - 💡 Idées & suggestions
-  - 🚨 Signalements et alertes (abus / blocages)
+  - 🚨 Signalements et alertes
 - 🧪 **Tests & Évaluations QCM** : Quiz interactifs chronométrés avec calcul du score en temps réel et explications détaillées des réponses.
 - 👤 **Profil Apprenant** : Badges, informations personnelles, indicateurs de points et déconnexion sécurisée.
 
