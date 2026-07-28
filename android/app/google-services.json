@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "940039203312-rd842fs3j1sg5sm216m8ugebavb5hc55.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.flutterfirecamp.myffsc",
+            "certificate_hash": "170624f3813d0f28db70da3760333563fcaf5dde"
+          }
+        },
+        {
           "client_id": "940039203312-dgmo6fr82npo9ts44c1vrr4f7rtild2b.apps.googleusercontent.com",
           "client_type": 3
         }
