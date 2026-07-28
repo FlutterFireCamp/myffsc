@@ -31,7 +31,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDn4ZHi1gKT44o97Ct-SABcxAWsmR06OLE',
-    appId: '1:940039203312:android:9c815883b06e8482f89535',
+    appId: '1:940039203312:android:608f9c8877c7ba5cf89535',
     messagingSenderId: '940039203312',
     projectId: 'flutterfiresummercamp',
     storageBucket: 'flutterfiresummercamp.firebasestorage.app',
