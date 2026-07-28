@@ -6,51 +6,56 @@ import '../../domain/entities/announcement_entity.dart';
 class AnnouncementsPage extends StatelessWidget {
   const AnnouncementsPage({super.key});
 
-  List<AnnouncementEntity> _getMockAnnouncements() {
-    return const [
-      AnnouncementEntity(
-        id: '1',
-        title: 'Lancement officiel de la Semaine 4 🚀',
-        content: 'Chers apprenants, le module sur BLoC Pattern & Clean Architecture est maintenant disponible. Consultez vos canaux Slack pour les groupes de travail !',
-        targetLevel: 'all',
-        priority: 'urgent',
-        createdAt: 'Aujourd\'hui, 10:00',
-        createdBy: 'Staff FFSC',
-      ),
-      AnnouncementEntity(
-        id: '2',
-        title: 'Rappel : Office Hours avec les Mentors',
-        content: 'Ce vendredi à 17h GMT, séance Q&R en direct pour répondre à vos questions sur Firebase Firestore & Rules.',
-        targetLevel: 'all',
-        priority: 'important',
-        createdAt: 'Hier, 18:00',
-        createdBy: 'Lead Mentor',
-      ),
-    ];
-  }
+  static const List<AnnouncementEntity> _mockAnnouncements = [
+    AnnouncementEntity(
+      id: '1',
+      title: 'Lancement Officiel de la Semaine 2 🚀',
+      content: 'Bienvenue dans la deuxième semaine d\'immersion. Les modules BLoC Pattern et Clean Architecture sont désormais accessibles.',
+      targetLevel: 'all',
+      priority: 'urgent',
+      createdAt: 'Hier à 14:00',
+      createdBy: 'Équipe Pédagogique FFSC',
+    ),
+    AnnouncementEntity(
+      id: '2',
+      title: 'Session Live Mentorat - Mercredi 18h GMT',
+      content: 'Rejoignez-nous pour la live Q&A avec nos mentors Flutter/Firebase. Préparez vos questions sur les state managers.',
+      targetLevel: 'all',
+      priority: 'important',
+      createdAt: 'Il y a 2 jours',
+      createdBy: 'Mentors Tech',
+    ),
+    AnnouncementEntity(
+      id: '3',
+      title: 'Rappel : Soumission des Standups Quotidiens',
+      content: 'N\'oubliez pas de soumettre vos standups quotidiens via l\'onglet Formulaires pour accumuler vos points FFSC.',
+      targetLevel: 'all',
+      priority: 'normal',
+      createdAt: 'Il y a 3 jours',
+      createdBy: 'Staff FFSC',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final announcements = _getMockAnnouncements();
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("Annonces du Camp 📢"),
+        title: const Text("Annonces du Camp"),
       ),
       body: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        itemCount: announcements.length,
+        padding: EdgeInsets.all(4.w),
+        itemCount: _mockAnnouncements.length,
         separatorBuilder: (context, index) => SizedBox(height: 2.h),
         itemBuilder: (context, index) {
-          final item = announcements[index];
+          final item = _mockAnnouncements[index];
           final isUrgent = item.priority == 'urgent';
 
           return Container(
             padding: EdgeInsets.all(4.w),
             decoration: BoxDecoration(
               color: AppColors.card,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: AppRadius.circular16,
               border: Border.all(
                 color: isUrgent ? AppColors.firebaseOrange : AppColors.borderSubtle,
                 width: isUrgent ? 1.5 : 1,
@@ -62,69 +67,41 @@ class AnnouncementsPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (isUrgent)
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.firebaseOrange.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          "URGENT ⚡",
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.firebaseOrange,
-                          ),
-                        ),
-                      )
-                    else
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.skyBlue.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          "INFO",
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 8.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.skyBlue,
-                          ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
+                      decoration: BoxDecoration(
+                        color: isUrgent
+                            ? AppColors.firebaseOrange.withValues(alpha: 0.2)
+                            : AppColors.skyBlue.withValues(alpha: 0.15),
+                        borderRadius: AppRadius.circular6,
+                      ),
+                      child: Text(
+                        isUrgent ? "URGENT ⚡" : "INFO",
+                        style: AppTextStyles.badge.copyWith(
+                          color: isUrgent ? AppColors.firebaseOrange : AppColors.skyBlue,
                         ),
                       ),
+                    ),
                     Text(
                       item.createdBy,
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 9.sp,
-                        color: AppColors.textMuted,
-                      ),
+                      style: AppTextStyles.bodySmall,
                     ),
                   ],
                 ),
                 SizedBox(height: 1.5.h),
                 Text(
                   item.title,
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
+                  style: AppTextStyles.titleLarge,
                 ),
                 SizedBox(height: 1.h),
                 Text(
                   item.content,
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 10.sp,
-                    color: AppColors.textSecondary,
-                    height: 1.4,
-                  ),
+                  style: AppTextStyles.bodyMedium,
+                ),
+                SizedBox(height: 1.5.h),
+                Text(
+                  item.createdAt,
+                  style: AppTextStyles.caption,
                 ),
               ],
             ),

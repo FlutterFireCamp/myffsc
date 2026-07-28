@@ -7,53 +7,78 @@ import 'test_taking_page.dart';
 class TestsPage extends StatelessWidget {
   const TestsPage({super.key});
 
-  List<QuestionItemEntity> _getMockQuestions() {
-    return const [
-      QuestionItemEntity(
-        id: 'q1',
-        title: 'En Dart, quel mot-clé permet de déclarer une variable immuable évaluée à la compilation ?',
-        type: 'choice',
-        level: 1,
-        modules: [1],
-        points: 10,
-        options: ['final', 'const', 'var', 'static'],
-        correctAnswers: [1],
-        explanation: 'Le mot-clé const crée des constantes au moment de la compilation.',
-      ),
-      QuestionItemEntity(
-        id: 'q2',
-        title: 'Quel widget réagit aux changements d\'état de BLoC pour reconstruire l\'UI ?',
-        type: 'choice',
-        level: 3,
-        modules: [3],
-        points: 10,
-        options: ['BlocListener', 'BlocBuilder', 'BlocObserver', 'RepositoryProvider'],
-        correctAnswers: [1],
-        explanation: 'BlocBuilder reconstruit son widget enfant chaque fois qu\'un nouvel état est émis.',
-      ),
-    ];
-  }
+  static const List<QuestionItemEntity> _mockQuestions = [
+    QuestionItemEntity(
+      id: 'q1',
+      title: 'Quelle est la différence fondamentale entre StatelessWidget et StatefulWidget dans Flutter ?',
+      type: 'choice',
+      level: 1,
+      modules: [1],
+      points: 10,
+      timingSeconds: 300,
+      options: [
+        'StatelessWidget est mutable alors que StatefulWidget est immuable.',
+        'StatelessWidget ne possède pas d\'état interne mutable, alors que StatefulWidget conserve un State persistant.',
+        'StatefulWidget est uniquement utilisé pour le rendu de texte.',
+        'StatelessWidget est exécuté sur le GPU direct.',
+      ],
+      correctAnswers: [1],
+      explanation: 'StatelessWidget est idéal pour les UI statiques car sa méthode build est pure par rapport à ses propriétés.',
+    ),
+    QuestionItemEntity(
+      id: 'q2',
+      title: 'Dans BLoC Pattern, comment un Widget écoute-t-il les changements d\'état pour reconstruire l\'UI ?',
+      type: 'choice',
+      level: 2,
+      modules: [2],
+      points: 15,
+      timingSeconds: 300,
+      options: [
+        'En utilisant setState() à chaque mise à jour.',
+        'Grâce au widget BlocBuilder ou BlocConsumer.',
+        'En déclenchant la méthode dispatch() globale.',
+        'En utilisant un Timer.periodic.',
+      ],
+      correctAnswers: [1],
+      explanation: 'BlocBuilder s\'abonne aux flux de state émis par le BLoC pour rebuild son sous-arbre de widgets.',
+    ),
+    QuestionItemEntity(
+      id: 'q3',
+      title: 'Quelle méthode de Firestore permet de lire un document en temps réel avec un flux Stream ?',
+      type: 'choice',
+      level: 3,
+      modules: [3],
+      points: 20,
+      timingSeconds: 300,
+      options: [
+        'doc().get()',
+        'doc().snapshots()',
+        'doc().fetch()',
+        'doc().observe()',
+      ],
+      correctAnswers: [1],
+      explanation: 'snapshots() renvoie un Stream<DocumentSnapshot> qui émet une nouvelle valeur dès que les données changent.',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final questions = _getMockQuestions();
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("Tests & Évaluations 🧪"),
+        title: const Text("Tests & Quiz"),
       ),
       body: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        itemCount: questions.length,
+        padding: EdgeInsets.all(4.w),
+        itemCount: _mockQuestions.length,
         separatorBuilder: (context, index) => SizedBox(height: 2.h),
         itemBuilder: (context, index) {
-          final q = questions[index];
+          final q = _mockQuestions[index];
           return Container(
             padding: EdgeInsets.all(4.w),
             decoration: BoxDecoration(
               color: AppColors.card,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: AppRadius.circular16,
               border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Column(
@@ -66,29 +91,20 @@ class TestsPage extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
                       decoration: BoxDecoration(
                         color: AppColors.actionBlue.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: AppRadius.circular8,
                       ),
                       child: Text(
                         "Niveau ${q.level} • ${q.points} pts",
-                        style: TextStyle(
-                          fontFamily: 'Outfit',
-                          fontSize: 9.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.skyBlue,
-                        ),
+                        style: AppTextStyles.badge,
                       ),
                     ),
-                    const Row(
+                    Row(
                       children: [
-                        Icon(AppIcons.timer, size: 14, color: AppColors.textMuted),
-                        SizedBox(width: 4),
+                        AppIcons.timer(size: AppSizes.iconSm, color: AppColors.textMuted),
+                        const SizedBox(width: 4),
                         Text(
-                          "15 min",
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 11,
-                            color: AppColors.textMuted,
-                          ),
+                          "5 min",
+                          style: AppTextStyles.bodySmall,
                         ),
                       ],
                     ),
@@ -97,12 +113,7 @@ class TestsPage extends StatelessWidget {
                 SizedBox(height: 1.5.h),
                 Text(
                   q.title,
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
+                  style: AppTextStyles.titleMedium,
                 ),
                 SizedBox(height: 2.h),
                 SizedBox(
@@ -118,20 +129,15 @@ class TestsPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.actionBlue,
-                      padding: EdgeInsets.symmetric(vertical: 1.2.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                      padding: EdgeInsets.symmetric(vertical: 1.4.h),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: AppRadius.circular10,
                       ),
                     ),
-                    icon: const Icon(AppIcons.tests, size: 18, color: Colors.white),
+                    icon: AppIcons.tests(size: AppSizes.iconSm, color: Colors.white),
                     label: Text(
                       "Commencer le Quiz",
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: AppTextStyles.buttonSmall,
                     ),
                   ),
                 ),

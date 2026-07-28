@@ -44,14 +44,12 @@ class ActionButton extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
             decoration: BoxDecoration(
               color: AppColors.card,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: AppRadius.circular8,
               border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Text(
               label!,
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                fontSize: 9.sp,
+              style: AppTextStyles.bodySmall.copyWith(
                 fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
               ),

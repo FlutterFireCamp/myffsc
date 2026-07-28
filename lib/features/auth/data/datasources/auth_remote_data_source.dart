@@ -25,15 +25,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> signInWithGoogle() async {
     try {
       dev.log('Initiating Google Sign-In flow...', name: 'AUTH_REMOTE_DS');
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) {
-        dev.log('Google Sign-In cancelled by user', name: 'AUTH_REMOTE_DS');
-        throw Exception("Connexion Google annulée par l'utilisateur.");
+      
+      await googleSignIn.initialize();
+
+      GoogleSignInAccount googleUser;
+      try {
+        googleUser = await googleSignIn.authenticate();
+      } on GoogleSignInException catch (e) {
+        if (e.code == GoogleSignInExceptionCode.canceled) {
+          dev.log('Google Sign-In cancelled by user', name: 'AUTH_REMOTE_DS');
+          throw Exception("Connexion Google annulée par l'utilisateur.");
+        }
+        rethrow;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      final authClient = googleUser.authorizationClient;
+      final clientAuth = await authClient.authorizationForScopes([]);
+
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
+        accessToken: clientAuth?.accessToken,
         idToken: googleAuth.idToken,
       );
 

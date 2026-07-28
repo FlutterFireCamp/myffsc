@@ -17,7 +17,7 @@ Future<void> initInjector() async {
 
   // External
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
-  sl.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn());
+  sl.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn.instance);
   sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
 
   // Data Sources

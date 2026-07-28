@@ -23,7 +23,7 @@ class _TestTakingPageState extends State<TestTakingPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("Évaluation en direct"),
+        title: const Text("Quiz FFSC"),
       ),
       body: Padding(
         padding: EdgeInsets.all(5.w),
@@ -39,23 +39,13 @@ class _TestTakingPageState extends State<TestTakingPage> {
 
             Text(
               "Niveau ${widget.question.level} • ${widget.question.points} Points",
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                fontSize: 10.sp,
-                color: AppColors.skyBlue,
-                fontWeight: FontWeight.bold,
-              ),
+              style: AppTextStyles.badge,
             ),
             SizedBox(height: 1.5.h),
 
             Text(
               widget.question.title,
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                fontSize: 13.sp,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+              style: AppTextStyles.titleLarge,
             ),
             SizedBox(height: 3.h),
 
@@ -92,12 +82,12 @@ class _TestTakingPageState extends State<TestTakingPage> {
                               _selectedOptionIndex = index;
                             });
                           },
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: AppRadius.circular12,
                     child: Container(
                       padding: EdgeInsets.all(4.w),
                       decoration: BoxDecoration(
                         color: optionBg,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: AppRadius.circular12,
                         border: Border.all(color: optionBorder, width: isSelected ? 2 : 1),
                       ),
                       child: Row(
@@ -105,17 +95,13 @@ class _TestTakingPageState extends State<TestTakingPage> {
                           Expanded(
                             child: Text(
                               options[index],
-                              style: TextStyle(
-                                fontFamily: 'Outfit',
-                                fontSize: 11.sp,
-                                color: AppColors.textPrimary,
-                              ),
+                              style: AppTextStyles.bodyLarge,
                             ),
                           ),
                           if (_isSubmitted && isCorrect)
-                            const Icon(AppIcons.check, color: AppColors.correctText)
+                            AppIcons.check(color: AppColors.correctText, size: AppSizes.iconMd)
                           else if (_isSubmitted && isSelected && !isCorrect)
-                            const Icon(AppIcons.cancel, color: AppColors.errorText),
+                            AppIcons.cancel(color: AppColors.errorText, size: AppSizes.iconMd),
                         ],
                       ),
                     ),
@@ -129,16 +115,12 @@ class _TestTakingPageState extends State<TestTakingPage> {
                 padding: EdgeInsets.all(3.w),
                 decoration: BoxDecoration(
                   color: AppColors.card,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: AppRadius.circular10,
                   border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
                 ),
                 child: Text(
                   "Explication : ${widget.question.explanation}",
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 10.sp,
-                    color: AppColors.textSecondary,
-                  ),
+                  style: AppTextStyles.bodyMedium,
                 ),
               ),
               SizedBox(height: 2.h),
@@ -157,17 +139,13 @@ class _TestTakingPageState extends State<TestTakingPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.correctText,
                   padding: EdgeInsets.symmetric(vertical: 1.5.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: AppRadius.circular12,
                   ),
                 ),
                 child: Text(
                   _isSubmitted ? "Réponse validée" : "Valider la réponse",
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTextStyles.button,
                 ),
               ),
             ),

@@ -48,8 +48,7 @@ class UnauthorizedPage extends StatelessWidget {
                   border: Border.all(color: AppColors.incorrectBorder, width: 2),
                 ),
                 child: Center(
-                  child: Icon(
-                    AppIcons.lock,
+                  child: AppIcons.lock(
                     size: 10.w,
                     color: AppColors.errorText,
                   ),
@@ -57,7 +56,7 @@ class UnauthorizedPage extends StatelessWidget {
               ),
               SizedBox(height: 3.h),
               Text(
-                "Accès Non Autorisé 🚫",
+                "Accès Non Autorisé",
                 style: TextStyle(
                   fontFamily: 'Outfit',
                   fontSize: 20.sp,
@@ -149,7 +148,7 @@ class UnauthorizedPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
-                icon: const Icon(AppIcons.logout, color: AppColors.textSecondary),
+                icon: AppIcons.logout(color: AppColors.textSecondary, size: 20),
                 label: Text(
                   "Se déconnecter",
                   style: TextStyle(

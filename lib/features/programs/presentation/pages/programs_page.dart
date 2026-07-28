@@ -6,69 +6,66 @@ import '../../domain/entities/course_session_entity.dart';
 class ProgramsPage extends StatelessWidget {
   const ProgramsPage({super.key});
 
-  List<CourseSessionEntity> _getMockModules() {
-    return const [
-      CourseSessionEntity(
-        id: '1',
-        level: 1,
-        title: 'Niveau 1 • Dart, OOP & Algorithmique',
-        description: 'Bases fondamentales du langage Dart, structures de données, POO avancée et logique.',
-        date: 'Lundi',
-        time: '18:00 GMT',
-        speaker: 'Lead Instructor',
-        meetingUrl: 'https://meet.google.com',
-        replayUrl: 'https://youtube.com',
-      ),
-      CourseSessionEntity(
-        id: '2',
-        level: 2,
-        title: 'Niveau 2 • Flutter UI, Responsive & Assets',
-        description: 'Création d\'interfaces réactives avec Sizer, Svg, HugeIcons et animations.',
-        date: 'Mardi',
-        time: '18:00 GMT',
-        speaker: 'UI Specialist',
-        meetingUrl: 'https://meet.google.com',
-        replayUrl: 'https://youtube.com',
-      ),
-      CourseSessionEntity(
-        id: '3',
-        level: 3,
-        title: 'Niveau 3 • State Management BLoC & Firebase',
-        description: 'Clean Architecture, BLoC pattern, Firebase Auth, Firestore et Cloud Storage.',
-        date: 'Mercredi',
-        time: '18:00 GMT',
-        speaker: 'Backend Lead',
-        meetingUrl: 'https://meet.google.com',
-        replayUrl: 'https://youtube.com',
-      ),
-      CourseSessionEntity(
-        id: '4',
-        level: 4,
-        title: 'Niveau 4 • Capstone Project & Deployment',
-        description: 'Projet de fin d\'immersion complet, tests, CI/CD et déploiement Stores.',
-        date: 'Jeudi',
-        time: '18:00 GMT',
-        speaker: 'DevOps Engineer',
-        meetingUrl: 'https://meet.google.com',
-      ),
-    ];
-  }
+  static const List<CourseSessionEntity> _mockModules = [
+    CourseSessionEntity(
+      id: 'm1',
+      title: 'Semaine 1 : Fondations Flutter & Dart Moderne',
+      description: 'Prise en main des Widgets avancés, de la gestion d\'état locale, des Null Safety et du typage fort en Dart.',
+      date: '15 Juillet 2026',
+      time: '18:00 GMT',
+      level: 1,
+      speaker: 'Mentor FFSC',
+      meetingUrl: 'https://meet.google.com/abc-defg-hij',
+      replayUrl: 'https://youtube.com/watch?v=example1',
+    ),
+    CourseSessionEntity(
+      id: 'm2',
+      title: 'Semaine 2 : Architecture Clean & BLoC Pattern',
+      description: 'Structuration en couches (Data, Domain, Presentation), gestion des événements et des états réactifs avec flutter_bloc.',
+      date: '22 Juillet 2026',
+      time: '18:00 GMT',
+      level: 2,
+      speaker: 'Senior Flutter Dev',
+      meetingUrl: 'https://meet.google.com/klm-nopq-rst',
+      replayUrl: 'https://youtube.com/watch?v=example2',
+    ),
+    CourseSessionEntity(
+      id: 'm3',
+      title: 'Semaine 3 : Intégration Firebase Suite (Auth, Firestore, Cloud Functions)',
+      description: 'Authentification Google, stockage réactif Firestore, règles de sécurité et déploiement backend serveur sans serveur.',
+      date: '29 Juillet 2026',
+      time: '18:00 GMT',
+      level: 3,
+      speaker: 'GDE Firebase',
+      meetingUrl: 'https://meet.google.com/uvw-xyz1-234',
+      replayUrl: null,
+    ),
+    CourseSessionEntity(
+      id: 'm4',
+      title: 'Semaine 4 : Capstone Project & Production Readiness',
+      description: 'Optimisation des performances, CI/CD, tests unitaires/UI et publication des applications.',
+      date: '05 Août 2026',
+      time: '18:00 GMT',
+      level: 4,
+      speaker: 'Lead Architect',
+      meetingUrl: '',
+      replayUrl: null,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final modules = _getMockModules();
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("Programme d'Immersion 📚"),
+        title: const Text("Programme & Cours"),
       ),
       body: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        itemCount: modules.length,
+        padding: EdgeInsets.all(4.w),
+        itemCount: _mockModules.length,
         separatorBuilder: (context, index) => SizedBox(height: 2.h),
         itemBuilder: (context, index) {
-          final module = modules[index];
+          final module = _mockModules[index];
           return _ModuleCard(module: module);
         },
       ),
@@ -89,7 +86,7 @@ class _ModuleCard extends StatelessWidget {
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
         color: isUnlocked ? AppColors.card : AppColors.ultraDark,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: AppRadius.circular16,
         border: Border.all(
           color: isUnlocked ? AppColors.borderSubtle : AppColors.card,
         ),
@@ -106,66 +103,55 @@ class _ModuleCard extends StatelessWidget {
                   color: isUnlocked
                       ? AppColors.actionBlue.withValues(alpha: 0.15)
                       : AppColors.card,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: AppRadius.circular8,
                 ),
                 child: Text(
                   "Niveau ${module.level}",
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 9.sp,
-                    fontWeight: FontWeight.bold,
+                  style: AppTextStyles.badge.copyWith(
                     color: isUnlocked ? AppColors.actionBlue : AppColors.textMuted,
                   ),
                 ),
               ),
-              Icon(
-                isUnlocked ? AppIcons.check : AppIcons.lock,
-                color: isUnlocked ? AppColors.correctText : AppColors.textMuted,
-                size: 20,
-              ),
+              isUnlocked
+                  ? AppIcons.check(color: AppColors.correctText, size: AppSizes.iconMd)
+                  : AppIcons.lock(color: AppColors.textMuted, size: AppSizes.iconMd),
             ],
           ),
           SizedBox(height: 1.5.h),
           Text(
             module.title,
-            style: TextStyle(
-              fontFamily: 'Outfit',
-              fontSize: 12.sp,
-              fontWeight: FontWeight.bold,
+            style: AppTextStyles.titleLarge.copyWith(
               color: isUnlocked ? AppColors.textPrimary : AppColors.textMuted,
             ),
           ),
           SizedBox(height: 0.8.h),
           Text(
             module.description,
-            style: TextStyle(
-              fontFamily: 'Outfit',
-              fontSize: 10.sp,
-              color: AppColors.textSecondary,
-              height: 1.3,
-            ),
+            style: AppTextStyles.bodyMedium,
           ),
           SizedBox(height: 2.h),
           Row(
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: isUnlocked ? () {} : null,
                   style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.skyBlue),
-                    padding: EdgeInsets.symmetric(vertical: 1.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(
+                      color: isUnlocked ? AppColors.skyBlue : AppColors.borderSubtle,
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 1.2.h),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: AppRadius.circular10,
                     ),
                   ),
-                  icon: const Icon(AppIcons.video, size: 16, color: AppColors.skyBlue),
+                  icon: AppIcons.video(
+                    size: AppSizes.iconSm,
+                    color: isUnlocked ? AppColors.skyBlue : AppColors.textMuted,
+                  ),
                   label: Text(
                     "Rejoindre Live",
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 9.sp,
-                      color: AppColors.skyBlue,
-                      fontWeight: FontWeight.bold,
+                    style: AppTextStyles.buttonSmall.copyWith(
+                      color: isUnlocked ? AppColors.skyBlue : AppColors.textMuted,
                     ),
                   ),
                 ),
@@ -177,21 +163,15 @@ class _ModuleCard extends StatelessWidget {
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.card,
-                      padding: EdgeInsets.symmetric(vertical: 1.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: const BorderSide(color: AppColors.borderSubtle),
+                      padding: EdgeInsets.symmetric(vertical: 1.2.h),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: AppRadius.circular10,
                       ),
                     ),
-                    icon: const Icon(AppIcons.video, size: 16, color: AppColors.textPrimary),
+                    icon: AppIcons.video(size: AppSizes.iconSm, color: AppColors.textPrimary),
                     label: Text(
-                      "Voir Replay",
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 9.sp,
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      "Replay",
+                      style: AppTextStyles.buttonSmall,
                     ),
                   ),
                 ),

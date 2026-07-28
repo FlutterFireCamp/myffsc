@@ -4,9 +4,9 @@ class AppColors {
   // Arrière-plans & Cartes (Fond Sombre Immersif)
   static const Color background = Color(0xFF070A13);
   static const Color ultraDark = Color(0xFF04050A);
-  static const Color card = Color.fromRGBO(15, 23, 42, 0.45); // Slate 900 / 0.45
-  static const Color cardHover = Color.fromRGBO(30, 41, 59, 0.65); // Slate 800 / 0.65
-  static const Color borderSubtle = Color.fromRGBO(255, 255, 255, 0.06);
+  static const Color card = Color.fromRGBO(15, 23, 42, 0.65); // Slate 900 / 0.65
+  static const Color cardHover = Color.fromRGBO(30, 41, 59, 0.75); // Slate 800 / 0.75
+  static const Color borderSubtle = Color.fromRGBO(255, 255, 255, 0.12);
 
   // Les Bleus (Accents Flutter & Thème Principal)
   static const Color flutterBlue = Color(0xFF02569B);
@@ -30,8 +30,8 @@ class AppColors {
   static const Color errorText = Color(0xFFEF4444); // Red 500
   static const Color alertRed = Color(0xFFF87171); // Red 400
 
-  // Textes Typographiques
-  static const Color textPrimary = Color(0xFFF8FAFC); // Slate 50
-  static const Color textSecondary = Color(0xFF94A3B8); // Slate 400
-  static const Color textMuted = Color(0xFF64748B); // Slate 500
+  // Textes Typographiques (Contrastes Clairs & Lisibles)
+  static const Color textPrimary = Color(0xFFF8FAFC); // Slate 50 (Blanc pur)
+  static const Color textSecondary = Color(0xFFCBD5E1); // Slate 300 (Gris clair haute visibilité)
+  static const Color textMuted = Color(0xFF94A3B8); // Slate 400 (Gris lisible)
 }

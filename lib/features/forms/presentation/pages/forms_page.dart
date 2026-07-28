@@ -12,38 +12,28 @@ class FormsPage extends StatefulWidget {
 }
 
 class _FormsPageState extends State<FormsPage> {
-  final _standupController = TextEditingController();
-  final _githubLinkController = TextEditingController();
-  final _feedbackController = TextEditingController();
-  final _ideaController = TextEditingController();
-  final _reportController = TextEditingController();
-
   final List<Map<String, String>> _submissions = [
     {
-      'title': 'Standup Semaine 4',
-      'date': 'Aujourd\'hui, 09:30',
-      'status': 'Validé',
-      'type': 'Standup',
+      "title": "Standup Quotidien - Semaine 2",
+      "date": "24 Juillet 2026",
+      "type": "Standup",
+      "status": "Soumis"
     },
     {
-      'title': 'Projet Module 2 • BLoC & Clean Arch',
-      'date': 'Hier, 18:45',
-      'status': 'En évaluation',
-      'type': 'Projet',
-    },
+      "title": "Projet Capstone - Étape 1 Architecture",
+      "date": "20 Juillet 2026",
+      "type": "Projet",
+      "status": "Validé"
+    }
   ];
 
-  @override
-  void dispose() {
-    _standupController.dispose();
-    _githubLinkController.dispose();
-    _feedbackController.dispose();
-    _ideaController.dispose();
-    _reportController.dispose();
-    super.dispose();
-  }
+  final _standupController = TextEditingController();
+  final _projectController = TextEditingController();
+  final _feedbackController = TextEditingController();
+  final _reportController = TextEditingController();
+  final _ideaController = TextEditingController();
 
-  void _showFormModal({
+  void _openFormModal({
     required String title,
     required Widget content,
     required VoidCallback onSubmit,
@@ -51,162 +41,143 @@ class _FormsPageState extends State<FormsPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.card,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r20)),
       ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            left: 5.w,
-            right: 5.w,
-            top: 3.h,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 3.h,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 2.h,
+          left: 5.w,
+          right: 5.w,
+          top: 3.h,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
                     title,
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(AppIcons.cancel, color: AppColors.textMuted),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              SizedBox(height: 2.h),
-              content,
-              SizedBox(height: 3.h),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    onSubmit();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.actionBlue,
-                    padding: EdgeInsets.symmetric(vertical: 1.5.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  icon: const Icon(AppIcons.send, color: Colors.white, size: 18),
-                  label: Text(
-                    "Soumettre le formulaire",
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTextStyles.h2,
                   ),
                 ),
+                IconButton(
+                  icon: AppIcons.cancel(color: AppColors.textMuted, size: AppSizes.iconMd),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+            SizedBox(height: 2.h),
+            content,
+            SizedBox(height: 3.h),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pop(context);
+                  onSubmit();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.actionBlue,
+                  padding: EdgeInsets.symmetric(vertical: 1.5.h),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: AppRadius.circular12,
+                  ),
+                ),
+                icon: AppIcons.send(color: Colors.white, size: AppSizes.iconSm),
+                label: Text(
+                  "Soumettre le formulaire",
+                  style: AppTextStyles.buttonSmall,
+                ),
               ),
-            ],
-          ),
-        );
-      },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   void _openStandupForm() {
-    _showFormModal(
-      title: "Standup Hebdomadaire 🚀",
-      content: Column(
-        children: [
-          TextField(
-            controller: _standupController,
-            maxLines: 4,
-            decoration: const InputDecoration(
-              hintText: "1. Ce que j'ai réalisé cette semaine...\n2. Mes blocages rencontrés...\n3. Mes objectifs pour la suite...",
-            ),
-          ),
-        ],
+    _openFormModal(
+      title: "Rendu Standup Quotidien",
+      content: TextField(
+        controller: _standupController,
+        maxLines: 4,
+        decoration: const InputDecoration(
+          hintText: "Qu'avez-vous accompli aujourd'hui ? Rencontrez-vous des blocages ?",
+        ),
       ),
       onSubmit: () {
-        setState(() {
-          _submissions.insert(0, {
-            'title': 'Standup Hebdomadaire',
-            'date': 'Aujourd\'hui',
-            'status': 'Envoyé',
-            'type': 'Standup',
+        if (_standupController.text.isNotEmpty) {
+          setState(() {
+            _submissions.insert(0, {
+              "title": "Standup - ${_standupController.text.substring(0, _standupController.text.length > 20 ? 20 : _standupController.text.length)}...",
+              "date": "Aujourd'hui",
+              "type": "Standup",
+              "status": "Soumis"
+            });
           });
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Standup soumis avec succès ! 🚀"),
-            backgroundColor: AppColors.correctBorder,
-          ),
-        );
-        _standupController.clear();
+          _standupController.clear();
+        }
       },
     );
   }
 
-  void _openProjectSubmissionForm() {
-    _showFormModal(
-      title: "Soumission de Projet 💻",
+  void _openProjectForm() {
+    _openFormModal(
+      title: "Rendu de Projet Capstone",
       content: Column(
         children: [
           TextField(
-            controller: _githubLinkController,
+            controller: _projectController,
             decoration: const InputDecoration(
-              hintText: "Lien du repository GitHub (ex: https://github.com/...)",
-              prefixIcon: Icon(AppIcons.link, color: AppColors.textMuted),
+              hintText: "Lien GitHub du projet ou dépôt d'exécutable",
+            ),
+          ),
+          SizedBox(height: 1.5.h),
+          TextField(
+            maxLines: 2,
+            decoration: const InputDecoration(
+              hintText: "Remarques complémentaires pour le mentor",
             ),
           ),
         ],
       ),
       onSubmit: () {
-        setState(() {
-          _submissions.insert(0, {
-            'title': 'Rendu de Projet GitHub',
-            'date': 'Aujourd\'hui',
-            'status': 'En évaluation',
-            'type': 'Projet',
+        if (_projectController.text.isNotEmpty) {
+          setState(() {
+            _submissions.insert(0, {
+              "title": "Projet - ${_projectController.text}",
+              "date": "Aujourd'hui",
+              "type": "Projet",
+              "status": "En revue"
+            });
           });
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Projet enregistré pour évaluation ! 🎉"),
-            backgroundColor: AppColors.correctBorder,
-          ),
-        );
-        _githubLinkController.clear();
+          _projectController.clear();
+        }
       },
     );
   }
 
   void _openFeedbackForm() {
-    _showFormModal(
-      title: "Feedback & Mentorat 💬",
-      content: Column(
-        children: [
-          TextField(
-            controller: _feedbackController,
-            maxLines: 4,
-            decoration: const InputDecoration(
-              hintText: "Donnez votre avis sur la qualité des sessions live, du soutien des mentors ou du rythme du camp...",
-            ),
-          ),
-        ],
+    _openFormModal(
+      title: "Feedback Normal / Avis",
+      content: TextField(
+        controller: _feedbackController,
+        maxLines: 4,
+        decoration: const InputDecoration(
+          hintText: "Partagez votre avis sur les cours, l'organisation ou les sessions live...",
+        ),
       ),
       onSubmit: () {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Merci pour votre feedback précieux ! 💙"),
-            backgroundColor: AppColors.correctBorder,
+            content: Text("Feedback transmis à l'équipe pédagogique avec succès !"),
+            backgroundColor: AppColors.actionBlue,
           ),
         );
         _feedbackController.clear();
@@ -214,37 +185,33 @@ class _FormsPageState extends State<FormsPage> {
     );
   }
 
-  void _openIdeaForm() {
-    _showFormModal(
-      title: "Idées & Suggestions 💡",
+  void _openReportForm() {
+    _openFormModal(
+      title: "Signalement d'Abus / Problème",
       content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextField(
-            controller: _ideaController,
-            maxLines: 4,
-            decoration: const InputDecoration(
-              hintText: "Proposez une idée d'atelier, une fonctionnalité pour l'app My FFSC ou une amélioration du programme...",
+          Container(
+            padding: EdgeInsets.all(3.w),
+            decoration: BoxDecoration(
+              color: AppColors.correctContainer,
+              borderRadius: AppRadius.circular10,
+              border: Border.all(color: AppColors.correctBorder),
+            ),
+            child: Row(
+              children: [
+                AppIcons.alert02(color: AppColors.correctText, size: AppSizes.iconMd),
+                SizedBox(width: 2.w),
+                Expanded(
+                  child: Text(
+                    "Soumission 100% Anonyme & Confidentielle. Votre identité ne sera pas rattachée à ce message.",
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.correctText, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-      onSubmit: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Idée transmise à l'équipe pédagogique ! 💡"),
-            backgroundColor: AppColors.correctBorder,
-          ),
-        );
-        _ideaController.clear();
-      },
-    );
-  }
-
-  void _openReportForm() {
-    _showFormModal(
-      title: "Signalement d'un Problème / Abus 🚨",
-      content: Column(
-        children: [
+          SizedBox(height: 2.h),
           TextField(
             controller: _reportController,
             maxLines: 4,
@@ -257,11 +224,33 @@ class _FormsPageState extends State<FormsPage> {
       onSubmit: () {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Signalement envoyé de manière confidentielle aux organisateurs. 🛡️"),
+            content: Text("Signalement anonyme envoyé en toute confidentialité."),
             backgroundColor: AppColors.correctBorder,
           ),
         );
         _reportController.clear();
+      },
+    );
+  }
+
+  void _openIdeaForm() {
+    _openFormModal(
+      title: "Idées ou Suggestions",
+      content: TextField(
+        controller: _ideaController,
+        maxLines: 4,
+        decoration: const InputDecoration(
+          hintText: "Quelle nouvelle fonctionnalité ou amélioration aimeriez-vous voir dans le camp ?",
+        ),
+      ),
+      onSubmit: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Idée envoyée ! Merci pour votre contribution."),
+            backgroundColor: AppColors.firebaseYellow,
+          ),
+        );
+        _ideaController.clear();
       },
     );
   }
@@ -271,7 +260,7 @@ class _FormsPageState extends State<FormsPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("Formulaires & Soumissions 📝"),
+        title: const Text("Formulaires & Soumissions"),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(4.w),
@@ -288,7 +277,7 @@ class _FormsPageState extends State<FormsPage> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: AppRadius.circular20,
                 border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
               ),
               child: Row(
@@ -299,7 +288,7 @@ class _FormsPageState extends State<FormsPage> {
                       color: AppColors.skyBlue.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(AppIcons.forms, color: AppColors.skyBlue, size: 28),
+                    child: AppIcons.forms(color: AppColors.skyBlue, size: AppSizes.iconXl),
                   ),
                   SizedBox(width: 4.w),
                   Expanded(
@@ -308,22 +297,12 @@ class _FormsPageState extends State<FormsPage> {
                       children: [
                         Text(
                           "Hub de Formulaires",
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
-                          ),
+                          style: AppTextStyles.h3,
                         ),
                         SizedBox(height: 0.5.h),
                         Text(
                           "Cliquez sur le bouton Floating en bas à droite pour soumettre vos standups, vos projets, vos idées ou un feedback.",
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 9.sp,
-                            color: AppColors.textSecondary,
-                            height: 1.3,
-                          ),
+                          style: AppTextStyles.bodyMedium,
                         ),
                       ],
                     ),
@@ -335,12 +314,7 @@ class _FormsPageState extends State<FormsPage> {
 
             Text(
               "Historique de vos soumissions",
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                fontSize: 13.sp,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+              style: AppTextStyles.h3,
             ),
             SizedBox(height: 1.5.h),
 
@@ -350,11 +324,7 @@ class _FormsPageState extends State<FormsPage> {
                 alignment: Alignment.center,
                 child: Text(
                   "Aucune soumission pour le moment.",
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 11.sp,
-                    color: AppColors.textMuted,
-                  ),
+                  style: AppTextStyles.bodyMedium,
                 ),
               )
             else
@@ -369,7 +339,7 @@ class _FormsPageState extends State<FormsPage> {
                     padding: EdgeInsets.all(4.w),
                     decoration: BoxDecoration(
                       color: AppColors.card,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: AppRadius.circular16,
                       border: Border.all(color: AppColors.borderSubtle),
                     ),
                     child: Row(
@@ -378,13 +348,11 @@ class _FormsPageState extends State<FormsPage> {
                           padding: EdgeInsets.all(2.5.w),
                           decoration: BoxDecoration(
                             color: AppColors.actionBlue.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: AppRadius.circular10,
                           ),
-                          child: Icon(
-                            item['type'] == 'Standup' ? AppIcons.forms : AppIcons.github,
-                            color: AppColors.actionBlue,
-                            size: 20,
-                          ),
+                          child: item['type'] == 'Standup'
+                              ? AppIcons.standup(color: AppColors.actionBlue, size: AppSizes.iconMd)
+                              : AppIcons.project(color: AppColors.actionBlue, size: AppSizes.iconMd),
                         ),
                         SizedBox(width: 3.w),
                         Expanded(
@@ -393,21 +361,12 @@ class _FormsPageState extends State<FormsPage> {
                             children: [
                               Text(
                                 item['title'] ?? '',
-                                style: TextStyle(
-                                  fontFamily: 'Outfit',
-                                  fontSize: 11.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.textPrimary,
-                                ),
+                                style: AppTextStyles.titleMedium,
                               ),
                               SizedBox(height: 0.4.h),
                               Text(
                                 item['date'] ?? '',
-                                style: TextStyle(
-                                  fontFamily: 'Outfit',
-                                  fontSize: 9.sp,
-                                  color: AppColors.textMuted,
-                                ),
+                                style: AppTextStyles.bodySmall,
                               ),
                             ],
                           ),
@@ -416,17 +375,12 @@ class _FormsPageState extends State<FormsPage> {
                           padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
                           decoration: BoxDecoration(
                             color: AppColors.correctContainer,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: AppRadius.circular8,
                             border: Border.all(color: AppColors.correctBorder),
                           ),
                           child: Text(
                             item['status'] ?? '',
-                            style: TextStyle(
-                              fontFamily: 'Outfit',
-                              fontSize: 9.sp,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.correctText,
-                            ),
+                            style: AppTextStyles.badgeSmall.copyWith(color: AppColors.correctText),
                           ),
                         ),
                       ],
@@ -439,37 +393,37 @@ class _FormsPageState extends State<FormsPage> {
         ),
       ),
       floatingActionButton: ExpandableFab(
-        distance: 140,
+        distance: 70,
         children: [
           ActionButton(
+            icon: AppIcons.standup(size: AppSizes.iconMd, color: Colors.white),
+            label: "Standup Quotidien",
             onPressed: _openStandupForm,
-            icon: const Icon(AppIcons.forms, size: 20),
-            backgroundColor: AppColors.skyBlue,
-            iconColor: AppColors.ultraDark,
-          ),
-          ActionButton(
-            onPressed: _openProjectSubmissionForm,
-            icon: const Icon(AppIcons.github, size: 20),
-            backgroundColor: AppColors.firebaseOrange,
-            iconColor: Colors.white,
-          ),
-          ActionButton(
-            onPressed: _openFeedbackForm,
-            icon: const Icon(AppIcons.star, size: 20),
-            backgroundColor: AppColors.firebaseYellow,
-            iconColor: AppColors.ultraDark,
-          ),
-          ActionButton(
-            onPressed: _openIdeaForm,
-            icon: const Icon(AppIcons.info, size: 20),
             backgroundColor: AppColors.actionBlue,
-            iconColor: Colors.white,
           ),
           ActionButton(
+            icon: AppIcons.project(size: AppSizes.iconMd, color: Colors.white),
+            label: "Rendu Projet",
+            onPressed: _openProjectForm,
+            backgroundColor: AppColors.firebaseOrange,
+          ),
+          ActionButton(
+            icon: AppIcons.feedback(size: AppSizes.iconMd, color: Colors.white),
+            label: "Feedback Normal",
+            onPressed: _openFeedbackForm,
+            backgroundColor: AppColors.skyBlue,
+          ),
+          ActionButton(
+            icon: AppIcons.report(size: AppSizes.iconMd, color: Colors.white),
+            label: "Signalement (Abus)",
             onPressed: _openReportForm,
-            icon: const Icon(AppIcons.warning, size: 20),
             backgroundColor: AppColors.errorText,
-            iconColor: Colors.white,
+          ),
+          ActionButton(
+            icon: AppIcons.idea(size: AppSizes.iconMd, color: Colors.white),
+            label: "Idées / Suggestions",
+            onPressed: _openIdeaForm,
+            backgroundColor: AppColors.firebaseYellow,
           ),
         ],
       ),

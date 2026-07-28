@@ -3,43 +3,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
-import '../../../auth/auth.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 
 class DashboardPage extends StatelessWidget {
-  final UserEntity? user;
-  final VoidCallback? onNavigateToPrograms;
-  final VoidCallback? onNavigateToAnnouncements;
-  final VoidCallback? onNavigateToForms;
-  final VoidCallback? onNavigateToTests;
-
-  const DashboardPage({
-    super.key,
-    this.user,
-    this.onNavigateToPrograms,
-    this.onNavigateToAnnouncements,
-    this.onNavigateToForms,
-    this.onNavigateToTests,
-  });
+  const DashboardPage({super.key});
 
   String _getLevelName(int level) {
     switch (level) {
       case 1:
-        return "Niveau 1 • Dart & Algo";
+        return "Niveau 1 • Débutant";
       case 2:
-        return "Niveau 2 • Flutter & UI";
+        return "Niveau 2 • Intermédiaire";
       case 3:
-        return "Niveau 3 • State & Firebase";
+        return "Niveau 3 • Avancé";
       case 4:
-        return "Niveau 4 • Capstone Project";
+        return "Niveau 4 • Capstone Pro";
       default:
-        return "Niveau $level • Immersion";
+        return "Niveau 1 • Débutant";
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
-    final currentUser = user ?? (authState is AuthenticatedState ? authState.user : null);
+    final currentUser = authState is AuthenticatedState ? authState.user : null;
 
     if (currentUser == null) {
       return const Scaffold(
@@ -50,24 +38,26 @@ class DashboardPage extends StatelessWidget {
       );
     }
 
-    final handlePrograms = onNavigateToPrograms ?? () => context.go(RoutePaths.programs);
-    final handleAnnouncements = onNavigateToAnnouncements ?? () => context.go(RoutePaths.announcements);
-    final handleForms = onNavigateToForms ?? () => context.go(RoutePaths.forms);
-    final handleTests = onNavigateToTests ?? () => context.go(RoutePaths.tests);
+    void handlePrograms() => context.go('/programs');
+    void handleAnnouncements() => context.go('/announcements');
+    void handleForms() => context.go('/forms');
+    void handleTests() => context.go('/tests');
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
         title: Row(
           children: [
             CircleAvatar(
-              radius: 18,
+              radius: 20,
               backgroundColor: AppColors.flutterBlue,
               backgroundImage: currentUser.photoUrl != null ? NetworkImage(currentUser.photoUrl!) : null,
               child: currentUser.photoUrl == null
                   ? Text(
                       currentUser.firstName.isNotEmpty ? currentUser.firstName[0].toUpperCase() : 'A',
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: AppTextStyles.titleMedium,
                     )
                   : null,
             ),
@@ -77,20 +67,11 @@ class DashboardPage extends StatelessWidget {
               children: [
                 Text(
                   "Salut, ${currentUser.firstName} 👋🏾",
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textPrimary,
-                  ),
+                  style: AppTextStyles.h3,
                 ),
                 Text(
                   "Apprenant FFSC 💙☀️",
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 9.sp,
-                    color: AppColors.textSecondary,
-                  ),
+                  style: AppTextStyles.bodySmall,
                 ),
               ],
             ),
@@ -102,21 +83,16 @@ class DashboardPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
             decoration: BoxDecoration(
               color: AppColors.firebaseOrange.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: AppRadius.circular12,
               border: Border.all(color: AppColors.firebaseOrange, width: 1),
             ),
             child: Row(
               children: [
-                const Icon(AppIcons.star, size: 16, color: AppColors.firebaseYellow),
+                AppIcons.star(size: 18, color: AppColors.firebaseYellow),
                 SizedBox(width: 1.w),
                 Text(
                   "${currentUser.totalPoints} pts",
-                  style: TextStyle(
-                    fontFamily: 'Outfit',
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.firebaseYellow,
-                  ),
+                  style: AppTextStyles.badge.copyWith(color: AppColors.firebaseYellow),
                 ),
               ],
             ),
@@ -138,7 +114,7 @@ class DashboardPage extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: AppRadius.circular20,
                 border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
               ),
               child: Column(
@@ -151,39 +127,25 @@ class DashboardPage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
                         decoration: BoxDecoration(
                           color: AppColors.skyBlue.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: AppRadius.circular8,
                         ),
                         child: Text(
                           _getLevelName(currentUser.level),
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.skyBlue,
-                          ),
+                          style: AppTextStyles.badge,
                         ),
                       ),
-                      const Icon(AppIcons.badge, color: AppColors.skyBlue),
+                      AppIcons.badge(color: AppColors.skyBlue, size: AppSizes.iconLg),
                     ],
                   ),
                   SizedBox(height: 2.h),
                   Text(
                     "Immersion Totale & Mentorat",
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
+                    style: AppTextStyles.h2,
                   ),
                   SizedBox(height: 0.8.h),
                   Text(
                     "3 mois pour propulser les futurs leaders de la tech en Afrique Francophone.",
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 10.sp,
-                      color: AppColors.textSecondary,
-                    ),
+                    style: AppTextStyles.bodyMedium,
                   ),
                   SizedBox(height: 2.h),
                   ElevatedButton.icon(
@@ -191,19 +153,15 @@ class DashboardPage extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.skyBlue,
                       foregroundColor: AppColors.ultraDark,
-                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.2.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.4.h),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: AppRadius.circular10,
                       ),
                     ),
-                    icon: const Icon(AppIcons.programs, size: 18, color: AppColors.ultraDark),
+                    icon: AppIcons.programs(size: AppSizes.iconMd, color: AppColors.ultraDark),
                     label: Text(
                       "Accéder aux Cours",
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: AppTextStyles.buttonSmall.copyWith(color: AppColors.ultraDark),
                     ),
                   ),
                 ],
@@ -213,20 +171,15 @@ class DashboardPage extends StatelessWidget {
 
             // Next Live Session Card
             Text(
-              "Prochaine Session Live 🎥",
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+              "Prochaine Session Live",
+              style: AppTextStyles.h3,
             ),
             SizedBox(height: 1.5.h),
             Container(
               padding: EdgeInsets.all(4.w),
               decoration: BoxDecoration(
                 color: AppColors.card,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: AppRadius.circular16,
                 border: Border.all(color: AppColors.borderSubtle),
               ),
               child: Row(
@@ -237,7 +190,7 @@ class DashboardPage extends StatelessWidget {
                       color: AppColors.actionBlue.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(AppIcons.video, color: AppColors.actionBlue),
+                    child: AppIcons.video(color: AppColors.actionBlue, size: 26),
                   ),
                   SizedBox(width: 4.w),
                   Expanded(
@@ -246,25 +199,16 @@ class DashboardPage extends StatelessWidget {
                       children: [
                         Text(
                           "Architecture Clean & BLoC Pattern",
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary,
-                          ),
+                          style: AppTextStyles.titleMedium,
                         ),
                         SizedBox(height: 0.5.h),
                         Row(
                           children: [
-                            const Icon(AppIcons.calendar, size: 14, color: AppColors.textMuted),
+                            AppIcons.calendar(size: AppSizes.iconSm, color: AppColors.textMuted),
                             SizedBox(width: 1.w),
                             Text(
                               "Mercredi 18:00 GMT • Mentor FFSC",
-                              style: TextStyle(
-                                fontFamily: 'Outfit',
-                                fontSize: 9.sp,
-                                color: AppColors.textMuted,
-                              ),
+                              style: AppTextStyles.bodySmall,
                             ),
                           ],
                         ),
@@ -278,13 +222,8 @@ class DashboardPage extends StatelessWidget {
 
             // Quick Actions Grid
             Text(
-              "Aujourd'hui dans le Camp ⚡",
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+              "Aujourd'hui dans le Camp",
+              style: AppTextStyles.h3,
             ),
             SizedBox(height: 1.5.h),
             Row(
@@ -293,8 +232,8 @@ class DashboardPage extends StatelessWidget {
                   child: _QuickActionCard(
                     title: "Annonces",
                     subtitle: "Fil d'actualité",
-                    icon: AppIcons.announcements,
-                    color: AppColors.skyBlue,
+                    icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                    backgroundColor: AppColors.skyBlue,
                     onTap: handleAnnouncements,
                   ),
                 ),
@@ -302,9 +241,9 @@ class DashboardPage extends StatelessWidget {
                 Expanded(
                   child: _QuickActionCard(
                     title: "Formulaires",
-                    subtitle: "Standups & Projets",
-                    icon: AppIcons.forms,
-                    color: AppColors.firebaseOrange,
+                    subtitle: "Soumissions & Rendu",
+                    icon: AppIcons.forms(color: AppColors.firebaseOrange, size: AppSizes.iconLg),
+                    backgroundColor: AppColors.firebaseOrange,
                     onTap: handleForms,
                   ),
                 ),
@@ -316,9 +255,9 @@ class DashboardPage extends StatelessWidget {
                 Expanded(
                   child: _QuickActionCard(
                     title: "Tests & Quiz",
-                    subtitle: "Évaluations",
-                    icon: AppIcons.tests,
-                    color: AppColors.correctText,
+                    subtitle: "Évaluation",
+                    icon: AppIcons.tests(color: AppColors.correctBorder, size: AppSizes.iconLg),
+                    backgroundColor: AppColors.correctBorder,
                     onTap: handleTests,
                   ),
                 ),
@@ -326,9 +265,9 @@ class DashboardPage extends StatelessWidget {
                 Expanded(
                   child: _QuickActionCard(
                     title: "Programme",
-                    subtitle: "Modules & Replays",
-                    icon: AppIcons.programs,
-                    color: AppColors.actionBlue,
+                    subtitle: "Syllabus complet",
+                    icon: AppIcons.programs(color: AppColors.actionBlue, size: AppSizes.iconLg),
+                    backgroundColor: AppColors.actionBlue,
                     onTap: handlePrograms,
                   ),
                 ),
@@ -345,15 +284,15 @@ class DashboardPage extends StatelessWidget {
 class _QuickActionCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData icon;
-  final Color color;
+  final Widget icon;
+  final Color backgroundColor;
   final VoidCallback onTap;
 
   const _QuickActionCard({
     required this.title,
     required this.subtitle,
     required this.icon,
-    required this.color,
+    required this.backgroundColor,
     required this.onTap,
   });
 
@@ -361,12 +300,12 @@ class _QuickActionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: AppRadius.circular16,
       child: Container(
         padding: EdgeInsets.all(4.w),
         decoration: BoxDecoration(
           color: AppColors.card,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: AppRadius.circular16,
           border: Border.all(color: AppColors.borderSubtle),
         ),
         child: Column(
@@ -375,29 +314,20 @@ class _QuickActionCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(2.5.w),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(10),
+                color: backgroundColor.withValues(alpha: 0.15),
+                borderRadius: AppRadius.circular12,
               ),
-              child: Icon(icon, color: color, size: 22),
+              child: icon,
             ),
             SizedBox(height: 1.5.h),
             Text(
               title,
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                fontSize: 11.sp,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+              style: AppTextStyles.titleMedium,
             ),
-            SizedBox(height: 0.3.h),
+            SizedBox(height: 0.4.h),
             Text(
               subtitle,
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                fontSize: 9.sp,
-                color: AppColors.textMuted,
-              ),
+              style: AppTextStyles.bodySmall,
             ),
           ],
         ),

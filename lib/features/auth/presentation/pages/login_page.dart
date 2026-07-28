@@ -13,142 +13,169 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: BlocConsumer<AuthBloc, AuthState>(
+      body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.incorrectBorder,
+                content: Text(state.message, style: AppTextStyles.bodyMedium),
+                backgroundColor: AppColors.errorText,
               ),
             );
           }
         },
-        builder: (context, state) {
-          final isLoading = state is AuthLoadingState;
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            final isLoading = state is AuthLoadingState;
 
-          return SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6.w),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Spacer(),
-                  // App Branding Header with Logo
-                  Container(
-                    width: 28.w,
-                    height: 28.w,
-                    padding: EdgeInsets.all(2.w),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: AppColors.card,
-                      border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.5), width: 2),
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 3.h),
-                  Text(
-                    "FlutterFire Summer Camp 💙☀️",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
-                  SizedBox(height: 1.5.h),
-                  Text(
-                    "Portail officiel des apprenants • Immersion totale & Mentorat intensif de 3 mois pour propulser les futurs leaders de la tech en Afrique Francophone.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Outfit',
-                      fontSize: 11.sp,
-                      color: AppColors.textSecondary,
-                      height: 1.4,
-                    ),
-                  ),
-                  const Spacer(),
-                  // Google Login Button Card
-                  Container(
-                    padding: EdgeInsets.all(5.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.card,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.borderSubtle),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          "Connexion Apprenant",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        SizedBox(height: 1.h),
-                        Text(
-                          "Connectez-vous avec votre compte Google du programme.",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Outfit',
-                            fontSize: 10.sp,
-                            color: AppColors.textMuted,
-                          ),
-                        ),
-                        SizedBox(height: 3.h),
-                        ElevatedButton.icon(
-                          onPressed: isLoading
-                              ? null
-                              : () {
-                                  context.read<AuthBloc>().add(SignInWithGoogleRequested());
+            return SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Top Section: Clean Logo Image (No circle border) & Titles
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.h),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 14.h,
+                              child: Image.asset(
+                                'assets/images/logo.png',
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(
+                                    child: Text(
+                                      "FFSC",
+                                      style: AppTextStyles.h1.copyWith(
+                                        color: AppColors.skyBlue,
+                                      ),
+                                    ),
+                                  );
                                 },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.actionBlue,
-                            padding: EdgeInsets.symmetric(vertical: 2.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              ),
                             ),
-                          ),
-                          icon: isLoading
-                              ? SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: AppColors.textPrimary,
+                            SizedBox(height: 2.5.h),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "Flutter",
+                                    style: AppTextStyles.h1.copyWith(
+                                      fontSize: 25.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFF0288D1),
+                                    ),
                                   ),
-                                )
-                              : const Icon(AppIcons.google, color: Colors.white),
-                          label: Text(
-                            isLoading ? "Connexion en cours..." : "Continuer avec Google",
-                            style: TextStyle(
-                              fontFamily: 'Outfit',
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textPrimary,
+                                  TextSpan(
+                                    text: "Fire\n",
+                                    style: AppTextStyles.h1.copyWith(
+                                      fontSize: 25.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.firebaseOrange,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: "Summer ",
+                                    style: AppTextStyles.h2.copyWith(
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFFFFCA28),
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: "Camp 💙☀️",
+                                    style: AppTextStyles.h2.copyWith(
+                                      fontSize: 20.sp,
+                                      fontWeight: FontWeight.normal,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                          ),
+                            SizedBox(height: 1.2.h),
+                            Text(
+                              "Portail Apprenant",
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.bodyMedium,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(height: 3.h),
+
+                      // Authentication Box
+                      Container(
+                        padding: EdgeInsets.all(6.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.card,
+                          borderRadius: AppRadius.circular20,
+                          border: Border.all(color: AppColors.borderSubtle),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text("Connexion", style: AppTextStyles.h3),
+                            SizedBox(height: 1.2.h),
+                            Text(
+                              "Connectez-vous avec le compte Google associé à votre candidature du programme.",
+                              style: AppTextStyles.bodySmall,
+                            ),
+                            SizedBox(height: 3.h),
+                            ElevatedButton.icon(
+                              onPressed: isLoading
+                                  ? null
+                                  : () {
+                                      context.read<AuthBloc>().add(
+                                        SignInWithGoogleRequested(),
+                                      );
+                                    },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.skyBlue,
+                                foregroundColor: AppColors.ultraDark,
+                                padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: AppRadius.circular14,
+                                ),
+                              ),
+                              icon: isLoading
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: AppColors.ultraDark,
+                                      ),
+                                    )
+                                  : AppIcons.google(
+                                      color: AppColors.ultraDark,
+                                      size: AppSizes.iconMd,
+                                    ),
+                              label: Text(
+                                isLoading
+                                    ? "Connexion en cours..."
+                                    : "Continuer avec Google",
+                                style: AppTextStyles.button.copyWith(
+                                  color: AppColors.ultraDark,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 4.h),
-                ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

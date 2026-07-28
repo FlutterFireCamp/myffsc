@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 
 class MainNavigationScaffold extends StatelessWidget {
@@ -37,38 +36,37 @@ class MainNavigationScaffold extends StatelessWidget {
           backgroundColor: AppColors.ultraDark,
           selectedItemColor: AppColors.skyBlue,
           unselectedItemColor: AppColors.textMuted,
-          selectedLabelStyle: TextStyle(
-            fontFamily: 'Outfit',
-            fontSize: 8.sp,
-            fontWeight: FontWeight.bold,
-          ),
-          unselectedLabelStyle: TextStyle(
-            fontFamily: 'Outfit',
-            fontSize: 8.sp,
-          ),
-          items: const [
+          selectedLabelStyle: AppTextStyles.navLabelActive,
+          unselectedLabelStyle: AppTextStyles.navLabel,
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(AppIcons.dashboard),
+              icon: AppIcons.dashboard(color: AppColors.textMuted, size: AppSizes.iconLg),
+              activeIcon: AppIcons.dashboard(color: AppColors.skyBlue, size: AppSizes.iconLg),
               label: "Accueil",
             ),
             BottomNavigationBarItem(
-              icon: Icon(AppIcons.programs),
+              icon: AppIcons.programs(color: AppColors.textMuted, size: AppSizes.iconLg),
+              activeIcon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconLg),
               label: "Cours",
             ),
             BottomNavigationBarItem(
-              icon: Icon(AppIcons.announcements),
+              icon: AppIcons.announcements(color: AppColors.textMuted, size: AppSizes.iconLg),
+              activeIcon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
               label: "Annonces",
             ),
             BottomNavigationBarItem(
-              icon: Icon(AppIcons.forms),
+              icon: AppIcons.forms(color: AppColors.textMuted, size: AppSizes.iconLg),
+              activeIcon: AppIcons.forms(color: AppColors.skyBlue, size: AppSizes.iconLg),
               label: "Formulaires",
             ),
             BottomNavigationBarItem(
-              icon: Icon(AppIcons.tests),
+              icon: AppIcons.tests(color: AppColors.textMuted, size: AppSizes.iconLg),
+              activeIcon: AppIcons.tests(color: AppColors.skyBlue, size: AppSizes.iconLg),
               label: "Tests",
             ),
             BottomNavigationBarItem(
-              icon: Icon(AppIcons.profile),
+              icon: AppIcons.profile(color: AppColors.textMuted, size: AppSizes.iconLg),
+              activeIcon: AppIcons.profile(color: AppColors.skyBlue, size: AppSizes.iconLg),
               label: "Profil",
             ),
           ],
