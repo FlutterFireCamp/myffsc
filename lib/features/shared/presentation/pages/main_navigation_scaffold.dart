@@ -75,7 +75,7 @@ class MainNavigationScaffold extends StatelessWidget {
                   color: AppColors.alertRed.withValues(alpha: 0.18),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.alertRed.withValues(alpha: 0.5),
+                    color: AppColors.alertRed,
                     width: 1.5,
                   ),
                 ),
@@ -86,13 +86,10 @@ class MainNavigationScaffold extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.alertRed,
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.alertRed.withValues(alpha: 0.5),
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                    ),
-                  ],
+                  border: Border.all(
+                    color: AppColors.alertRed,
+                    width: 1.5,
+                  ),
                 ),
                 child: AppIcons.tests(color: Colors.white, size: AppSizes.iconLg),
               ),
