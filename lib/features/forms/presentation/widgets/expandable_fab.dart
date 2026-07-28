@@ -1,6 +1,6 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../../core/core.dart';
-import 'expanding_action_button.dart';
 
 @immutable
 class ExpandableFab extends StatefulWidget {
@@ -82,12 +82,12 @@ class _ExpandableFabState extends State<ExpandableFab>
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
           color: AppColors.card,
-          elevation: 2,
+          elevation: 4,
           child: InkWell(
             onTap: _toggle,
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: AppIcons.cancel(color: AppColors.skyBlue, size: 24),
+              child: Icon(Icons.close, color: AppColors.skyBlue),
             ),
           ),
         ),
@@ -100,14 +100,14 @@ class _ExpandableFabState extends State<ExpandableFab>
     final count = widget.children.length;
     if (count == 0) return children;
 
-    final step = count == 1 ? 90.0 : 90.0 / (count - 1);
+    final step = count > 1 ? 90.0 / (count - 1) : 90.0;
     for (
       var i = 0, angleInDegrees = 0.0;
       i < count;
       i++, angleInDegrees += step
     ) {
       children.add(
-        ExpandingActionButton(
+        _ExpandingActionButton(
           directionInDegrees: angleInDegrees,
           maxDistance: widget.distance,
           progress: _expandAnimation,
@@ -138,12 +138,49 @@ class _ExpandableFabState extends State<ExpandableFab>
             onPressed: _toggle,
             backgroundColor: AppColors.skyBlue,
             foregroundColor: AppColors.ultraDark,
-            elevation: 2,
+            elevation: 4,
             shape: const CircleBorder(),
-            child: AppIcons.forms(size: 24, color: AppColors.ultraDark),
+            child: AppIcons.forms(color: AppColors.ultraDark, size: AppSizes.iconLg),
           ),
         ),
       ),
+    );
+  }
+}
+
+@immutable
+class _ExpandingActionButton extends StatelessWidget {
+  const _ExpandingActionButton({
+    required this.directionInDegrees,
+    required this.maxDistance,
+    required this.progress,
+    required this.child,
+  });
+
+  final double directionInDegrees;
+  final double maxDistance;
+  final Animation<double> progress;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: progress,
+      builder: (context, child) {
+        final offset = Offset.fromDirection(
+          directionInDegrees * (math.pi / 180.0),
+          progress.value * maxDistance,
+        );
+        return Positioned(
+          right: 4.0 + offset.dx,
+          bottom: 4.0 + offset.dy,
+          child: Transform.rotate(
+            angle: (1.0 - progress.value) * math.pi / 2,
+            child: child!,
+          ),
+        );
+      },
+      child: FadeTransition(opacity: progress, child: child),
     );
   }
 }

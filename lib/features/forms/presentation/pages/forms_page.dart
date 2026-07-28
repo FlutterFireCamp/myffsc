@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
+import '../widgets/action_button.dart';
+import '../widgets/expandable_fab.dart';
 import '../widgets/forms_modal_helper.dart';
 
 class FormsPage extends StatefulWidget {
@@ -237,10 +239,20 @@ class _FormsPageState extends State<FormsPage> {
             SizedBox(height: 10.h),
           ],
         ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => FormsModalHelper.showFormsSelectionSheet(context),
-        backgroundColor: AppColors.skyBlue,
-        child: AppIcons.forms(color: AppColors.ultraDark, size: AppSizes.iconLg),
+      floatingActionButton: ExpandableFab(
+        distance: 112,
+        children: [
+          ActionButton(
+            onPressed: () => FormsModalHelper.openFeedbackForm(context),
+            icon: AppIcons.feedback(color: AppColors.ultraDark, size: AppSizes.iconMd),
+            color: AppColors.skyBlue,
+          ),
+          ActionButton(
+            onPressed: () => FormsModalHelper.openReportForm(context),
+            icon: AppIcons.alert02(color: Colors.white, size: AppSizes.iconMd),
+            color: AppColors.errorText,
+          ),
+        ],
       ),
     );
   }
