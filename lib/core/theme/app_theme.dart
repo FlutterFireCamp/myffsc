@@ -24,6 +24,7 @@ class AppTheme {
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,
         elevation: 0,
+        surfaceTintColor: Colors.transparent,
         centerTitle: false,
         titleTextStyle: AppTextStyles.h3,
         iconTheme: const IconThemeData(color: AppColors.textPrimary),

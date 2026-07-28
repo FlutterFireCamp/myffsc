@@ -69,14 +69,35 @@ class MainNavigationScaffold extends StatelessWidget {
               label: "Cours",
             ),
             BottomNavigationBarItem(
+              icon: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: AppColors.firebaseOrange.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: AppIcons.tests(color: AppColors.firebaseOrange, size: AppSizes.iconMd),
+              ),
+              activeIcon: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: AppColors.firebaseOrange,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.firebaseOrange.withValues(alpha: 0.4),
+                      blurRadius: 8,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: AppIcons.tests(color: AppColors.ultraDark, size: AppSizes.iconMd),
+              ),
+              label: "Tests",
+            ),
+            BottomNavigationBarItem(
               icon: AppIcons.announcements(color: AppColors.textMuted, size: AppSizes.iconLg),
               activeIcon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
               label: "Annonces",
-            ),
-            BottomNavigationBarItem(
-              icon: AppIcons.tests(color: AppColors.textMuted, size: AppSizes.iconLg),
-              activeIcon: AppIcons.tests(color: AppColors.skyBlue, size: AppSizes.iconLg),
-              label: "Tests",
             ),
             BottomNavigationBarItem(
               icon: AppIcons.profile(color: AppColors.textMuted, size: AppSizes.iconLg),

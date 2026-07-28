@@ -137,18 +137,18 @@ class RoutesConfig {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                name: RouteNames.announcements,
-                path: RoutePaths.announcements,
-                builder: (context, state) => const AnnouncementsPage(),
+                name: RouteNames.tests,
+                path: RoutePaths.tests,
+                builder: (context, state) => const TestsPage(),
               ),
             ],
           ),
           StatefulShellBranch(
             routes: [
               GoRoute(
-                name: RouteNames.tests,
-                path: RoutePaths.tests,
-                builder: (context, state) => const TestsPage(),
+                name: RouteNames.announcements,
+                path: RoutePaths.announcements,
+                builder: (context, state) => const AnnouncementsPage(),
               ),
             ],
           ),

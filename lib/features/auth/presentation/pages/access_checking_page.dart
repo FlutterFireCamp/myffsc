@@ -10,94 +10,96 @@ class AccessCheckingPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Spacer(),
-              // Logo
-              SizedBox(
-                height: 22.h,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Center(
-                      child: Text(
-                        "FFSC",
-                        style: AppTextStyles.h1.copyWith(
-                          color: AppColors.skyBlue,
+        child: SizedBox.expand(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Spacer(flex: 2),
+                // Logo
+                SizedBox(
+                  height: 20.h,
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Text(
+                          "FFSC",
+                          style: AppTextStyles.h1.copyWith(
+                            color: AppColors.skyBlue,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: 2.5.h),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Flutter",
-                      style: AppTextStyles.heroTitle.copyWith(
-                        color: const Color(0xFF0288D1),
-                      ),
-                    ),
-                    TextSpan(
-                      text: "Fire\n",
-                      style: AppTextStyles.heroTitle.copyWith(
-                        color: AppColors.firebaseOrange,
-                      ),
-                    ),
-                    TextSpan(
-                      text: "Summer ",
-                      style: AppTextStyles.heroSubtitle.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFFFFCA28),
-                      ),
-                    ),
-                    TextSpan(
-                      text: "Camp 💙☀️",
-                      style: AppTextStyles.heroSubtitle.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 1.2.h),
-              Text(
-                "Portail Apprenant",
-                textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMedium,
-              ),
-              const Spacer(),
-
-              // Thin Progress Bar & Text
-              SizedBox(
-                width: 55.w,
-                child: ClipRRect(
-                  borderRadius: AppRadius.circular8,
-                  child: const LinearProgressIndicator(
-                    minHeight: 2,
-                    backgroundColor: AppColors.ultraDark,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.skyBlue),
+                      );
+                    },
                   ),
                 ),
-              ),
-              SizedBox(height: 1.8.h),
-              Text(
-                "Vérification de votre accès...",
-                textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textSecondary,
+                SizedBox(height: 2.5.h),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Flutter",
+                        style: AppTextStyles.heroTitle.copyWith(
+                          color: const Color(0xFF0288D1),
+                        ),
+                      ),
+                      TextSpan(
+                        text: "Fire\n",
+                        style: AppTextStyles.heroTitle.copyWith(
+                          color: AppColors.firebaseOrange,
+                        ),
+                      ),
+                      TextSpan(
+                        text: "Summer ",
+                        style: AppTextStyles.heroSubtitle.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFFFFCA28),
+                        ),
+                      ),
+                      TextSpan(
+                        text: "Camp 💙☀️",
+                        style: AppTextStyles.heroSubtitle.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              SizedBox(height: 2.h),
-            ],
+                SizedBox(height: 1.2.h),
+                Text(
+                  "Portail Apprenant",
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyMedium,
+                ),
+                const Spacer(flex: 2),
+
+                // Thin Progress Bar & Text
+                SizedBox(
+                  width: 55.w,
+                  child: ClipRRect(
+                    borderRadius: AppRadius.circular8,
+                    child: const LinearProgressIndicator(
+                      minHeight: 2,
+                      backgroundColor: AppColors.ultraDark,
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.skyBlue),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 1.8.h),
+                Text(
+                  "Vérification de votre accès...",
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const Spacer(flex: 1),
+              ],
+            ),
           ),
         ),
       ),
