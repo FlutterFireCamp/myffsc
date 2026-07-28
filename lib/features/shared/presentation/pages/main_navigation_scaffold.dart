@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
+import '../../../forms/presentation/widgets/forms_modal_helper.dart';
 
 class MainNavigationScaffold extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
@@ -22,6 +23,18 @@ class MainNavigationScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: navigationShell,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          FormsModalHelper.showFormsSelectionSheet(context);
+        },
+        backgroundColor: AppColors.skyBlue,
+        elevation: 4,
+        child: AppIcons.forms(
+          color: AppColors.ultraDark,
+          size: AppSizes.iconLg,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           color: AppColors.ultraDark,
@@ -53,11 +66,6 @@ class MainNavigationScaffold extends StatelessWidget {
               icon: AppIcons.announcements(color: AppColors.textMuted, size: AppSizes.iconLg),
               activeIcon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
               label: "Annonces",
-            ),
-            BottomNavigationBarItem(
-              icon: AppIcons.forms(color: AppColors.textMuted, size: AppSizes.iconLg),
-              activeIcon: AppIcons.forms(color: AppColors.skyBlue, size: AppSizes.iconLg),
-              label: "Formulaires",
             ),
             BottomNavigationBarItem(
               icon: AppIcons.tests(color: AppColors.textMuted, size: AppSizes.iconLg),

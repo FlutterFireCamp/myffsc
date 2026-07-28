@@ -106,6 +106,11 @@ class RoutesConfig {
           return UnauthorizedPage(user: user);
         },
       ),
+      GoRoute(
+        name: RouteNames.forms,
+        path: RoutePaths.forms,
+        builder: (context, state) => const FormsPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainNavigationScaffold(navigationShell: navigationShell);
@@ -135,15 +140,6 @@ class RoutesConfig {
                 name: RouteNames.announcements,
                 path: RoutePaths.announcements,
                 builder: (context, state) => const AnnouncementsPage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                name: RouteNames.forms,
-                path: RoutePaths.forms,
-                builder: (context, state) => const FormsPage(),
               ),
             ],
           ),
