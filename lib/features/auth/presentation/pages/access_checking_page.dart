@@ -10,78 +10,112 @@ class AccessCheckingPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Spacer(),
-              // Centered App Logo
-              SizedBox(
-                height: 22.h,
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Center(
-                      child: Text(
-                        "FFSC",
-                        style: AppTextStyles.heroTitle.copyWith(
-                          color: AppColors.skyBlue,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 2.h),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 24.h,
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(
+                              child: Text(
+                                "FFSC",
+                                style: AppTextStyles.h1.copyWith(
+                                  color: AppColors.skyBlue,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: 2.5.h),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "FlutterFire ",
-                      style: AppTextStyles.titleLarge.copyWith(
-                        color: AppColors.skyBlue,
+                      SizedBox(height: 2.5.h),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Flutter",
+                              style: AppTextStyles.heroTitle.copyWith(
+                                color: const Color(0xFF0288D1),
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Fire\n",
+                              style: AppTextStyles.heroTitle.copyWith(
+                                color: AppColors.firebaseOrange,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Summer ",
+                              style: AppTextStyles.heroSubtitle.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFFFFCA28),
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Camp 💙☀️",
+                              style: AppTextStyles.heroSubtitle.copyWith(
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                    ),
-                    TextSpan(
-                      text: "Summer Camp",
-                      style: AppTextStyles.titleMedium.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.normal,
+                      SizedBox(height: 1.2.h),
+                      Text(
+                        "Portail Apprenant",
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.bodyMedium,
                       ),
-                    ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const Spacer(),
-
-              // Bottom Progress & Verification Text
-              SizedBox(
-                width: 45.w,
-                child: ClipRRect(
-                  borderRadius: AppRadius.circular8,
-                  child: LinearProgressIndicator(
-                    minHeight: 4,
-                    backgroundColor: AppColors.ultraDark,
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      AppColors.skyBlue,
-                    ),
+                    ],
                   ),
                 ),
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                "Vérification...",
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textSecondary,
-                  letterSpacing: 0.3,
+                SizedBox(height: 3.h),
+
+                // Access Verification Container (Identical dimensions to Login Box)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: AppRadius.circular20,
+                    border: Border.all(color: AppColors.borderSubtle),
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: AppRadius.circular8,
+                          child: const LinearProgressIndicator(
+                            minHeight: 5,
+                            backgroundColor: AppColors.ultraDark,
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.skyBlue),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 2.5.h),
+                      Text(
+                        "Vérification de votre accès...",
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 2.h),
-            ],
+              ],
+            ),
           ),
         ),
       ),
