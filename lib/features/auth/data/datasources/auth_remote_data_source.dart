@@ -92,41 +92,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw Exception("Échec de la récupération de l'utilisateur Firebase.");
       }
 
-      // Fetch user document from Firestore 'users' collection
-      final docRef = firestore.collection('users').doc(firebaseUser.uid);
-      final docSnap = await docRef.get();
+      final email = firebaseUser.email ?? googleUser.email;
+      final photoUrl = firebaseUser.photoURL ?? googleUser.photoUrl;
+      final displayName = firebaseUser.displayName ?? googleUser.displayName;
 
-      final googlePhotoUrl = firebaseUser.photoURL ?? googleUser.photoUrl;
-
-      if (docSnap.exists && docSnap.data() != null) {
-        final data = Map<String, dynamic>.from(docSnap.data()!);
-
-        // Sync Google photoUrl to Firestore document if present and missing/different
-        if (googlePhotoUrl != null && googlePhotoUrl.isNotEmpty) {
-          if (data['photoUrl'] != googlePhotoUrl) {
-            dev.log('Updating user photoUrl in Firestore to: $googlePhotoUrl', name: 'AUTH_REMOTE_DS');
-            await docRef.update({'photoUrl': googlePhotoUrl});
-            data['photoUrl'] = googlePhotoUrl;
-          }
-        }
-
-        dev.log('Fetched existing user doc for UID: ${firebaseUser.uid}', name: 'AUTH_REMOTE_DS');
-        return UserModel.fromMap(data, firebaseUser.uid);
-      } else {
-        dev.log('User doc not found. Creating new user doc for UID: ${firebaseUser.uid}', name: 'AUTH_REMOTE_DS');
-        final newUser = UserModel(
-          id: firebaseUser.uid,
-          name: firebaseUser.displayName ?? googleUser.displayName ?? 'Apprenant FFSC',
-          email: firebaseUser.email ?? googleUser.email,
-          role: 'student',
-          level: 1,
-          status: 'pending', // Requires admin approval
-          photoUrl: googlePhotoUrl,
-          createdAt: DateTime.now().toIso8601String(),
-        );
-        await docRef.set(newUser.toMap());
-        return newUser;
-      }
+      return await _fetchAndSyncExistingUserDoc(
+        firebaseUid: firebaseUser.uid,
+        email: email,
+        displayName: displayName,
+        googlePhotoUrl: photoUrl,
+      );
     } on UserCanceledException {
       rethrow;
     } catch (e, stackTrace) {
@@ -144,40 +119,93 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return null;
       }
 
-      final docRef = firestore.collection('users').doc(firebaseUser.uid);
-      final docSnap = await docRef.get();
-
-      final googlePhotoUrl = firebaseUser.photoURL;
-
-      if (docSnap.exists && docSnap.data() != null) {
-        final data = Map<String, dynamic>.from(docSnap.data()!);
-
-        if (googlePhotoUrl != null && googlePhotoUrl.isNotEmpty) {
-          if (data['photoUrl'] != googlePhotoUrl) {
-            dev.log('Syncing updated Google photoUrl for UID: ${firebaseUser.uid}', name: 'AUTH_REMOTE_DS');
-            await docRef.update({'photoUrl': googlePhotoUrl});
-            data['photoUrl'] = googlePhotoUrl;
-          }
-        }
-
-        dev.log('Successfully fetched current user doc: ${firebaseUser.uid}', name: 'AUTH_REMOTE_DS');
-        return UserModel.fromMap(data, firebaseUser.uid);
-      } else {
-        dev.log('User doc missing in Firestore for current auth user: ${firebaseUser.uid}', name: 'AUTH_REMOTE_DS');
-        return UserModel(
-          id: firebaseUser.uid,
-          name: firebaseUser.displayName ?? 'Apprenant FFSC',
-          email: firebaseUser.email ?? '',
-          role: 'student',
-          level: 1,
-          status: 'pending',
-          photoUrl: googlePhotoUrl,
-        );
-      }
+      return await _fetchAndSyncExistingUserDoc(
+        firebaseUid: firebaseUser.uid,
+        email: firebaseUser.email,
+        displayName: firebaseUser.displayName,
+        googlePhotoUrl: firebaseUser.photoURL,
+      );
     } catch (e, stackTrace) {
       dev.log('Error fetching getCurrentUser', name: 'AUTH_REMOTE_DS', error: e, stackTrace: stackTrace);
       rethrow;
     }
+  }
+
+  /// Finds an existing user document where `email == user.email` (or docId == firebaseUid).
+  /// Updates only `photoUrl` if changed and returns the UserModel.
+  /// Never creates a new document in Firestore.
+  Future<UserModel> _fetchAndSyncExistingUserDoc({
+    required String firebaseUid,
+    required String? email,
+    required String? displayName,
+    required String? googlePhotoUrl,
+  }) async {
+    QueryDocumentSnapshot<Map<String, dynamic>>? existingDoc;
+
+    // 1. Primary search: Query Firestore for existing document where email == user.email
+    if (email != null && email.isNotEmpty) {
+      final querySnap = await firestore
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      if (querySnap.docs.isNotEmpty) {
+        existingDoc = querySnap.docs.first;
+      }
+    }
+
+    // 2. Secondary search: Check doc with ID matching firebaseUid
+    DocumentSnapshot<Map<String, dynamic>>? docByIdSnap;
+    if (existingDoc == null) {
+      final docSnap = await firestore.collection('users').doc(firebaseUid).get();
+      if (docSnap.exists && docSnap.data() != null) {
+        docByIdSnap = docSnap;
+      }
+    }
+
+    final docRefToUpdate = existingDoc != null
+        ? existingDoc.reference
+        : docByIdSnap?.reference;
+
+    final data = existingDoc != null
+        ? Map<String, dynamic>.from(existingDoc.data())
+        : (docByIdSnap != null ? Map<String, dynamic>.from(docByIdSnap.data()!) : null);
+
+    final docId = existingDoc != null
+        ? existingDoc.id
+        : (docByIdSnap != null ? docByIdSnap.id : firebaseUid);
+
+    if (data != null && docRefToUpdate != null) {
+      // Sync photoUrl if present and changed
+      if (googlePhotoUrl != null && googlePhotoUrl.isNotEmpty) {
+        if (data['photoUrl'] != googlePhotoUrl) {
+          dev.log('Updating photoUrl in existing user doc ($docId) to $googlePhotoUrl', name: 'AUTH_REMOTE_DS');
+          await docRefToUpdate.update({'photoUrl': googlePhotoUrl});
+          data['photoUrl'] = googlePhotoUrl;
+        }
+      }
+
+      dev.log('Found existing user doc for email ($email) / docId ($docId)', name: 'AUTH_REMOTE_DS');
+      return UserModel.fromMap(data, docId);
+    }
+
+    // 3. If NO document exists in Firestore for this email/UID:
+    // DO NOT create a new document in Firestore per user requirements.
+    dev.log(
+      'No pre-existing Firestore document found for email: $email. Returning unapproved user state without creating Firestore doc.',
+      name: 'AUTH_REMOTE_DS',
+    );
+    return UserModel(
+      id: firebaseUid,
+      name: displayName ?? 'Apprenant FFSC',
+      email: email ?? '',
+      role: 'student',
+      level: 1,
+      status: 'pending',
+      photoUrl: googlePhotoUrl,
+      createdAt: DateTime.now().toIso8601String(),
+    );
   }
 
   @override
