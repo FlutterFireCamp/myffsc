@@ -174,12 +174,7 @@ class _FormsPageState extends State<FormsPage> {
         ),
       ),
       onSubmit: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Feedback transmis à l'équipe pédagogique avec succès !"),
-            backgroundColor: AppColors.actionBlue,
-          ),
-        );
+        AppSnackBar.showSuccess(context, "Feedback transmis à l'équipe pédagogique avec succès !");
         _feedbackController.clear();
       },
     );
@@ -222,12 +217,7 @@ class _FormsPageState extends State<FormsPage> {
         ],
       ),
       onSubmit: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Signalement anonyme envoyé en toute confidentialité."),
-            backgroundColor: AppColors.correctBorder,
-          ),
-        );
+        AppSnackBar.showSuccess(context, "Signalement anonyme envoyé en toute confidentialité.");
         _reportController.clear();
       },
     );
@@ -244,12 +234,7 @@ class _FormsPageState extends State<FormsPage> {
         ),
       ),
       onSubmit: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Idée envoyée ! Merci pour votre contribution."),
-            backgroundColor: AppColors.firebaseYellow,
-          ),
-        );
+        AppSnackBar.showSuccess(context, "Idée envoyée ! Merci pour votre contribution.");
         _ideaController.clear();
       },
     );

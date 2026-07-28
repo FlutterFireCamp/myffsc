@@ -16,12 +16,7 @@ class LoginPage extends StatelessWidget {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthErrorState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message, style: AppTextStyles.bodyMedium),
-                backgroundColor: AppColors.errorText,
-              ),
-            );
+            AppSnackBar.showError(context, state.message);
           }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
@@ -126,43 +121,66 @@ class LoginPage extends StatelessWidget {
                               style: AppTextStyles.bodySmall,
                             ),
                             SizedBox(height: 3.h),
-                            ElevatedButton.icon(
-                              onPressed: isLoading
-                                  ? null
-                                  : () {
-                                      context.read<AuthBloc>().add(
-                                        SignInWithGoogleRequested(),
-                                      );
-                                    },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.skyBlue,
-                                foregroundColor: AppColors.ultraDark,
-                                padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                                shape: const RoundedRectangleBorder(
-                                  borderRadius: AppRadius.circular14,
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: isLoading
+                                    ? null
+                                    : () {
+                                        context.read<AuthBloc>().add(
+                                              SignInWithGoogleRequested(),
+                                            );
+                                      },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.skyBlue,
+                                  foregroundColor: AppColors.ultraDark,
+                                  disabledBackgroundColor: AppColors.skyBlue.withValues(alpha: 0.65),
+                                  disabledForegroundColor: AppColors.ultraDark,
+                                  padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: AppRadius.circular14,
+                                  ),
+                                  elevation: 2,
                                 ),
-                              ),
-                              icon: isLoading
-                                  ? const SizedBox(
-                                      width: 20,
-                                      height: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: AppColors.ultraDark,
+                                child: isLoading
+                                    ? Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 22,
+                                            height: 22,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.5,
+                                              color: AppColors.ultraDark,
+                                            ),
+                                          ),
+                                          SizedBox(width: 3.w),
+                                          Text(
+                                            "Connexion en cours...",
+                                            style: AppTextStyles.button.copyWith(
+                                              color: AppColors.ultraDark,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          AppIcons.google(
+                                            color: AppColors.ultraDark,
+                                            size: AppSizes.iconMd,
+                                          ),
+                                          SizedBox(width: 3.w),
+                                          Text(
+                                            "Continuer avec Google",
+                                            style: AppTextStyles.button.copyWith(
+                                              color: AppColors.ultraDark,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    )
-                                  : AppIcons.google(
-                                      color: AppColors.ultraDark,
-                                      size: AppSizes.iconMd,
-                                    ),
-                              label: Text(
-                                isLoading
-                                    ? "Connexion en cours..."
-                                    : "Continuer avec Google",
-                                style: AppTextStyles.button.copyWith(
-                                  color: AppColors.ultraDark,
-                                  fontWeight: FontWeight.bold,
-                                ),
                               ),
                             ),
                           ],
