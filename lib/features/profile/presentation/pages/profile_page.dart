@@ -65,19 +65,6 @@ class ProfilePage extends StatelessWidget {
                   currentUser.email,
                   style: AppTextStyles.bodyMedium,
                 ),
-                SizedBox(height: 1.5.h),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.correctContainer,
-                    borderRadius: AppRadius.circular20,
-                    border: Border.all(color: AppColors.correctBorder),
-                  ),
-                  child: Text(
-                    "Statut : ${currentUser.status.toUpperCase()} • Apprenant FFSC 💙☀️",
-                    style: AppTextStyles.badgeSmall.copyWith(color: AppColors.correctText),
-                  ),
-                ),
               ],
             ),
           ),
