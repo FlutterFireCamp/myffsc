@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "940039203312",
+    "project_id": "flutterfiresummercamp",
+    "storage_bucket": "flutterfiresummercamp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940039203312:android:9c815883b06e8482f89535",
+        "android_client_info": {
+          "package_name": "com.flutterfirecamp.myffsc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940039203312-dgmo6fr82npo9ts44c1vrr4f7rtild2b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDn4ZHi1gKT44o97Ct-SABcxAWsmR06OLE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940039203312-dgmo6fr82npo9ts44c1vrr4f7rtild2b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
