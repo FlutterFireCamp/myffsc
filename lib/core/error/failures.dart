@@ -16,6 +16,10 @@ class AuthFailure extends Failure {
   const AuthFailure([super.message = "Échec de l'authentification."]);
 }
 
+class UserCanceledFailure extends Failure {
+  const UserCanceledFailure([super.message = "Connexion annulée par l'utilisateur."]);
+}
+
 class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure([super.message = "Vous n'êtes pas autorisé à accéder à cette application."]);
 }

@@ -1,5 +1,6 @@
 import 'dart:developer' as dev;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/error/failures.dart';
 import '../../../../core/utils/usecase.dart';
 import '../../domain/usecases/auth_usecases.dart';
 import 'auth_event.dart';
@@ -58,8 +59,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     result.fold(
       (failure) {
-        dev.log('SignInWithGoogle failed: ${failure.message}', name: 'AUTH_BLOC');
-        emit(AuthErrorState(failure.message));
+        if (failure is UserCanceledFailure) {
+          dev.log('SignInWithGoogle cancelled by user -> emit UnauthenticatedState', name: 'AUTH_BLOC');
+          emit(UnauthenticatedState());
+        } else {
+          dev.log('SignInWithGoogle failed: ${failure.message}', name: 'AUTH_BLOC');
+          emit(AuthErrorState(failure.message));
+        }
       },
       (user) {
         if (user.isAuthorized) {

@@ -15,6 +15,9 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final user = await remoteDataSource.signInWithGoogle();
       return Right(user);
+    } on UserCanceledException catch (e) {
+      dev.log('Sign in cancelled by user', name: 'AUTH_REPOSITORY');
+      return Left(UserCanceledFailure(e.message));
     } catch (e, stackTrace) {
       dev.log(
         'AuthRepository.signInWithGoogle failed',

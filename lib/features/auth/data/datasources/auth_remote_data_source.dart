@@ -4,6 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../models/user_model.dart';
 
+class UserCanceledException implements Exception {
+  final String message;
+  const UserCanceledException([this.message = "Connexion Google annulée par l'utilisateur."]);
+
+  @override
+  String toString() => message;
+}
+
 abstract class AuthRemoteDataSource {
   Future<UserModel> signInWithGoogle();
   Future<UserModel?> getCurrentUser();
@@ -14,7 +22,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
   final GoogleSignIn googleSignIn;
   final FirebaseFirestore firestore;
-
   final String? serverClientId;
 
   AuthRemoteDataSourceImpl({
@@ -34,20 +41,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           ? serverClientId
           : (envServerClientId.isNotEmpty
               ? envServerClientId
-              : '1234567890-webclientid.apps.googleusercontent.com');
+              : '940039203312-dgmo6fr82npo9ts44c1vrr4f7rtild2b.apps.googleusercontent.com');
 
-      dev.log('Initializing GoogleSignIn with serverClientId...', name: 'AUTH_REMOTE_DS');
+      dev.log('Initializing GoogleSignIn with serverClientId ($clientIdToUse)...', name: 'AUTH_REMOTE_DS');
       await googleSignIn.initialize(
         serverClientId: clientIdToUse,
       );
 
-      GoogleSignInAccount googleUser;
+      GoogleSignInAccount? googleUser;
       try {
         googleUser = await googleSignIn.authenticate();
       } on GoogleSignInException catch (e) {
         if (e.code == GoogleSignInExceptionCode.canceled) {
           dev.log('Google Sign-In cancelled by user', name: 'AUTH_REMOTE_DS');
-          throw Exception("Connexion Google annulée par l'utilisateur.");
+          throw const UserCanceledException();
         } else if (e.code == GoogleSignInExceptionCode.clientConfigurationError) {
           dev.log(
             'Google Sign-In client configuration error. serverClientId must be provided in Firebase Console / WEB_CLIENT_ID env variable.',
@@ -55,7 +62,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             error: e,
           );
           throw Exception(
-            "Configuration Google Sign-In requise : veuillez spécifier le Web Client ID dans Firebase Console.",
+            "Configuration Google Sign-In requise : veuillez vérifier le Web Client ID dans Firebase Console.",
           );
         }
         rethrow;
@@ -113,6 +120,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await docRef.set(newUser.toMap());
         return newUser;
       }
+    } on UserCanceledException {
+      rethrow;
     } catch (e, stackTrace) {
       dev.log('Error during signInWithGoogle', name: 'AUTH_REMOTE_DS', error: e, stackTrace: stackTrace);
       rethrow;

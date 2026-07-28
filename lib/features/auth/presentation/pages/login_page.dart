@@ -36,16 +36,15 @@ class LoginPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Top Section: Clean Logo Image (No circle border) & Titles
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 2.h),
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 14.h,
+                              height: 24.h,
                               child: Image.asset(
                                 'assets/images/logo.png',
-                                fit: BoxFit.contain,
+                                fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Center(
                                     child: Text(
