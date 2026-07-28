@@ -1,19 +1,32 @@
 ---
 name: Demande de Fonctionnalité
-about: Proposer une nouvelle idée pour l'application My FFSC
+about: Proposer une nouvelle idée ou amélioration pour l'application My FFSC 💙☀️
 title: '[FEAT] '
 labels: 'enhancement'
 assignees: ''
 ---
 
-**Est-ce que votre demande est liée à un problème ?**
-Une description claire et concise du problème [ex: Je suis toujours frustré quand...].
+## 🚀 Résumé de la Fonctionnalité
+Une description synthétique et claire de la nouvelle fonctionnalité proposée.
 
-**Solution proposée**
-Une description claire de la fonctionnalité souhaitée.
+## 🎯 Problème ou Besoin Utilisateur
+Expliquez le besoin ou le problème auquel cette fonctionnalité répond :
+> *Exemple : "En tant qu'apprenant, je souhaite pouvoir filtrer les cours du programme par niveau pour accéder plus rapidement à mes modules."*
 
-**Alternatives envisagées**
-Une description des solutions alternatives que vous avez envisagées.
+## 💡 Solution Proposée & Impact Architecture
+Décrivez en détail le fonctionnement souhaité :
+- **Impact UI / UX** : Quels écrans ou widgets seront modifiés ou ajoutés ?
+- **Impact Clean Architecture & BLoC** :
+  - **Domain** : Entités ou UseCases requis.
+  - **Data** : Sources de données ou collections Firestore concernées.
+  - **Presentation** : Nouveaux événements / états BLoC nécessaires.
 
-**Contexte supplémentaire**
-Ajoutez tout autre contexte ou capture d'écran sur la demande de fonctionnalité ici.
+## 🎨 Maquettes / Recommandations Visuelles
+Ajoutez des croquis, schémas, maquettes Figma ou références d'interface si disponible.
+
+## 🔄 Alternatives Envisagées
+Avez-vous envisagé d'autres approches pour répondre à ce besoin ?
+
+## 📋 Checklist de Validation
+- [ ] J'ai vérifié qu'une demande identique n'existe pas déjà dans les Issues.
+- [ ] La fonctionnalité respecte le design system (Colors, Outfit, HugeIcons).
