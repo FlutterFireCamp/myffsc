@@ -37,12 +37,13 @@ class RoutesConfig {
   RoutesConfig({required this.authBloc});
 
   late final GoRouter router = GoRouter(
-    initialLocation: RoutePaths.dashboard,
+    initialLocation: RoutePaths.checking,
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
     redirect: (BuildContext context, GoRouterState state) {
       final authState = authBloc.state;
       final location = state.matchedLocation;
 
+      final isChecking = location == RoutePaths.checking;
       final isLoggingIn = location == RoutePaths.login;
       final isUnauthorized = location == RoutePaths.unauthorized;
 
@@ -50,6 +51,14 @@ class RoutesConfig {
         'GoRouter evaluating redirect -> Path: $location, AuthState: ${authState.runtimeType}',
         name: 'ROUTER',
       );
+
+      if (authState is AuthInitialState || authState is AuthLoadingState) {
+        if (!isChecking) {
+          dev.log('Displaying access checking page', name: 'ROUTER');
+          return RoutePaths.checking;
+        }
+        return null;
+      }
 
       if (authState is UnauthenticatedState || authState is AuthErrorState) {
         if (!isLoggingIn) {
@@ -68,7 +77,7 @@ class RoutesConfig {
       }
 
       if (authState is AuthenticatedState) {
-        if (isLoggingIn || isUnauthorized || location == '/') {
+        if (isLoggingIn || isUnauthorized || isChecking || location == '/') {
           dev.log('Redirecting authenticated user to ${RoutePaths.dashboard}', name: 'ROUTER');
           return RoutePaths.dashboard;
         }
@@ -77,6 +86,11 @@ class RoutesConfig {
       return null;
     },
     routes: [
+      GoRoute(
+        name: RouteNames.checking,
+        path: RoutePaths.checking,
+        builder: (context, state) => const AccessCheckingPage(),
+      ),
       GoRoute(
         name: RouteNames.login,
         path: RoutePaths.login,

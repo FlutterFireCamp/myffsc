@@ -122,16 +122,17 @@ class UnauthorizedPage extends StatelessWidget {
                 },
                 style: OutlinedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 8.w),
-                  side: const BorderSide(color: AppColors.borderSubtle),
+                  backgroundColor: AppColors.incorrectContainer,
+                  side: const BorderSide(color: AppColors.incorrectBorder, width: 1.5),
                   shape: const RoundedRectangleBorder(
                     borderRadius: AppRadius.circular14,
                   ),
                 ),
-                icon: AppIcons.logout(color: AppColors.textSecondary, size: 20),
+                icon: AppIcons.logout(color: AppColors.errorText, size: 20),
                 label: Text(
                   "Se déconnecter",
                   style: AppTextStyles.button.copyWith(
-                    color: AppColors.textPrimary,
+                    color: AppColors.errorText,
                   ),
                 ),
               ),

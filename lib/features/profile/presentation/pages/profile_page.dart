@@ -127,9 +127,10 @@ class ProfilePage extends StatelessWidget {
             ),
             SizedBox(height: 1.5.h),
             _ProfileTile(
-              icon: AppIcons.lock(color: AppColors.errorText, size: AppSizes.iconMd),
+              icon: AppIcons.logout(color: AppColors.errorText, size: AppSizes.iconMd),
               title: "Déconnexion",
               subtitle: "Se déconnecter du compte Google",
+              isDestructive: true,
               onTap: () {
                 context.read<AuthBloc>().add(SignOutRequested());
               },
@@ -176,12 +177,14 @@ class _ProfileTile extends StatelessWidget {
   final Widget icon;
   final String title;
   final String subtitle;
+  final bool isDestructive;
   final VoidCallback onTap;
 
   const _ProfileTile({
     required this.icon,
     required this.title,
     required this.subtitle,
+    this.isDestructive = false,
     required this.onTap,
   });
 
@@ -189,22 +192,31 @@ class _ProfileTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: isDestructive ? AppColors.incorrectContainer.withValues(alpha: 0.4) : AppColors.card,
         borderRadius: AppRadius.circular14,
-        border: Border.all(color: AppColors.borderSubtle),
+        border: Border.all(
+          color: isDestructive ? AppColors.incorrectBorder.withValues(alpha: 0.6) : AppColors.borderSubtle,
+        ),
       ),
       child: ListTile(
         onTap: onTap,
         leading: icon,
         title: Text(
           title,
-          style: AppTextStyles.titleMedium,
+          style: AppTextStyles.titleMedium.copyWith(
+            color: isDestructive ? AppColors.errorText : AppColors.textPrimary,
+          ),
         ),
         subtitle: Text(
           subtitle,
-          style: AppTextStyles.bodySmall,
+          style: AppTextStyles.bodySmall.copyWith(
+            color: isDestructive ? AppColors.alertRed.withValues(alpha: 0.8) : AppColors.textSecondary,
+          ),
         ),
-        trailing: AppIcons.arrowRight(color: AppColors.textMuted, size: AppSizes.iconSm),
+        trailing: AppIcons.arrowRight(
+          color: isDestructive ? AppColors.errorText : AppColors.textMuted,
+          size: AppSizes.iconSm,
+        ),
       ),
     );
   }
