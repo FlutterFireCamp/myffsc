@@ -29,6 +29,15 @@ class AppTheme {
         titleTextStyle: AppTextStyles.h3,
         iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: AppColors.modalBackground,
+        modalBackgroundColor: AppColors.modalBackground,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r20)),
+        ),
+      ),
       cardTheme: CardThemeData(
         color: AppColors.card,
         elevation: 0,

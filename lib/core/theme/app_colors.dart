@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Arrière-plans & Cartes (Fond Sombre Immersif)
+  // Arrière-plans & Cartes (Fond Sombre Immersif & 100% Opaque)
   static const Color background = Color(0xFF070A13);
   static const Color ultraDark = Color(0xFF04050A);
-  static const Color card = Color.fromRGBO(15, 23, 42, 0.65); // Slate 900 / 0.65
-  static const Color cardHover = Color.fromRGBO(30, 41, 59, 0.75); // Slate 800 / 0.75
+  static const Color modalBackground = Color(0xFF0F172A); // Slate 900 (100% Opaque - 0% Transparence)
+  static const Color card = Color(0xFF0F172A); // Slate 900 (100% Opaque - 0% Transparence)
+  static const Color cardHover = Color(0xFF1E293B); // Slate 800 (100% Opaque)
   static const Color borderSubtle = Color.fromRGBO(255, 255, 255, 0.12);
 
   // Les Bleus (Accents Flutter & Thème Principal)

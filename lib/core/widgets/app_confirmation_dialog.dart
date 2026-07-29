@@ -46,7 +46,7 @@ class AppConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: AppColors.card,
+      backgroundColor: AppColors.modalBackground,
       surfaceTintColor: Colors.transparent,
       elevation: 8,
       shape: const RoundedRectangleBorder(
