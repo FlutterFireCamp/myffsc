@@ -44,16 +44,11 @@ class ProfilePage extends StatelessWidget {
             ),
             child: Column(
               children: [
-                CircleAvatar(
+                AppCachedAvatar(
+                  imageUrl: currentUser.photoUrl,
                   radius: 40,
-                  backgroundColor: AppColors.flutterBlue,
-                  backgroundImage: currentUser.photoUrl != null ? NetworkImage(currentUser.photoUrl!) : null,
-                  child: currentUser.photoUrl == null
-                      ? Text(
-                          currentUser.firstName.isNotEmpty ? currentUser.firstName[0].toUpperCase() : 'A',
-                          style: AppTextStyles.h1.copyWith(color: Colors.white),
-                        )
-                      : null,
+                  fallbackInitial: currentUser.firstName,
+                  fallbackTextStyle: AppTextStyles.h1.copyWith(color: Colors.white),
                 ),
                 SizedBox(height: 1.5.h),
                 Text(

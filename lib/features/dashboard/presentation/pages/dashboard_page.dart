@@ -48,16 +48,11 @@ class DashboardPage extends StatelessWidget {
         elevation: 0,
         title: Row(
           children: [
-            CircleAvatar(
+            AppCachedAvatar(
+              imageUrl: currentUser.photoUrl,
               radius: 20,
-              backgroundColor: AppColors.flutterBlue,
-              backgroundImage: currentUser.photoUrl != null ? NetworkImage(currentUser.photoUrl!) : null,
-              child: currentUser.photoUrl == null
-                  ? Text(
-                      currentUser.firstName.isNotEmpty ? currentUser.firstName[0].toUpperCase() : 'A',
-                      style: AppTextStyles.titleMedium,
-                    )
-                  : null,
+              fallbackInitial: currentUser.firstName,
+              fallbackTextStyle: AppTextStyles.titleMedium,
             ),
             SizedBox(width: 3.w),
             Column(

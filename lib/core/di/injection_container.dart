@@ -15,10 +15,16 @@ final sl = GetIt.instance;
 Future<void> initInjector() async {
   dev.log('Initializing Dependency Injection Container...', name: 'DI_CONTAINER');
 
-  // External
+  // External & Cache Configuration
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn.instance);
-  sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+  
+  final firestore = FirebaseFirestore.instance;
+  firestore.settings = const Settings(
+    persistenceEnabled: true,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+  );
+  sl.registerLazySingleton<FirebaseFirestore>(() => firestore);
 
   // Data Sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
