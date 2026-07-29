@@ -75,9 +75,9 @@ class DashboardPage extends StatelessWidget {
             margin: EdgeInsets.only(right: 4.w),
             padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
             decoration: BoxDecoration(
-              color: AppColors.firebaseOrange.withValues(alpha: 0.15),
+              color: AppColors.firebaseYellow.withValues(alpha: 0.15),
               borderRadius: AppRadius.circular12,
-              border: Border.all(color: AppColors.firebaseOrange, width: 1),
+              border: Border.all(color: AppColors.firebaseYellow, width: 1),
             ),
             child: Row(
               children: [

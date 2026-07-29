@@ -30,16 +30,16 @@ class TestsPage extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(4.w),
                   decoration: BoxDecoration(
-                    color: AppColors.alertRed.withValues(alpha: 0.15),
+                    color: AppColors.firebaseYellow.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: AppColors.alertRed.withValues(alpha: 0.3),
+                      color: AppColors.firebaseYellow.withValues(alpha: 0.3),
                       width: 1.5,
                     ),
                   ),
                   child: AppIcons.tests(
                     size: 36,
-                    color: AppColors.alertRed,
+                    color: AppColors.firebaseYellow,
                   ),
                 ),
                 SizedBox(height: 2.5.h),

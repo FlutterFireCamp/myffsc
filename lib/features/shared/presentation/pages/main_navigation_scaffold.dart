@@ -72,26 +72,26 @@ class MainNavigationScaffold extends StatelessWidget {
               icon: Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: AppColors.alertRed.withValues(alpha: 0.18),
+                  color: AppColors.firebaseYellow.withValues(alpha: 0.18),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.alertRed,
+                    color: AppColors.firebaseYellow,
                     width: 1.5,
                   ),
                 ),
-                child: AppIcons.tests(color: AppColors.alertRed, size: AppSizes.iconLg),
+                child: AppIcons.tests(color: AppColors.firebaseYellow, size: AppSizes.iconLg),
               ),
               activeIcon: Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: AppColors.alertRed,
+                  color: AppColors.firebaseYellow,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: AppColors.alertRed,
+                    color: AppColors.firebaseYellow,
                     width: 1.5,
                   ),
                 ),
-                child: AppIcons.tests(color: Colors.white, size: AppSizes.iconLg),
+                child: AppIcons.tests(color: AppColors.ultraDark, size: AppSizes.iconLg),
               ),
               label: "",
             ),
