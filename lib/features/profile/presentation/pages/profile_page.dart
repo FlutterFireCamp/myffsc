@@ -78,121 +78,103 @@ class ProfilePage extends StatelessWidget {
               borderRadius: AppRadius.circular20,
               border: Border.all(color: AppColors.borderSubtle),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Stack(
               children: [
-                AppCachedAvatar(
-                  imageUrl: currentUser.photoUrl,
-                  radius: 40,
-                  fallbackInitial: currentUser.firstName,
-                  fallbackTextStyle: AppTextStyles.h1.copyWith(color: Colors.white),
-                ),
-                SizedBox(height: 1.5.h),
-                Text(
-                  currentUser.name,
-                  style: AppTextStyles.h3,
-                  textAlign: TextAlign.center,
-                ),
-
-                // Headline / Spécialité
-                if (currentUser.headline != null && currentUser.headline!.isNotEmpty) ...[
-                  SizedBox(height: 0.4.h),
-                  Text(
-                    currentUser.headline!,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.skyBlue,
-                      fontWeight: FontWeight.w600,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AppCachedAvatar(
+                      imageUrl: currentUser.photoUrl,
+                      radius: 40,
+                      fallbackInitial: currentUser.firstName,
+                      fallbackTextStyle: AppTextStyles.h1.copyWith(color: Colors.white),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-
-                SizedBox(height: 0.4.h),
-                Text(
-                  currentUser.email,
-                  style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
-                ),
-
-                // Location / Hub info
-                if (locationText.isNotEmpty || (hubText != null && hubText.isNotEmpty)) ...[
-                  SizedBox(height: 1.2.h),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 2.w,
-                    runSpacing: 0.8.h,
-                    children: [
-                      if (locationText.isNotEmpty)
-                        _buildBadgeChip(
-                          icon: Icons.location_on_outlined,
-                          text: locationText,
-                        ),
-                      if (hubText != null && hubText.isNotEmpty)
-                        _buildBadgeChip(
-                          icon: Icons.groups_outlined,
-                          text: hubText,
-                        ),
-                    ],
-                  ),
-                ],
-
-                // Bio
-                if (currentUser.bio != null && currentUser.bio!.isNotEmpty) ...[
-                  SizedBox(height: 1.5.h),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(3.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.ultraDark.withValues(alpha: 0.5),
-                      borderRadius: AppRadius.circular12,
-                      border: Border.all(color: AppColors.borderSubtle),
-                    ),
-                    child: Text(
-                      currentUser.bio!,
-                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    SizedBox(height: 1.5.h),
+                    Text(
+                      currentUser.name,
+                      style: AppTextStyles.h3,
                       textAlign: TextAlign.center,
                     ),
-                  ),
-                ],
 
-                SizedBox(height: 2.h),
-                const Divider(color: AppColors.borderSubtle, height: 1),
-                SizedBox(height: 1.5.h),
-
-                // Bottom row with Edit Button in bottom right
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Informations & Liens",
-                      style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
-                    ),
-                    InkWell(
-                      onTap: () => EditProfileBottomSheet.show(context, currentUser),
-                      borderRadius: AppRadius.circular12,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.8.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.actionBlue.withValues(alpha: 0.15),
-                          borderRadius: AppRadius.circular12,
-                          border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.3)),
+                    // Headline / Spécialité
+                    if (currentUser.headline != null && currentUser.headline!.isNotEmpty) ...[
+                      SizedBox(height: 0.4.h),
+                      Text(
+                        currentUser.headline!,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.skyBlue,
+                          fontWeight: FontWeight.w600,
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            AppIcons.edit(color: AppColors.skyBlue, size: 16),
-                            SizedBox(width: 1.5.w),
-                            Text(
-                              "Modifier mon profil",
-                              style: AppTextStyles.caption.copyWith(
-                                color: AppColors.skyBlue,
-                                fontWeight: FontWeight.bold,
-                              ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+
+                    SizedBox(height: 0.4.h),
+                    Text(
+                      currentUser.email,
+                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    ),
+
+                    // Location / Hub info
+                    if (locationText.isNotEmpty || (hubText != null && hubText.isNotEmpty)) ...[
+                      SizedBox(height: 1.2.h),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 2.w,
+                        runSpacing: 0.8.h,
+                        children: [
+                          if (locationText.isNotEmpty)
+                            _buildBadgeChip(
+                              icon: Icons.location_on_outlined,
+                              text: locationText,
                             ),
-                          ],
+                          if (hubText != null && hubText.isNotEmpty)
+                            _buildBadgeChip(
+                              icon: Icons.groups_outlined,
+                              text: hubText,
+                            ),
+                        ],
+                      ),
+                    ],
+
+                    // Bio
+                    if (currentUser.bio != null && currentUser.bio!.isNotEmpty) ...[
+                      SizedBox(height: 1.5.h),
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(3.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.ultraDark.withValues(alpha: 0.5),
+                          borderRadius: AppRadius.circular12,
+                          border: Border.all(color: AppColors.borderSubtle),
+                        ),
+                        child: Text(
+                          currentUser.bio!,
+                          style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ),
+                    ],
                   ],
+                ),
+
+                // Pencil Edit Icon Button in Bottom Right
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: InkWell(
+                    onTap: () => EditProfileBottomSheet.show(context, currentUser),
+                    borderRadius: AppRadius.circular12,
+                    child: Container(
+                      padding: EdgeInsets.all(2.5.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.actionBlue.withValues(alpha: 0.15),
+                        borderRadius: AppRadius.circular12,
+                        border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.3)),
+                      ),
+                      child: AppIcons.edit(color: AppColors.skyBlue, size: 18),
+                    ),
+                  ),
                 ),
               ],
             ),
