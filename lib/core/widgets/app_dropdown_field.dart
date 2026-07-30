@@ -170,7 +170,7 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
       curve: Curves.easeOut,
       child: Container(
         constraints: BoxConstraints(
-          maxHeight: isSearchable ? 95.h : 80.h,
+          maxHeight: isSearchable ? 85.h : 80.h,
         ),
         decoration: const BoxDecoration(
           color: AppColors.modalBackground,
