@@ -132,29 +132,7 @@ class UnauthorizedPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 2.5.h),
-
-                // Badge "ACCÈS RESTREINT"
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardHover,
-                    borderRadius: AppRadius.circular20,
-                    border: Border.all(
-                      color: AppColors.actionBlue.withValues(alpha: 0.3),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    "ACCÈS RESTREINT",
-                    style: AppTextStyles.badgeSmall.copyWith(
-                      color: AppColors.skyBlue,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 2.h),
+                SizedBox(height: 3.h),
 
                 // Main Title
                 Text(
@@ -209,43 +187,45 @@ class UnauthorizedPage extends StatelessWidget {
                 ),
                 SizedBox(height: 2.5.h),
 
-                // Status Details Card
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
-                  decoration: BoxDecoration(
-                    color: AppColors.card.withValues(alpha: 0.5),
-                    borderRadius: AppRadius.circular12,
-                    border: Border.all(color: AppColors.borderSubtle),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Statut Actuel :",
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textMuted,
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
-                        decoration: BoxDecoration(
-                          color: statusColor.withValues(alpha: 0.15),
-                          borderRadius: AppRadius.circular8,
-                          border: Border.all(color: statusColor.withValues(alpha: 0.5)),
-                        ),
-                        child: Text(
-                          statusBadgeText,
-                          style: AppTextStyles.badgeSmall.copyWith(
-                            color: statusColor,
-                            fontWeight: FontWeight.w600,
+                // Status Details Card (Shown only if document exists in database)
+                if (!isDocMissing) ...[
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.card.withValues(alpha: 0.5),
+                      borderRadius: AppRadius.circular12,
+                      border: Border.all(color: AppColors.borderSubtle),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Statut Actuel :",
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textMuted,
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
+                          decoration: BoxDecoration(
+                            color: statusColor.withValues(alpha: 0.15),
+                            borderRadius: AppRadius.circular8,
+                            border: Border.all(color: statusColor.withValues(alpha: 0.5)),
+                          ),
+                          child: Text(
+                            statusBadgeText,
+                            style: AppTextStyles.badgeSmall.copyWith(
+                              color: statusColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 3.h),
+                  SizedBox(height: 3.h),
+                ],
 
                 // Contact Section Container
                 Container(
