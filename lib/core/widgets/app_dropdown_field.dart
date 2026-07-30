@@ -26,6 +26,7 @@ class AppDropdownField extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
         return _AppDropdownModalSheet(
@@ -161,28 +162,31 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final isSearchable = widget.enableSearch;
 
     return AnimatedPadding(
       padding: EdgeInsets.only(bottom: bottomInset),
       duration: const Duration(milliseconds: 100),
       curve: Curves.easeOut,
       child: Container(
-        height: 70.h,
-        margin: EdgeInsets.only(
-          left: 4.w,
-          right: 4.w,
-          bottom: 2.h,
-          top: 8.h,
+        constraints: BoxConstraints(
+          maxHeight: isSearchable ? 95.h : 80.h,
         ),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: AppColors.modalBackground,
-          borderRadius: AppRadius.circular20,
-          border: Border.all(color: AppColors.borderSubtle, width: 1.2),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          border: Border(
+            top: BorderSide(color: AppColors.borderSubtle, width: 1.2),
+            left: BorderSide(color: AppColors.borderSubtle, width: 1.2),
+            right: BorderSide(color: AppColors.borderSubtle, width: 1.2),
+          ),
         ),
         child: SafeArea(
+          top: false,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
             child: Column(
+              mainAxisSize: isSearchable ? MainAxisSize.max : MainAxisSize.min,
               children: [
                 // Handle bar indicator
                 Container(
@@ -217,8 +221,8 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
                 ),
                 SizedBox(height: 1.h),
 
-                // Search Field
-                if (widget.enableSearch) ...[
+                // Optional Search Field
+                if (isSearchable) ...[
                   TextField(
                     controller: _searchController,
                     onChanged: _filter,
@@ -246,62 +250,78 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
                   SizedBox(height: 1.5.h),
                 ],
 
-                // Options List - Static expanded height
-                Expanded(
-                  child: _filteredOptions.isEmpty
-                      ? Center(
-                          child: Text(
-                            "Aucun résultat trouvé",
-                            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
-                          ),
-                        )
-                      : ListView.separated(
-                          itemCount: _filteredOptions.length,
-                          separatorBuilder: (context, index) =>
-                              const Divider(color: AppColors.borderSubtle, height: 1),
-                          itemBuilder: (context, index) {
-                            final item = _filteredOptions[index];
-                            final isSelected = item == widget.selectedValue;
-
-                            return InkWell(
-                              onTap: () {
-                                widget.onSelected(item);
-                                Navigator.pop(context);
-                              },
-                              borderRadius: AppRadius.circular8,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.8.h),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? AppColors.actionBlue.withValues(alpha: 0.12)
-                                      : Colors.transparent,
-                                  borderRadius: AppRadius.circular8,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        item,
-                                        style: AppTextStyles.bodyMedium.copyWith(
-                                          color: isSelected ? AppColors.skyBlue : AppColors.textPrimary,
-                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                        ),
-                                      ),
-                                    ),
-                                    if (isSelected)
-                                      AppIcons.check(color: AppColors.skyBlue, size: 18),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                ),
+                // Options List with primary: false
+                if (isSearchable)
+                  Expanded(
+                    child: _buildOptionsListView(primary: false, shrinkWrap: false),
+                  )
+                else
+                  Flexible(
+                    child: _buildOptionsListView(primary: false, shrinkWrap: true),
+                  ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildOptionsListView({required bool primary, required bool shrinkWrap}) {
+    if (_filteredOptions.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 3.h),
+          child: Text(
+            "Aucun résultat trouvé",
+            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
+          ),
+        ),
+      );
+    }
+
+    return ListView.separated(
+      primary: primary,
+      shrinkWrap: shrinkWrap,
+      itemCount: _filteredOptions.length,
+      separatorBuilder: (context, index) =>
+          const Divider(color: AppColors.borderSubtle, height: 1),
+      itemBuilder: (context, index) {
+        final item = _filteredOptions[index];
+        final isSelected = item == widget.selectedValue;
+
+        return InkWell(
+          onTap: () {
+            widget.onSelected(item);
+            Navigator.pop(context);
+          },
+          borderRadius: AppRadius.circular8,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.8.h),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? AppColors.actionBlue.withValues(alpha: 0.12)
+                  : Colors.transparent,
+              borderRadius: AppRadius.circular8,
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    item,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: isSelected ? AppColors.skyBlue : AppColors.textPrimary,
+                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ),
+                if (isSelected)
+                  AppIcons.check(color: AppColors.skyBlue, size: 18),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
