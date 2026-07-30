@@ -161,28 +161,23 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     final isSearchable = widget.enableSearch;
 
-    return AnimatedPadding(
-      padding: EdgeInsets.only(bottom: bottomInset),
-      duration: const Duration(milliseconds: 100),
-      curve: Curves.easeOut,
-      child: Container(
-        constraints: BoxConstraints(
-          maxHeight: isSearchable ? 85.h : 80.h,
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: isSearchable ? 85.h : 80.h,
+      ),
+      decoration: const BoxDecoration(
+        color: AppColors.modalBackground,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        border: Border(
+          top: BorderSide(color: AppColors.borderSubtle, width: 1.2),
+          left: BorderSide(color: AppColors.borderSubtle, width: 1.2),
+          right: BorderSide(color: AppColors.borderSubtle, width: 1.2),
         ),
-        decoration: const BoxDecoration(
-          color: AppColors.modalBackground,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          border: Border(
-            top: BorderSide(color: AppColors.borderSubtle, width: 1.2),
-            left: BorderSide(color: AppColors.borderSubtle, width: 1.2),
-            right: BorderSide(color: AppColors.borderSubtle, width: 1.2),
-          ),
-        ),
-        child: SafeArea(
-          top: false,
+      ),
+      child: SafeArea(
+        top: false,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
             child: Column(
@@ -263,9 +258,8 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
   Widget _buildOptionsListView({required bool primary, required bool shrinkWrap}) {
     if (_filteredOptions.isEmpty) {
