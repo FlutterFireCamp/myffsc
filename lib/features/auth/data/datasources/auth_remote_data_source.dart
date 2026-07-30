@@ -193,7 +193,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     // 3. If NO document exists in Firestore for this email/UID:
     // DO NOT create a new document in Firestore per user requirements.
     dev.log(
-      'No pre-existing Firestore document found for email: $email. Returning unapproved user state without creating Firestore doc.',
+      'No pre-existing Firestore document found for email: $email. Returning unapproved user state (not_found) without creating Firestore doc.',
       name: 'AUTH_REMOTE_DS',
     );
     return UserModel(
@@ -202,7 +202,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       email: email ?? '',
       role: 'student',
       level: 1,
-      status: 'pending',
+      status: 'not_found',
       photoUrl: googlePhotoUrl,
       createdAt: DateTime.now().toIso8601String(),
     );

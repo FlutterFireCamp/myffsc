@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/user_entity.dart';
 import '../bloc/auth_bloc.dart';
@@ -15,129 +17,324 @@ class UnauthorizedPage extends StatelessWidget {
     this.user,
   });
 
+  Future<void> _launchEmail(BuildContext context) async {
+    const email = 'flutterfiresummer@gmail.com';
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: email,
+      queryParameters: {
+        'subject': 'Demande d\'accès - FlutterFire Summer Camp',
+      },
+    );
+
+    try {
+      if (await canLaunchUrl(emailUri)) {
+        await launchUrl(emailUri, mode: LaunchMode.externalApplication);
+      } else {
+        await Clipboard.setData(const ClipboardData(text: email));
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Adresse e-mail copiée : $email'),
+              backgroundColor: AppColors.correctContainer,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      await Clipboard.setData(const ClipboardData(text: email));
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Adresse e-mail copiée : $email'),
+            backgroundColor: AppColors.correctContainer,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
     final currentUser = user ?? (authState is UnauthorizedState ? authState.user : null);
 
-    final emailText = currentUser?.email ?? 'votre compte';
-    final statusText = currentUser?.status == 'pending'
-        ? 'En attente de validation'
-        : currentUser?.status == 'suspended'
-            ? 'Compte suspendu'
-            : 'Non autorisé';
+    final emailText = currentUser?.email.isNotEmpty == true
+        ? currentUser!.email
+        : 'adresse non renseignée';
+
+    final isDocMissing = currentUser?.isDocMissing == true;
+    final isPending = currentUser?.isPending == true;
+    final isSuspended = currentUser?.isSuspended == true;
+
+    final String statusBadgeText;
+    final Color statusColor;
+
+    if (isDocMissing) {
+      statusBadgeText = "Absent du programme";
+      statusColor = AppColors.errorText;
+    } else if (isPending) {
+      statusBadgeText = "En attente de validation";
+      statusColor = AppColors.warningAmber;
+    } else if (isSuspended) {
+      statusBadgeText = "Compte suspendu";
+      statusColor = AppColors.errorText;
+    } else {
+      statusBadgeText = currentUser?.status.isNotEmpty == true
+          ? currentUser!.status
+          : "Non autorisé";
+      statusColor = AppColors.errorText;
+    }
+
+    final String descriptionText;
+    if (isDocMissing) {
+      descriptionText =
+          "Cette application est exclusivement réservée aux participants retenus pour la cohorte du FlutterFire Camp. Votre adresse e-mail n'a pas été trouvée parmi les participants autorisés.";
+    } else if (isPending) {
+      descriptionText =
+          "Votre dossier existe bien dans notre base de données, mais votre compte est actuellement en attente de validation par l'équipe d'administration.";
+    } else if (isSuspended) {
+      descriptionText =
+          "Votre adresse e-mail figure dans le programme FlutterFire Camp, mais votre accès est actuellement suspendu.";
+    } else {
+      descriptionText =
+          "Cette application est exclusivement réservée aux participants retenus pour la cohorte du FlutterFire Camp. Votre profil n'a pas les autorisations requises.";
+    }
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Spacer(),
-              // Warning Icon Container
-              Container(
-                width: 24.w,
-                height: 24.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.incorrectContainer,
-                  border: Border.all(color: AppColors.incorrectBorder, width: 2),
-                ),
-                child: Center(
-                  child: AppIcons.lock(
-                    size: 10.w,
-                    color: AppColors.errorText,
+        child: SingleChildScrollView(
+          child: Container(
+            constraints: BoxConstraints(
+              minHeight: 90.h,
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 2.h),
+
+                // Top Icon (User with X / Restricted)
+                Container(
+                  width: 22.w,
+                  height: 22.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF1E1B4B).withValues(alpha: 0.6), // Deep Indigo tint
+                    border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.3), width: 1.5),
+                  ),
+                  child: Center(
+                    child: AppIcons.userRemove(
+                      size: 9.w,
+                      color: const Color(0xFFA5B4FC), // Indigo 300
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 3.h),
-              Text(
-                "Accès Non Autorisé",
-                style: AppTextStyles.h2.copyWith(
-                  color: AppColors.errorText,
-                ),
-              ),
-              SizedBox(height: 1.h),
-              Text(
-                "Votre compte ($emailText) n'a pas la permission d'accéder au portail My FFSC.",
-                textAlign: TextAlign.center,
-                style: AppTextStyles.bodyMedium,
-              ),
-              SizedBox(height: 3.h),
+                SizedBox(height: 2.5.h),
 
-              // Status Details Card
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(5.w),
-                decoration: BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: AppRadius.circular16,
-                  border: Border.all(color: AppColors.borderSubtle),
+                // Badge "ACCÈS RESTREINT"
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardHover,
+                    borderRadius: AppRadius.circular20,
+                    border: Border.all(
+                      color: AppColors.actionBlue.withValues(alpha: 0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    "ACCÈS RESTREINT",
+                    style: AppTextStyles.badgeSmall.copyWith(
+                      color: AppColors.skyBlue,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Statut Actuel :",
-                          style: AppTextStyles.bodyMedium,
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
-                          decoration: BoxDecoration(
-                            color: AppColors.warningAmber.withValues(alpha: 0.15),
-                            borderRadius: AppRadius.circular8,
-                            border: Border.all(color: AppColors.warningAmber),
+                SizedBox(height: 2.h),
+
+                // Main Title
+                Text(
+                  "Accès réservé aux participants",
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.h2.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 1.8.h),
+
+                // User Email Chip Box
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.2.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: AppRadius.circular12,
+                    border: Border.all(color: AppColors.borderSubtle),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AppIcons.mail(
+                        color: AppColors.textSecondary,
+                        size: 18,
+                      ),
+                      SizedBox(width: 2.w),
+                      Flexible(
+                        child: Text(
+                          emailText,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w500,
                           ),
-                          child: Text(
-                            statusText,
-                            style: AppTextStyles.badgeSmall.copyWith(
-                              color: AppColors.warningAmber,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 2.5.h),
+
+                // Explanation Text
+                Text(
+                  descriptionText,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textSecondary,
+                    height: 1.5,
+                  ),
+                ),
+                SizedBox(height: 2.5.h),
+
+                // Status Details Card
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.card.withValues(alpha: 0.5),
+                    borderRadius: AppRadius.circular12,
+                    border: Border.all(color: AppColors.borderSubtle),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Statut Actuel :",
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
+                        decoration: BoxDecoration(
+                          color: statusColor.withValues(alpha: 0.15),
+                          borderRadius: AppRadius.circular8,
+                          border: Border.all(color: statusColor.withValues(alpha: 0.5)),
+                        ),
+                        child: Text(
+                          statusBadgeText,
+                          style: AppTextStyles.badgeSmall.copyWith(
+                            color: statusColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 3.h),
+
+                // Contact Section Container
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(5.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.card,
+                    borderRadius: AppRadius.circular16,
+                    border: Border.all(color: AppColors.borderSubtle),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Si vous estimez qu'il s'agit d'une erreur ou si vous souhaitez en savoir plus, vous pouvez contacter les organisateurs :",
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textSecondary,
+                          height: 1.4,
+                        ),
+                      ),
+                      SizedBox(height: 2.h),
+
+                      // Email Action Button
+                      InkWell(
+                        onTap: () => _launchEmail(context),
+                        borderRadius: AppRadius.circular12,
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.actionBlue.withValues(alpha: 0.12),
+                            borderRadius: AppRadius.circular12,
+                            border: Border.all(
+                              color: AppColors.actionBlue.withValues(alpha: 0.4),
+                              width: 1.2,
                             ),
                           ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AppIcons.mail(
+                                color: AppColors.skyBlue,
+                                size: 20,
+                              ),
+                              SizedBox(width: 2.5.w),
+                              Flexible(
+                                child: Text(
+                                  "flutterfiresummer@gmail.com",
+                                  style: AppTextStyles.button.copyWith(
+                                    color: AppColors.skyBlue,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12.sp,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                    SizedBox(height: 2.h),
-                    const Divider(color: AppColors.borderSubtle),
-                    SizedBox(height: 2.h),
-                    Text(
-                      "Si vous êtes un apprenant sélectionné pour cette cohorte du FlutterFire Summer Camp, veuillez contacter les mentors sur Discord ou WhatsApp pour faire valider votre accès.",
-                      textAlign: TextAlign.center,
-                      style: AppTextStyles.bodySmall,
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const Spacer(),
+                SizedBox(height: 3.h),
 
-              // Logout Button
-              OutlinedButton.icon(
-                onPressed: () {
-                  context.read<AuthBloc>().add(SignOutRequested());
-                },
-                style: OutlinedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 8.w),
-                  backgroundColor: AppColors.incorrectContainer,
-                  side: const BorderSide(color: AppColors.incorrectBorder, width: 1.5),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: AppRadius.circular14,
+                // Logout Button
+                OutlinedButton.icon(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(SignOutRequested());
+                  },
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 1.8.h, horizontal: 7.w),
+                    backgroundColor: AppColors.incorrectContainer.withValues(alpha: 0.4),
+                    side: const BorderSide(color: AppColors.incorrectBorder, width: 1.2),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: AppRadius.circular14,
+                    ),
+                  ),
+                  icon: AppIcons.logout(color: AppColors.errorText, size: 18),
+                  label: Text(
+                    "Se déconnecter",
+                    style: AppTextStyles.button.copyWith(
+                      color: AppColors.errorText,
+                    ),
                   ),
                 ),
-                icon: AppIcons.logout(color: AppColors.errorText, size: 20),
-                label: Text(
-                  "Se déconnecter",
-                  style: AppTextStyles.button.copyWith(
-                    color: AppColors.errorText,
-                  ),
-                ),
-              ),
-              SizedBox(height: 4.h),
-            ],
+                SizedBox(height: 2.h),
+              ],
+            ),
           ),
         ),
       ),

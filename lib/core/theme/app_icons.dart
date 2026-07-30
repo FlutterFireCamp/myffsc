@@ -104,4 +104,10 @@ class AppIcons {
 
   static Widget twitter({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedNewTwitter, color: color, size: size);
+
+  static Widget mail({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedMail01, color: color, size: size);
+
+  static Widget userRemove({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedUserRemove01, color: color, size: size);
 }

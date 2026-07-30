@@ -55,6 +55,9 @@ class UserEntity extends Equatable {
   }
 
   bool get isAuthorized => role == 'student' && status == 'accepted';
+  bool get isDocMissing => status == 'not_found' || status == 'not_registered';
+  bool get isPending => status == 'pending';
+  bool get isSuspended => status == 'suspended';
 
   @override
   List<Object?> get props => [
