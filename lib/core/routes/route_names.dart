@@ -1,6 +1,7 @@
 class RouteNames {
   static const String checking = 'checking';
   static const String login = 'login';
+  static const String completeProfile = 'completeProfile';
   static const String unauthorized = 'unauthorized';
   static const String dashboard = 'dashboard';
   static const String programs = 'programs';

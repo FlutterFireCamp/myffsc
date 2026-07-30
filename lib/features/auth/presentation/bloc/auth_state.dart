@@ -28,6 +28,14 @@ class UnauthorizedState extends AuthState {
   List<Object?> get props => [user];
 }
 
+class ProfileIncompleteState extends AuthState {
+  final UserEntity user;
+  const ProfileIncompleteState(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}
+
 class UnauthenticatedState extends AuthState {}
 
 class AuthErrorState extends AuthState {

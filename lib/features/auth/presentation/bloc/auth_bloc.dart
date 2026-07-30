@@ -38,6 +38,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null) {
           dev.log('User is null -> UnauthenticatedState', name: 'AUTH_BLOC');
           emit(UnauthenticatedState());
+        } else if (user.isProfileIncomplete) {
+          dev.log('User profile incomplete -> ProfileIncompleteState (${user.email})', name: 'AUTH_BLOC');
+          emit(ProfileIncompleteState(user));
         } else if (user.isAuthorized) {
           dev.log('User authorized -> AuthenticatedState (${user.name})', name: 'AUTH_BLOC');
           emit(AuthenticatedState(user));
@@ -68,7 +71,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         }
       },
       (user) {
-        if (user.isAuthorized) {
+        if (user.isProfileIncomplete) {
+          dev.log('Sign-In success & profile incomplete -> ProfileIncompleteState (${user.email})', name: 'AUTH_BLOC');
+          emit(ProfileIncompleteState(user));
+        } else if (user.isAuthorized) {
           dev.log('Sign-In success & authorized -> AuthenticatedState (${user.name})', name: 'AUTH_BLOC');
           emit(AuthenticatedState(user));
         } else {

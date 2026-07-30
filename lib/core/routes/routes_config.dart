@@ -46,6 +46,7 @@ class RoutesConfig {
       final isChecking = location == RoutePaths.checking;
       final isLoggingIn = location == RoutePaths.login;
       final isUnauthorized = location == RoutePaths.unauthorized;
+      final isCompletingProfile = location == RoutePaths.completeProfile;
 
       dev.log(
         'GoRouter evaluating redirect -> Path: $location, AuthState: ${authState.runtimeType}',
@@ -68,6 +69,14 @@ class RoutesConfig {
         return null;
       }
 
+      if (authState is ProfileIncompleteState) {
+        if (!isCompletingProfile) {
+          dev.log('Redirecting user with incomplete profile to ${RoutePaths.completeProfile}', name: 'ROUTER');
+          return RoutePaths.completeProfile;
+        }
+        return null;
+      }
+
       if (authState is UnauthorizedState) {
         if (!isUnauthorized) {
           dev.log('Redirecting unauthorized user to ${RoutePaths.unauthorized}', name: 'ROUTER');
@@ -77,7 +86,7 @@ class RoutesConfig {
       }
 
       if (authState is AuthenticatedState) {
-        if (isLoggingIn || isUnauthorized || isChecking || location == '/') {
+        if (isLoggingIn || isUnauthorized || isChecking || isCompletingProfile || location == '/') {
           dev.log('Redirecting authenticated user to ${RoutePaths.dashboard}', name: 'ROUTER');
           return RoutePaths.dashboard;
         }
@@ -95,6 +104,16 @@ class RoutesConfig {
         name: RouteNames.login,
         path: RoutePaths.login,
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        name: RouteNames.completeProfile,
+        path: RoutePaths.completeProfile,
+        builder: (context, state) {
+          final user = authBloc.state is ProfileIncompleteState
+              ? (authBloc.state as ProfileIncompleteState).user
+              : null;
+          return CompleteProfilePage(user: user);
+        },
       ),
       GoRoute(
         name: RouteNames.unauthorized,

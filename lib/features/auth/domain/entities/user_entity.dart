@@ -58,6 +58,8 @@ class UserEntity extends Equatable {
   bool get isDocMissing => status == 'not_found' || status == 'not_registered';
   bool get isPending => status == 'pending';
   bool get isSuspended => status == 'suspended';
+  bool get isProfileIncomplete =>
+      !isDocMissing && (name.trim().isEmpty || name == 'Apprenant FFSC');
 
   @override
   List<Object?> get props => [
