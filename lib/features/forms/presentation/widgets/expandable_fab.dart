@@ -100,8 +100,8 @@ class _ExpandableFabState extends State<ExpandableFab>
           child: InkWell(
             onTap: _toggle,
             child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Icon(Icons.close, color: AppColors.skyBlue),
+              padding: const EdgeInsets.all(16),
+              child: AppIcons.cancel(color: AppColors.skyBlue, size: 20),
             ),
           ),
         ),

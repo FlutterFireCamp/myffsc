@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
+import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../forms/presentation/widgets/action_button.dart';
 import '../../../forms/presentation/widgets/expandable_fab.dart';
 import '../../../forms/presentation/widgets/forms_modal_helper.dart';
@@ -29,14 +32,32 @@ class MainNavigationScaffold extends StatelessWidget {
         distance: 112,
         children: [
           ActionButton(
+            tooltip: "Signalements",
+            onPressed: () => FormsModalHelper.openReportForm(context),
+            icon: AppIcons.alert02(color: Colors.white, size: AppSizes.iconMd),
+            color: AppColors.errorText,
+          ),
+          ActionButton(
+            tooltip: "Feedback & Avis",
             onPressed: () => FormsModalHelper.openFeedbackForm(context),
             icon: AppIcons.feedback(color: AppColors.ultraDark, size: AppSizes.iconMd),
             color: AppColors.skyBlue,
           ),
           ActionButton(
-            onPressed: () => FormsModalHelper.openReportForm(context),
-            icon: AppIcons.alert02(color: Colors.white, size: AppSizes.iconMd),
-            color: AppColors.errorText,
+            tooltip: "Idées & Suggestions",
+            onPressed: () => FormsModalHelper.openIdeaForm(context),
+            icon: AppIcons.idea(color: AppColors.ultraDark, size: AppSizes.iconMd),
+            color: const Color(0xFFFFB703),
+          ),
+          ActionButton(
+            tooltip: "Soumettre Certificat",
+            onPressed: () {
+              final authState = context.read<AuthBloc>().state;
+              final userLevel = authState is AuthenticatedState ? authState.user.level : 1;
+              FormsModalHelper.openCertificateForm(context, userLevel);
+            },
+            icon: AppIcons.badge(color: Colors.white, size: AppSizes.iconMd),
+            color: const Color(0xFF10B981),
           ),
         ],
       ),

@@ -7,16 +7,18 @@ class ActionButton extends StatelessWidget {
     this.onPressed,
     required this.icon,
     this.color,
+    this.tooltip,
   });
 
   final VoidCallback? onPressed;
   final Widget icon;
   final Color? color;
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Material(
+    final buttonWidget = Material(
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
       color: color ?? theme.colorScheme.secondary,
@@ -27,5 +29,14 @@ class ActionButton extends StatelessWidget {
         color: theme.colorScheme.onSecondary,
       ),
     );
+
+    if (tooltip != null && tooltip!.isNotEmpty) {
+      return Tooltip(
+        message: tooltip!,
+        child: buttonWidget,
+      );
+    }
+
+    return buttonWidget;
   }
 }
