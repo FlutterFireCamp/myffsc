@@ -240,72 +240,78 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Connected Account Card
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(4.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.card,
-                    borderRadius: AppRadius.circular16,
-                    border: Border.all(color: AppColors.borderSubtle),
-                  ),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 5.w,
-                        backgroundColor: AppColors.actionBlue.withValues(alpha: 0.2),
-                        backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
-                            ? NetworkImage(photoUrl)
-                            : null,
-                        child: (photoUrl == null || photoUrl.isEmpty)
-                            ? AppIcons.user(size: 20, color: AppColors.skyBlue)
-                            : null,
-                      ),
-                      SizedBox(width: 3.5.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Compte Google connecté",
-                              style: AppTextStyles.caption.copyWith(
-                                color: AppColors.textMuted,
-                              ),
-                            ),
-                            SizedBox(height: 0.3.h),
-                            Text(
-                              emailText,
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Connected Account Card (Fixed at Top)
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(4.w),
+                decoration: BoxDecoration(
+                  color: AppColors.card,
+                  borderRadius: AppRadius.circular16,
+                  border: Border.all(color: AppColors.borderSubtle),
                 ),
-                SizedBox(height: 3.h),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 5.w,
+                      backgroundColor: AppColors.actionBlue.withValues(alpha: 0.2),
+                      backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
+                          ? NetworkImage(photoUrl)
+                          : null,
+                      child: (photoUrl == null || photoUrl.isEmpty)
+                          ? AppIcons.user(size: 20, color: AppColors.skyBlue)
+                          : null,
+                    ),
+                    SizedBox(width: 3.5.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Compte Google connecté",
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.textMuted,
+                            ),
+                          ),
+                          SizedBox(height: 0.3.h),
+                          Text(
+                            emailText,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 2.h),
 
-                Text(
-                  "Informations Personnelles",
-                  style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
-                ),
-                SizedBox(height: 0.8.h),
-                Text(
-                  "Veuillez compléter vos informations pour valider votre dossier.",
-                  style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
-                ),
-                SizedBox(height: 2.5.h),
+              // Scrollable Form Body
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Informations Personnelles",
+                          style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+                        ),
+                        SizedBox(height: 0.8.h),
+                        Text(
+                          "Veuillez compléter vos informations pour valider votre dossier.",
+                          style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                        ),
+                        SizedBox(height: 2.5.h),
 
                 // 1. Nom complet *
                 _buildLabel("Nom complet *"),
@@ -456,7 +462,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
           ),
         ),
       ),
-    );
+    ],
+  ),
+),
+),
+);
   }
 
   Widget _buildLabel(String text) {
