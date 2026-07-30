@@ -26,16 +26,37 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   late TextEditingController _nameController;
   late TextEditingController _discordController;
   late TextEditingController _townController;
-  late TextEditingController _hubController;
 
   String? _selectedGender;
   String _selectedCountry = 'République Démocratique du Congo (RDC)';
   String _hasNextFlutterPremium = 'Non';
+  String? _selectedHub;
 
   bool _isSubmitting = false;
 
   static const List<String> _genderOptions = ['Homme', 'Femme'];
   static const List<String> _premiumOptions = ['Non', 'Oui'];
+
+  static const List<String> _hubOptions = [
+    'KIVU IMPACT CENTER',
+    '10000 Codeurs',
+    'Tek Komea',
+    'GDG On Campus ESTI',
+    'GDG RATOMA',
+    'GDG Ouaga',
+    'GDG Yamoussoukro',
+    'GDG CLOUD ABIDJAN',
+    'GDG on Campus UCB',
+    'WTM Kivu',
+    'ITN Hub',
+    'GDG Yaoundé',
+    'Yekola Now',
+    'Devcreed',
+    'GDG LOMÉ',
+    'Club Statistique de Université Lumière de Bujumbura (ULBU)',
+    'WTM Ngaoundéré',
+    'Autre / Non affilié',
+  ];
 
   static const List<String> _africanCountries = [
     'République Démocratique du Congo (RDC)',
@@ -102,7 +123,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     );
     _discordController = TextEditingController(text: currentUser?.discordUsername ?? '');
     _townController = TextEditingController(text: currentUser?.town ?? '');
-    _hubController = TextEditingController(text: currentUser?.hub ?? currentUser?.community ?? '');
 
     if (currentUser?.gender != null && _genderOptions.contains(currentUser!.gender)) {
       _selectedGender = currentUser.gender;
@@ -111,6 +131,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     if (currentUser?.country != null && _africanCountries.contains(currentUser!.country)) {
       _selectedCountry = currentUser.country!;
     }
+
+    final existingHub = currentUser?.hub ?? currentUser?.community;
+    if (existingHub != null && _hubOptions.contains(existingHub)) {
+      _selectedHub = existingHub;
+    }
   }
 
   @override
@@ -118,7 +143,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     _nameController.dispose();
     _discordController.dispose();
     _townController.dispose();
-    _hubController.dispose();
     super.dispose();
   }
 
@@ -147,8 +171,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         'country': _selectedCountry,
         'hasNextFlutterPremium': _hasNextFlutterPremium == 'Oui',
         'town': _townController.text.trim(),
-        'hub': _hubController.text.trim(),
-        'community': _hubController.text.trim(),
+        'hub': _selectedHub ?? '',
+        'community': _selectedHub ?? '',
         'updatedAt': DateTime.now().toIso8601String(),
       };
 
@@ -307,17 +331,13 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 SizedBox(height: 0.8.h),
                 DropdownButtonFormField<String>(
                   initialValue: _selectedGender,
-                  dropdownColor: AppColors.card,
+                  dropdownColor: AppColors.cardHover,
+                  borderRadius: AppRadius.circular12,
+                  menuMaxHeight: 45.h,
+                  isExpanded: true,
                   style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
                   decoration: _buildInputDecoration(hint: "Sélectionnez votre genre"),
-                  items: _genderOptions
-                      .map(
-                        (g) => DropdownMenuItem(
-                          value: g,
-                          child: Text(g),
-                        ),
-                      )
-                      .toList(),
+                  items: _genderOptions.map(_buildDropdownItem).toList(),
                   onChanged: (val) {
                     setState(() {
                       _selectedGender = val;
@@ -337,21 +357,13 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 SizedBox(height: 0.8.h),
                 DropdownButtonFormField<String>(
                   initialValue: _selectedCountry,
-                  dropdownColor: AppColors.card,
+                  dropdownColor: AppColors.cardHover,
+                  borderRadius: AppRadius.circular12,
+                  menuMaxHeight: 45.h,
                   isExpanded: true,
                   style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
                   decoration: _buildInputDecoration(hint: "Sélectionnez votre pays"),
-                  items: _africanCountries
-                      .map(
-                        (country) => DropdownMenuItem(
-                          value: country,
-                          child: Text(
-                            country,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      )
-                      .toList(),
+                  items: _africanCountries.map(_buildDropdownItem).toList(),
                   onChanged: (val) {
                     if (val != null) {
                       setState(() {
@@ -367,17 +379,13 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 SizedBox(height: 0.8.h),
                 DropdownButtonFormField<String>(
                   initialValue: _hasNextFlutterPremium,
-                  dropdownColor: AppColors.card,
+                  dropdownColor: AppColors.cardHover,
+                  borderRadius: AppRadius.circular12,
+                  menuMaxHeight: 45.h,
+                  isExpanded: true,
                   style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
                   decoration: _buildInputDecoration(hint: "Sélectionnez Oui ou Non"),
-                  items: _premiumOptions
-                      .map(
-                        (opt) => DropdownMenuItem(
-                          value: opt,
-                          child: Text(opt),
-                        ),
-                      )
-                      .toList(),
+                  items: _premiumOptions.map(_buildDropdownItem).toList(),
                   onChanged: (val) {
                     if (val != null) {
                       setState(() {
@@ -388,23 +396,33 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 ),
                 SizedBox(height: 2.h),
 
-                // 6. Ville (Optionnel)
+                // 6. Communauté / Hub (Optionnel)
+                _buildLabel("Communauté / Hub (Optionnel)"),
+                SizedBox(height: 0.8.h),
+                DropdownButtonFormField<String>(
+                  initialValue: _selectedHub,
+                  dropdownColor: AppColors.cardHover,
+                  borderRadius: AppRadius.circular12,
+                  menuMaxHeight: 45.h,
+                  isExpanded: true,
+                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                  decoration: _buildInputDecoration(hint: "Sélectionnez votre communauté / hub"),
+                  items: _hubOptions.map(_buildDropdownItem).toList(),
+                  onChanged: (val) {
+                    setState(() {
+                      _selectedHub = val;
+                    });
+                  },
+                ),
+                SizedBox(height: 2.h),
+
+                // 7. Ville (Optionnel)
                 _buildLabel("Ville (Optionnel)"),
                 SizedBox(height: 0.8.h),
                 TextFormField(
                   controller: _townController,
                   style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
                   decoration: _buildInputDecoration(hint: "Ex: Kinshasa, Lubumbashi..."),
-                ),
-                SizedBox(height: 2.h),
-
-                // 7. Communauté / Hub (Optionnel)
-                _buildLabel("Communauté / Hub (Optionnel)"),
-                SizedBox(height: 0.8.h),
-                TextFormField(
-                  controller: _hubController,
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                  decoration: _buildInputDecoration(hint: "Ex: GDG Kinshasa, Flutter RDC..."),
                 ),
                 SizedBox(height: 3.5.h),
 
@@ -445,6 +463,20 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  DropdownMenuItem<String> _buildDropdownItem(String value) {
+    return DropdownMenuItem<String>(
+      value: value,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+        child: Text(
+          value,
+          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
