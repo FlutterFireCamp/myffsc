@@ -101,6 +101,18 @@ class UnauthorizedPage extends StatelessWidget {
           "Cette application est exclusivement réservée aux participants retenus pour la cohorte du FlutterFire Camp. Votre profil n'a pas les autorisations requises.";
     }
 
+    final Color topIconBg = isDocMissing
+        ? AppColors.incorrectContainer
+        : const Color(0xFF1E1B4B).withValues(alpha: 0.6);
+
+    final Color topIconBorder = isDocMissing
+        ? AppColors.incorrectBorder
+        : AppColors.actionBlue.withValues(alpha: 0.3);
+
+    final Color topIconColor = isDocMissing
+        ? AppColors.errorText
+        : const Color(0xFFA5B4FC);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -122,13 +134,13 @@ class UnauthorizedPage extends StatelessWidget {
                   height: 22.w,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFF1E1B4B).withValues(alpha: 0.6), // Deep Indigo tint
-                    border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.3), width: 1.5),
+                    color: topIconBg,
+                    border: Border.all(color: topIconBorder, width: 1.5),
                   ),
                   child: Center(
                     child: AppIcons.userRemove(
                       size: 9.w,
-                      color: const Color(0xFFA5B4FC), // Indigo 300
+                      color: topIconColor,
                     ),
                   ),
                 ),
@@ -268,16 +280,15 @@ class UnauthorizedPage extends StatelessWidget {
                             children: [
                               AppIcons.mail(
                                 color: AppColors.skyBlue,
-                                size: 20,
+                                size: 18,
                               ),
                               SizedBox(width: 2.5.w),
                               Flexible(
                                 child: Text(
                                   "flutterfiresummer@gmail.com",
-                                  style: AppTextStyles.button.copyWith(
+                                  style: AppTextStyles.bodyMedium.copyWith(
                                     color: AppColors.skyBlue,
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 12.sp,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
