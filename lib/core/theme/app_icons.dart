@@ -116,4 +116,7 @@ class AppIcons {
 
   static Widget arrowDown({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedArrowDown01, color: color, size: size);
+
+  static Widget edit({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedEdit02, color: color, size: size);
 }
