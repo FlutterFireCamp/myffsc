@@ -173,6 +173,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
     try {
       final docId = currentUser.id;
+      final hubValue = (_selectedHub == null || _selectedHub!.contains('Non affilié'))
+          ? ''
+          : _selectedHub!.trim();
+
       final updateData = {
         'name': _nameController.text.trim(),
         'discordUsername': _discordController.text.trim(),
@@ -180,8 +184,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         'country': _selectedCountry,
         'hasNextFlutterPremium': _hasNextFlutterPremium == 'Oui',
         'town': _townController.text.trim(),
-        'hub': _selectedHub ?? '',
-        'community': _selectedHub ?? '',
+        'hub': hubValue,
+        'community': hubValue,
         'updatedAt': DateTime.now().toIso8601String(),
       };
 
