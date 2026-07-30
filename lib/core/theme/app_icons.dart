@@ -110,4 +110,10 @@ class AppIcons {
 
   static Widget userRemove({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedUserRemove01, color: color, size: size);
+
+  static Widget search({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedSearch01, color: color, size: size);
+
+  static Widget arrowDown({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedArrowDown01, color: color, size: size);
 }

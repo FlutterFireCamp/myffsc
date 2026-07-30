@@ -338,7 +338,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 // 3. Genre *
                 _buildLabel("Genre *"),
                 SizedBox(height: 0.8.h),
-                _AppSelectField(
+                AppDropdownField(
                   label: "Genre *",
                   value: _selectedGender,
                   hint: "Sélectionnez votre genre",
@@ -355,7 +355,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 // 4. Pays de résidence *
                 _buildLabel("Pays de résidence *"),
                 SizedBox(height: 0.8.h),
-                _AppSelectField(
+                AppDropdownField(
                   label: "Pays de résidence *",
                   value: _selectedCountry,
                   hint: "Sélectionnez votre pays",
@@ -373,7 +373,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 // 5. Avez-vous l'accès Premium sur NextFlutter ? *
                 _buildLabel("Avez-vous l'accès Premium sur NextFlutter ? *"),
                 SizedBox(height: 0.8.h),
-                _AppSelectField(
+                AppDropdownField(
                   label: "Accès Premium NextFlutter *",
                   value: _hasNextFlutterPremium,
                   hint: "Sélectionnez Oui ou Non",
@@ -389,7 +389,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 // 6. Communauté / Hub (Optionnel)
                 _buildLabel("Communauté / Hub (Optionnel)"),
                 SizedBox(height: 0.8.h),
-                _AppSelectField(
+                AppDropdownField(
                   label: "Communauté / Hub",
                   value: _selectedHub,
                   hint: "Sélectionnez votre communauté ou hub",
@@ -500,279 +500,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       errorBorder: OutlineInputBorder(
         borderRadius: AppRadius.circular12,
         borderSide: const BorderSide(color: AppColors.errorText),
-      ),
-    );
-  }
-}
-
-class _AppSelectField extends StatelessWidget {
-  final String label;
-  final String? value;
-  final String hint;
-  final List<String> options;
-  final ValueChanged<String> onSelected;
-  final bool enableSearch;
-  final String? Function(String?)? validator;
-
-  const _AppSelectField({
-    required this.label,
-    required this.value,
-    required this.hint,
-    required this.options,
-    required this.onSelected,
-    this.enableSearch = false,
-    this.validator,
-  });
-
-  void _showPicker(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return _AppSelectModalSheet(
-          title: label,
-          selectedValue: value,
-          options: options,
-          enableSearch: enableSearch,
-          onSelected: onSelected,
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FormField<String>(
-      initialValue: value,
-      validator: validator,
-      builder: (formFieldState) {
-        final hasError = formFieldState.hasError;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            InkWell(
-              onTap: () => _showPicker(context),
-              borderRadius: AppRadius.circular12,
-              child: InputDecorator(
-                decoration: InputDecoration(
-                  hintText: hint,
-                  hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
-                  filled: true,
-                  fillColor: AppColors.card,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
-                  border: OutlineInputBorder(
-                    borderRadius: AppRadius.circular12,
-                    borderSide: const BorderSide(color: AppColors.borderSubtle),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: AppRadius.circular12,
-                    borderSide: BorderSide(
-                      color: hasError ? AppColors.errorText : AppColors.borderSubtle,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: AppRadius.circular12,
-                    borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
-                  ),
-                  suffixIcon: Icon(
-                    Icons.arrow_drop_down,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                child: Text(
-                  value != null && value!.isNotEmpty ? value! : hint,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: value != null && value!.isNotEmpty
-                        ? AppColors.textPrimary
-                        : AppColors.textMuted,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-            if (hasError)
-              Padding(
-                padding: EdgeInsets.only(top: 0.8.h, left: 3.w),
-                child: Text(
-                  formFieldState.errorText!,
-                  style: AppTextStyles.caption.copyWith(color: AppColors.errorText),
-                ),
-              ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _AppSelectModalSheet extends StatefulWidget {
-  final String title;
-  final String? selectedValue;
-  final List<String> options;
-  final bool enableSearch;
-  final ValueChanged<String> onSelected;
-
-  const _AppSelectModalSheet({
-    required this.title,
-    required this.selectedValue,
-    required this.options,
-    required this.enableSearch,
-    required this.onSelected,
-  });
-
-  @override
-  State<_AppSelectModalSheet> createState() => _AppSelectModalSheetState();
-}
-
-class _AppSelectModalSheetState extends State<_AppSelectModalSheet> {
-  late List<String> _filteredOptions;
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _filteredOptions = widget.options;
-  }
-
-  void _filter(String query) {
-    setState(() {
-      if (query.trim().isEmpty) {
-        _filteredOptions = widget.options;
-      } else {
-        _filteredOptions = widget.options
-            .where((opt) => opt.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-        left: 4.w,
-        right: 4.w,
-        bottom: 3.h,
-        top: 12.h,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.modalBackground,
-        borderRadius: AppRadius.circular20,
-        border: Border.all(color: AppColors.borderSubtle, width: 1.2),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar indicator
-              Container(
-                width: 10.w,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.textMuted.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              SizedBox(height: 1.5.h),
-
-              // Modal Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.title,
-                      style: AppTextStyles.h3.copyWith(
-                        color: AppColors.textPrimary,
-                        fontSize: 13.sp,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                    icon: AppIcons.cancel(size: 18, color: AppColors.textMuted),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              SizedBox(height: 1.h),
-
-              // Search Field
-              if (widget.enableSearch) ...[
-                TextField(
-                  controller: _searchController,
-                  onChanged: _filter,
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                  decoration: InputDecoration(
-                    hintText: "Rechercher...",
-                    hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
-                    prefixIcon: Icon(Icons.search, color: AppColors.textMuted, size: 20),
-                    filled: true,
-                    fillColor: AppColors.card,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
-                    border: OutlineInputBorder(
-                      borderRadius: AppRadius.circular12,
-                      borderSide: const BorderSide(color: AppColors.borderSubtle),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: AppRadius.circular12,
-                      borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 1.5.h),
-              ],
-
-              // Options List
-              Flexible(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: _filteredOptions.length,
-                  separatorBuilder: (context, index) => const Divider(color: AppColors.borderSubtle, height: 1),
-                  itemBuilder: (context, index) {
-                    final item = _filteredOptions[index];
-                    final isSelected = item == widget.selectedValue;
-
-                    return InkWell(
-                      onTap: () {
-                        widget.onSelected(item);
-                        Navigator.pop(context);
-                      },
-                      borderRadius: AppRadius.circular8,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.8.h),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                item,
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                  color: isSelected ? AppColors.skyBlue : AppColors.textPrimary,
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                            if (isSelected)
-                              AppIcons.check(color: AppColors.skyBlue, size: 18),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
