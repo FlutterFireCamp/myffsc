@@ -73,10 +73,14 @@ class AppDropdownField extends StatelessWidget {
                     borderRadius: AppRadius.circular12,
                     borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
                   ),
+                  suffixIconConstraints: BoxConstraints(
+                    minWidth: 8.w,
+                    minHeight: 0,
+                  ),
                   suffixIcon: Padding(
-                    padding: EdgeInsets.only(right: 3.w),
+                    padding: EdgeInsets.only(right: 3.5.w),
                     child: AppIcons.arrowDown(
-                      size: 18,
+                      size: 14,
                       color: AppColors.textSecondary,
                     ),
                   ),
