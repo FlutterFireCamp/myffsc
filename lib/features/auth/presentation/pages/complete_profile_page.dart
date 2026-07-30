@@ -370,19 +370,13 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 ),
                 SizedBox(height: 2.h),
 
-                // 5. Avez-vous l'accès Premium sur NextFlutter ? *
-                _buildLabel("Avez-vous l'accès Premium sur NextFlutter ? *"),
+                // 5. Ville (Optionnel)
+                _buildLabel("Ville (Optionnel)"),
                 SizedBox(height: 0.8.h),
-                AppDropdownField(
-                  label: "Accès Premium NextFlutter *",
-                  value: _hasNextFlutterPremium,
-                  hint: "Sélectionnez Oui ou Non",
-                  options: _premiumOptions,
-                  onSelected: (val) {
-                    setState(() {
-                      _hasNextFlutterPremium = val;
-                    });
-                  },
+                TextFormField(
+                  controller: _townController,
+                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                  decoration: _buildInputDecoration(hint: "Ex: Kinshasa, Lubumbashi..."),
                 ),
                 SizedBox(height: 2.h),
 
@@ -403,13 +397,19 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 ),
                 SizedBox(height: 2.h),
 
-                // 7. Ville (Optionnel)
-                _buildLabel("Ville (Optionnel)"),
+                // 7. Avez-vous l'accès Premium sur NextFlutter ? *
+                _buildLabel("Avez-vous l'accès Premium sur NextFlutter ? *"),
                 SizedBox(height: 0.8.h),
-                TextFormField(
-                  controller: _townController,
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                  decoration: _buildInputDecoration(hint: "Ex: Kinshasa, Lubumbashi..."),
+                AppDropdownField(
+                  label: "Accès Premium NextFlutter *",
+                  value: _hasNextFlutterPremium,
+                  hint: "Sélectionnez Oui ou Non",
+                  options: _premiumOptions,
+                  onSelected: (val) {
+                    setState(() {
+                      _hasNextFlutterPremium = val;
+                    });
+                  },
                 ),
                 SizedBox(height: 3.5.h),
 
