@@ -28,7 +28,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   late TextEditingController _townController;
 
   String? _selectedGender;
-  String _selectedCountry = 'République Démocratique du Congo (RDC)';
+  String? _selectedCountry;
   String _hasNextFlutterPremium = 'Non';
   String? _selectedHub;
 
@@ -59,7 +59,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   ];
 
   static const List<String> _africanCountries = [
-    'République Démocratique du Congo (RDC)',
     'Algérie',
     'Angola',
     'Bénin',
@@ -69,7 +68,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     'Cabo Verde',
     'Cameroun',
     'Comores',
-    'Congo (Brazzaville)',
+    'Congo-Brazzaville',
+    'Congo-Kinshasa',
     'Côte d\'Ivoire',
     'Djibouti',
     'Égypte',
@@ -152,6 +152,15 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Veuillez sélectionner votre genre."),
+          backgroundColor: AppColors.incorrectContainer,
+        ),
+      );
+      return;
+    }
+    if (_selectedCountry == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Veuillez sélectionner votre pays de résidence."),
           backgroundColor: AppColors.incorrectContainer,
         ),
       );
@@ -370,6 +379,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         _selectedCountry = val;
                       });
                     }
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Veuillez sélectionner votre pays de résidence.";
+                    }
+                    return null;
                   },
                 ),
                 SizedBox(height: 2.h),
