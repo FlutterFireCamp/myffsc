@@ -160,131 +160,145 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-        left: 4.w,
-        right: 4.w,
-        bottom: 3.h,
-        top: 12.h,
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.modalBackground,
-        borderRadius: AppRadius.circular20,
-        border: Border.all(color: AppColors.borderSubtle, width: 1.2),
-      ),
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar indicator
-              Container(
-                width: 10.w,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.textMuted.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              SizedBox(height: 1.5.h),
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
-              // Modal Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.title,
-                      style: AppTextStyles.h3.copyWith(
-                        color: AppColors.textPrimary,
-                        fontSize: 13.sp,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                    icon: AppIcons.cancel(size: 18, color: AppColors.textMuted),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              SizedBox(height: 1.h),
-
-              // Search Field
-              if (widget.enableSearch) ...[
-                TextField(
-                  controller: _searchController,
-                  onChanged: _filter,
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                  decoration: InputDecoration(
-                    hintText: "Rechercher...",
-                    hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.all(3.w),
-                      child: AppIcons.search(size: 18, color: AppColors.textMuted),
-                    ),
-                    filled: true,
-                    fillColor: AppColors.card,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
-                    border: OutlineInputBorder(
-                      borderRadius: AppRadius.circular12,
-                      borderSide: const BorderSide(color: AppColors.borderSubtle),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: AppRadius.circular12,
-                      borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
-                    ),
+    return AnimatedPadding(
+      padding: EdgeInsets.only(bottom: bottomInset),
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeOut,
+      child: Container(
+        height: 70.h,
+        margin: EdgeInsets.only(
+          left: 4.w,
+          right: 4.w,
+          bottom: 2.h,
+          top: 8.h,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.modalBackground,
+          borderRadius: AppRadius.circular20,
+          border: Border.all(color: AppColors.borderSubtle, width: 1.2),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+            child: Column(
+              children: [
+                // Handle bar indicator
+                Container(
+                  width: 10.w,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.textMuted.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
                 SizedBox(height: 1.5.h),
-              ],
 
-              // Options List
-              Flexible(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: _filteredOptions.length,
-                  separatorBuilder: (context, index) => const Divider(color: AppColors.borderSubtle, height: 1),
-                  itemBuilder: (context, index) {
-                    final item = _filteredOptions[index];
-                    final isSelected = item == widget.selectedValue;
-
-                    return InkWell(
-                      onTap: () {
-                        widget.onSelected(item);
-                        Navigator.pop(context);
-                      },
-                      borderRadius: AppRadius.circular8,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.8.h),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.actionBlue.withValues(alpha: 0.12)
-                              : Colors.transparent,
-                          borderRadius: AppRadius.circular8,
+                // Modal Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.title,
+                        style: AppTextStyles.h3.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: 13.sp,
                         ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                item,
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                  color: isSelected ? AppColors.skyBlue : AppColors.textPrimary,
-                                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    IconButton(
+                      icon: AppIcons.cancel(size: 18, color: AppColors.textMuted),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 1.h),
+
+                // Search Field
+                if (widget.enableSearch) ...[
+                  TextField(
+                    controller: _searchController,
+                    onChanged: _filter,
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    decoration: InputDecoration(
+                      hintText: "Rechercher...",
+                      hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
+                      prefixIcon: Padding(
+                        padding: EdgeInsets.all(3.w),
+                        child: AppIcons.search(size: 18, color: AppColors.textMuted),
+                      ),
+                      filled: true,
+                      fillColor: AppColors.card,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
+                      border: OutlineInputBorder(
+                        borderRadius: AppRadius.circular12,
+                        borderSide: const BorderSide(color: AppColors.borderSubtle),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: AppRadius.circular12,
+                        borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 1.5.h),
+                ],
+
+                // Options List - Static expanded height
+                Expanded(
+                  child: _filteredOptions.isEmpty
+                      ? Center(
+                          child: Text(
+                            "Aucun résultat trouvé",
+                            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
+                          ),
+                        )
+                      : ListView.separated(
+                          itemCount: _filteredOptions.length,
+                          separatorBuilder: (context, index) =>
+                              const Divider(color: AppColors.borderSubtle, height: 1),
+                          itemBuilder: (context, index) {
+                            final item = _filteredOptions[index];
+                            final isSelected = item == widget.selectedValue;
+
+                            return InkWell(
+                              onTap: () {
+                                widget.onSelected(item);
+                                Navigator.pop(context);
+                              },
+                              borderRadius: AppRadius.circular8,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.8.h),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? AppColors.actionBlue.withValues(alpha: 0.12)
+                                      : Colors.transparent,
+                                  borderRadius: AppRadius.circular8,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        item,
+                                        style: AppTextStyles.bodyMedium.copyWith(
+                                          color: isSelected ? AppColors.skyBlue : AppColors.textPrimary,
+                                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                        ),
+                                      ),
+                                    ),
+                                    if (isSelected)
+                                      AppIcons.check(color: AppColors.skyBlue, size: 18),
+                                  ],
                                 ),
                               ),
-                            ),
-                            if (isSelected)
-                              AppIcons.check(color: AppColors.skyBlue, size: 18),
-                          ],
+                            );
+                          },
                         ),
-                      ),
-                    );
-                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
