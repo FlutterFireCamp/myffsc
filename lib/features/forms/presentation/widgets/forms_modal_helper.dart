@@ -13,25 +13,40 @@ class FormsModalHelper {
       isScrollControlled: true,
       backgroundColor: AppColors.modalBackground,
       elevation: 0,
+      clipBehavior: Clip.antiAlias,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r28)),
       ),
       builder: (bottomSheetContext) => StatefulBuilder(
         builder: (bottomSheetContext, setModalState) {
           return Container(
-            color: AppColors.modalBackground,
+            decoration: const BoxDecoration(
+              color: AppColors.modalBackground,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r28)),
+            ),
             child: SafeArea(
               child: Padding(
                 padding: EdgeInsets.only(
                   bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom + 2.h,
                   left: 5.w,
                   right: 5.w,
-                  top: 3.h,
+                  top: 1.5.h,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 1.5.h),
+                        width: 36,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: AppColors.textMuted.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -131,25 +146,40 @@ class FormsModalHelper {
       isScrollControlled: true,
       backgroundColor: AppColors.modalBackground,
       elevation: 0,
+      clipBehavior: Clip.antiAlias,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r28)),
       ),
       builder: (bottomSheetContext) => StatefulBuilder(
         builder: (bottomSheetContext, setModalState) {
           return Container(
-            color: AppColors.modalBackground,
+            decoration: const BoxDecoration(
+              color: AppColors.modalBackground,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r28)),
+            ),
             child: SafeArea(
               child: Padding(
                 padding: EdgeInsets.only(
                   bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom + 2.h,
                   left: 5.w,
                   right: 5.w,
-                  top: 3.h,
+                  top: 1.5.h,
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Center(
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 1.5.h),
+                        width: 36,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: AppColors.textMuted.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -269,18 +299,33 @@ class FormsModalHelper {
       context: context,
       backgroundColor: AppColors.modalBackground,
       elevation: 0,
+      clipBehavior: Clip.antiAlias,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r28)),
       ),
       builder: (bottomSheetContext) => Container(
-        color: AppColors.modalBackground,
+        decoration: const BoxDecoration(
+          color: AppColors.modalBackground,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r28)),
+        ),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 3.h),
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 1.5.h),
+                    width: 36,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.textMuted.withValues(alpha: 0.3),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

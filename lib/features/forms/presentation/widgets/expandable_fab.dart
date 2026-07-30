@@ -58,6 +58,15 @@ class _ExpandableFabState extends State<ExpandableFab>
     });
   }
 
+  void _close() {
+    if (_open) {
+      setState(() {
+        _open = false;
+        _controller.reverse();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
@@ -65,6 +74,11 @@ class _ExpandableFabState extends State<ExpandableFab>
         alignment: Alignment.bottomRight,
         clipBehavior: Clip.none,
         children: [
+          if (_open)
+            GestureDetector(
+              onTap: _close,
+              behavior: HitTestBehavior.translucent,
+            ),
           _buildTapToCloseFab(),
           ..._buildExpandingActionButtons(),
           _buildTapToOpenFab(),
@@ -111,7 +125,11 @@ class _ExpandableFabState extends State<ExpandableFab>
           directionInDegrees: angleInDegrees,
           maxDistance: widget.distance,
           progress: _expandAnimation,
-          child: widget.children[i],
+          child: Listener(
+            behavior: HitTestBehavior.translucent,
+            onPointerDown: (_) => _close(),
+            child: widget.children[i],
+          ),
         ),
       );
     }

@@ -34,8 +34,9 @@ class AppTheme {
         modalBackgroundColor: AppColors.modalBackground,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
+        clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r20)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r28)),
         ),
       ),
       cardTheme: CardThemeData(
