@@ -442,7 +442,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             ),
                           )
                         : Text(
-                            "Enregistrer mon profil",
+                            "Finaliser mon inscription",
                             style: AppTextStyles.button.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
