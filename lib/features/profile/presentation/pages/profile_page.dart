@@ -104,16 +104,6 @@ class ProfilePage extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          if (currentUser.headline != null && currentUser.headline!.isNotEmpty) ...[
-                            SizedBox(height: 0.3.h),
-                            Text(
-                              currentUser.headline!,
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.skyBlue,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
                           SizedBox(height: 0.3.h),
                           Text(
                             currentUser.email,
@@ -138,20 +128,6 @@ class ProfilePage extends StatelessWidget {
                                     text: hubText,
                                   ),
                               ],
-                            ),
-                          ],
-
-                          // Bio
-                          if (currentUser.bio != null && currentUser.bio!.isNotEmpty) ...[
-                            SizedBox(height: 1.2.h),
-                            Text(
-                              currentUser.bio!,
-                              style: AppTextStyles.bodySmall.copyWith(
-                                color: AppColors.textMuted,
-                                fontStyle: FontStyle.italic,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
 
@@ -262,7 +238,7 @@ class ProfilePage extends StatelessWidget {
           _ProfileTile(
             icon: AppIcons.edit(color: AppColors.skyBlue, size: AppSizes.iconMd),
             title: "Modifier mon Profil",
-            subtitle: "Changer vos coordonnées, bio et réseaux sociaux",
+            subtitle: "Changer vos coordonnées et vos liens sociaux",
             onTap: () {
               Navigator.push(
                 context,

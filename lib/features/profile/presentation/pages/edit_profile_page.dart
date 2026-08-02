@@ -25,9 +25,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _nameController;
   late TextEditingController _discordController;
   late TextEditingController _townController;
-  late TextEditingController _whatsappController;
-  late TextEditingController _headlineController;
-  late TextEditingController _bioController;
   late TextEditingController _githubController;
   late TextEditingController _linkedinController;
   late TextEditingController _xController;
@@ -125,9 +122,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _nameController = TextEditingController(text: u.name == 'Apprenant FFSC' ? '' : u.name);
     _discordController = TextEditingController(text: u.discordUsername ?? '');
     _townController = TextEditingController(text: u.town ?? '');
-    _whatsappController = TextEditingController(text: u.whatsapp ?? '');
-    _headlineController = TextEditingController(text: u.headline ?? '');
-    _bioController = TextEditingController(text: u.bio ?? '');
     _githubController = TextEditingController(text: u.github ?? '');
     _linkedinController = TextEditingController(text: u.linkedin ?? '');
     _xController = TextEditingController(text: u.x ?? '');
@@ -152,9 +146,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _nameController.dispose();
     _discordController.dispose();
     _townController.dispose();
-    _whatsappController.dispose();
-    _headlineController.dispose();
-    _bioController.dispose();
     _githubController.dispose();
     _linkedinController.dispose();
     _xController.dispose();
@@ -201,9 +192,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         'town': _townController.text.trim(),
         'hub': hubValue,
         'community': hubValue,
-        'whatsapp': _whatsappController.text.trim(),
-        'headline': _headlineController.text.trim(),
-        'bio': _bioController.text.trim(),
         'github': _githubController.text.trim(),
         'linkedin': _linkedinController.text.trim(),
         'x': _xController.text.trim(),
@@ -272,7 +260,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         SizedBox(width: 3.w),
                         Expanded(
                           child: Text(
-                            "Mettez à jour vos coordonnées et informations personnelles. Vos modifications seront visibles directement sur votre profil.",
+                            "Mettez à jour vos informations personnelles et vos liens. Vos modifications seront enregistrées directement.",
                             style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
                           ),
                         ),
@@ -350,39 +338,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   SizedBox(height: 3.h),
 
-                  // Section: Profil Professionnel
-                  _buildSectionTitle("Profil & Contact"),
-
-                  _buildLabel("Numéro WhatsApp (Optionnel)"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _whatsappController,
-                    keyboardType: TextInputType.phone,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Ex: +243..."),
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Spécialité / Titre (Optionnel)"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _headlineController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Ex: Développeur Flutter Mobile"),
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Bio / Présentation (Optionnel)"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _bioController,
-                    maxLines: 3,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Décrivez brièvement votre parcours et vos passions..."),
-                  ),
-                  SizedBox(height: 3.h),
-
-                  // Section: Liens Sociaux
+                  // Section: Liens Sociaux & Portfolio
                   _buildSectionTitle("Liens & Réseaux Sociaux"),
 
                   _buildLabel("Profil GitHub (Optionnel)"),

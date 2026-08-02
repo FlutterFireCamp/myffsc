@@ -13,10 +13,7 @@ class UserEntity extends Equatable {
   final String? hub;
   final String? discordUsername;
   final String? gender;
-  final String? whatsapp;
   final String? photoUrl;
-  final String? headline;
-  final String? bio;
   final String? github;
   final String? linkedin;
   final String? x;
@@ -37,10 +34,7 @@ class UserEntity extends Equatable {
     this.hub,
     this.discordUsername,
     this.gender,
-    this.whatsapp,
     this.photoUrl,
-    this.headline,
-    this.bio,
     this.github,
     this.linkedin,
     this.x,
@@ -75,10 +69,7 @@ class UserEntity extends Equatable {
         hub,
         discordUsername,
         gender,
-        whatsapp,
         photoUrl,
-        headline,
-        bio,
         github,
         linkedin,
         x,
