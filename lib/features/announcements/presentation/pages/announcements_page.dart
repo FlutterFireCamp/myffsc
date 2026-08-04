@@ -1,40 +1,114 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
-import '../../domain/entities/announcement_entity.dart';
+import '../../domain/entities/announcement_item.dart';
 
-class AnnouncementsPage extends StatelessWidget {
+class AnnouncementsPage extends StatefulWidget {
   const AnnouncementsPage({super.key});
 
-  static const List<AnnouncementEntity> _mockAnnouncements = [
-    AnnouncementEntity(
-      id: '1',
-      title: 'Lancement Officiel de la Semaine 2 🚀',
-      content: 'Bienvenue dans la deuxième semaine d\'immersion. Les modules BLoC Pattern et Clean Architecture sont désormais accessibles.',
-      targetLevel: 'all',
-      priority: 'urgent',
-      createdAt: 'Hier à 14:00',
-      createdBy: 'Équipe Pédagogique FFSC',
-    ),
-    AnnouncementEntity(
-      id: '2',
-      title: 'Session Live Mentorat - Mercredi 18h GMT',
-      content: 'Rejoignez-nous pour la live Q&A avec nos mentors Flutter/Firebase. Préparez vos questions sur les state managers.',
-      targetLevel: 'all',
-      priority: 'important',
-      createdAt: 'Il y a 2 jours',
-      createdBy: 'Mentors Tech',
-    ),
-    AnnouncementEntity(
-      id: '3',
-      title: 'Rappel : Soumission des Standups Quotidiens',
-      content: 'N\'oubliez pas de soumettre vos standups quotidiens via l\'onglet Formulaires pour accumuler vos points FFSC.',
-      targetLevel: 'all',
-      priority: 'normal',
-      createdAt: 'Il y a 3 jours',
-      createdBy: 'Staff FFSC',
-    ),
-  ];
+  @override
+  State<AnnouncementsPage> createState() => _AnnouncementsPageState();
+}
+
+class _AnnouncementsPageState extends State<AnnouncementsPage> {
+  final ScrollController _scrollController = ScrollController();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  AnnouncementType? _selectedTypeFilter; // null means 'All'
+
+  final List<AnnouncementItem> _announcements = [];
+  DocumentSnapshot? _lastDocument;
+  bool _isLoadingInitial = true;
+  bool _isLoadingMore = false;
+  bool _hasMore = true;
+  static const int _pageSize = 10;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAnnouncements(isInitial: true);
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      if (!_isLoadingMore && _hasMore && !_isLoadingInitial) {
+        _fetchAnnouncements(isInitial: false);
+      }
+    }
+  }
+
+  Future<void> _fetchAnnouncements({required bool isInitial}) async {
+    if (isInitial) {
+      setState(() {
+        _isLoadingInitial = true;
+        _announcements.clear();
+        _lastDocument = null;
+        _hasMore = true;
+      });
+    } else {
+      if (!_hasMore || _isLoadingMore) return;
+      setState(() {
+        _isLoadingMore = true;
+      });
+    }
+
+    try {
+      Query<Map<String, dynamic>> query = _firestore.collection('announcements');
+
+      if (_selectedTypeFilter != null) {
+        query = query.where('type', isEqualTo: _selectedTypeFilter!.toDbString());
+      }
+
+      query = query.orderBy('createdAt', descending: true).limit(_pageSize);
+
+      if (_lastDocument != null && !isInitial) {
+        query = query.startAfterDocument(_lastDocument!);
+      }
+
+      final querySnapshot = await query.get();
+
+      if (querySnapshot.docs.length < _pageSize) {
+        _hasMore = false;
+      }
+
+      if (querySnapshot.docs.isNotEmpty) {
+        _lastDocument = querySnapshot.docs.last;
+        final newItems = querySnapshot.docs
+            .map((doc) => AnnouncementItem.fromFirestore(doc))
+            .toList();
+
+        setState(() {
+          _announcements.addAll(newItems);
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching announcements: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingInitial = false;
+          _isLoadingMore = false;
+        });
+      }
+    }
+  }
+
+  void _onFilterChanged(AnnouncementType? type) {
+    if (_selectedTypeFilter == type) return;
+    setState(() {
+      _selectedTypeFilter = type;
+    });
+    _fetchAnnouncements(isInitial: true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,70 +117,229 @@ class AnnouncementsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Annonces du Camp"),
       ),
-      body: ListView.separated(
-        padding: EdgeInsets.all(4.w),
-        itemCount: _mockAnnouncements.length,
-        separatorBuilder: (context, index) => SizedBox(height: 2.h),
-        itemBuilder: (context, index) {
-          final item = _mockAnnouncements[index];
-          final isUrgent = item.priority == 'urgent';
-
-          return Container(
-            padding: EdgeInsets.all(4.w),
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: AppRadius.circular16,
-              border: Border.all(
-                color: isUrgent ? AppColors.firebaseOrange : AppColors.borderSubtle,
-                width: isUrgent ? 1.5 : 1,
+      body: Column(
+        children: [
+          // Filter Tabs
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 1.5.h),
+            color: AppColors.background,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(horizontal: 4.w),
+              child: Row(
+                children: [
+                  _buildFilterTab(
+                    label: "Toutes",
+                    isSelected: _selectedTypeFilter == null,
+                    onTap: () => _onFilterChanged(null),
+                  ),
+                  SizedBox(width: 2.w),
+                  _buildFilterTab(
+                    label: "Informations",
+                    isSelected: _selectedTypeFilter == AnnouncementType.info,
+                    icon: AppIcons.info(
+                      color: _selectedTypeFilter == AnnouncementType.info ? AppColors.ultraDark : AppColors.skyBlue,
+                      size: 16,
+                    ),
+                    onTap: () => _onFilterChanged(AnnouncementType.info),
+                  ),
+                  SizedBox(width: 2.w),
+                  _buildFilterTab(
+                    label: "Flash Info",
+                    isSelected: _selectedTypeFilter == AnnouncementType.important,
+                    icon: AppIcons.star(
+                      color: _selectedTypeFilter == AnnouncementType.important ? AppColors.ultraDark : AppColors.firebaseYellow,
+                      size: 16,
+                    ),
+                    onTap: () => _onFilterChanged(AnnouncementType.important),
+                  ),
+                  SizedBox(width: 2.w),
+                  _buildFilterTab(
+                    label: "Urgences",
+                    isSelected: _selectedTypeFilter == AnnouncementType.urgent,
+                    icon: AppIcons.alert02(
+                      color: _selectedTypeFilter == AnnouncementType.urgent ? Colors.white : AppColors.errorText,
+                      size: 16,
+                    ),
+                    onTap: () => _onFilterChanged(AnnouncementType.urgent),
+                  ),
+                ],
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
-                      decoration: BoxDecoration(
-                        color: isUrgent
-                            ? AppColors.firebaseOrange.withValues(alpha: 0.2)
-                            : AppColors.skyBlue.withValues(alpha: 0.15),
-                        borderRadius: AppRadius.circular6,
-                      ),
-                      child: Text(
-                        isUrgent ? "URGENT ⚡" : "INFO",
-                        style: AppTextStyles.badge.copyWith(
-                          color: isUrgent ? AppColors.firebaseOrange : AppColors.skyBlue,
+          ),
+          const Divider(height: 1, color: AppColors.borderSubtle),
+
+          // Body Content
+          Expanded(
+            child: _isLoadingInitial
+                ? const Center(child: CircularProgressIndicator(color: AppColors.skyBlue))
+                : _announcements.isEmpty
+                    ? AppEmptyState(
+                        title: _selectedTypeFilter == null
+                            ? "Aucune annonce disponible"
+                            : "Aucune annonce pour la catégorie \"${_selectedTypeFilter!.label}\"",
+                        message: "Les nouvelles annonces publiées par les mentors et l'équipe pédagogique apparaîtront ici.",
+                        icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconXl),
+                        actionLabel: "Actualiser",
+                        onAction: () => _fetchAnnouncements(isInitial: true),
+                      )
+                    : RefreshIndicator(
+                        color: AppColors.skyBlue,
+                        onRefresh: () => _fetchAnnouncements(isInitial: true),
+                        child: ListView.separated(
+                          controller: _scrollController,
+                          padding: EdgeInsets.all(4.w),
+                          itemCount: _announcements.length + (_isLoadingMore ? 1 : 0),
+                          separatorBuilder: (context, index) => SizedBox(height: 2.h),
+                          itemBuilder: (context, index) {
+                            if (index == _announcements.length) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 2.h),
+                                child: const Center(
+                                  child: CircularProgressIndicator(color: AppColors.skyBlue),
+                                ),
+                              );
+                            }
+
+                            final item = _announcements[index];
+                            return _AnnouncementCard(item: item);
+                          },
                         ),
                       ),
-                    ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFilterTab({
+    required String label,
+    required bool isSelected,
+    Widget? icon,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: AppRadius.circular12,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.skyBlue : AppColors.card,
+          borderRadius: AppRadius.circular12,
+          border: Border.all(
+            color: isSelected ? AppColors.skyBlue : AppColors.borderSubtle,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[
+              icon,
+              SizedBox(width: 1.5.w),
+            ],
+            Text(
+              label,
+              style: AppTextStyles.buttonSmall.copyWith(
+                color: isSelected ? AppColors.ultraDark : AppColors.textPrimary,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AnnouncementCard extends StatelessWidget {
+  final AnnouncementItem item;
+
+  const _AnnouncementCard({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(4.5.w),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: AppRadius.circular16,
+        border: Border.all(
+          color: item.type.color.withValues(alpha: 0.5),
+          width: item.type == AnnouncementType.urgent ? 1.5 : 1.0,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
+                decoration: BoxDecoration(
+                  color: item.type.color.withValues(alpha: 0.15),
+                  borderRadius: AppRadius.circular8,
+                  border: Border.all(color: item.type.color.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    item.type.icon,
+                    SizedBox(width: 1.5.w),
                     Text(
-                      item.createdBy,
-                      style: AppTextStyles.bodySmall,
+                      item.type.label.toUpperCase(),
+                      style: AppTextStyles.badge.copyWith(
+                        color: item.type.color,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 9.sp,
+                      ),
                     ),
                   ],
                 ),
-                SizedBox(height: 1.5.h),
-                Text(
-                  item.title,
-                  style: AppTextStyles.titleLarge,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.4.h),
+                decoration: BoxDecoration(
+                  color: AppColors.ultraDark.withValues(alpha: 0.5),
+                  borderRadius: AppRadius.circular6,
                 ),
-                SizedBox(height: 1.h),
-                Text(
-                  item.content,
-                  style: AppTextStyles.bodyMedium,
+                child: Text(
+                  "Cible: ${item.targetRole.label}",
+                  style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
                 ),
-                SizedBox(height: 1.5.h),
-                Text(
-                  item.createdAt,
-                  style: AppTextStyles.caption,
-                ),
-              ],
+              ),
+            ],
+          ),
+          SizedBox(height: 1.8.h),
+          Text(
+            item.title,
+            style: AppTextStyles.titleLarge.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.bold,
             ),
-          );
-        },
+          ),
+          SizedBox(height: 1.h),
+          Text(
+            item.description,
+            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+          ),
+          SizedBox(height: 2.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  AppIcons.calendar(size: 14, color: AppColors.textMuted),
+                  SizedBox(width: 1.w),
+                  Text(
+                    item.date.isNotEmpty ? item.date : "Date non précisée",
+                    style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

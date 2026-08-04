@@ -1,13 +1,81 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
+import '../../../programs/domain/entities/program_item.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  ProgramItem? _todayProgram;
+  bool _isLoadingTodayProgram = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTodayProgram();
+  }
+
+  Future<void> _fetchTodayProgram() async {
+    try {
+      final querySnapshot = await _firestore
+          .collection('programs')
+          .orderBy('createdAt', descending: true)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        setState(() {
+          _todayProgram = ProgramItem.fromFirestore(querySnapshot.docs.first);
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching today program: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingTodayProgram = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _launchExternalUrl(String? urlString) async {
+    if (urlString == null || urlString.trim().isEmpty) return;
+    final Uri url = Uri.parse(urlString.startsWith('http') ? urlString : 'https://$urlString');
+    try {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Impossible d'ouvrir le lien : $urlString"),
+              backgroundColor: AppColors.incorrectContainer,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Erreur lors de l'ouverture : $e"),
+            backgroundColor: AppColors.incorrectContainer,
+          ),
+        );
+      }
+    }
+  }
 
   String _getLevelName(int level) {
     switch (level) {
@@ -161,55 +229,25 @@ class DashboardPage extends StatelessWidget {
           ),
           SizedBox(height: 3.h),
 
-          // Next Live Session Card
+          // Programme du Jour (Realtime from Firebase)
           Text(
-            "Prochaine Session Live",
+            "Programme du Jour",
             style: AppTextStyles.titleLarge,
           ),
           SizedBox(height: 1.5.h),
-          Container(
-            padding: EdgeInsets.all(4.w),
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: AppRadius.circular16,
-              border: Border.all(color: AppColors.borderSubtle),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(3.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.actionBlue.withValues(alpha: 0.15),
-                    shape: BoxShape.circle,
+          _isLoadingTodayProgram
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: CircularProgressIndicator(color: AppColors.skyBlue),
                   ),
-                  child: AppIcons.video(color: AppColors.actionBlue, size: 26),
-                ),
-                SizedBox(width: 4.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Architecture Clean & BLoC Pattern",
-                        style: AppTextStyles.titleMedium,
-                      ),
-                      SizedBox(height: 0.5.h),
-                      Row(
-                        children: [
-                          AppIcons.calendar(size: AppSizes.iconSm, color: AppColors.textMuted),
-                          SizedBox(width: 1.w),
-                          Text(
-                            "Mercredi 18:00 GMT • Mentor FFSC",
-                            style: AppTextStyles.bodySmall,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+                )
+              : _todayProgram == null
+                  ? const AppEmptyState(
+                      title: "Aucun programme prévu aujourd'hui",
+                      message: "Consultez l'onglet Programmes pour découvrir les prochaines sessions.",
+                    )
+                  : _buildTodayProgramCard(_todayProgram!),
           SizedBox(height: 3.h),
 
           // Quick Actions Grid (Programmes & Annonces)
@@ -242,6 +280,119 @@ class DashboardPage extends StatelessWidget {
             ],
           ),
           SizedBox(height: 4.h),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTodayProgramCard(ProgramItem program) {
+    final hasLive = program.sessionUrl != null && program.sessionUrl!.trim().isNotEmpty;
+    final hasReplay = program.replayUrl != null && program.replayUrl!.trim().isNotEmpty;
+
+    return Container(
+      padding: EdgeInsets.all(4.w),
+      decoration: BoxDecoration(
+        color: AppColors.card,
+        borderRadius: AppRadius.circular16,
+        border: Border.all(color: AppColors.borderSubtle),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(3.w),
+                decoration: BoxDecoration(
+                  color: AppColors.actionBlue.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: AppIcons.video(color: AppColors.actionBlue, size: 24),
+              ),
+              SizedBox(width: 3.5.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.3.h),
+                      decoration: BoxDecoration(
+                        color: AppColors.actionBlue.withValues(alpha: 0.12),
+                        borderRadius: AppRadius.circular6,
+                      ),
+                      child: Text(
+                        program.type.label,
+                        style: AppTextStyles.badge.copyWith(
+                          color: AppColors.actionBlue,
+                          fontSize: 8.5.sp,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 0.5.h),
+                    Text(
+                      program.title,
+                      style: AppTextStyles.titleMedium.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 0.3.h),
+                    Row(
+                      children: [
+                        AppIcons.calendar(size: 13, color: AppColors.textMuted),
+                        SizedBox(width: 1.w),
+                        Text(
+                          "${program.date} ${program.time.isNotEmpty ? '• ${program.time}' : ''}",
+                          style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          if (hasLive || hasReplay) ...[
+            SizedBox(height: 2.h),
+            Row(
+              children: [
+                if (hasLive)
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _launchExternalUrl(program.sessionUrl),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppColors.skyBlue),
+                        padding: EdgeInsets.symmetric(vertical: 1.h),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: AppRadius.circular10,
+                        ),
+                      ),
+                      icon: AppIcons.video(size: AppSizes.iconSm, color: AppColors.skyBlue),
+                      label: Text(
+                        "Rejoindre Live",
+                        style: AppTextStyles.buttonSmall.copyWith(color: AppColors.skyBlue),
+                      ),
+                    ),
+                  ),
+                if (hasLive && hasReplay) SizedBox(width: 2.w),
+                if (hasReplay)
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _launchExternalUrl(program.replayUrl),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.ultraDark,
+                        padding: EdgeInsets.symmetric(vertical: 1.h),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: AppRadius.circular10,
+                        ),
+                      ),
+                      icon: AppIcons.video(size: AppSizes.iconSm, color: AppColors.textPrimary),
+                      label: Text(
+                        "Replay",
+                        style: AppTextStyles.buttonSmall.copyWith(color: AppColors.textPrimary),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
         ],
       ),
     );

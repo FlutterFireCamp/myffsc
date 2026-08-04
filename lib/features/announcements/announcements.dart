@@ -1,2 +1,2 @@
-export 'domain/entities/announcement_entity.dart';
+export 'domain/entities/announcement_item.dart';
 export 'presentation/pages/announcements_page.dart';
