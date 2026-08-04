@@ -101,21 +101,21 @@ class _DashboardPageState extends State<DashboardPage> {
     switch (level) {
       case 1:
         return const _LevelConfig(
-          title: "Niveau 1 • Dart",
+          title: "Niveau 1 - Logique avec Dart 🎯",
           subtitle: "Fondations Dart & Logique de programmation",
           emoji: "🎯",
           gradientColors: [Color(0xFF02569B), Color(0xFF013A63)],
         );
       case 2:
         return const _LevelConfig(
-          title: "Niveau 2 • Flutter",
+          title: "Niveau 2 - UI/UX avec Flutter 💙",
           subtitle: "Développement Mobile Cross-Platform & UI",
           emoji: "💙",
           gradientColors: [Color(0xFF02569B), Color(0xFF01B5F8)],
         );
       case 3:
         return const _LevelConfig(
-          title: "Niveau 3 • Firebase",
+          title: "Niveau 3 - Intégration Firebase 🔥",
           subtitle: "Backend Serverless, Auth & Firestore",
           emoji: "🔥",
           gradientColors: [Color(0xFFFF8F00), Color(0xFFFF6F00)],
@@ -123,7 +123,7 @@ class _DashboardPageState extends State<DashboardPage> {
       case 4:
       default:
         return const _LevelConfig(
-          title: "Niveau 4 • Capstone Project",
+          title: "Niveau 4 - Projet de Fin du Camp 💎",
           subtitle: "Projet final & Attestation de réussite",
           emoji: "💎",
           gradientColors: [Color(0xFF00C6FF), Color(0xFF0072FF)],
