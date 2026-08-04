@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_icons.dart';
 
 class AppCachedAvatar extends StatelessWidget {
   final String? imageUrl;
@@ -18,13 +19,19 @@ class AppCachedAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle defaultStyle = TextStyle(
+      fontSize: radius * 0.8,
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+    );
+
     if (imageUrl == null || imageUrl!.trim().isEmpty) {
       return CircleAvatar(
         radius: radius,
         backgroundColor: AppColors.flutterBlue,
         child: Text(
           fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
-          style: fallbackTextStyle,
+          style: fallbackTextStyle ?? defaultStyle,
         ),
       );
     }
@@ -38,13 +45,9 @@ class AppCachedAvatar extends StatelessWidget {
       placeholder: (context, url) => CircleAvatar(
         radius: radius,
         backgroundColor: AppColors.card,
-        child: SizedBox(
-          width: radius,
-          height: radius,
-          child: const CircularProgressIndicator(
-            strokeWidth: 2,
-            color: AppColors.skyBlue,
-          ),
+        child: AppIcons.user(
+          color: AppColors.skyBlue,
+          size: radius * 1.1,
         ),
       ),
       errorWidget: (context, url, error) => CircleAvatar(
@@ -52,7 +55,7 @@ class AppCachedAvatar extends StatelessWidget {
         backgroundColor: AppColors.flutterBlue,
         child: Text(
           fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
-          style: fallbackTextStyle,
+          style: fallbackTextStyle ?? defaultStyle,
         ),
       ),
     );
@@ -86,14 +89,10 @@ class AppNetworkImage extends StatelessWidget {
         width: width,
         height: height,
         color: AppColors.card,
-        child: const Center(
-          child: SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: AppColors.skyBlue,
-            ),
+        child: Center(
+          child: AppIcons.user(
+            color: AppColors.skyBlue,
+            size: (width != null && height != null) ? (width! < height! ? width! * 0.5 : height! * 0.5) : 24,
           ),
         ),
       ),

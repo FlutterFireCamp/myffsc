@@ -172,7 +172,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
           // Body Content
           Expanded(
             child: _isLoadingInitial
-                ? const Center(child: CircularProgressIndicator(color: AppColors.skyBlue))
+                ? const AppListShimmer(itemCount: 4)
                 : _announcements.isEmpty
                     ? AppEmptyState(
                         title: _selectedTypeFilter == null

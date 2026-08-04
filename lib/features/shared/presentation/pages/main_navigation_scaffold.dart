@@ -23,6 +23,36 @@ class MainNavigationScaffold extends StatelessWidget {
     );
   }
 
+  Widget _buildProfileTabIcon(BuildContext context, bool isActive) {
+    final authState = context.watch<AuthBloc>().state;
+    final currentUser = authState is AuthenticatedState ? authState.user : null;
+    final photoUrl = currentUser?.photoUrl;
+    final initial = currentUser?.firstName ?? 'A';
+
+    if (photoUrl != null && photoUrl.trim().isNotEmpty) {
+      return Container(
+        padding: const EdgeInsets.all(1),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: isActive ? AppColors.skyBlue : AppColors.textMuted.withValues(alpha: 0.3),
+            width: isActive ? 2.0 : 1.0,
+          ),
+        ),
+        child: AppCachedAvatar(
+          imageUrl: photoUrl,
+          radius: 11,
+          fallbackInitial: initial,
+        ),
+      );
+    }
+
+    return AppIcons.profile(
+      color: isActive ? AppColors.skyBlue : AppColors.textMuted,
+      size: AppSizes.iconLg,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,8 +152,8 @@ class MainNavigationScaffold extends StatelessWidget {
               label: "Annonces",
             ),
             BottomNavigationBarItem(
-              icon: AppIcons.profile(color: AppColors.textMuted, size: AppSizes.iconLg),
-              activeIcon: AppIcons.profile(color: AppColors.skyBlue, size: AppSizes.iconLg),
+              icon: _buildProfileTabIcon(context, false),
+              activeIcon: _buildProfileTabIcon(context, true),
               label: "Profil",
             ),
           ],

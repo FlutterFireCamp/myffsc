@@ -199,7 +199,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
           // Body Content
           Expanded(
             child: _isLoadingInitial
-                ? const Center(child: CircularProgressIndicator(color: AppColors.skyBlue))
+                ? const AppListShimmer(itemCount: 4)
                 : _programs.isEmpty
                     ? AppEmptyState(
                         title: _selectedTypeFilter == null

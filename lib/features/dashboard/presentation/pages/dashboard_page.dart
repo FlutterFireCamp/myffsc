@@ -236,12 +236,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           SizedBox(height: 1.5.h),
           _isLoadingTodayProgram
-              ? const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: CircularProgressIndicator(color: AppColors.skyBlue),
-                  ),
-                )
+              ? const AppShimmer(child: AppCardShimmer())
               : _todayProgram == null
                   ? const AppEmptyState(
                       title: "Aucun programme prévu aujourd'hui",
