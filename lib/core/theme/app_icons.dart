@@ -7,10 +7,10 @@ class AppIcons {
       HugeIcon(icon: HugeIcons.strokeRoundedDashboardSquare02, color: color, size: size);
 
   static Widget programs({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedBookOpen02, color: color, size: size);
+      HugeIcon(icon: HugeIcons.strokeRoundedCalendar01, color: color, size: size);
 
   static Widget announcements({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedNotification01, color: color, size: size);
+      HugeIcon(icon: HugeIcons.strokeRoundedPromotion, color: color, size: size);
 
   static Widget forms({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedNote, color: color, size: size);

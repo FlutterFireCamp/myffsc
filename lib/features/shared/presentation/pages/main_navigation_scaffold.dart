@@ -123,7 +123,7 @@ class MainNavigationScaffold extends StatelessWidget {
               BottomNavigationBarItem(
                 icon: AppIcons.programs(color: AppColors.textMuted, size: AppSizes.iconLg),
                 activeIcon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconLg),
-                label: "Cours",
+                label: "Programs",
               ),
               BottomNavigationBarItem(
                 icon: Transform.translate(
