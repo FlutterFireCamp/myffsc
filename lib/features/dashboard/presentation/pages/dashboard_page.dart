@@ -77,18 +77,57 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  String _getLevelName(int level) {
+  int _getUserProgressPercentage(int level, int totalPoints) {
+    final points = totalPoints < 0 ? 0 : totalPoints;
+
+    if (level == 1) {
+      final ratio = (points / 100).clamp(0.0, 1.0);
+      return (0 + ratio * 30).round();
+    } else if (level == 2) {
+      final ptsInLevel = (points - 100) < 0 ? 0 : (points - 100);
+      final ratio = (ptsInLevel / 200).clamp(0.0, 1.0);
+      return (31 + ratio * 29).round();
+    } else if (level == 3) {
+      final ptsInLevel = (points - 300) < 0 ? 0 : (points - 300);
+      final ratio = (ptsInLevel / 300).clamp(0.0, 1.0);
+      return (61 + ratio * 19).round();
+    } else if (level >= 4) {
+      return 100;
+    }
+    return 0;
+  }
+
+  _LevelConfig _getLevelConfig(int level) {
     switch (level) {
       case 1:
-        return "Niveau 1 • Débutant";
+        return const _LevelConfig(
+          title: "Niveau 1 • Dart",
+          subtitle: "Fondations Dart & Logique de programmation",
+          emoji: "🎯",
+          gradientColors: [Color(0xFF02569B), Color(0xFF013A63)],
+        );
       case 2:
-        return "Niveau 2 • Intermédiaire";
+        return const _LevelConfig(
+          title: "Niveau 2 • Flutter",
+          subtitle: "Développement Mobile Cross-Platform & UI",
+          emoji: "💙",
+          gradientColors: [Color(0xFF02569B), Color(0xFF01B5F8)],
+        );
       case 3:
-        return "Niveau 3 • Avancé";
+        return const _LevelConfig(
+          title: "Niveau 3 • Firebase",
+          subtitle: "Backend Serverless, Auth & Firestore",
+          emoji: "🔥",
+          gradientColors: [Color(0xFFFF8F00), Color(0xFFFF6F00)],
+        );
       case 4:
-        return "Niveau 4 • Capstone Pro";
       default:
-        return "Niveau 1 • Débutant";
+        return const _LevelConfig(
+          title: "Niveau 4 • Capstone Project",
+          subtitle: "Projet final & Attestation de réussite",
+          emoji: "💎",
+          gradientColors: [Color(0xFF00C6FF), Color(0xFF0072FF)],
+        );
     }
   }
 
@@ -108,6 +147,9 @@ class _DashboardPageState extends State<DashboardPage> {
 
     void handlePrograms() => context.go('/programs');
     void handleAnnouncements() => context.go('/announcements');
+
+    final progressPct = _getUserProgressPercentage(currentUser.level, currentUser.totalPoints);
+    final levelConfig = _getLevelConfig(currentUser.level);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -164,18 +206,24 @@ class _DashboardPageState extends State<DashboardPage> {
         primary: false,
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         children: [
-          // Banner Immersion Progress
+          // Custom Level Header Banner
           Container(
             width: double.infinity,
             padding: EdgeInsets.all(5.w),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.flutterBlue, AppColors.ultraDark],
+              gradient: LinearGradient(
+                colors: levelConfig.gradientColors,
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: AppRadius.circular20,
-              border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
+              boxShadow: [
+                BoxShadow(
+                  color: levelConfig.gradientColors.first.withValues(alpha: 0.3),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,44 +232,108 @@ class _DashboardPageState extends State<DashboardPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
+                      padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.7.h),
                       decoration: BoxDecoration(
-                        color: AppColors.skyBlue.withValues(alpha: 0.2),
-                        borderRadius: AppRadius.circular8,
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: AppRadius.circular10,
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
                       ),
                       child: Text(
-                        _getLevelName(currentUser.level),
-                        style: AppTextStyles.badge,
+                        levelConfig.title,
+                        style: AppTextStyles.badge.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 9.5.sp,
+                        ),
                       ),
                     ),
-                    AppIcons.badge(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                    Text(
+                      levelConfig.emoji,
+                      style: TextStyle(fontSize: 24.sp),
+                    ),
                   ],
                 ),
                 SizedBox(height: 2.h),
                 Text(
                   "Immersion Totale & Mentorat",
-                  style: AppTextStyles.h2,
+                  style: AppTextStyles.h2.copyWith(color: Colors.white),
                 ),
-                SizedBox(height: 0.8.h),
+                SizedBox(height: 0.6.h),
                 Text(
-                  "3 mois pour propulser les futurs leaders de la tech en Afrique Francophone.",
-                  style: AppTextStyles.bodyMedium,
+                  levelConfig.subtitle,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: Colors.white.withValues(alpha: 0.9),
+                  ),
                 ),
-                SizedBox(height: 2.h),
+                SizedBox(height: 2.5.h),
+
+                // Progress Bar Header (Label + Percentage)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Progression Globale",
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: Colors.white.withValues(alpha: 0.85),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      "$progressPct%",
+                      style: AppTextStyles.titleMedium.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 1.h),
+
+                // Progress Bar
+                ClipRRect(
+                  borderRadius: AppRadius.circular10,
+                  child: Container(
+                    height: 10,
+                    width: double.infinity,
+                    color: Colors.black.withValues(alpha: 0.25),
+                    child: Stack(
+                      children: [
+                        FractionallySizedBox(
+                          widthFactor: (progressPct / 100).clamp(0.0, 1.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Colors.white, Color(0xFFE0F2FE)],
+                              ),
+                              borderRadius: AppRadius.circular10,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 2.5.h),
+
+                // Action Button
                 ElevatedButton.icon(
                   onPressed: handlePrograms,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.skyBlue,
+                    backgroundColor: Colors.white,
                     foregroundColor: AppColors.ultraDark,
-                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.4.h),
+                    padding: EdgeInsets.symmetric(horizontal: 4.5.w, vertical: 1.4.h),
                     shape: const RoundedRectangleBorder(
-                      borderRadius: AppRadius.circular10,
+                      borderRadius: AppRadius.circular12,
                     ),
+                    elevation: 0,
                   ),
                   icon: AppIcons.programs(size: AppSizes.iconMd, color: AppColors.ultraDark),
                   label: Text(
                     "Accéder aux Cours",
-                    style: AppTextStyles.buttonSmall.copyWith(color: AppColors.ultraDark),
+                    style: AppTextStyles.buttonSmall.copyWith(
+                      color: AppColors.ultraDark,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -392,6 +504,20 @@ class _DashboardPageState extends State<DashboardPage> {
       ),
     );
   }
+}
+
+class _LevelConfig {
+  final String title;
+  final String subtitle;
+  final String emoji;
+  final List<Color> gradientColors;
+
+  const _LevelConfig({
+    required this.title,
+    required this.subtitle,
+    required this.emoji,
+    required this.gradientColors,
+  });
 }
 
 class _QuickActionCard extends StatelessWidget {
