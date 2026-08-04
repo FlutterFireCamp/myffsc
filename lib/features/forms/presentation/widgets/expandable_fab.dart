@@ -158,7 +158,7 @@ class _ExpandableFabState extends State<ExpandableFab>
             foregroundColor: AppColors.ultraDark,
             elevation: 4,
             shape: const CircleBorder(),
-            child: AppIcons.forms(color: AppColors.ultraDark, size: AppSizes.iconLg),
+            child: AppIcons.link(color: AppColors.ultraDark, size: AppSizes.iconLg),
           ),
         ),
       ),
