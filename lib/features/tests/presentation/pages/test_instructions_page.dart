@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/test_quiz_entity.dart';
+import '../widgets/instruction_rule_card.dart';
 import 'test_taking_page.dart';
 
 class TestInstructionsPage extends StatelessWidget {
@@ -48,15 +49,11 @@ class TestInstructionsPage extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 3.w, vertical: 0.6.h),
+                                padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
                                 decoration: BoxDecoration(
-                                  color: AppColors.actionBlue
-                                      .withValues(alpha: 0.15),
+                                  color: AppColors.actionBlue.withValues(alpha: 0.15),
                                   borderRadius: AppRadius.circular8,
-                                  border: Border.all(
-                                      color: AppColors.actionBlue
-                                          .withValues(alpha: 0.4)),
+                                  border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.4)),
                                 ),
                                 child: Text(
                                   "EXAMEN OFFICIEL",
@@ -98,18 +95,15 @@ class TestInstructionsPage extends StatelessWidget {
                             runSpacing: 1.h,
                             children: [
                               _buildMetaBadge(
-                                icon: AppIcons.timer(
-                                    size: 16, color: AppColors.skyBlue),
+                                icon: AppIcons.timer(size: 16, color: AppColors.skyBlue),
                                 label: "${quiz.totalDurationMinutes} Minutes",
                               ),
                               _buildMetaBadge(
-                                icon: AppIcons.forms(
-                                    size: 16, color: AppColors.firebaseYellow),
+                                icon: AppIcons.forms(size: 16, color: AppColors.firebaseYellow),
                                 label: "${quiz.questions.length} Questions",
                               ),
                               _buildMetaBadge(
-                                icon: AppIcons.info(
-                                    size: 16, color: AppColors.correctText),
+                                icon: AppIcons.info(size: 16, color: AppColors.correctText),
                                 label: quiz.avgTimePerQuestionText,
                               ),
                             ],
@@ -135,8 +129,7 @@ class TestInstructionsPage extends StatelessWidget {
                           Container(
                             padding: EdgeInsets.all(2.5.w),
                             decoration: BoxDecoration(
-                              color: AppColors.firebaseOrange
-                                  .withValues(alpha: 0.15),
+                              color: AppColors.firebaseOrange.withValues(alpha: 0.15),
                               shape: BoxShape.circle,
                             ),
                             child: AppIcons.calendar(
@@ -182,19 +175,17 @@ class TestInstructionsPage extends StatelessWidget {
                     SizedBox(height: 1.5.h),
 
                     // Rule 1: No Backward Navigation
-                    _buildRuleCard(
-                      icon: AppIcons.warning(
-                          size: 20, color: AppColors.alertRed),
+                    InstructionRuleCard(
+                      icon: AppIcons.warning(size: 20, color: AppColors.alertRed),
                       title: "Pas de retour en arrière",
                       description:
-                          "Une fois que vous validez une question et passez à la suivante, il est strictement impossible de revenir en arrière.",
+                          "Une fois que vous validez une question et passez à la suivante, il est strictly impossible de revenir en arrière.",
                     ),
                     SizedBox(height: 1.5.h),
 
                     // Rule 2: Timing & Bonus Time
-                    _buildRuleCard(
-                      icon: AppIcons.timer(
-                          size: 20, color: AppColors.skyBlue),
+                    InstructionRuleCard(
+                      icon: AppIcons.timer(size: 20, color: AppColors.skyBlue),
                       title: "Gestion du temps & Décompte global",
                       description:
                           "Le chronomètre total descend en temps réel. Si vous répondez rapidement aux questions QCM, le temps économisé sera conservé pour les questions pratiques ou écrites à la fin.",
@@ -202,9 +193,8 @@ class TestInstructionsPage extends StatelessWidget {
                     SizedBox(height: 1.5.h),
 
                     // Rule 3: Anti Screenshot Protection
-                    _buildRuleCard(
-                      icon: AppIcons.lock(
-                          size: 20, color: const Color(0xFFA5B4FC)),
+                    InstructionRuleCard(
+                      icon: AppIcons.lock(size: 20, color: const Color(0xFFA5B4FC)),
                       title: "Protection Anti-Capture d'Écran",
                       description:
                           "Le système sécurisé de l'application bloque automatiquement les captures d'écran et les enregistrements vidéos de l'examen.",
@@ -212,9 +202,8 @@ class TestInstructionsPage extends StatelessWidget {
                     SizedBox(height: 1.5.h),
 
                     // Rule 4: No Copy Paste
-                    _buildRuleCard(
-                      icon: AppIcons.cancel(
-                          size: 20, color: AppColors.warningAmber),
+                    InstructionRuleCard(
+                      icon: AppIcons.cancel(size: 20, color: AppColors.warningAmber),
                       title: "Copier-Coller Désactivé",
                       description:
                           "La sélection de texte, la copie et le collage d'éléments externes sont totalement désactivés durant toute la durée du test.",
@@ -222,9 +211,8 @@ class TestInstructionsPage extends StatelessWidget {
                     SizedBox(height: 1.5.h),
 
                     // Rule 5: AI Content Detection
-                    _buildRuleCard(
-                      icon: AppIcons.star(
-                          size: 20, color: AppColors.correctText),
+                    InstructionRuleCard(
+                      icon: AppIcons.star(size: 20, color: AppColors.correctText),
                       title: "Détection Automatique d'IA",
                       description:
                           "Les contenus générés ou assistés par une intelligence artificielle sont automatiquement détectés et disqualifieront l'épreuve.",
@@ -298,57 +286,6 @@ class TestInstructionsPage extends StatelessWidget {
             style: AppTextStyles.caption.copyWith(
               color: AppColors.textSecondary,
               fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRuleCard({
-    required Widget icon,
-    required String title,
-    required String description,
-  }) {
-    return Container(
-      padding: EdgeInsets.all(4.w),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: AppRadius.circular12,
-        border: Border.all(color: AppColors.borderSubtle),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.all(2.w),
-            decoration: BoxDecoration(
-              color: AppColors.ultraDark,
-              borderRadius: AppRadius.circular8,
-            ),
-            child: icon,
-          ),
-          SizedBox(width: 3.5.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 0.6.h),
-                Text(
-                  description,
-                  style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.textSecondary,
-                    height: 1.4,
-                  ),
-                ),
-              ],
             ),
           ),
         ],

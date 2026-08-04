@@ -11,10 +11,7 @@ import '../bloc/auth_state.dart';
 class CompleteProfilePage extends StatefulWidget {
   final UserEntity? user;
 
-  const CompleteProfilePage({
-    super.key,
-    this.user,
-  });
+  const CompleteProfilePage({super.key, this.user});
 
   @override
   State<CompleteProfilePage> createState() => _CompleteProfilePageState();
@@ -34,101 +31,33 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   bool _isSubmitting = false;
 
-  static const List<String> _genderOptions = ['Homme', 'Femme'];
-  static const List<String> _premiumOptions = ['Non', 'Oui'];
-
-  static const List<String> _hubOptions = [
-    'KIVU IMPACT CENTER',
-    '10000 Codeurs',
-    'Tek Komea',
-    'GDG On Campus ESTI',
-    'GDG RATOMA',
-    'GDG Ouaga',
-    'GDG Yamoussoukro',
-    'GDG CLOUD ABIDJAN',
-    'GDG on Campus UCB',
-    'WTM Kivu',
-    'ITN Hub',
-    'GDG Yaoundé',
-    'Yekola Now',
-    'Devcreed',
-    'GDG LOMÉ',
-    'Club Statistique de Université Lumière de Bujumbura (ULBU)',
-    'WTM Ngaoundéré',
-    'Autre / Non affilié',
-  ];
-
-  static const List<String> _africanCountries = [
-    'Algérie',
-    'Angola',
-    'Bénin',
-    'Botswana',
-    'Burkina Faso',
-    'Burundi',
-    'Cabo Verde',
-    'Cameroun',
-    'Comores',
-    'Congo-Brazzaville',
-    'Congo-Kinshasa',
-    'Côte d\'Ivoire',
-    'Djibouti',
-    'Égypte',
-    'Érythrée',
-    'Eswatini',
-    'Éthiopie',
-    'Gabon',
-    'Gambie',
-    'Ghana',
-    'Guinée',
-    'Guinée-Bissau',
-    'Guinée équatoriale',
-    'Kenya',
-    'Lesotho',
-    'Libéria',
-    'Libye',
-    'Madagascar',
-    'Malawi',
-    'Mali',
-    'Maroc',
-    'Maurice',
-    'Mauritanie',
-    'Mozambique',
-    'Namibie',
-    'Niger',
-    'Nigéria',
-    'Ouganda',
-    'République centrafricaine',
-    'Rwanda',
-    'Sao Tomé-et-Principe',
-    'Sénégal',
-    'Seychelles',
-    'Sierra Leone',
-    'Somalie',
-    'Soudan',
-    'Soudan du Sud',
-    'Tanzanie',
-    'Tchad',
-    'Togo',
-    'Tunisie',
-    'Zambie',
-    'Zimbabwe',
-  ];
+  static const List<String> _genderOptions = AppDataConstants.genderOptions;
+  static const List<String> _premiumOptions = AppDataConstants.yesNoOptions;
+  static const List<String> _hubOptions = AppDataConstants.hubOptions;
+  static const List<String> _africanCountries =
+      AppDataConstants.africanCountries;
 
   @override
   void initState() {
     super.initState();
     final currentUser = widget.user;
     _nameController = TextEditingController(
-      text: currentUser?.name == 'Apprenant FFSC' ? '' : (currentUser?.name ?? ''),
+      text: currentUser?.name == 'Apprenant FFSC'
+          ? ''
+          : (currentUser?.name ?? ''),
     );
-    _discordController = TextEditingController(text: currentUser?.discordUsername ?? '');
+    _discordController = TextEditingController(
+      text: currentUser?.discordUsername ?? '',
+    );
     _townController = TextEditingController(text: currentUser?.town ?? '');
 
-    if (currentUser?.gender != null && _genderOptions.contains(currentUser!.gender)) {
+    if (currentUser?.gender != null &&
+        _genderOptions.contains(currentUser!.gender)) {
       _selectedGender = currentUser.gender;
     }
 
-    if (currentUser?.country != null && _africanCountries.contains(currentUser!.country)) {
+    if (currentUser?.country != null &&
+        _africanCountries.contains(currentUser!.country)) {
       _selectedCountry = currentUser.country!;
     }
 
@@ -173,7 +102,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
     try {
       final docId = currentUser.id;
-      final hubValue = (_selectedHub == null || _selectedHub!.contains('Non affilié'))
+      final hubValue =
+          (_selectedHub == null || _selectedHub!.contains('Non affilié'))
           ? ''
           : _selectedHub!.trim();
 
@@ -215,7 +145,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
-    final currentUser = widget.user ??
+    final currentUser =
+        widget.user ??
         (authState is ProfileIncompleteState
             ? authState.user
             : (authState is UnauthorizedState ? authState.user : null));
@@ -258,7 +189,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                   children: [
                     CircleAvatar(
                       radius: 5.w,
-                      backgroundColor: AppColors.actionBlue.withValues(alpha: 0.2),
+                      backgroundColor: AppColors.actionBlue.withValues(
+                        alpha: 0.2,
+                      ),
                       backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
                           ? NetworkImage(photoUrl)
                           : null,
@@ -304,169 +237,191 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       children: [
                         Text(
                           "Informations Personnelles",
-                          style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+                          style: AppTextStyles.h3.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                         ),
                         SizedBox(height: 0.8.h),
                         Text(
                           "Veuillez compléter vos informations pour valider votre dossier.",
-                          style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         SizedBox(height: 2.5.h),
 
-                // 1. Nom complet *
-                _buildLabel("Nom complet *"),
-                SizedBox(height: 0.8.h),
-                TextFormField(
-                  controller: _nameController,
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                  decoration: _buildInputDecoration(hint: "Ex: Georges Byona"),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Veuillez entrer votre nom complet.";
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 2.h),
-
-                // 2. Discord Username *
-                _buildLabel("Discord Username *"),
-                SizedBox(height: 0.8.h),
-                TextFormField(
-                  controller: _discordController,
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                  decoration: _buildInputDecoration(hint: "Ex: glosings0n"),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Veuillez entrer votre pseudo Discord.";
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 2.h),
-
-                // 3. Genre *
-                _buildLabel("Genre *"),
-                SizedBox(height: 0.8.h),
-                AppDropdownField(
-                  label: "Genre *",
-                  value: _selectedGender,
-                  hint: "Sélectionnez votre genre",
-                  options: _genderOptions,
-                  onSelected: (val) {
-                    setState(() {
-                      _selectedGender = val;
-                    });
-                  },
-                  validator: (val) => val == null || val.isEmpty ? "Veuillez choisir un genre." : null,
-                ),
-                SizedBox(height: 2.h),
-
-                // 4. Pays de résidence *
-                _buildLabel("Pays de résidence *"),
-                SizedBox(height: 0.8.h),
-                AppDropdownField(
-                  label: "Pays de résidence *",
-                  value: _selectedCountry,
-                  hint: "Sélectionnez votre pays",
-                  options: _africanCountries,
-                  enableSearch: true,
-                  onSelected: (val) {
-                    setState(() {
-                      _selectedCountry = val;
-                    });
-                  },
-                  validator: (val) => val == null || val.isEmpty ? "Veuillez sélectionner votre pays de résidence." : null,
-                ),
-                SizedBox(height: 2.h),
-
-                // 5. Ville (Optionnel)
-                _buildLabel("Ville (Optionnel)"),
-                SizedBox(height: 0.8.h),
-                TextFormField(
-                  controller: _townController,
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                  decoration: _buildInputDecoration(hint: "Ex: Kinshasa, Lubumbashi..."),
-                ),
-                SizedBox(height: 2.h),
-
-                // 6. Communauté / Hub (Optionnel)
-                _buildLabel("Communauté / Hub (Optionnel)"),
-                SizedBox(height: 0.8.h),
-                AppDropdownField(
-                  label: "Communauté / Hub",
-                  value: _selectedHub,
-                  hint: "Sélectionnez votre communauté ou hub",
-                  options: _hubOptions,
-                  enableSearch: true,
-                  onSelected: (val) {
-                    setState(() {
-                      _selectedHub = val;
-                    });
-                  },
-                ),
-                SizedBox(height: 2.h),
-
-                // 7. Avez-vous l'accès Premium sur NextFlutter ? *
-                _buildLabel("Avez-vous l'accès Premium sur NextFlutter ? *"),
-                SizedBox(height: 0.8.h),
-                AppDropdownField(
-                  label: "Accès Premium NextFlutter *",
-                  value: _hasNextFlutterPremium,
-                  hint: "Sélectionnez Oui ou Non",
-                  options: _premiumOptions,
-                  onSelected: (val) {
-                    setState(() {
-                      _hasNextFlutterPremium = val;
-                    });
-                  },
-                ),
-                SizedBox(height: 3.5.h),
-
-                // Submit Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isSubmitting || currentUser == null
-                        ? null
-                        : () => _submitProfile(currentUser),
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                      backgroundColor: AppColors.actionBlue,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: AppRadius.circular14,
-                      ),
-                      elevation: 0,
-                    ),
-                    child: _isSubmitting
-                        ? SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : Text(
-                            "Finaliser mon inscription",
-                            style: AppTextStyles.button.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        // 1. Nom complet *
+                        _buildLabel("Nom complet *"),
+                        SizedBox(height: 0.8.h),
+                        TextFormField(
+                          controller: _nameController,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textPrimary,
                           ),
+                          decoration: _buildInputDecoration(
+                            hint: "Ex: Georges Byona",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Veuillez entrer votre nom complet.";
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 2.h),
+
+                        // 2. Discord Username *
+                        _buildLabel("Discord Username *"),
+                        SizedBox(height: 0.8.h),
+                        TextFormField(
+                          controller: _discordController,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                          decoration: _buildInputDecoration(
+                            hint: "Ex: glosings0n",
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return "Veuillez entrer votre pseudo Discord.";
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 2.h),
+
+                        // 3. Genre *
+                        _buildLabel("Genre *"),
+                        SizedBox(height: 0.8.h),
+                        AppDropdownField(
+                          label: "Genre *",
+                          value: _selectedGender,
+                          hint: "Sélectionnez votre genre",
+                          options: _genderOptions,
+                          onSelected: (val) {
+                            setState(() {
+                              _selectedGender = val;
+                            });
+                          },
+                          validator: (val) => val == null || val.isEmpty
+                              ? "Veuillez choisir un genre."
+                              : null,
+                        ),
+                        SizedBox(height: 2.h),
+
+                        // 4. Pays de résidence *
+                        _buildLabel("Pays de résidence *"),
+                        SizedBox(height: 0.8.h),
+                        AppDropdownField(
+                          label: "Pays de résidence *",
+                          value: _selectedCountry,
+                          hint: "Sélectionnez votre pays",
+                          options: _africanCountries,
+                          enableSearch: true,
+                          onSelected: (val) {
+                            setState(() {
+                              _selectedCountry = val;
+                            });
+                          },
+                          validator: (val) => val == null || val.isEmpty
+                              ? "Veuillez sélectionner votre pays de résidence."
+                              : null,
+                        ),
+                        SizedBox(height: 2.h),
+
+                        // 5. Ville (Optionnel)
+                        _buildLabel("Ville (Optionnel)"),
+                        SizedBox(height: 0.8.h),
+                        TextFormField(
+                          controller: _townController,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                          decoration: _buildInputDecoration(
+                            hint: "Ex: Kinshasa, Dakar, Abidjan...",
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+
+                        // 6. Communauté / Hub (Optionnel)
+                        _buildLabel("Communauté / Hub (Optionnel)"),
+                        SizedBox(height: 0.8.h),
+                        AppDropdownField(
+                          label: "Communauté / Hub",
+                          value: _selectedHub,
+                          hint: "Sélectionnez votre communauté ou hub",
+                          options: _hubOptions,
+                          enableSearch: true,
+                          onSelected: (val) {
+                            setState(() {
+                              _selectedHub = val;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 2.h),
+
+                        // 7. Avez-vous l'accès Premium sur NextFlutter ? *
+                        _buildLabel(
+                          "Avez-vous l'accès Premium sur NextFlutter ? *",
+                        ),
+                        SizedBox(height: 0.8.h),
+                        AppDropdownField(
+                          label: "Accès Premium NextFlutter *",
+                          value: _hasNextFlutterPremium,
+                          hint: "Sélectionnez Oui ou Non",
+                          options: _premiumOptions,
+                          onSelected: (val) {
+                            setState(() {
+                              _hasNextFlutterPremium = val;
+                            });
+                          },
+                        ),
+                        SizedBox(height: 3.5.h),
+
+                        // Submit Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _isSubmitting || currentUser == null
+                                ? null
+                                : () => _submitProfile(currentUser),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                              backgroundColor: AppColors.actionBlue,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: AppRadius.circular14,
+                              ),
+                              elevation: 0,
+                            ),
+                            child: _isSubmitting
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(
+                                    "Finaliser mon inscription",
+                                    style: AppTextStyles.button.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                        SizedBox(height: 3.h),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(height: 3.h),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
-    ],
-  ),
-),
-),
-);
+    );
   }
 
   Widget _buildLabel(String text) {

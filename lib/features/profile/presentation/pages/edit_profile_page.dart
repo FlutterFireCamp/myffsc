@@ -36,84 +36,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   bool _isSubmitting = false;
 
-  static const List<String> _genderOptions = ['Homme', 'Femme'];
-
-  static const List<String> _hubOptions = [
-    'KIVU IMPACT CENTER',
-    '10000 Codeurs',
-    'Tek Komea',
-    'GDG On Campus ESTI',
-    'GDG RATOMA',
-    'GDG Ouaga',
-    'GDG Yamoussoukro',
-    'GDG CLOUD ABIDJAN',
-    'GDG on Campus UCB',
-    'WTM Kivu',
-    'ITN Hub',
-    'GDG Yaoundé',
-    'Yekola Now',
-    'Devcreed',
-    'GDG LOMÉ',
-    'Club Statistique de Université Lumière de Bujumbura (ULBU)',
-    'WTM Ngaoundéré',
-    'Autre / Non affilié',
-  ];
-
-  static const List<String> _africanCountries = [
-    'Algérie',
-    'Angola',
-    'Bénin',
-    'Botswana',
-    'Burkina Faso',
-    'Burundi',
-    'Cabo Verde',
-    'Cameroun',
-    'Comores',
-    'Congo-Brazzaville',
-    'Congo-Kinshasa',
-    'Côte d\'Ivoire',
-    'Djibouti',
-    'Égypte',
-    'Érythrée',
-    'Eswatini',
-    'Éthiopie',
-    'Gabon',
-    'Gambie',
-    'Ghana',
-    'Guinée',
-    'Guinée-Bissau',
-    'Guinée équatoriale',
-    'Kenya',
-    'Lesotho',
-    'Libéria',
-    'Libye',
-    'Madagascar',
-    'Malawi',
-    'Mali',
-    'Maroc',
-    'Maurice',
-    'Mauritanie',
-    'Mozambique',
-    'Namibie',
-    'Niger',
-    'Nigéria',
-    'Ouganda',
-    'République centrafricaine',
-    'Rwanda',
-    'Sao Tomé-et-Principe',
-    'Sénégal',
-    'Seychelles',
-    'Sierra Leone',
-    'Somalie',
-    'Soudan',
-    'Soudan du Sud',
-    'Tanzanie',
-    'Tchad',
-    'Togo',
-    'Tunisie',
-    'Zambie',
-    'Zimbabwe',
-  ];
+  static const List<String> _genderOptions = AppDataConstants.genderOptions;
+  static const List<String> _hubOptions = AppDataConstants.hubOptions;
+  static const List<String> _africanCountries = AppDataConstants.africanCountries;
 
   @override
   void initState() {
