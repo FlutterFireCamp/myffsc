@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/test_quiz_entity.dart';
+import '../widgets/quiz_option_tile.dart';
+import '../widgets/quiz_segmented_progress_bar.dart';
 
 class TestTakingPage extends StatefulWidget {
   final TestQuizEntity quiz;
@@ -89,13 +91,11 @@ class _TestTakingPageState extends State<TestTakingPage> {
 
   void _onNextOrSubmit() {
     if (!_isSubmitted) {
-      // Validate current question
       setState(() {
         _isSubmitted = true;
         _userAnswers[_currentQuestionIndex] = _selectedOptionIndex ?? _textAnswerController.text;
       });
     } else {
-      // Move to next question or finish
       if (_currentQuestionIndex < widget.quiz.questions.length - 1) {
         setState(() {
           _currentQuestionIndex++;
@@ -138,6 +138,38 @@ class _TestTakingPageState extends State<TestTakingPage> {
     );
   }
 
+  void _showQuitConfirmDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.modalBackground,
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.circular16),
+        title: Text(
+          "Quitter l'examen ?",
+          style: AppTextStyles.h3.copyWith(color: AppColors.alertRed),
+        ),
+        content: Text(
+          "Si vous quittez maintenant, l'examen sera interrompu et vos réponses actuelles seront enregistrées définitivement.",
+          style: AppTextStyles.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Continuer l'examen"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context); // close dialog
+              Navigator.pop(context); // leave test page
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.incorrectBorder),
+            child: const Text("Quitter"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final question = widget.quiz.questions[_currentQuestionIndex];
@@ -155,9 +187,7 @@ class _TestTakingPageState extends State<TestTakingPage> {
             elevation: 0,
             leading: IconButton(
               icon: AppIcons.cancel(color: AppColors.textSecondary, size: 20),
-              onPressed: () {
-                _showQuitConfirmDialog();
-              },
+              onPressed: _showQuitConfirmDialog,
             ),
             title: Text(
               widget.quiz.title,
@@ -168,7 +198,6 @@ class _TestTakingPageState extends State<TestTakingPage> {
               overflow: TextOverflow.ellipsis,
             ),
             actions: [
-              // Text view button indicator matching screenshot
               Padding(
                 padding: EdgeInsets.only(right: 3.w),
                 child: Row(
@@ -190,6 +219,7 @@ class _TestTakingPageState extends State<TestTakingPage> {
             child: Column(
               children: [
                 SizedBox(height: 1.h),
+
                 // Timer & Segmented Progress Bar Header
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
@@ -232,7 +262,6 @@ class _TestTakingPageState extends State<TestTakingPage> {
                             ),
                           ),
 
-                          // Question Counter: 1 / 20
                           Text(
                             "${_currentQuestionIndex + 1} / $totalQuestions",
                             style: AppTextStyles.bodyMedium.copyWith(
@@ -244,8 +273,11 @@ class _TestTakingPageState extends State<TestTakingPage> {
                       ),
                       SizedBox(height: 1.5.h),
 
-                      // Custom Segmented Progress Bar (Matching Screenshot)
-                      _buildSegmentedProgressBar(totalQuestions),
+                      // Segmented Progress Bar Widget
+                      QuizSegmentedProgressBar(
+                        total: totalQuestions,
+                        currentIndex: _currentQuestionIndex,
+                      ),
                     ],
                   ),
                 ),
@@ -259,7 +291,6 @@ class _TestTakingPageState extends State<TestTakingPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Question Title with number prefix
                         Text(
                           "${_currentQuestionIndex + 1}. ${question.title}",
                           style: AppTextStyles.h3.copyWith(
@@ -277,95 +308,24 @@ class _TestTakingPageState extends State<TestTakingPage> {
                             itemCount: options.length,
                             separatorBuilder: (context, index) => SizedBox(height: 1.8.h),
                             itemBuilder: (context, index) {
-                              final letterPrefix = _getLetterPrefix(index);
-                              final optionText = options[index];
-
                               final isSelected = _selectedOptionIndex == index;
                               final isCorrect = question.correctAnswers?.contains(index) ?? false;
 
-                              Color optionBg = AppColors.card;
-                              Color optionBorder = AppColors.borderSubtle;
-                              Color textColor = AppColors.textPrimary;
-                              Color prefixColor = AppColors.textSecondary;
-
-                              if (_isSubmitted) {
-                                if (isCorrect) {
-                                  // Correct Option -> Solid Green
-                                  optionBg = const Color(0xFF0F5122); // Deep Green
-                                  optionBorder = AppColors.correctBorder;
-                                  textColor = AppColors.textPrimary;
-                                  prefixColor = AppColors.correctText;
-                                } else if (isSelected && !isCorrect) {
-                                  // Selected Incorrect Option -> Solid Red
-                                  optionBg = const Color(0xFF3F1214); // Deep Red
-                                  optionBorder = AppColors.incorrectBorder;
-                                  textColor = AppColors.errorText;
-                                  prefixColor = AppColors.errorText;
-                                }
-                              } else if (isSelected) {
-                                // Selected before submit -> Action Blue Tint
-                                optionBg = AppColors.cardHover;
-                                optionBorder = AppColors.actionBlue;
-                                prefixColor = AppColors.skyBlue;
-                              }
-
-                              return InkWell(
-                                onTap: _isSubmitted
-                                    ? null
-                                    : () {
-                                        setState(() {
-                                          _selectedOptionIndex = index;
-                                        });
-                                      },
-                                borderRadius: AppRadius.circular12,
-                                child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 200),
-                                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-                                  decoration: BoxDecoration(
-                                    color: optionBg,
-                                    borderRadius: AppRadius.circular12,
-                                    border: Border.all(
-                                      color: optionBorder,
-                                      width: isSelected || (_isSubmitted && isCorrect) ? 1.8 : 1,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      // Prefix A., B., C., D.
-                                      Text(
-                                        "$letterPrefix. ",
-                                        style: AppTextStyles.bodyLarge.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: prefixColor,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Text(
-                                          optionText,
-                                          style: AppTextStyles.bodyMedium.copyWith(
-                                            color: textColor,
-                                            fontWeight: isSelected || (_isSubmitted && isCorrect)
-                                                ? FontWeight.w600
-                                                : FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      if (_isSubmitted && isCorrect) ...[
-                                        SizedBox(width: 2.w),
-                                        AppIcons.check(color: AppColors.correctText, size: 20),
-                                      ] else if (_isSubmitted && isSelected && !isCorrect) ...[
-                                        SizedBox(width: 2.w),
-                                        AppIcons.cancel(color: AppColors.errorText, size: 20),
-                                      ],
-                                    ],
-                                  ),
-                                ),
+                              return QuizOptionTile(
+                                index: index,
+                                optionText: options[index],
+                                isSelected: isSelected,
+                                isSubmitted: _isSubmitted,
+                                isCorrect: isCorrect,
+                                onTap: () {
+                                  setState(() {
+                                    _selectedOptionIndex = index;
+                                  });
+                                },
                               );
                             },
                           )
                         else
-                          // Text Open Question Area
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -373,7 +333,7 @@ class _TestTakingPageState extends State<TestTakingPage> {
                                 controller: _textAnswerController,
                                 enabled: !_isSubmitted,
                                 maxLines: 5,
-                                enableInteractiveSelection: false, // disable copy-paste
+                                enableInteractiveSelection: false,
                                 style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
                                 decoration: InputDecoration(
                                   hintText: "Saisissez votre réponse ici...",
@@ -417,7 +377,6 @@ class _TestTakingPageState extends State<TestTakingPage> {
                         ),
                       ),
 
-                      // Rounded Pill Next Button (Matching Screenshot)
                       ElevatedButton(
                         onPressed: (_selectedOptionIndex == null &&
                                 (isChoiceQuestion || _textAnswerController.text.trim().isEmpty))
@@ -425,10 +384,10 @@ class _TestTakingPageState extends State<TestTakingPage> {
                             : _onNextOrSubmit,
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 1.5.h),
-                          backgroundColor: const Color(0xFF2563EB), // Primary Blue matching image
+                          backgroundColor: const Color(0xFF2563EB),
                           disabledBackgroundColor: AppColors.cardHover,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24), // Rounded pill button
+                            borderRadius: BorderRadius.circular(24),
                           ),
                           elevation: 0,
                         ),
@@ -449,74 +408,6 @@ class _TestTakingPageState extends State<TestTakingPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  /// Builds a segmented progress bar matching the screenshot
-  Widget _buildSegmentedProgressBar(int total) {
-    return Row(
-      children: List.generate(total, (index) {
-        final isPassed = index < _currentQuestionIndex;
-        final isCurrent = index == _currentQuestionIndex;
-
-        Color segmentColor = AppColors.cardHover;
-        if (isPassed) {
-          segmentColor = AppColors.actionBlue;
-        } else if (isCurrent) {
-          segmentColor = AppColors.skyBlue;
-        }
-
-        return Expanded(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 0.5.w),
-            height: 4,
-            decoration: BoxDecoration(
-              color: segmentColor,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-        );
-      }),
-    );
-  }
-
-  String _getLetterPrefix(int index) {
-    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-    if (index >= 0 && index < letters.length) {
-      return letters[index];
-    }
-    return '${index + 1}';
-  }
-
-  void _showQuitConfirmDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.modalBackground,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.circular16),
-        title: Text(
-          "Quitter l'examen ?",
-          style: AppTextStyles.h3.copyWith(color: AppColors.alertRed),
-        ),
-        content: Text(
-          "Si vous quittez maintenant, l'examen sera interrompu et vos réponses actuelles seront enregistrées définitivement.",
-          style: AppTextStyles.bodyMedium,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Continuer l'examen"),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context); // close dialog
-              Navigator.pop(context); // leave test page
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.incorrectBorder),
-            child: const Text("Quitter"),
-          ),
-        ],
       ),
     );
   }

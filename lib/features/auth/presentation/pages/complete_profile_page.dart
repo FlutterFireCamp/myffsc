@@ -7,6 +7,7 @@ import '../../domain/entities/user_entity.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
+import '../widgets/complete_profile_header.dart';
 
 class CompleteProfilePage extends StatefulWidget {
   final UserEntity? user;
@@ -34,30 +35,25 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   static const List<String> _genderOptions = AppDataConstants.genderOptions;
   static const List<String> _premiumOptions = AppDataConstants.yesNoOptions;
   static const List<String> _hubOptions = AppDataConstants.hubOptions;
-  static const List<String> _africanCountries =
-      AppDataConstants.africanCountries;
+  static const List<String> _africanCountries = AppDataConstants.africanCountries;
 
   @override
   void initState() {
     super.initState();
     final currentUser = widget.user;
     _nameController = TextEditingController(
-      text: currentUser?.name == 'Apprenant FFSC'
-          ? ''
-          : (currentUser?.name ?? ''),
+      text: currentUser?.name == 'Apprenant FFSC' ? '' : (currentUser?.name ?? ''),
     );
     _discordController = TextEditingController(
       text: currentUser?.discordUsername ?? '',
     );
     _townController = TextEditingController(text: currentUser?.town ?? '');
 
-    if (currentUser?.gender != null &&
-        _genderOptions.contains(currentUser!.gender)) {
+    if (currentUser?.gender != null && _genderOptions.contains(currentUser!.gender)) {
       _selectedGender = currentUser.gender;
     }
 
-    if (currentUser?.country != null &&
-        _africanCountries.contains(currentUser!.country)) {
+    if (currentUser?.country != null && _africanCountries.contains(currentUser!.country)) {
       _selectedCountry = currentUser.country!;
     }
 
@@ -102,8 +98,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
     try {
       final docId = currentUser.id;
-      final hubValue =
-          (_selectedHub == null || _selectedHub!.contains('Non affilié'))
+      final hubValue = (_selectedHub == null || _selectedHub!.contains('Non affilié'))
           ? ''
           : _selectedHub!.trim();
 
@@ -145,8 +140,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
-    final currentUser =
-        widget.user ??
+    final currentUser = widget.user ??
         (authState is ProfileIncompleteState
             ? authState.user
             : (authState is UnauthorizedState ? authState.user : null));
@@ -176,299 +170,157 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Connected Account Card (Fixed at Top)
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(4.w),
-                decoration: BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: AppRadius.circular16,
-                  border: Border.all(color: AppColors.borderSubtle),
-                ),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 5.w,
-                      backgroundColor: AppColors.actionBlue.withValues(
-                        alpha: 0.2,
-                      ),
-                      backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
-                          ? NetworkImage(photoUrl)
-                          : null,
-                      child: (photoUrl == null || photoUrl.isEmpty)
-                          ? AppIcons.user(size: 20, color: AppColors.skyBlue)
-                          : null,
-                    ),
-                    SizedBox(width: 3.5.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Compte Google connecté",
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.textMuted,
-                            ),
-                          ),
-                          SizedBox(height: 0.3.h),
-                          Text(
-                            emailText,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              // Connected Account Card Header
+              CompleteProfileHeader(
+                emailText: emailText,
+                photoUrl: photoUrl,
               ),
               SizedBox(height: 2.h),
 
-              // Scrollable Form Body
+              // Scrollable Form Fields
               Expanded(
-                child: SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Informations Personnelles",
-                          style: AppTextStyles.h3.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-                        SizedBox(height: 0.8.h),
-                        Text(
-                          "Veuillez compléter vos informations pour valider votre dossier.",
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        SizedBox(height: 2.5.h),
+                child: Form(
+                  key: _formKey,
+                  child: ListView(
+                    primary: false,
+                    padding: EdgeInsets.only(bottom: 3.h),
+                    children: [
+                      Text(
+                        "Informations personnelles",
+                        style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+                      ),
+                      SizedBox(height: 1.5.h),
 
-                        // 1. Nom complet *
-                        _buildLabel("Nom complet *"),
-                        SizedBox(height: 0.8.h),
-                        TextFormField(
-                          controller: _nameController,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                          decoration: _buildInputDecoration(
-                            hint: "Ex: Georges Byona",
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return "Veuillez entrer votre nom complet.";
-                            }
-                            return null;
-                          },
+                      // Nom Complet
+                      TextFormField(
+                        controller: _nameController,
+                        style: AppTextStyles.bodyMedium,
+                        decoration: const InputDecoration(
+                          labelText: "Nom complet (Nom & Prénom) *",
+                          hintText: "Ex: Georges Byona",
                         ),
-                        SizedBox(height: 2.h),
+                        validator: (val) {
+                          if (val == null || val.trim().isEmpty) {
+                            return "Veuillez entrer votre nom complet.";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 2.h),
 
-                        // 2. Discord Username *
-                        _buildLabel("Discord Username *"),
-                        SizedBox(height: 0.8.h),
-                        TextFormField(
-                          controller: _discordController,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                          decoration: _buildInputDecoration(
-                            hint: "Ex: glosings0n",
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return "Veuillez entrer votre pseudo Discord.";
-                            }
-                            return null;
-                          },
+                      // Pseudo Discord
+                      TextFormField(
+                        controller: _discordController,
+                        style: AppTextStyles.bodyMedium,
+                        decoration: const InputDecoration(
+                          labelText: "Nom d'utilisateur Discord *",
+                          hintText: "Ex: georges_dev",
                         ),
-                        SizedBox(height: 2.h),
+                        validator: (val) {
+                          if (val == null || val.trim().isEmpty) {
+                            return "Veuillez entrer votre pseudo Discord.";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 2.h),
 
-                        // 3. Genre *
-                        _buildLabel("Genre *"),
-                        SizedBox(height: 0.8.h),
-                        AppDropdownField(
-                          label: "Genre *",
-                          value: _selectedGender,
-                          hint: "Sélectionnez votre genre",
-                          options: _genderOptions,
-                          onSelected: (val) {
-                            setState(() {
-                              _selectedGender = val;
-                            });
-                          },
-                          validator: (val) => val == null || val.isEmpty
-                              ? "Veuillez choisir un genre."
-                              : null,
-                        ),
-                        SizedBox(height: 2.h),
+                      // Pays de résidence Dropdown
+                      AppDropdownField(
+                        label: "Pays de résidence *",
+                        value: _selectedCountry,
+                        options: _africanCountries,
+                        onSelected: (val) => setState(() => _selectedCountry = val),
+                        hint: "Sélectionner votre pays",
+                      ),
+                      SizedBox(height: 2.h),
 
-                        // 4. Pays de résidence *
-                        _buildLabel("Pays de résidence *"),
-                        SizedBox(height: 0.8.h),
-                        AppDropdownField(
-                          label: "Pays de résidence *",
-                          value: _selectedCountry,
-                          hint: "Sélectionnez votre pays",
-                          options: _africanCountries,
-                          enableSearch: true,
-                          onSelected: (val) {
-                            setState(() {
-                              _selectedCountry = val;
-                            });
-                          },
-                          validator: (val) => val == null || val.isEmpty
-                              ? "Veuillez sélectionner votre pays de résidence."
-                              : null,
+                      // Ville de résidence
+                      TextFormField(
+                        controller: _townController,
+                        style: AppTextStyles.bodyMedium,
+                        decoration: const InputDecoration(
+                          labelText: "Ville de résidence *",
+                          hintText: "Ex: Goma, Abidjan, Yaoundé...",
                         ),
-                        SizedBox(height: 2.h),
+                        validator: (val) {
+                          if (val == null || val.trim().isEmpty) {
+                            return "Veuillez entrer votre ville de résidence.";
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(height: 2.h),
 
-                        // 5. Ville (Optionnel)
-                        _buildLabel("Ville (Optionnel)"),
-                        SizedBox(height: 0.8.h),
-                        TextFormField(
-                          controller: _townController,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                          decoration: _buildInputDecoration(
-                            hint: "Ex: Kinshasa, Dakar, Abidjan...",
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
+                      // Hub / Communauté Tech Affiliée Dropdown
+                      AppDropdownField(
+                        label: "Hub / Communauté Tech d'origine (Optionnel)",
+                        value: _selectedHub,
+                        options: _hubOptions,
+                        onSelected: (val) => setState(() => _selectedHub = val),
+                        hint: "Sélectionner votre hub ou GDG...",
+                      ),
+                      SizedBox(height: 2.h),
 
-                        // 6. Communauté / Hub (Optionnel)
-                        _buildLabel("Communauté / Hub (Optionnel)"),
-                        SizedBox(height: 0.8.h),
-                        AppDropdownField(
-                          label: "Communauté / Hub",
-                          value: _selectedHub,
-                          hint: "Sélectionnez votre communauté ou hub",
-                          options: _hubOptions,
-                          enableSearch: true,
-                          onSelected: (val) {
-                            setState(() {
-                              _selectedHub = val;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 2.h),
+                      // Genre Dropdown
+                      AppDropdownField(
+                        label: "Genre / Sexe *",
+                        value: _selectedGender,
+                        options: _genderOptions,
+                        onSelected: (val) => setState(() => _selectedGender = val),
+                        hint: "Sélectionner votre genre",
+                      ),
+                      SizedBox(height: 2.h),
 
-                        // 7. Avez-vous l'accès Premium sur NextFlutter ? *
-                        _buildLabel(
-                          "Avez-vous l'accès Premium sur NextFlutter ? *",
-                        ),
-                        SizedBox(height: 0.8.h),
-                        AppDropdownField(
-                          label: "Accès Premium NextFlutter *",
-                          value: _hasNextFlutterPremium,
-                          hint: "Sélectionnez Oui ou Non",
-                          options: _premiumOptions,
-                          onSelected: (val) {
-                            setState(() {
-                              _hasNextFlutterPremium = val;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 3.5.h),
+                      // Participé au Next Flutter Premium
+                      AppDropdownField(
+                        label: "Avez-vous participé au Next Flutter Premium ?",
+                        value: _hasNextFlutterPremium,
+                        options: _premiumOptions,
+                        onSelected: (val) => setState(() => _hasNextFlutterPremium = val),
+                        hint: "Sélectionner une option",
+                      ),
+                      SizedBox(height: 3.h),
 
-                        // Submit Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _isSubmitting || currentUser == null
-                                ? null
-                                : () => _submitProfile(currentUser),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                              backgroundColor: AppColors.actionBlue,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: AppRadius.circular14,
-                              ),
-                              elevation: 0,
+                      // Submit Button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _isSubmitting || currentUser == null
+                              ? null
+                              : () => _submitProfile(currentUser),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.skyBlue,
+                            padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: AppRadius.circular12,
                             ),
-                            child: _isSubmitting
-                                ? SizedBox(
-                                    width: 20,
-                                    height: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : Text(
-                                    "Finaliser mon inscription",
-                                    style: AppTextStyles.button.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
                           ),
+                          child: _isSubmitting
+                              ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.ultraDark,
+                                  ),
+                                )
+                              : Text(
+                                  "Valider et Accéder au Portail",
+                                  style: AppTextStyles.button.copyWith(
+                                    color: AppColors.ultraDark,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
-                        SizedBox(height: 3.h),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildLabel(String text) {
-    return RichText(
-      text: TextSpan(
-        text: text.replaceAll(' *', ''),
-        style: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.textPrimary,
-          fontWeight: FontWeight.w600,
-        ),
-        children: text.contains('*')
-            ? [
-                TextSpan(
-                  text: ' *',
-                  style: TextStyle(
-                    color: AppColors.errorText,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ]
-            : [],
-      ),
-    );
-  }
-
-  InputDecoration _buildInputDecoration({required String hint}) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
-      filled: true,
-      fillColor: AppColors.card,
-      contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
-      border: OutlineInputBorder(
-        borderRadius: AppRadius.circular12,
-        borderSide: const BorderSide(color: AppColors.borderSubtle),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: AppRadius.circular12,
-        borderSide: const BorderSide(color: AppColors.borderSubtle),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: AppRadius.circular12,
-        borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: AppRadius.circular12,
-        borderSide: const BorderSide(color: AppColors.errorText),
       ),
     );
   }

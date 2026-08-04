@@ -6,6 +6,7 @@ import '../../../../core/core.dart';
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
+import '../widgets/edit_profile_header.dart';
 
 class EditProfilePage extends StatefulWidget {
   final UserEntity user;
@@ -43,24 +44,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    final u = widget.user;
-    _nameController = TextEditingController(text: u.name == 'Apprenant FFSC' ? '' : u.name);
-    _discordController = TextEditingController(text: u.discordUsername ?? '');
-    _townController = TextEditingController(text: u.town ?? '');
-    _githubController = TextEditingController(text: u.github ?? '');
-    _linkedinController = TextEditingController(text: u.linkedin ?? '');
-    _xController = TextEditingController(text: u.x ?? '');
-    _portfolioController = TextEditingController(text: u.portfolio ?? '');
+    final user = widget.user;
 
-    if (u.gender != null && _genderOptions.contains(u.gender)) {
-      _selectedGender = u.gender;
+    _nameController = TextEditingController(text: user.name);
+    _discordController = TextEditingController(text: user.discordUsername ?? '');
+    _townController = TextEditingController(text: user.town ?? '');
+    _githubController = TextEditingController(text: user.github ?? '');
+    _linkedinController = TextEditingController(text: user.linkedin ?? '');
+    _xController = TextEditingController(text: user.x ?? '');
+    _portfolioController = TextEditingController(text: user.portfolio ?? '');
+
+    if (user.gender != null && _genderOptions.contains(user.gender)) {
+      _selectedGender = user.gender;
     }
 
-    if (u.country != null && _africanCountries.contains(u.country)) {
-      _selectedCountry = u.country;
+    if (user.country != null && _africanCountries.contains(user.country)) {
+      _selectedCountry = user.country;
     }
 
-    final existingHub = u.hub ?? u.community;
+    final existingHub = user.hub ?? user.community;
     if (existingHub != null && _hubOptions.contains(existingHub)) {
       _selectedHub = existingHub;
     }
@@ -78,7 +80,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     super.dispose();
   }
 
-  Future<void> _saveProfile() async {
+  Future<void> _submitChanges() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedGender == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -131,13 +133,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       if (mounted) {
         context.read<AuthBloc>().add(CheckAuthEvent());
-        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Profil mis à jour avec succès !"),
             backgroundColor: AppColors.correctContainer,
           ),
         );
+        Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
@@ -159,255 +161,193 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("Modifier mon profil"),
+        title: const Text("Éditer mon profil"),
+        backgroundColor: AppColors.background,
+        elevation: 0,
       ),
       body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-          children: [
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header note
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(4.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.card,
-                      borderRadius: AppRadius.circular16,
-                      border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            primary: false,
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+            children: [
+              // Header Card
+              EditProfileHeader(user: widget.user),
+              SizedBox(height: 3.h),
+
+              Text(
+                "Informations personnelles",
+                style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+              ),
+              SizedBox(height: 1.5.h),
+
+              // Nom complet
+              TextFormField(
+                controller: _nameController,
+                style: AppTextStyles.bodyMedium,
+                decoration: const InputDecoration(
+                  labelText: "Nom complet (Nom & Prénom) *",
+                  hintText: "Ex: Georges Byona",
+                ),
+                validator: (val) {
+                  if (val == null || val.trim().isEmpty) {
+                    return "Veuillez entrer votre nom complet.";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 2.h),
+
+              // Pseudo Discord
+              TextFormField(
+                controller: _discordController,
+                style: AppTextStyles.bodyMedium,
+                decoration: const InputDecoration(
+                  labelText: "Nom d'utilisateur Discord *",
+                  hintText: "Ex: georges_dev",
+                ),
+                validator: (val) {
+                  if (val == null || val.trim().isEmpty) {
+                    return "Veuillez entrer votre pseudo Discord.";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 2.h),
+
+              // Pays Dropdown
+              AppDropdownField(
+                label: "Pays de résidence *",
+                value: _selectedCountry,
+                options: _africanCountries,
+                onSelected: (val) => setState(() => _selectedCountry = val),
+                hint: "Sélectionner votre pays",
+              ),
+              SizedBox(height: 2.h),
+
+              // Ville
+              TextFormField(
+                controller: _townController,
+                style: AppTextStyles.bodyMedium,
+                decoration: const InputDecoration(
+                  labelText: "Ville de résidence *",
+                  hintText: "Ex: Goma, Abidjan, Yaoundé...",
+                ),
+                validator: (val) {
+                  if (val == null || val.trim().isEmpty) {
+                    return "Veuillez entrer votre ville de résidence.";
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 2.h),
+
+              // Hub Dropdown
+              AppDropdownField(
+                label: "Hub / Communauté Tech d'origine (Optionnel)",
+                value: _selectedHub,
+                options: _hubOptions,
+                onSelected: (val) => setState(() => _selectedHub = val),
+                hint: "Sélectionner votre hub ou GDG...",
+              ),
+              SizedBox(height: 2.h),
+
+              // Genre Dropdown
+              AppDropdownField(
+                label: "Genre / Sexe *",
+                value: _selectedGender,
+                options: _genderOptions,
+                onSelected: (val) => setState(() => _selectedGender = val),
+                hint: "Sélectionner votre genre",
+              ),
+              SizedBox(height: 3.h),
+
+              // Section Réseaux Sociaux & Portfolio
+              Text(
+                "Réseaux Sociaux & Portfolio",
+                style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+              ),
+              SizedBox(height: 1.5.h),
+
+              // GitHub
+              TextFormField(
+                controller: _githubController,
+                style: AppTextStyles.bodyMedium,
+                decoration: const InputDecoration(
+                  labelText: "Lien GitHub (Optionnel)",
+                  hintText: "https://github.com/votre_pseudo",
+                ),
+              ),
+              SizedBox(height: 2.h),
+
+              // LinkedIn
+              TextFormField(
+                controller: _linkedinController,
+                style: AppTextStyles.bodyMedium,
+                decoration: const InputDecoration(
+                  labelText: "Lien LinkedIn (Optionnel)",
+                  hintText: "https://linkedin.com/in/votre_pseudo",
+                ),
+              ),
+              SizedBox(height: 2.h),
+
+              // Twitter / X
+              TextFormField(
+                controller: _xController,
+                style: AppTextStyles.bodyMedium,
+                decoration: const InputDecoration(
+                  labelText: "Lien X / Twitter (Optionnel)",
+                  hintText: "https://x.com/votre_pseudo",
+                ),
+              ),
+              SizedBox(height: 2.h),
+
+              // Portfolio / Site Web
+              TextFormField(
+                controller: _portfolioController,
+                style: AppTextStyles.bodyMedium,
+                decoration: const InputDecoration(
+                  labelText: "Portfolio ou Site Web (Optionnel)",
+                  hintText: "https://votre-site.com",
+                ),
+              ),
+              SizedBox(height: 3.5.h),
+
+              // Save Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isSubmitting ? null : _submitChanges,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.skyBlue,
+                    padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: AppRadius.circular12,
                     ),
-                    child: Row(
-                      children: [
-                        AppIcons.info(color: AppColors.skyBlue, size: 20),
-                        SizedBox(width: 3.w),
-                        Expanded(
-                          child: Text(
-                            "Mettez à jour vos informations personnelles et vos liens. Vos modifications seront enregistrées directement.",
-                            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  ),
+                  child: _isSubmitting
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.ultraDark,
+                          ),
+                        )
+                      : Text(
+                          "Enregistrer les modifications",
+                          style: AppTextStyles.button.copyWith(
+                            color: AppColors.ultraDark,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 3.h),
-
-                  // Section: Informations Personnelles
-                  _buildSectionTitle("Informations Personnelles"),
-
-                  _buildLabel("Nom complet *"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _nameController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Ex: Georges Byona"),
-                    validator: (val) => val == null || val.trim().isEmpty ? "Veuillez entrer votre nom." : null,
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Discord Username *"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _discordController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Ex: glosings0n"),
-                    validator: (val) => val == null || val.trim().isEmpty ? "Veuillez entrer votre pseudo Discord." : null,
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Genre *"),
-                  SizedBox(height: 0.8.h),
-                  AppDropdownField(
-                    label: "Genre *",
-                    value: _selectedGender,
-                    hint: "Sélectionnez votre genre",
-                    options: _genderOptions,
-                    onSelected: (val) => setState(() => _selectedGender = val),
-                    validator: (val) => val == null || val.isEmpty ? "Veuillez choisir un genre." : null,
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Pays de résidence *"),
-                  SizedBox(height: 0.8.h),
-                  AppDropdownField(
-                    label: "Pays de résidence *",
-                    value: _selectedCountry,
-                    hint: "Sélectionnez votre pays",
-                    options: _africanCountries,
-                    enableSearch: true,
-                    onSelected: (val) => setState(() => _selectedCountry = val),
-                    validator: (val) => val == null || val.isEmpty ? "Veuillez choisir un pays." : null,
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Ville (Optionnel)"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _townController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Ex: Kinshasa, Lubumbashi..."),
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Communauté / Hub (Optionnel)"),
-                  SizedBox(height: 0.8.h),
-                  AppDropdownField(
-                    label: "Communauté / Hub",
-                    value: _selectedHub,
-                    hint: "Sélectionnez votre communauté ou hub",
-                    options: _hubOptions,
-                    enableSearch: true,
-                    onSelected: (val) => setState(() => _selectedHub = val),
-                  ),
-                  SizedBox(height: 3.h),
-
-                  // Section: Liens Sociaux & Portfolio
-                  _buildSectionTitle("Liens & Réseaux Sociaux"),
-
-                  _buildLabel("Profil GitHub (Optionnel)"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _githubController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Ex: https://github.com/votre-pseudo"),
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Profil LinkedIn (Optionnel)"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _linkedinController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Ex: https://linkedin.com/in/votre-nom"),
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Profil X / Twitter (Optionnel)"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _xController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Ex: https://x.com/votre-pseudo"),
-                  ),
-                  SizedBox(height: 2.h),
-
-                  _buildLabel("Site Web / Portfolio (Optionnel)"),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
-                    controller: _portfolioController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: _buildInputDecoration(hint: "Ex: https://votre-portfolio.com"),
-                  ),
-                  SizedBox(height: 4.h),
-
-                  // Save Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _isSubmitting ? null : _saveProfile,
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                        backgroundColor: AppColors.actionBlue,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: AppRadius.circular14,
-                        ),
-                        elevation: 0,
-                      ),
-                      child: _isSubmitting
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text(
-                              "Enregistrer les modifications",
-                              style: AppTextStyles.button.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 1.5.h, top: 1.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: AppTextStyles.h3.copyWith(
-              color: AppColors.skyBlue,
-              fontSize: 12.sp,
-            ),
-          ),
-          SizedBox(height: 0.5.h),
-          const Divider(color: AppColors.borderSubtle, height: 1),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLabel(String text) {
-    return RichText(
-      text: TextSpan(
-        text: text.replaceAll(' *', ''),
-        style: AppTextStyles.bodyMedium.copyWith(
-          color: AppColors.textPrimary,
-          fontWeight: FontWeight.w600,
-        ),
-        children: text.contains('*')
-            ? [
-                TextSpan(
-                  text: ' *',
-                  style: TextStyle(
-                    color: AppColors.errorText,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
-              ]
-            : [],
-      ),
-    );
-  }
-
-  InputDecoration _buildInputDecoration({required String hint}) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
-      filled: true,
-      fillColor: AppColors.card,
-      contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
-      border: OutlineInputBorder(
-        borderRadius: AppRadius.circular12,
-        borderSide: const BorderSide(color: AppColors.borderSubtle),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: AppRadius.circular12,
-        borderSide: const BorderSide(color: AppColors.borderSubtle),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: AppRadius.circular12,
-        borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: AppRadius.circular12,
-        borderSide: const BorderSide(color: AppColors.errorText),
+              ),
+              SizedBox(height: 4.h),
+            ],
+          ),
+        ),
       ),
     );
   }
