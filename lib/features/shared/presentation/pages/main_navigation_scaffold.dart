@@ -99,64 +99,77 @@ class MainNavigationScaffold extends StatelessWidget {
             top: BorderSide(color: AppColors.borderSubtle, width: 1),
           ),
         ),
-        child: BottomNavigationBar(
-          currentIndex: navigationShell.currentIndex,
-          onTap: _onTap,
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: AppColors.ultraDark,
-          selectedItemColor: AppColors.skyBlue,
-          unselectedItemColor: AppColors.textMuted,
-          selectedLabelStyle: AppTextStyles.navLabelActive,
-          unselectedLabelStyle: AppTextStyles.navLabel,
-          items: [
-            BottomNavigationBarItem(
-              icon: AppIcons.dashboard(color: AppColors.textMuted, size: AppSizes.iconLg),
-              activeIcon: AppIcons.dashboard(color: AppColors.skyBlue, size: AppSizes.iconLg),
-              label: "Accueil",
-            ),
-            BottomNavigationBarItem(
-              icon: AppIcons.programs(color: AppColors.textMuted, size: AppSizes.iconLg),
-              activeIcon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconLg),
-              label: "Cours",
-            ),
-            BottomNavigationBarItem(
-              icon: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.firebaseYellow.withValues(alpha: 0.18),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColors.firebaseYellow,
-                    width: 1.5,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            splashFactory: NoSplash.splashFactory,
+          ),
+          child: BottomNavigationBar(
+            currentIndex: navigationShell.currentIndex,
+            onTap: _onTap,
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: AppColors.ultraDark,
+            selectedItemColor: AppColors.skyBlue,
+            unselectedItemColor: AppColors.textMuted,
+            selectedLabelStyle: AppTextStyles.navLabelActive,
+            unselectedLabelStyle: AppTextStyles.navLabel,
+            items: [
+              BottomNavigationBarItem(
+                icon: AppIcons.dashboard(color: AppColors.textMuted, size: AppSizes.iconLg),
+                activeIcon: AppIcons.dashboard(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                label: "Accueil",
+              ),
+              BottomNavigationBarItem(
+                icon: AppIcons.programs(color: AppColors.textMuted, size: AppSizes.iconLg),
+                activeIcon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                label: "Cours",
+              ),
+              BottomNavigationBarItem(
+                icon: Transform.translate(
+                  offset: const Offset(0, 3),
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: AppColors.firebaseYellow.withValues(alpha: 0.18),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.firebaseYellow,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: AppIcons.tests(color: AppColors.firebaseYellow, size: AppSizes.iconLg),
                   ),
                 ),
-                child: AppIcons.tests(color: AppColors.firebaseYellow, size: AppSizes.iconLg),
-              ),
-              activeIcon: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.firebaseYellow,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColors.firebaseYellow,
-                    width: 1.5,
+                activeIcon: Transform.translate(
+                  offset: const Offset(0, 3),
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: AppColors.firebaseYellow,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.firebaseYellow,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: AppIcons.tests(color: AppColors.ultraDark, size: AppSizes.iconLg),
                   ),
                 ),
-                child: AppIcons.tests(color: AppColors.ultraDark, size: AppSizes.iconLg),
+                label: "",
               ),
-              label: "",
-            ),
-            BottomNavigationBarItem(
-              icon: AppIcons.announcements(color: AppColors.textMuted, size: AppSizes.iconLg),
-              activeIcon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
-              label: "Annonces",
-            ),
-            BottomNavigationBarItem(
-              icon: _buildProfileTabIcon(context, false),
-              activeIcon: _buildProfileTabIcon(context, true),
-              label: "Profil",
-            ),
-          ],
+              BottomNavigationBarItem(
+                icon: AppIcons.announcements(color: AppColors.textMuted, size: AppSizes.iconLg),
+                activeIcon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                label: "Annonces",
+              ),
+              BottomNavigationBarItem(
+                icon: _buildProfileTabIcon(context, false),
+                activeIcon: _buildProfileTabIcon(context, true),
+                label: "Profil",
+              ),
+            ],
+          ),
         ),
       ),
     );

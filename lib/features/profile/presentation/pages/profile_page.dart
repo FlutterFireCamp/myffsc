@@ -114,8 +114,8 @@ class ProfilePage extends StatelessWidget {
                           if (locationText.isNotEmpty || (hubText != null && hubText.isNotEmpty)) ...[
                             SizedBox(height: 1.2.h),
                             Wrap(
-                              spacing: 1.5.w,
-                              runSpacing: 0.6.h,
+                              spacing: 2.w,
+                              runSpacing: 0.8.h,
                               children: [
                                 if (locationText.isNotEmpty)
                                   _buildBadgeChip(
@@ -144,8 +144,7 @@ class ProfilePage extends StatelessWidget {
                   right: 0,
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
+                      Navigator.of(context, rootNavigator: true).push(
                         MaterialPageRoute(
                           builder: (context) => EditProfilePage(user: currentUser),
                         ),
@@ -240,8 +239,7 @@ class ProfilePage extends StatelessWidget {
             title: "Modifier mon Profil",
             subtitle: "Changer vos coordonnées et vos liens sociaux",
             onTap: () {
-              Navigator.push(
-                context,
+              Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(
                   builder: (context) => EditProfilePage(user: currentUser),
                 ),
@@ -290,7 +288,7 @@ class ProfilePage extends StatelessWidget {
 
   Widget _buildBadgeChip({required IconData icon, required String text}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
+      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
       decoration: BoxDecoration(
         color: AppColors.actionBlue.withValues(alpha: 0.12),
         borderRadius: AppRadius.circular8,
@@ -299,13 +297,14 @@ class ProfilePage extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: AppColors.skyBlue),
-          SizedBox(width: 1.w),
+          Icon(icon, size: 16, color: AppColors.skyBlue),
+          SizedBox(width: 1.5.w),
           Text(
             text,
-            style: AppTextStyles.caption.copyWith(
+            style: AppTextStyles.bodySmall.copyWith(
               color: AppColors.textPrimary,
-              fontSize: 9.sp,
+              fontWeight: FontWeight.w600,
+              fontSize: 11.sp,
             ),
           ),
         ],
