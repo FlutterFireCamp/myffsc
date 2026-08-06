@@ -71,7 +71,7 @@ class TodayProgramCard extends StatelessWidget {
                     SizedBox(height: 0.3.h),
                     Row(
                       children: [
-                        AppIcons.calendar(size: 13, color: AppColors.textMuted),
+                        AppIcons.calendar(size: 13, color: badgeColor),
                         SizedBox(width: 1.w),
                         Expanded(
                           child: Text(

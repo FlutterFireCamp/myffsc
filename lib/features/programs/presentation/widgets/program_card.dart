@@ -90,11 +90,14 @@ class ProgramCard extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AppIcons.calendar(size: 14, color: AppColors.textMuted),
+                    AppIcons.calendar(size: 14, color: badgeColor),
                     SizedBox(width: 1.w),
                     Text(
                       item.date,
-                      style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
+                      style: AppTextStyles.caption.copyWith(
+                        color: badgeColor,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),

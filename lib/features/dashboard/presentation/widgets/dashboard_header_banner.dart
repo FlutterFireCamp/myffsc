@@ -136,10 +136,10 @@ class DashboardHeaderBanner extends StatelessWidget {
           SizedBox(height: 2.h),
           Text(
             "Ravis de te revoir !",
-            style: AppTextStyles.titleLarge.copyWith(
+            style: AppTextStyles.h2.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 16.sp,
+              fontSize: 18.sp,
             ),
           ),
           SizedBox(height: 0.6.h),
@@ -147,6 +147,7 @@ class DashboardHeaderBanner extends StatelessWidget {
             levelConfig.subtitle,
             style: AppTextStyles.bodySmall.copyWith(
               color: Colors.white.withValues(alpha: 0.9),
+              fontWeight: FontWeight.normal,
               fontSize: 10.sp,
             ),
           ),
