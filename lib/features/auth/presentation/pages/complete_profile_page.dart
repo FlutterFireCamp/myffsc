@@ -240,15 +240,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         controller: _townController,
                         style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
                         decoration: const InputDecoration(
-                          labelText: "Ville de résidence *",
+                          labelText: "Ville de résidence (Optionnel)",
                           hintText: "Ex: Goma, Abidjan, Yaoundé...",
                         ),
-                        validator: (val) {
-                          if (val == null || val.trim().isEmpty) {
-                            return "Veuillez entrer votre ville de résidence.";
-                          }
-                          return null;
-                        },
                       ),
                       SizedBox(height: 2.h),
 

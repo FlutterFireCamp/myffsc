@@ -141,6 +141,28 @@ class _ProgramsPageState extends State<ProgramsPage> {
     }
   }
 
+  Widget _buildEmptyState() {
+    if (_selectedTypeFilter == null) {
+      return AppEmptyState(
+        title: "Aucun programme disponible",
+        icon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconXl),
+        accentColor: AppColors.skyBlue,
+        actionLabel: "Actualiser",
+        onAction: () => _fetchPrograms(isInitial: true),
+      );
+    }
+
+    final categoryColor = _selectedTypeFilter!.badgeColor;
+
+    return AppEmptyState(
+      title: "Aucun programme pour \"${_selectedTypeFilter!.label}\"",
+      icon: AppIcons.programs(color: categoryColor, size: AppSizes.iconXl),
+      accentColor: categoryColor,
+      actionLabel: "Actualiser",
+      onAction: () => _fetchPrograms(isInitial: true),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,15 +188,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
             child: _isLoadingInitial
                 ? const AppListShimmer(itemCount: 4)
                 : _programs.isEmpty
-                    ? AppEmptyState(
-                        title: _selectedTypeFilter == null
-                            ? "Aucun programme disponible"
-                            : "Aucun programme pour \"${_selectedTypeFilter!.label}\"",
-                        message: "Les prochaines sessions et workshops organisés apparaîtront ici.",
-                        icon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconXl),
-                        actionLabel: "Actualiser",
-                        onAction: () => _fetchPrograms(isInitial: true),
-                      )
+                    ? _buildEmptyState()
                     : RefreshIndicator(
                         color: AppColors.skyBlue,
                         onRefresh: () => _fetchPrograms(isInitial: true),

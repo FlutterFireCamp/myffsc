@@ -17,8 +17,11 @@ class TodayProgramCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isTest = program.type == ProgramType.test;
-    final hasLive = (program.sessionUrl != null && program.sessionUrl!.trim().isNotEmpty) || isTest;
-    final hasReplay = program.replayUrl != null && program.replayUrl!.trim().isNotEmpty;
+    final hasLive =
+        (program.sessionUrl != null && program.sessionUrl!.trim().isNotEmpty) ||
+        isTest;
+    final hasReplay =
+        program.replayUrl != null && program.replayUrl!.trim().isNotEmpty;
 
     final badgeColor = program.type.badgeColor;
     final cardBgColor = program.type.cardBgColor;
@@ -52,17 +55,22 @@ class TodayProgramCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.3.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 2.w,
+                        vertical: 0.3.h,
+                      ),
                       decoration: BoxDecoration(
                         color: badgeColor.withValues(alpha: 0.15),
                         borderRadius: AppRadius.circular6,
-                        border: Border.all(color: badgeColor.withValues(alpha: 0.3)),
+                        border: Border.all(
+                          color: badgeColor.withValues(alpha: 0.3),
+                        ),
                       ),
                       child: Text(
                         program.type.label,
                         style: AppTextStyles.bodySmall.copyWith(
                           color: badgeColor,
-                          fontSize: 10.sp,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -70,7 +78,9 @@ class TodayProgramCard extends StatelessWidget {
                     SizedBox(height: 0.5.h),
                     Text(
                       program.title,
-                      style: AppTextStyles.titleMedium.copyWith(fontWeight: FontWeight.bold),
+                      style: AppTextStyles.titleMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 0.3.h),
                     Row(
@@ -117,11 +127,19 @@ class TodayProgramCard extends StatelessWidget {
                         ),
                       ),
                       icon: isTest
-                          ? AppIcons.tests(size: AppSizes.iconSm, color: badgeColor)
-                          : AppIcons.video(size: AppSizes.iconSm, color: badgeColor),
+                          ? AppIcons.tests(
+                              size: AppSizes.iconSm,
+                              color: badgeColor,
+                            )
+                          : AppIcons.video(
+                              size: AppSizes.iconSm,
+                              color: badgeColor,
+                            ),
                       label: Text(
                         isTest ? "Rejoindre le Test" : "Rejoindre Live",
-                        style: AppTextStyles.buttonSmall.copyWith(color: badgeColor),
+                        style: AppTextStyles.buttonSmall.copyWith(
+                          color: badgeColor,
+                        ),
                       ),
                     ),
                   ),
@@ -137,10 +155,15 @@ class TodayProgramCard extends StatelessWidget {
                           borderRadius: AppRadius.circular10,
                         ),
                       ),
-                      icon: AppIcons.video(size: AppSizes.iconSm, color: AppColors.textPrimary),
+                      icon: AppIcons.video(
+                        size: AppSizes.iconSm,
+                        color: AppColors.textPrimary,
+                      ),
                       label: Text(
                         "Replay",
-                        style: AppTextStyles.buttonSmall.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.buttonSmall.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                     ),
                   ),

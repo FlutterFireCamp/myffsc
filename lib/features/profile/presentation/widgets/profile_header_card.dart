@@ -28,21 +28,22 @@ class ProfileHeaderCard extends StatelessWidget {
         borderRadius: AppRadius.circular20,
         border: Border.all(color: AppColors.borderSubtle),
       ),
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Avatar Left
               AppCachedAvatar(
                 imageUrl: user.photoUrl,
-                radius: 36,
+                radius: 34,
                 fallbackInitial: user.firstName,
                 fallbackTextStyle: AppTextStyles.h2.copyWith(color: Colors.white),
               ),
               SizedBox(width: 4.w),
 
-              // Info Column Right
+              // Name & Email Column
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,56 +60,60 @@ class ProfileHeaderCard extends StatelessWidget {
                       user.email,
                       style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
                     ),
-
-                    // Location & Hub/Community Badges
-                    if (locationText.isNotEmpty || (hubText != null && hubText.isNotEmpty)) ...[
-                      SizedBox(height: 1.2.h),
-                      Wrap(
-                        spacing: 2.w,
-                        runSpacing: 0.8.h,
-                        children: [
-                          if (locationText.isNotEmpty)
-                            _buildBadgeChip(
-                              icon: Icons.location_on_outlined,
-                              text: locationText,
-                            ),
-                          if (hubText != null && hubText.isNotEmpty)
-                            _buildBadgeChip(
-                              icon: Icons.groups_outlined,
-                              text: hubText,
-                            ),
-                        ],
-                      ),
-                    ],
-
-                    SizedBox(height: 3.h),
                   ],
                 ),
               ),
             ],
           ),
+          SizedBox(height: 2.h),
 
-          // Pencil Edit Icon Button
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: InkWell(
-              onTap: () {
+          // Location & Hub/Community Badges
+          if (locationText.isNotEmpty || (hubText != null && hubText.isNotEmpty)) ...[
+            Wrap(
+              spacing: 2.w,
+              runSpacing: 0.8.h,
+              children: [
+                if (locationText.isNotEmpty)
+                  _buildBadgeChip(
+                    icon: AppIcons.location04(color: AppColors.skyBlue, size: 18),
+                    text: locationText,
+                  ),
+                if (hubText != null && hubText.isNotEmpty)
+                  _buildBadgeChip(
+                    icon: AppIcons.userGroup(color: AppColors.skyBlue, size: 18),
+                    text: hubText,
+                  ),
+              ],
+            ),
+            SizedBox(height: 2.h),
+          ],
+
+          // Edit Profile Button placed cleanly inside the Column
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
                 Navigator.of(context, rootNavigator: true).push(
                   MaterialPageRoute(
                     builder: (context) => EditProfilePage(user: user),
                   ),
                 );
               },
-              borderRadius: AppRadius.circular12,
-              child: Container(
-                padding: EdgeInsets.all(2.5.w),
-                decoration: BoxDecoration(
-                  color: AppColors.actionBlue.withValues(alpha: 0.15),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.skyBlue,
+                side: BorderSide(color: AppColors.skyBlue.withValues(alpha: 0.5), width: 1.2),
+                padding: EdgeInsets.symmetric(vertical: 1.2.h),
+                shape: const RoundedRectangleBorder(
                   borderRadius: AppRadius.circular12,
-                  border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.3)),
                 ),
-                child: AppIcons.edit(color: AppColors.skyBlue, size: 18),
+              ),
+              icon: AppIcons.edit(color: AppColors.skyBlue, size: 18),
+              label: Text(
+                "Éditer mon profil",
+                style: AppTextStyles.buttonSmall.copyWith(
+                  color: AppColors.skyBlue,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -117,7 +122,7 @@ class ProfileHeaderCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBadgeChip({required IconData icon, required String text}) {
+  Widget _buildBadgeChip({required Widget icon, required String text}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.9.h),
       decoration: BoxDecoration(
@@ -128,7 +133,7 @@ class ProfileHeaderCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18, color: AppColors.skyBlue),
+          icon,
           SizedBox(width: 2.w),
           Text(
             text,

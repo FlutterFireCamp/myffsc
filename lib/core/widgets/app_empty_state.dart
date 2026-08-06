@@ -6,6 +6,7 @@ class AppEmptyState extends StatelessWidget {
   final String title;
   final String? message;
   final Widget? icon;
+  final Color? accentColor;
   final String? actionLabel;
   final VoidCallback? onAction;
 
@@ -14,12 +15,15 @@ class AppEmptyState extends StatelessWidget {
     required this.title,
     this.message,
     this.icon,
+    this.accentColor,
     this.actionLabel,
     this.onAction,
   });
 
   @override
   Widget build(BuildContext context) {
+    final activeColor = accentColor ?? AppColors.skyBlue;
+
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
@@ -31,14 +35,14 @@ class AppEmptyState extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(5.w),
               decoration: BoxDecoration(
-                color: AppColors.skyBlue.withValues(alpha: 0.12),
+                color: activeColor.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppColors.skyBlue.withValues(alpha: 0.25),
+                  color: activeColor.withValues(alpha: 0.25),
                   width: 1.5,
                 ),
               ),
-              child: icon ?? AppIcons.info(color: AppColors.skyBlue, size: 40),
+              child: icon ?? AppIcons.info(color: activeColor, size: 40),
             ),
             SizedBox(height: 2.5.h),
             Text(
@@ -60,11 +64,11 @@ class AppEmptyState extends StatelessWidget {
                     borderRadius: AppRadius.circular12,
                   ),
                 ),
-                icon: AppIcons.refresh03(color: AppColors.skyBlue, size: 20),
+                icon: AppIcons.refresh03(color: activeColor, size: 20),
                 label: Text(
                   actionLabel!,
                   style: AppTextStyles.button.copyWith(
-                    color: AppColors.skyBlue,
+                    color: activeColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 13.sp,
                   ),

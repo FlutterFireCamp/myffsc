@@ -112,6 +112,39 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     _fetchAnnouncements(isInitial: true);
   }
 
+  Widget _buildEmptyState() {
+    if (_selectedTypeFilter == null) {
+      return AppEmptyState(
+        title: "Aucune annonce disponible",
+        icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconXl),
+        accentColor: AppColors.skyBlue,
+        actionLabel: "Actualiser",
+        onAction: () => _fetchAnnouncements(isInitial: true),
+      );
+    }
+
+    final categoryColor = _selectedTypeFilter!.color;
+
+    return AppEmptyState(
+      title: "Aucune annonce pour la catégorie \"${_selectedTypeFilter!.label}\"",
+      icon: _buildCategoryIcon(_selectedTypeFilter!, categoryColor),
+      accentColor: categoryColor,
+      actionLabel: "Actualiser",
+      onAction: () => _fetchAnnouncements(isInitial: true),
+    );
+  }
+
+  Widget _buildCategoryIcon(AnnouncementType type, Color color) {
+    switch (type) {
+      case AnnouncementType.info:
+        return AppIcons.infoCircle(color: color, size: AppSizes.iconXl);
+      case AnnouncementType.important:
+        return AppIcons.flashInfo(color: color, size: AppSizes.iconXl);
+      case AnnouncementType.urgent:
+        return AppIcons.alert02(color: color, size: AppSizes.iconXl);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,15 +170,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
             child: _isLoadingInitial
                 ? const AppListShimmer(itemCount: 4)
                 : _announcements.isEmpty
-                    ? AppEmptyState(
-                        title: _selectedTypeFilter == null
-                            ? "Aucune annonce disponible"
-                            : "Aucune annonce pour la catégorie \"${_selectedTypeFilter!.label}\"",
-                        message: "Les nouvelles annonces publiées par les mentors et l'équipe pédagogique apparaîtront ici.",
-                        icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconXl),
-                        actionLabel: "Actualiser",
-                        onAction: () => _fetchAnnouncements(isInitial: true),
-                      )
+                    ? _buildEmptyState()
                     : RefreshIndicator(
                         color: AppColors.skyBlue,
                         onRefresh: () => _fetchAnnouncements(isInitial: true),

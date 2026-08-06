@@ -138,4 +138,10 @@ class AppIcons {
 
   static Widget edit({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedEdit02, color: color, size: size);
+
+  static Widget userGroup({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedUserGroup, color: color, size: size);
+
+  static Widget location04({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedLocation04, color: color, size: size);
 }
