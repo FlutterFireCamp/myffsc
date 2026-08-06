@@ -20,21 +20,24 @@ class LevelConfig {
       case 1:
         return const LevelConfig(
           title: "Niveau 1 - Logique avec Dart 🎯",
-          subtitle: "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
+          subtitle:
+              "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🎯",
           gradientColors: [Color(0xFF02569B), Color(0xFF013A63)],
         );
       case 2:
         return const LevelConfig(
           title: "Niveau 2 - UI/UX avec Flutter 💙",
-          subtitle: "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
+          subtitle:
+              "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💙",
           gradientColors: [Color(0xFF02569B), Color(0xFF01B5F8)],
         );
       case 3:
         return const LevelConfig(
           title: "Niveau 3 - Intégration Firebase 🔥",
-          subtitle: "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
+          subtitle:
+              "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🔥",
           gradientColors: [Color(0xFFFF8F00), Color(0xFFFF6F00)],
         );
@@ -42,7 +45,8 @@ class LevelConfig {
       default:
         return const LevelConfig(
           title: "Niveau 4 - Projet de Fin du Camp 💎",
-          subtitle: "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
+          subtitle:
+              "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💎",
           gradientColors: [Color(0xFF00C6FF), Color(0xFF0072FF)],
         );
@@ -84,7 +88,10 @@ class DashboardHeaderBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progressPct = LevelConfig.calculateProgressPercentage(userLevel, totalPoints);
+    final progressPct = LevelConfig.calculateProgressPercentage(
+      userLevel,
+      totalPoints,
+    );
     final levelConfig = LevelConfig.fromLevel(userLevel);
 
     return Container(
@@ -112,11 +119,16 @@ class DashboardHeaderBanner extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.7.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 3.5.w,
+                  vertical: 0.7.h,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.22),
                   borderRadius: AppRadius.circular10,
-                  border: Border.all(color: Colors.white.withValues(alpha: 0.35)),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.35),
+                  ),
                 ),
                 child: Text(
                   levelConfig.title,
@@ -127,19 +139,15 @@ class DashboardHeaderBanner extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                levelConfig.emoji,
-                style: TextStyle(fontSize: 12.sp),
-              ),
+              Text(levelConfig.emoji, style: TextStyle(fontSize: 12.sp)),
             ],
           ),
           SizedBox(height: 2.h),
           Text(
             "Ravis de te revoir !",
-            style: AppTextStyles.h2.copyWith(
+            style: AppTextStyles.h3.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 18.sp,
             ),
           ),
           SizedBox(height: 0.6.h),
@@ -148,7 +156,6 @@ class DashboardHeaderBanner extends StatelessWidget {
             style: AppTextStyles.bodySmall.copyWith(
               color: Colors.white.withValues(alpha: 0.9),
               fontWeight: FontWeight.normal,
-              fontSize: 10.sp,
             ),
           ),
           SizedBox(height: 2.5.h),

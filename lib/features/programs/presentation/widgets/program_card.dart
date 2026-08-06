@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/program_item.dart';
@@ -15,12 +16,14 @@ class ProgramCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasLive = item.sessionUrl != null && item.sessionUrl!.trim().isNotEmpty;
+    final hasLive = (item.sessionUrl != null && item.sessionUrl!.trim().isNotEmpty) ||
+        item.type == ProgramType.test;
     final hasReplay = item.replayUrl != null && item.replayUrl!.trim().isNotEmpty;
 
     final badgeColor = item.type.badgeColor;
     final cardBgColor = item.type.cardBgColor;
     final borderColor = item.type.borderColor;
+    final isTest = item.type == ProgramType.test;
 
     return Container(
       padding: EdgeInsets.all(4.5.w),
@@ -138,7 +141,13 @@ class ProgramCard extends StatelessWidget {
                 if (hasLive)
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: () => onLaunchUrl(item.sessionUrl),
+                      onPressed: () {
+                        if (isTest) {
+                          context.go('/tests');
+                        } else {
+                          onLaunchUrl(item.sessionUrl);
+                        }
+                      },
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: badgeColor),
                         padding: EdgeInsets.symmetric(vertical: 1.h),
@@ -146,9 +155,11 @@ class ProgramCard extends StatelessWidget {
                           borderRadius: AppRadius.circular10,
                         ),
                       ),
-                      icon: AppIcons.video(size: AppSizes.iconSm, color: badgeColor),
+                      icon: isTest
+                          ? AppIcons.tests(size: AppSizes.iconSm, color: badgeColor)
+                          : AppIcons.video(size: AppSizes.iconSm, color: badgeColor),
                       label: Text(
-                        "Rejoindre Live",
+                        isTest ? "Rejoindre le Test" : "Rejoindre Live",
                         style: AppTextStyles.buttonSmall.copyWith(color: badgeColor),
                       ),
                     ),
