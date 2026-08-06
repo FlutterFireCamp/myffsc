@@ -174,9 +174,11 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           SizedBox(height: 3.h),
 
-          // Programme du Jour
+          // Programme du jour ou à venir
           Text(
-            "Programme du Jour",
+            (_todayProgram != null && _todayProgram!.isToday)
+                ? "Programme du jour"
+                : "Programme à venir",
             style: AppTextStyles.titleLarge,
           ),
           SizedBox(height: 1.5.h),

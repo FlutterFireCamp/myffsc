@@ -203,6 +203,14 @@ class ProgramItem extends Equatable {
     return dt.isBefore(todayStart);
   }
 
+  /// Checks if the program is happening today
+  bool get isToday {
+    final dt = programDateTime;
+    if (dt == null) return false;
+    final now = DateTime.now();
+    return dt.year == now.year && dt.month == now.month && dt.day == now.day;
+  }
+
   factory ProgramItem.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data() ?? {};
     DateTime? parsedCreatedAt;

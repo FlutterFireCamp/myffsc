@@ -112,7 +112,7 @@ class DashboardHeaderBanner extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.9.h),
+                padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.7.h),
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.22),
                   borderRadius: AppRadius.circular10,
@@ -120,34 +120,34 @@ class DashboardHeaderBanner extends StatelessWidget {
                 ),
                 child: Text(
                   levelConfig.title,
-                  style: AppTextStyles.badge.copyWith(
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 10.5.sp,
+                    fontSize: 10.sp,
                   ),
                 ),
               ),
               Text(
                 levelConfig.emoji,
-                style: TextStyle(fontSize: 16.sp),
+                style: TextStyle(fontSize: 12.sp),
               ),
             ],
           ),
           SizedBox(height: 2.h),
           Text(
             "Ravis de te revoir !",
-            style: AppTextStyles.h3.copyWith(
+            style: AppTextStyles.titleLarge.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 14.sp,
+              fontSize: 16.sp,
             ),
           ),
           SizedBox(height: 0.6.h),
           Text(
             levelConfig.subtitle,
-            style: AppTextStyles.bodyMedium.copyWith(
+            style: AppTextStyles.bodySmall.copyWith(
               color: Colors.white.withValues(alpha: 0.9),
-              fontSize: 10.5.sp,
+              fontSize: 10.sp,
             ),
           ),
           SizedBox(height: 2.5.h),
@@ -195,29 +195,6 @@ class DashboardHeaderBanner extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-            ),
-          ),
-          SizedBox(height: 2.5.h),
-
-          // Action Button
-          ElevatedButton.icon(
-            onPressed: onActionTap,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: AppColors.ultraDark,
-              padding: EdgeInsets.symmetric(horizontal: 4.5.w, vertical: 1.4.h),
-              shape: const RoundedRectangleBorder(
-                borderRadius: AppRadius.circular12,
-              ),
-              elevation: 0,
-            ),
-            icon: AppIcons.programs(size: AppSizes.iconMd, color: AppColors.ultraDark),
-            label: Text(
-              "Accéder aux Programmes",
-              style: AppTextStyles.buttonSmall.copyWith(
-                color: AppColors.ultraDark,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ),
