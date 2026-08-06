@@ -23,75 +23,69 @@ class AppEmptyState extends StatelessWidget {
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(6.w),
-          decoration: BoxDecoration(
-            color: AppColors.card,
-            borderRadius: AppRadius.circular20,
-            border: Border.all(color: AppColors.borderSubtle),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(4.w),
-                decoration: BoxDecoration(
-                  color: AppColors.skyBlue.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColors.skyBlue.withValues(alpha: 0.25),
-                    width: 1.5,
-                  ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              padding: EdgeInsets.all(5.w),
+              decoration: BoxDecoration(
+                color: AppColors.skyBlue.withValues(alpha: 0.12),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: AppColors.skyBlue.withValues(alpha: 0.25),
+                  width: 1.5,
                 ),
-                child: icon ?? AppIcons.info(color: AppColors.skyBlue, size: AppSizes.iconXl),
               ),
-              SizedBox(height: 2.h),
+              child: icon ?? AppIcons.info(color: AppColors.skyBlue, size: 40),
+            ),
+            SizedBox(height: 2.5.h),
+            Text(
+              title,
+              style: AppTextStyles.h2.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            if (message != null && message!.isNotEmpty) ...[
+              SizedBox(height: 1.2.h),
               Text(
-                title,
-                style: AppTextStyles.h3.copyWith(
-                  color: AppColors.textPrimary,
-                  fontSize: 13.sp,
+                message!,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: 11.sp,
+                  height: 1.4,
                 ),
                 textAlign: TextAlign.center,
               ),
-              if (message != null && message!.isNotEmpty) ...[
-                SizedBox(height: 1.h),
-                Text(
-                  message!,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: 10.sp,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-              if (actionLabel != null && onAction != null) ...[
-                SizedBox(height: 2.5.h),
-                ElevatedButton(
-                  onPressed: onAction,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.skyBlue,
-                    foregroundColor: AppColors.ultraDark,
-                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.2.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: AppRadius.circular12,
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    actionLabel!,
-                    style: AppTextStyles.buttonSmall.copyWith(
-                      color: AppColors.ultraDark,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
             ],
-          ),
+            if (actionLabel != null && onAction != null) ...[
+              SizedBox(height: 3.h),
+              ElevatedButton(
+                onPressed: onAction,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.skyBlue,
+                  foregroundColor: AppColors.ultraDark,
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.4.h),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: AppRadius.circular12,
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  actionLabel!,
+                  style: AppTextStyles.button.copyWith(
+                    color: AppColors.ultraDark,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 11.sp,
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

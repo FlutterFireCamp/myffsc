@@ -7,7 +7,7 @@ class AppIcons {
       HugeIcon(icon: HugeIcons.strokeRoundedDashboardSquare02, color: color, size: size);
 
   static Widget programs({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedCalendar01, color: color, size: size);
+      HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, color: color, size: size);
 
   static Widget announcements({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedPromotion, color: color, size: size);
@@ -41,7 +41,7 @@ class AppIcons {
       HugeIcon(icon: HugeIcons.strokeRoundedTimer02, color: color, size: size);
 
   static Widget calendar({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedCalendar01, color: color, size: size);
+      HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, color: color, size: size);
 
   static Widget user({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedUser, color: color, size: size);

@@ -119,23 +119,23 @@ class ProfileHeaderCard extends StatelessWidget {
 
   Widget _buildBadgeChip({required IconData icon, required String text}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
+      padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.9.h),
       decoration: BoxDecoration(
         color: AppColors.actionBlue.withValues(alpha: 0.12),
         borderRadius: AppRadius.circular8,
-        border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.2)),
+        border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.25)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 16, color: AppColors.skyBlue),
-          SizedBox(width: 1.5.w),
+          Icon(icon, size: 18, color: AppColors.skyBlue),
+          SizedBox(width: 2.w),
           Text(
             text,
-            style: AppTextStyles.bodySmall.copyWith(
+            style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textPrimary,
               fontWeight: FontWeight.w600,
-              fontSize: 11.sp,
+              fontSize: 12.5.sp,
             ),
           ),
         ],

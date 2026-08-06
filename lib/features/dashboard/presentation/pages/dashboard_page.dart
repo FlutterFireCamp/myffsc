@@ -34,14 +34,28 @@ class _DashboardPageState extends State<DashboardPage> {
     try {
       final querySnapshot = await _firestore
           .collection('programs')
-          .orderBy('createdAt', descending: true)
-          .limit(1)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        setState(() {
-          _todayProgram = ProgramItem.fromFirestore(querySnapshot.docs.first);
+        final activePrograms = querySnapshot.docs
+            .map((doc) => ProgramItem.fromFirestore(doc))
+            .where((item) => !item.isPast)
+            .toList();
+
+        activePrograms.sort((a, b) {
+          final dtA = a.programDateTime;
+          final dtB = b.programDateTime;
+          if (dtA == null && dtB == null) return 0;
+          if (dtA == null) return 1;
+          if (dtB == null) return -1;
+          return dtA.compareTo(dtB);
         });
+
+        if (activePrograms.isNotEmpty) {
+          setState(() {
+            _todayProgram = activePrograms.first;
+          });
+        }
       }
     } catch (e) {
       debugPrint('Error fetching today program: $e');

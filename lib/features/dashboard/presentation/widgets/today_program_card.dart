@@ -18,12 +18,16 @@ class TodayProgramCard extends StatelessWidget {
     final hasLive = program.sessionUrl != null && program.sessionUrl!.trim().isNotEmpty;
     final hasReplay = program.replayUrl != null && program.replayUrl!.trim().isNotEmpty;
 
+    final badgeColor = program.type.badgeColor;
+    final cardBgColor = program.type.cardBgColor;
+    final borderColor = program.type.borderColor;
+
     return Container(
       padding: EdgeInsets.all(4.w),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: cardBgColor,
         borderRadius: AppRadius.circular16,
-        border: Border.all(color: AppColors.borderSubtle),
+        border: Border.all(color: borderColor, width: 1.2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,10 +37,10 @@ class TodayProgramCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(3.w),
                 decoration: BoxDecoration(
-                  color: AppColors.actionBlue.withValues(alpha: 0.15),
+                  color: badgeColor.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
-                child: AppIcons.video(color: AppColors.actionBlue, size: 24),
+                child: AppIcons.video(color: badgeColor, size: 24),
               ),
               SizedBox(width: 3.5.w),
               Expanded(
@@ -46,14 +50,16 @@ class TodayProgramCard extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.3.h),
                       decoration: BoxDecoration(
-                        color: AppColors.actionBlue.withValues(alpha: 0.12),
+                        color: badgeColor.withValues(alpha: 0.15),
                         borderRadius: AppRadius.circular6,
+                        border: Border.all(color: badgeColor.withValues(alpha: 0.3)),
                       ),
                       child: Text(
                         program.type.label,
                         style: AppTextStyles.badge.copyWith(
-                          color: AppColors.actionBlue,
-                          fontSize: 8.5.sp,
+                          color: badgeColor,
+                          fontSize: 9.sp,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -67,9 +73,16 @@ class TodayProgramCard extends StatelessWidget {
                       children: [
                         AppIcons.calendar(size: 13, color: AppColors.textMuted),
                         SizedBox(width: 1.w),
-                        Text(
-                          "${program.date} ${program.time.isNotEmpty ? '• ${program.time}' : ''}",
-                          style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
+                        Expanded(
+                          child: Text(
+                            "${program.date} ${program.time.isNotEmpty ? '• ${program.formattedLocalTime}' : ''}",
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: badgeColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -87,16 +100,16 @@ class TodayProgramCard extends StatelessWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => onLaunchUrl(program.sessionUrl),
                       style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: AppColors.skyBlue),
+                        side: BorderSide(color: badgeColor),
                         padding: EdgeInsets.symmetric(vertical: 1.h),
                         shape: const RoundedRectangleBorder(
                           borderRadius: AppRadius.circular10,
                         ),
                       ),
-                      icon: AppIcons.video(size: AppSizes.iconSm, color: AppColors.skyBlue),
+                      icon: AppIcons.video(size: AppSizes.iconSm, color: badgeColor),
                       label: Text(
                         "Rejoindre Live",
-                        style: AppTextStyles.buttonSmall.copyWith(color: AppColors.skyBlue),
+                        style: AppTextStyles.buttonSmall.copyWith(color: badgeColor),
                       ),
                     ),
                   ),

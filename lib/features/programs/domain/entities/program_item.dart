@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 enum ProgramType {
   workshop,
@@ -13,13 +14,58 @@ enum ProgramType {
       case ProgramType.workshop:
         return 'Workshop';
       case ProgramType.session:
-        return 'Session de cours';
+        return 'Session';
       case ProgramType.conference:
         return 'Conférence';
       case ProgramType.studyGroup:
         return 'Groupe d\'étude';
       case ProgramType.test:
         return 'Test / Évaluation';
+    }
+  }
+
+  Color get badgeColor {
+    switch (this) {
+      case ProgramType.session:
+        return const Color(0xFFFBBF24); // 🟡 Jaune Ambre (#fbbf24)
+      case ProgramType.test:
+        return const Color(0xFFF87171); // 🔴 Rouge Corail (#f87171)
+      case ProgramType.workshop:
+        return const Color(0xFF38BDF8); // 🔵 Bleu Ciel (#38bdf8)
+      case ProgramType.conference:
+        return const Color(0xFFC084FC); // 🟣 Violet (#c084fc)
+      case ProgramType.studyGroup:
+        return const Color(0xFF4ADE80); // 🟢 Vert Émeraude (#4ade80)
+    }
+  }
+
+  Color get cardBgColor {
+    switch (this) {
+      case ProgramType.session:
+        return const Color(0x14F59E0B); // rgba(245, 158, 11, 0.08)
+      case ProgramType.test:
+        return const Color(0x14EF4444); // rgba(239, 68, 68, 0.08)
+      case ProgramType.workshop:
+        return const Color(0x1438BDF8); // rgba(56, 189, 248, 0.08)
+      case ProgramType.conference:
+        return const Color(0x14A855F7); // rgba(168, 85, 247, 0.08)
+      case ProgramType.studyGroup:
+        return const Color(0x1422C55E); // rgba(34, 197, 94, 0.08)
+    }
+  }
+
+  Color get borderColor {
+    switch (this) {
+      case ProgramType.session:
+        return const Color(0x40F59E0B); // rgba(245, 158, 11, 0.25)
+      case ProgramType.test:
+        return const Color(0x40EF4444); // rgba(239, 68, 68, 0.25)
+      case ProgramType.workshop:
+        return const Color(0x4038BDF8); // rgba(56, 189, 248, 0.25)
+      case ProgramType.conference:
+        return const Color(0x40A855F7); // rgba(168, 85, 247, 0.25)
+      case ProgramType.studyGroup:
+        return const Color(0x4022C55E); // rgba(34, 197, 94, 0.25)
     }
   }
 
@@ -83,6 +129,79 @@ class ProgramItem extends Equatable {
     this.speaker,
     this.createdAt,
   });
+
+  /// Converts GMT time string stored in DB to user device local time with GMT offset suffix
+  String get formattedLocalTime {
+    if (time.trim().isEmpty) return '';
+
+    final now = DateTime.now();
+    final offset = now.timeZoneOffset;
+    final offsetHours = offset.inHours;
+    final offsetMinutes = offset.inMinutes.remainder(60).abs();
+
+    final String offsetSign = offset.isNegative ? '-' : '+';
+    final String offsetStr = offsetMinutes == 0
+        ? 'GMT$offsetSign${offsetHours.abs()}'
+        : 'GMT$offsetSign${offsetHours.abs()}:${offsetMinutes.toString().padLeft(2, '0')}';
+
+    final timeParts = time.split(RegExp(r'\s*-\s*|\s+à\s+'));
+    List<String> convertedParts = [];
+
+    for (final part in timeParts) {
+      final cleanPart = part.trim().replaceAll('h', ':').replaceAll('H', ':');
+      final match = RegExp(r'^(\d{1,2})(?::(\d{1,2}))?').firstMatch(cleanPart);
+      if (match != null) {
+        int hours = int.parse(match.group(1)!);
+        int minutes = match.group(2) != null ? int.parse(match.group(2)!) : 0;
+
+        DateTime utcDateTime = DateTime.utc(now.year, now.month, now.day, hours, minutes);
+        DateTime localDateTime = utcDateTime.toLocal();
+
+        final formattedHour = localDateTime.hour.toString().padLeft(2, '0');
+        final formattedMin = localDateTime.minute.toString().padLeft(2, '0');
+        convertedParts.add('${formattedHour}h$formattedMin');
+      } else {
+        convertedParts.add(part.trim());
+      }
+    }
+
+    return '${convertedParts.join(' - ')} $offsetStr';
+  }
+
+  /// Parses program date & time to DateTime for ordering and past-event filtering
+  DateTime? get programDateTime {
+    if (date.trim().isEmpty) return createdAt;
+
+    try {
+      final isoParsed = DateTime.tryParse(date);
+      if (isoParsed != null) return isoParsed;
+
+      final parts = date.split(RegExp(r'[-/.]'));
+      if (parts.length == 3) {
+        int year, month, day;
+        if (parts[0].length == 4) {
+          year = int.parse(parts[0]);
+          month = int.parse(parts[1]);
+          day = int.parse(parts[2]);
+        } else {
+          day = int.parse(parts[0]);
+          month = int.parse(parts[1]);
+          year = int.parse(parts[2]);
+        }
+        return DateTime(year, month, day);
+      }
+    } catch (_) {}
+
+    return createdAt;
+  }
+
+  /// Checks if the program has already passed (before today midnight)
+  bool get isPast {
+    final dt = programDateTime;
+    if (dt == null) return false;
+    final todayStart = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    return dt.isBefore(todayStart);
+  }
 
   factory ProgramItem.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data() ?? {};

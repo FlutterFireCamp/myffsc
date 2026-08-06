@@ -23,36 +23,42 @@ class ProgramFilterTabs extends StatelessWidget {
           _buildFilterTab(
             label: "Tous",
             isSelected: selectedTypeFilter == null,
+            badgeColor: AppColors.skyBlue,
             onTap: () => onSelectFilter(null),
           ),
           SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Sessions",
             isSelected: selectedTypeFilter == ProgramType.session,
+            badgeColor: ProgramType.session.badgeColor,
             onTap: () => onSelectFilter(ProgramType.session),
           ),
           SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Workshops",
             isSelected: selectedTypeFilter == ProgramType.workshop,
+            badgeColor: ProgramType.workshop.badgeColor,
             onTap: () => onSelectFilter(ProgramType.workshop),
           ),
           SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Conférences",
             isSelected: selectedTypeFilter == ProgramType.conference,
+            badgeColor: ProgramType.conference.badgeColor,
             onTap: () => onSelectFilter(ProgramType.conference),
           ),
           SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Groupes d'étude",
             isSelected: selectedTypeFilter == ProgramType.studyGroup,
+            badgeColor: ProgramType.studyGroup.badgeColor,
             onTap: () => onSelectFilter(ProgramType.studyGroup),
           ),
           SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Tests",
             isSelected: selectedTypeFilter == ProgramType.test,
+            badgeColor: ProgramType.test.badgeColor,
             onTap: () => onSelectFilter(ProgramType.test),
           ),
         ],
@@ -63,24 +69,27 @@ class ProgramFilterTabs extends StatelessWidget {
   Widget _buildFilterTab({
     required String label,
     required bool isSelected,
+    required Color badgeColor,
     required VoidCallback onTap,
   }) {
     return InkWell(
       onTap: onTap,
       borderRadius: AppRadius.circular12,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.skyBlue : AppColors.card,
+          color: isSelected ? badgeColor.withValues(alpha: 0.2) : AppColors.card,
           borderRadius: AppRadius.circular12,
           border: Border.all(
-            color: isSelected ? AppColors.skyBlue : AppColors.borderSubtle,
+            color: isSelected ? badgeColor : AppColors.borderSubtle,
+            width: isSelected ? 1.5 : 1.0,
           ),
         ),
         child: Text(
           label,
           style: AppTextStyles.buttonSmall.copyWith(
-            color: isSelected ? AppColors.ultraDark : AppColors.textPrimary,
+            color: isSelected ? badgeColor : AppColors.textPrimary,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
           ),
         ),

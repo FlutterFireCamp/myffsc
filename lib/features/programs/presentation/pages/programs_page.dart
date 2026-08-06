@@ -19,10 +19,9 @@ class _ProgramsPageState extends State<ProgramsPage> {
   final ScrollController _scrollController = ScrollController();
 
   final List<ProgramItem> _programs = [];
-  DocumentSnapshot<Map<String, dynamic>>? _lastDocument;
   bool _isLoadingInitial = true;
   bool _isLoadingMore = false;
-  bool _hasMore = true;
+  bool _hasMore = false;
 
   ProgramType? _selectedTypeFilter;
 
@@ -52,8 +51,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
       setState(() {
         _isLoadingInitial = true;
         _programs.clear();
-        _lastDocument = null;
-        _hasMore = true;
+        _hasMore = false;
       });
     } else {
       if (_isLoadingMore || !_hasMore) return;
@@ -63,33 +61,34 @@ class _ProgramsPageState extends State<ProgramsPage> {
     }
 
     try {
-      Query<Map<String, dynamic>> query = _firestore
-          .collection('programs')
-          .orderBy('createdAt', descending: true);
+      Query<Map<String, dynamic>> query = _firestore.collection('programs');
 
       if (_selectedTypeFilter != null) {
-        query = query.where('type', isEqualTo: _selectedTypeFilter!.name);
-      }
-
-      query = query.limit(10);
-
-      if (_lastDocument != null && !isInitial) {
-        query = query.startAfterDocument(_lastDocument!);
+        query = query.where('type', isEqualTo: _selectedTypeFilter!.toDbString());
       }
 
       final querySnapshot = await query.get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        _lastDocument = querySnapshot.docs.last;
-        final newItems = querySnapshot.docs
+        final activeItems = querySnapshot.docs
             .map((doc) => ProgramItem.fromFirestore(doc))
+            .where((item) => !item.isPast)
             .toList();
 
+        // Sort ascending: nearest upcoming date first
+        activeItems.sort((a, b) {
+          final dtA = a.programDateTime;
+          final dtB = b.programDateTime;
+          if (dtA == null && dtB == null) return 0;
+          if (dtA == null) return 1;
+          if (dtB == null) return -1;
+          return dtA.compareTo(dtB);
+        });
+
         setState(() {
-          _programs.addAll(newItems);
-          if (querySnapshot.docs.length < 10) {
-            _hasMore = false;
-          }
+          _programs.clear();
+          _programs.addAll(activeItems);
+          _hasMore = false;
         });
       } else {
         setState(() {
