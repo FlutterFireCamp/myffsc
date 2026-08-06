@@ -53,7 +53,7 @@ class AnnouncementFilterTabs extends StatelessWidget {
             label: "Urgences",
             isSelected: selectedTypeFilter == AnnouncementType.urgent,
             badgeColor: AppColors.errorText,
-            icon: AppIcons.infoDiamond(
+            icon: AppIcons.alert02(
               color: AppColors.errorText,
               size: 16,
             ),

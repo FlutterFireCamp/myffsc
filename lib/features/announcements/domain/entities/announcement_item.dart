@@ -27,7 +27,7 @@ enum AnnouncementType {
       case AnnouncementType.important:
         return AppIcons.flashInfo(color: AppColors.firebaseYellow, size: 20);
       case AnnouncementType.urgent:
-        return AppIcons.infoDiamond(color: AppColors.errorText, size: 20);
+        return AppIcons.alert02(color: AppColors.errorText, size: 20);
     }
   }
 

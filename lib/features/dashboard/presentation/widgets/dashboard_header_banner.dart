@@ -19,7 +19,7 @@ class LevelConfig {
     switch (level) {
       case 1:
         return const LevelConfig(
-          title: "Niveau 1 - Logique avec Dart 🎯",
+          title: "Niveau 1 - Logique avec Dart",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🎯",
@@ -27,7 +27,7 @@ class LevelConfig {
         );
       case 2:
         return const LevelConfig(
-          title: "Niveau 2 - UI/UX avec Flutter 💙",
+          title: "Niveau 2 - UI/UX avec Flutter",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💙",
@@ -35,7 +35,7 @@ class LevelConfig {
         );
       case 3:
         return const LevelConfig(
-          title: "Niveau 3 - Intégration Firebase 🔥",
+          title: "Niveau 3 - Intégration Firebase",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🔥",
@@ -44,7 +44,7 @@ class LevelConfig {
       case 4:
       default:
         return const LevelConfig(
-          title: "Niveau 4 - Projet de Fin du Camp 💎",
+          title: "Niveau 4 - Projet de Fin du Camp",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💎",
@@ -135,27 +135,22 @@ class DashboardHeaderBanner extends StatelessWidget {
                   style: AppTextStyles.bodySmall.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 10.sp,
                   ),
                 ),
               ),
-              Text(levelConfig.emoji, style: TextStyle(fontSize: 12.sp)),
+              Text(levelConfig.emoji, style: TextStyle(fontSize: 14.sp)),
             ],
           ),
           SizedBox(height: 2.h),
           Text(
             "Ravis de te revoir !",
-            style: AppTextStyles.h3.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+            style: AppTextStyles.h3.copyWith(color: Colors.white),
           ),
           SizedBox(height: 0.6.h),
           Text(
             levelConfig.subtitle,
             style: AppTextStyles.bodySmall.copyWith(
               color: Colors.white.withValues(alpha: 0.9),
-              fontWeight: FontWeight.normal,
             ),
           ),
           SizedBox(height: 2.5.h),

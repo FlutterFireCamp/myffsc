@@ -51,22 +51,20 @@ class AppEmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             if (actionLabel != null && onAction != null) ...[
-              SizedBox(height: 3.h),
-              ElevatedButton(
+              SizedBox(height: 2.5.h),
+              TextButton.icon(
                 onPressed: onAction,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.skyBlue,
-                  foregroundColor: AppColors.ultraDark,
-                  padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 1.6.h),
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.2.h),
                   shape: const RoundedRectangleBorder(
                     borderRadius: AppRadius.circular12,
                   ),
-                  elevation: 0,
                 ),
-                child: Text(
+                icon: AppIcons.refresh03(color: AppColors.skyBlue, size: 20),
+                label: Text(
                   actionLabel!,
                   style: AppTextStyles.button.copyWith(
-                    color: AppColors.ultraDark,
+                    color: AppColors.skyBlue,
                     fontWeight: FontWeight.bold,
                     fontSize: 13.sp,
                   ),
