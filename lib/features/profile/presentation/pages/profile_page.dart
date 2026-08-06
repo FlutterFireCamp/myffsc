@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -67,8 +68,10 @@ class ProfilePage extends StatelessWidget {
           ProfileOptionTile(
             icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconMd),
             title: "Notifications & Rappels",
-            subtitle: "Gérer les alertes des cours et lives",
-            onTap: () {},
+            subtitle: "Consulter les annonces, flashs et rappels",
+            onTap: () {
+              context.go('/announcements');
+            },
           ),
           SizedBox(height: 1.5.h),
           ProfileOptionTile(

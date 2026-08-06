@@ -80,9 +80,14 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.ultraDark,
-        hintStyle: AppTextStyles.caption,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        fillColor: AppColors.card,
+        labelStyle: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+        floatingLabelStyle: AppTextStyles.bodySmall.copyWith(
+          color: AppColors.skyBlue,
+          fontWeight: FontWeight.w600,
+        ),
+        hintStyle: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: const OutlineInputBorder(
           borderRadius: AppRadius.circular12,
           borderSide: BorderSide(color: AppColors.borderSubtle),

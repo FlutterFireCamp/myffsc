@@ -170,7 +170,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Connected Account Card Header
+              // Connected Account Card Header (Fixed at top)
               CompleteProfileHeader(
                 emailText: emailText,
                 photoUrl: photoUrl,
@@ -194,7 +194,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       // Nom Complet
                       TextFormField(
                         controller: _nameController,
-                        style: AppTextStyles.bodyMedium,
+                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
                         decoration: const InputDecoration(
                           labelText: "Nom complet (Nom & Prénom) *",
                           hintText: "Ex: Georges Byona",
@@ -211,7 +211,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       // Pseudo Discord
                       TextFormField(
                         controller: _discordController,
-                        style: AppTextStyles.bodyMedium,
+                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
                         decoration: const InputDecoration(
                           labelText: "Nom d'utilisateur Discord *",
                           hintText: "Ex: georges_dev",
@@ -238,7 +238,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       // Ville de résidence
                       TextFormField(
                         controller: _townController,
-                        style: AppTextStyles.bodyMedium,
+                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
                         decoration: const InputDecoration(
                           labelText: "Ville de résidence *",
                           hintText: "Ex: Goma, Abidjan, Yaoundé...",
