@@ -147,7 +147,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
-          "Programmes & Sessions",
+          "Programmes & Agenda",
           style: AppTextStyles.h3,
         ),
         backgroundColor: AppColors.background,

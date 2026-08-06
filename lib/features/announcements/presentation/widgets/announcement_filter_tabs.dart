@@ -23,14 +23,16 @@ class AnnouncementFilterTabs extends StatelessWidget {
           _buildFilterTab(
             label: "Toutes",
             isSelected: selectedTypeFilter == null,
+            badgeColor: AppColors.skyBlue,
             onTap: () => onSelectFilter(null),
           ),
           SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Informations",
             isSelected: selectedTypeFilter == AnnouncementType.info,
-            icon: AppIcons.info(
-              color: selectedTypeFilter == AnnouncementType.info ? AppColors.ultraDark : AppColors.skyBlue,
+            badgeColor: AppColors.skyBlue,
+            icon: AppIcons.infoCircle(
+              color: AppColors.skyBlue,
               size: 16,
             ),
             onTap: () => onSelectFilter(AnnouncementType.info),
@@ -39,8 +41,9 @@ class AnnouncementFilterTabs extends StatelessWidget {
           _buildFilterTab(
             label: "Flash Info",
             isSelected: selectedTypeFilter == AnnouncementType.important,
-            icon: AppIcons.star(
-              color: selectedTypeFilter == AnnouncementType.important ? AppColors.ultraDark : AppColors.firebaseYellow,
+            badgeColor: AppColors.firebaseYellow,
+            icon: AppIcons.flashInfo(
+              color: AppColors.firebaseYellow,
               size: 16,
             ),
             onTap: () => onSelectFilter(AnnouncementType.important),
@@ -49,8 +52,9 @@ class AnnouncementFilterTabs extends StatelessWidget {
           _buildFilterTab(
             label: "Urgences",
             isSelected: selectedTypeFilter == AnnouncementType.urgent,
-            icon: AppIcons.alert02(
-              color: selectedTypeFilter == AnnouncementType.urgent ? AppColors.ultraDark : AppColors.errorText,
+            badgeColor: AppColors.errorText,
+            icon: AppIcons.infoDiamond(
+              color: AppColors.errorText,
               size: 16,
             ),
             onTap: () => onSelectFilter(AnnouncementType.urgent),
@@ -63,19 +67,22 @@ class AnnouncementFilterTabs extends StatelessWidget {
   Widget _buildFilterTab({
     required String label,
     required bool isSelected,
+    required Color badgeColor,
     Widget? icon,
     required VoidCallback onTap,
   }) {
     return InkWell(
       onTap: onTap,
       borderRadius: AppRadius.circular12,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.skyBlue : AppColors.card,
+          color: isSelected ? badgeColor.withValues(alpha: 0.2) : AppColors.card,
           borderRadius: AppRadius.circular12,
           border: Border.all(
-            color: isSelected ? AppColors.skyBlue : AppColors.borderSubtle,
+            color: isSelected ? badgeColor : AppColors.borderSubtle,
+            width: isSelected ? 1.5 : 1.0,
           ),
         ),
         child: Row(
@@ -88,7 +95,7 @@ class AnnouncementFilterTabs extends StatelessWidget {
             Text(
               label,
               style: AppTextStyles.buttonSmall.copyWith(
-                color: isSelected ? AppColors.ultraDark : AppColors.textPrimary,
+                color: isSelected ? badgeColor : AppColors.textPrimary,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               ),
             ),
