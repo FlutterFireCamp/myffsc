@@ -14,20 +14,20 @@ enum AnnouncementType {
       case AnnouncementType.info:
         return 'Information';
       case AnnouncementType.important:
-        return 'Flash Info Important';
+        return 'Flash Info';
       case AnnouncementType.urgent:
-        return 'Annonce Urgente';
+        return 'Urgent';
     }
   }
 
   Widget get icon {
     switch (this) {
       case AnnouncementType.info:
-        return AppIcons.info(color: AppColors.skyBlue, size: 20);
+        return AppIcons.infoCircle(color: AppColors.skyBlue, size: 20);
       case AnnouncementType.important:
-        return AppIcons.star(color: AppColors.firebaseYellow, size: 20);
+        return AppIcons.flashInfo(color: AppColors.firebaseYellow, size: 20);
       case AnnouncementType.urgent:
-        return AppIcons.alert02(color: AppColors.errorText, size: 20);
+        return AppIcons.infoDiamond(color: AppColors.errorText, size: 20);
     }
   }
 
@@ -47,6 +47,8 @@ enum AnnouncementType {
       case 'urgent':
         return AnnouncementType.urgent;
       case 'important':
+      case 'flash':
+      case 'flash_info':
         return AnnouncementType.important;
       case 'info':
       default:

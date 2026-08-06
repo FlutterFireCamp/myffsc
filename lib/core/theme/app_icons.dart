@@ -64,6 +64,15 @@ class AppIcons {
   static Widget info({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedInformationCircle, color: color, size: size);
 
+  static Widget infoCircle({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedInformationCircle, color: color, size: size);
+
+  static Widget flashInfo({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedFlash, color: color, size: size);
+
+  static Widget infoDiamond({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedInformationSquare, color: color, size: size);
+
   static Widget warning({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedAlert01, color: color, size: size);
 
