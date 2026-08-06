@@ -50,18 +50,6 @@ class AppEmptyState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            if (message != null && message!.isNotEmpty) ...[
-              SizedBox(height: 1.2.h),
-              Text(
-                message!,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.textSecondary,
-                  fontSize: 11.sp,
-                  height: 1.4,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
             if (actionLabel != null && onAction != null) ...[
               SizedBox(height: 3.h),
               ElevatedButton(
@@ -69,7 +57,7 @@ class AppEmptyState extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.skyBlue,
                   foregroundColor: AppColors.ultraDark,
-                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.4.h),
+                  padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 1.6.h),
                   shape: const RoundedRectangleBorder(
                     borderRadius: AppRadius.circular12,
                   ),
@@ -80,7 +68,7 @@ class AppEmptyState extends StatelessWidget {
                   style: AppTextStyles.button.copyWith(
                     color: AppColors.ultraDark,
                     fontWeight: FontWeight.bold,
-                    fontSize: 11.sp,
+                    fontSize: 13.sp,
                   ),
                 ),
               ),
