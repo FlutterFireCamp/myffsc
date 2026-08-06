@@ -18,10 +18,9 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
   final ScrollController _scrollController = ScrollController();
 
   final List<AnnouncementItem> _announcements = [];
-  DocumentSnapshot<Map<String, dynamic>>? _lastDocument;
   bool _isLoadingInitial = true;
   bool _isLoadingMore = false;
-  bool _hasMore = true;
+  bool _hasMore = false;
 
   AnnouncementType? _selectedTypeFilter;
 
@@ -51,8 +50,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
       setState(() {
         _isLoadingInitial = true;
         _announcements.clear();
-        _lastDocument = null;
-        _hasMore = true;
+        _hasMore = false;
       });
     } else {
       if (_isLoadingMore || !_hasMore) return;
@@ -62,33 +60,32 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     }
 
     try {
-      Query<Map<String, dynamic>> query = _firestore
-          .collection('announcements')
-          .orderBy('createdAt', descending: true);
-
-      if (_selectedTypeFilter != null) {
-        query = query.where('type', isEqualTo: _selectedTypeFilter!.name);
-      }
-
-      query = query.limit(10);
-
-      if (_lastDocument != null && !isInitial) {
-        query = query.startAfterDocument(_lastDocument!);
-      }
-
-      final querySnapshot = await query.get();
+      final querySnapshot = await _firestore.collection('announcements').get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        _lastDocument = querySnapshot.docs.last;
-        final newItems = querySnapshot.docs
+        final allItems = querySnapshot.docs
             .map((doc) => AnnouncementItem.fromFirestore(doc))
             .toList();
 
+        // Sort descending by createdAt or date
+        allItems.sort((a, b) {
+          final dtA = a.createdAt;
+          final dtB = b.createdAt;
+          if (dtA == null && dtB == null) return 0;
+          if (dtA == null) return 1;
+          if (dtB == null) return -1;
+          return dtB.compareTo(dtA);
+        });
+
+        // Filter by selected AnnouncementType
+        final filteredItems = _selectedTypeFilter == null
+            ? allItems
+            : allItems.where((item) => item.type == _selectedTypeFilter).toList();
+
         setState(() {
-          _announcements.addAll(newItems);
-          if (querySnapshot.docs.length < 10) {
-            _hasMore = false;
-          }
+          _announcements.clear();
+          _announcements.addAll(filteredItems);
+          _hasMore = false;
         });
       } else {
         setState(() {
