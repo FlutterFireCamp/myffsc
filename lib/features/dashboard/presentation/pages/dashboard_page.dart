@@ -32,9 +32,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<void> _fetchTodayProgram() async {
     try {
-      final querySnapshot = await _firestore
-          .collection('programs')
-          .get();
+      final querySnapshot = await _firestore.collection('programs').get();
 
       if (querySnapshot.docs.isNotEmpty) {
         final activePrograms = querySnapshot.docs
@@ -70,7 +68,9 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<void> _launchExternalUrl(String? urlString) async {
     if (urlString == null || urlString.trim().isEmpty) return;
-    final Uri url = Uri.parse(urlString.startsWith('http') ? urlString : 'https://$urlString');
+    final Uri url = Uri.parse(
+      urlString.startsWith('http') ? urlString : 'https://$urlString',
+    );
     try {
       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         if (mounted) {
@@ -132,10 +132,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   "Salut, ${currentUser.firstName} 👋🏾",
                   style: AppTextStyles.h3,
                 ),
-                Text(
-                  "Apprenant FFSC 💙☀️",
-                  style: AppTextStyles.bodySmall,
-                ),
+                Text("Apprenant FFSC 💙☀️", style: AppTextStyles.bodySmall),
               ],
             ),
           ],
@@ -155,7 +152,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 SizedBox(width: 1.w),
                 Text(
                   "${currentUser.totalPoints} pts",
-                  style: AppTextStyles.badge.copyWith(color: AppColors.firebaseYellow),
+                  style: AppTextStyles.badge.copyWith(
+                    color: AppColors.firebaseYellow,
+                  ),
                 ),
               ],
             ),
@@ -185,21 +184,19 @@ class _DashboardPageState extends State<DashboardPage> {
           _isLoadingTodayProgram
               ? const AppShimmer(child: AppCardShimmer())
               : _todayProgram == null
-                  ? const AppEmptyState(
-                      title: "Aucun programme prévu aujourd'hui",
-                      message: "Consultez l'onglet Programmes pour découvrir les prochaines sessions.",
-                    )
-                  : TodayProgramCard(
-                      program: _todayProgram!,
-                      onLaunchUrl: _launchExternalUrl,
-                    ),
-          SizedBox(height: 3.h),
+              ? const AppEmptyState(
+                  title: "Aucun programme prévu aujourd'hui",
+                  message:
+                      "Consultez l'onglet Programmes pour découvrir les prochaines sessions.",
+                )
+              : TodayProgramCard(
+                  program: _todayProgram!,
+                  onLaunchUrl: _launchExternalUrl,
+                ),
+          SizedBox(height: 2.h),
 
           // Quick Actions Grid
-          Text(
-            "Aujourd'hui dans le Camp",
-            style: AppTextStyles.titleLarge,
-          ),
+          Text("Aujourd'hui dans le Camp", style: AppTextStyles.titleLarge),
           SizedBox(height: 1.5.h),
           Row(
             children: [
@@ -207,7 +204,10 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: QuickActionCard(
                   title: "Programmes",
                   subtitle: "Syllabus complet & cours",
-                  icon: AppIcons.programs(color: AppColors.actionBlue, size: AppSizes.iconLg),
+                  icon: AppIcons.programs(
+                    color: AppColors.actionBlue,
+                    size: AppSizes.iconLg,
+                  ),
                   backgroundColor: AppColors.actionBlue,
                   onTap: handlePrograms,
                 ),
@@ -217,7 +217,10 @@ class _DashboardPageState extends State<DashboardPage> {
                 child: QuickActionCard(
                   title: "Annonces",
                   subtitle: "Fil d'actualité",
-                  icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                  icon: AppIcons.announcements(
+                    color: AppColors.skyBlue,
+                    size: AppSizes.iconLg,
+                  ),
                   backgroundColor: AppColors.skyBlue,
                   onTap: handleAnnouncements,
                 ),

@@ -138,7 +138,20 @@ class DashboardHeaderBanner extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(levelConfig.emoji, style: TextStyle(fontSize: 14.sp)),
+              Container(
+                padding: EdgeInsets.all(2.w),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.22),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Text(
+                  levelConfig.emoji,
+                  style: TextStyle(fontSize: 12.sp),
+                ),
+              ),
             ],
           ),
           SizedBox(height: 2.h),
