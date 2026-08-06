@@ -30,7 +30,7 @@ class AnnouncementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
+                padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
                 decoration: BoxDecoration(
                   color: item.type.color.withValues(alpha: 0.15),
                   borderRadius: AppRadius.circular8,
@@ -42,25 +42,13 @@ class AnnouncementCard extends StatelessWidget {
                     item.type.icon,
                     SizedBox(width: 1.5.w),
                     Text(
-                      item.type.label.toUpperCase(),
+                      item.type.label,
                       style: AppTextStyles.badge.copyWith(
                         color: item.type.color,
                         fontWeight: FontWeight.bold,
-                        fontSize: 9.sp,
                       ),
                     ),
                   ],
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.4.h),
-                decoration: BoxDecoration(
-                  color: AppColors.ultraDark.withValues(alpha: 0.5),
-                  borderRadius: AppRadius.circular6,
-                ),
-                child: Text(
-                  "Cible: ${item.targetRole.label}",
-                  style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
                 ),
               ),
             ],
