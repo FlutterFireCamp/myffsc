@@ -79,7 +79,7 @@ class TodayProgramCard extends StatelessWidget {
                         SizedBox(width: 1.w),
                         Expanded(
                           child: Text(
-                            "${program.date} ${program.time.isNotEmpty ? '• ${program.formattedLocalTime}' : ''}",
+                            "${program.formattedFrenchDate} ${program.time.isNotEmpty ? '• ${program.formattedLocalTime}' : ''}",
                             style: AppTextStyles.bodySmall.copyWith(
                               color: badgeColor,
                               fontWeight: FontWeight.w600,

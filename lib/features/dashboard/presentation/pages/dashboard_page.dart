@@ -171,7 +171,7 @@ class _DashboardPageState extends State<DashboardPage> {
             totalPoints: currentUser.totalPoints,
             onActionTap: handlePrograms,
           ),
-          SizedBox(height: 3.h),
+          SizedBox(height: 2.h),
 
           // Programme du jour ou à venir
           Text(
@@ -180,7 +180,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 : "Programme à venir",
             style: AppTextStyles.titleLarge,
           ),
-          SizedBox(height: 1.5.h),
+          SizedBox(height: 1.h),
           _isLoadingTodayProgram
               ? const AppShimmer(child: AppCardShimmer())
               : _todayProgram == null
@@ -197,8 +197,9 @@ class _DashboardPageState extends State<DashboardPage> {
 
           // Quick Actions Grid
           Text("Aujourd'hui dans le Camp", style: AppTextStyles.titleLarge),
-          SizedBox(height: 1.5.h),
+          SizedBox(height: 1.h),
           Row(
+            spacing: 3.w,
             children: [
               Expanded(
                 child: QuickActionCard(
@@ -212,7 +213,6 @@ class _DashboardPageState extends State<DashboardPage> {
                   onTap: handlePrograms,
                 ),
               ),
-              SizedBox(width: 3.w),
               Expanded(
                 child: QuickActionCard(
                   title: "Annonces",
@@ -227,7 +227,6 @@ class _DashboardPageState extends State<DashboardPage> {
               ),
             ],
           ),
-          SizedBox(height: 4.h),
         ],
       ),
     );

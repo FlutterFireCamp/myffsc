@@ -21,6 +21,19 @@ class AppIcons {
   static Widget profile({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedUser, color: color, size: size);
 
+  // Time & Countdown Icons
+  static Widget time({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedTime02, color: color, size: size);
+
+  static Widget timer({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedHourglass, color: color, size: size);
+
+  static Widget hourglass({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedHourglass, color: color, size: size);
+
+  static Widget calendar({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, color: color, size: size);
+
   // Actions & UI Icons
   static Widget google({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedGoogle, color: color, size: size);
@@ -36,12 +49,6 @@ class AppIcons {
 
   static Widget cancel({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedCancel01, color: color, size: size);
-
-  static Widget timer({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedTimer02, color: color, size: size);
-
-  static Widget calendar({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedCalendar03, color: color, size: size);
 
   static Widget user({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedUser, color: color, size: size);
@@ -65,7 +72,7 @@ class AppIcons {
       HugeIcon(icon: HugeIcons.strokeRoundedInformationCircle, color: color, size: size);
 
   static Widget infoCircle({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedInformationCircle, color: color, size: size);
+      info(color: color, size: size);
 
   static Widget flashInfo({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedFlash, color: color, size: size);
@@ -90,7 +97,7 @@ class AppIcons {
       HugeIcon(icon: HugeIcons.strokeRoundedRocket, color: color, size: size);
 
   static Widget project({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedGithub, color: color, size: size);
+      github(color: color, size: size);
 
   static Widget feedback({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedComment01, color: color, size: size);
@@ -99,7 +106,7 @@ class AppIcons {
       HugeIcon(icon: HugeIcons.strokeRoundedIdea01, color: color, size: size);
 
   static Widget report({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedAlert01, color: color, size: size);
+      warning(color: color, size: size);
 
   // Social Links Icons
   static Widget github({Color color = Colors.white, double size = 24.0}) =>

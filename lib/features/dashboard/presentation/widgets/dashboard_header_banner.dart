@@ -139,9 +139,9 @@ class DashboardHeaderBanner extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(2.w),
+                padding: EdgeInsets.all(1.w),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.22),
+                  color: Colors.white.withValues(alpha: 0.5),
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: Colors.white.withValues(alpha: 0.35),
@@ -149,7 +149,7 @@ class DashboardHeaderBanner extends StatelessWidget {
                 ),
                 child: Text(
                   levelConfig.emoji,
-                  style: TextStyle(fontSize: 12.sp),
+                  style: TextStyle(fontSize: 16.sp),
                 ),
               ),
             ],
@@ -166,7 +166,7 @@ class DashboardHeaderBanner extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.9),
             ),
           ),
-          SizedBox(height: 2.5.h),
+          SizedBox(height: 2.h),
 
           // Progress Bar Header
           Row(
@@ -194,7 +194,7 @@ class DashboardHeaderBanner extends StatelessWidget {
           ClipRRect(
             borderRadius: AppRadius.circular10,
             child: Container(
-              height: 10,
+              height: 8,
               width: double.infinity,
               color: Colors.black.withValues(alpha: 0.25),
               child: Stack(

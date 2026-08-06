@@ -75,7 +75,7 @@ class AnnouncementCard extends StatelessWidget {
                   AppIcons.calendar(size: 14, color: AppColors.textMuted),
                   SizedBox(width: 1.w),
                   Text(
-                    item.date.isNotEmpty ? item.date : "Date non précisée",
+                    item.formattedFrenchDate,
                     style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
                   ),
                 ],

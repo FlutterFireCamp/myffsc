@@ -96,7 +96,7 @@ class ProgramCard extends StatelessWidget {
                     AppIcons.calendar(size: 14, color: badgeColor),
                     SizedBox(width: 1.w),
                     Text(
-                      item.date,
+                      item.formattedFrenchDate,
                       style: AppTextStyles.caption.copyWith(
                         color: badgeColor,
                         fontWeight: FontWeight.w600,
@@ -108,7 +108,7 @@ class ProgramCard extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AppIcons.timer(size: 14, color: badgeColor),
+                    AppIcons.time(size: 14, color: badgeColor),
                     SizedBox(width: 1.w),
                     Text(
                       item.formattedLocalTime,
@@ -123,11 +123,14 @@ class ProgramCard extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    AppIcons.video(size: 14, color: AppColors.textMuted),
+                    AppIcons.video(size: 14, color: badgeColor),
                     SizedBox(width: 1.w),
                     Text(
                       item.location!,
-                      style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
+                      style: AppTextStyles.caption.copyWith(
+                        color: badgeColor,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),

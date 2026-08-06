@@ -114,6 +114,27 @@ class AnnouncementItem extends Equatable {
     this.createdAt,
   });
 
+  /// Formats date to French DD/MM/YYYY style (e.g. 07/08/2026)
+  String get formattedFrenchDate {
+    if (date.trim().isEmpty) return 'Date non précisée';
+
+    try {
+      final dt = DateTime.tryParse(date);
+      if (dt != null) {
+        final day = dt.day.toString().padLeft(2, '0');
+        final month = dt.month.toString().padLeft(2, '0');
+        return '$day/$month/${dt.year}';
+      }
+
+      final parts = date.split(RegExp(r'[-/.]'));
+      if (parts.length == 3 && parts[0].length == 4) {
+        return '${parts[2].padLeft(2, '0')}/${parts[1].padLeft(2, '0')}/${parts[0]}';
+      }
+    } catch (_) {}
+
+    return date;
+  }
+
   factory AnnouncementItem.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data() ?? {};
     DateTime? parsedCreatedAt;
