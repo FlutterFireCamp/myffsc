@@ -51,7 +51,7 @@ class ProfileSocialLinksBar extends StatelessWidget {
     if (!hasSocialLinks) return const SizedBox.shrink();
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .center,
       children: [
         Text(
           "Réseaux Sociaux",

@@ -37,19 +37,22 @@ class ProfileHeaderCard extends StatelessWidget {
               // Avatar Left
               AppCachedAvatar(
                 imageUrl: user.photoUrl,
-                radius: 34,
+                radius: 32,
                 fallbackInitial: user.firstName,
                 fallbackTextStyle: AppTextStyles.h2.copyWith(color: Colors.white),
               ),
-              SizedBox(width: 4.w),
+              SizedBox(width: 3.5.w),
 
-              // Name & Email Column
+              // Name & Email Column (single line max, ellipsis overflow)
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       user.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.h3.copyWith(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.bold,
@@ -58,17 +61,41 @@ class ProfileHeaderCard extends StatelessWidget {
                     SizedBox(height: 0.3.h),
                     Text(
                       user.email,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
                     ),
                   ],
                 ),
               ),
+              SizedBox(width: 2.w),
+
+              // Edit Button (Icon Only) placed at far right
+              InkWell(
+                onTap: () {
+                  Navigator.of(context, rootNavigator: true).push(
+                    MaterialPageRoute(
+                      builder: (context) => EditProfilePage(user: user),
+                    ),
+                  );
+                },
+                borderRadius: AppRadius.circular12,
+                child: Container(
+                  padding: EdgeInsets.all(2.5.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.actionBlue.withValues(alpha: 0.15),
+                    borderRadius: AppRadius.circular12,
+                    border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.3)),
+                  ),
+                  child: AppIcons.edit(color: AppColors.skyBlue, size: 18),
+                ),
+              ),
             ],
           ),
-          SizedBox(height: 2.h),
 
           // Location & Hub/Community Badges
           if (locationText.isNotEmpty || (hubText != null && hubText.isNotEmpty)) ...[
+            SizedBox(height: 2.h),
             Wrap(
               spacing: 2.w,
               runSpacing: 0.8.h,
@@ -85,38 +112,7 @@ class ProfileHeaderCard extends StatelessWidget {
                   ),
               ],
             ),
-            SizedBox(height: 2.h),
           ],
-
-          // Edit Profile Button placed cleanly inside the Column
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).push(
-                  MaterialPageRoute(
-                    builder: (context) => EditProfilePage(user: user),
-                  ),
-                );
-              },
-              style: OutlinedButton.styleFrom(
-                foregroundColor: AppColors.skyBlue,
-                side: BorderSide(color: AppColors.skyBlue.withValues(alpha: 0.5), width: 1.2),
-                padding: EdgeInsets.symmetric(vertical: 1.2.h),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: AppRadius.circular12,
-                ),
-              ),
-              icon: AppIcons.edit(color: AppColors.skyBlue, size: 18),
-              label: Text(
-                "Éditer mon profil",
-                style: AppTextStyles.buttonSmall.copyWith(
-                  color: AppColors.skyBlue,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -135,12 +131,16 @@ class ProfileHeaderCard extends StatelessWidget {
         children: [
           icon,
           SizedBox(width: 2.w),
-          Text(
-            text,
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w600,
-              fontSize: 12.5.sp,
+          Flexible(
+            child: Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w600,
+                fontSize: 12.5.sp,
+              ),
             ),
           ),
         ],

@@ -29,7 +29,7 @@ class EditProfileHeader extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           AppCachedAvatar(
             imageUrl: user.photoUrl,
@@ -41,9 +41,12 @@ class EditProfileHeader extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   user.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.h3.copyWith(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
@@ -52,6 +55,8 @@ class EditProfileHeader extends StatelessWidget {
                 SizedBox(height: 0.3.h),
                 Text(
                   user.email,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
                 ),
                 if (locationText.isNotEmpty || (hubText != null && hubText.isNotEmpty)) ...[
@@ -62,12 +67,12 @@ class EditProfileHeader extends StatelessWidget {
                     children: [
                       if (locationText.isNotEmpty)
                         _buildBadgeChip(
-                          icon: Icons.location_on_outlined,
+                          icon: AppIcons.location04(color: AppColors.skyBlue, size: 18),
                           text: locationText,
                         ),
                       if (hubText != null && hubText.isNotEmpty)
                         _buildBadgeChip(
-                          icon: Icons.groups_outlined,
+                          icon: AppIcons.userGroup(color: AppColors.skyBlue, size: 18),
                           text: hubText,
                         ),
                     ],
@@ -81,7 +86,7 @@ class EditProfileHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildBadgeChip({required IconData icon, required String text}) {
+  Widget _buildBadgeChip({required Widget icon, required String text}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.9.h),
       decoration: BoxDecoration(
@@ -92,14 +97,18 @@ class EditProfileHeader extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 18, color: AppColors.skyBlue),
+          icon,
           SizedBox(width: 2.w),
-          Text(
-            text,
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w600,
-              fontSize: 12.5.sp,
+          Flexible(
+            child: Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w600,
+                fontSize: 12.5.sp,
+              ),
             ),
           ),
         ],
