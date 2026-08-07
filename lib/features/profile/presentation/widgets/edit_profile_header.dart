@@ -97,7 +97,7 @@ class EditProfileHeader extends StatelessWidget {
 
   Widget _buildBadgeChip({required Widget icon, required String text}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.9.h),
+      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.8.h),
       decoration: BoxDecoration(
         color: AppColors.actionBlue.withValues(alpha: 0.12),
         borderRadius: AppRadius.circular8,

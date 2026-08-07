@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import '../utils/app_snackbar.dart';
 
 class NetworkHelper {
   /// Checks if device has active internet connectivity by performing a DNS lookup.
@@ -20,13 +20,7 @@ class NetworkHelper {
   static Future<bool> checkConnection(BuildContext context) async {
     final isOnline = await hasInternetConnection();
     if (!isOnline && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Connexion Internet requise pour cette action."),
-          backgroundColor: AppColors.card,
-          duration: Duration(seconds: 3),
-        ),
-      );
+      AppSnackBar.showNetworkError(context);
     }
     return isOnline;
   }

@@ -74,21 +74,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   Future<void> _submitProfile(UserEntity currentUser) async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedGender == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Veuillez sélectionner votre genre."),
-          backgroundColor: AppColors.incorrectContainer,
-        ),
-      );
+      AppSnackBar.showError(context, "Veuillez sélectionner votre genre.");
       return;
     }
     if (_selectedCountry == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Veuillez sélectionner votre pays de résidence."),
-          backgroundColor: AppColors.incorrectContainer,
-        ),
-      );
+      AppSnackBar.showError(context, "Veuillez sélectionner votre pays de résidence.");
       return;
     }
 
@@ -131,12 +121,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         setState(() {
           _isSubmitting = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Erreur lors de l'enregistrement : $e"),
-            backgroundColor: AppColors.incorrectContainer,
-          ),
-        );
+        AppSnackBar.showError(context, "Erreur lors de l'enregistrement : $e");
       }
     }
   }

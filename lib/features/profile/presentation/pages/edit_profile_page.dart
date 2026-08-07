@@ -11,10 +11,7 @@ import '../widgets/edit_profile_header.dart';
 class EditProfilePage extends StatefulWidget {
   final UserEntity user;
 
-  const EditProfilePage({
-    super.key,
-    required this.user,
-  });
+  const EditProfilePage({super.key, required this.user});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
@@ -39,7 +36,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   static const List<String> _genderOptions = AppDataConstants.genderOptions;
   static const List<String> _hubOptions = AppDataConstants.hubOptions;
-  static const List<String> _africanCountries = AppDataConstants.africanCountries;
+  static const List<String> _africanCountries =
+      AppDataConstants.africanCountries;
 
   @override
   void initState() {
@@ -47,7 +45,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final user = widget.user;
 
     _nameController = TextEditingController(text: user.name);
-    _discordController = TextEditingController(text: user.discordUsername ?? '');
+    _discordController = TextEditingController(
+      text: user.discordUsername ?? '',
+    );
     _townController = TextEditingController(text: user.town ?? '');
     _githubController = TextEditingController(text: user.github ?? '');
     _linkedinController = TextEditingController(text: user.linkedin ?? '');
@@ -83,21 +83,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _submitChanges() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedGender == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Veuillez sélectionner votre genre."),
-          backgroundColor: AppColors.incorrectContainer,
-        ),
-      );
+      AppSnackBar.showError(context, "Veuillez sélectionner votre genre.");
       return;
     }
     if (_selectedCountry == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Veuillez sélectionner votre pays de résidence."),
-          backgroundColor: AppColors.incorrectContainer,
-        ),
-      );
+      AppSnackBar.showError(context, "Veuillez sélectionner votre pays de résidence.");
       return;
     }
 
@@ -111,7 +101,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     try {
       final docId = widget.user.id;
-      final hubValue = (_selectedHub == null || _selectedHub!.contains('Non affilié'))
+      final hubValue =
+          (_selectedHub == null || _selectedHub!.contains('Non affilié'))
           ? ''
           : _selectedHub!.trim();
 
@@ -137,25 +128,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
       if (mounted) {
         context.read<AuthBloc>().add(CheckAuthEvent());
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Profil mis à jour avec succès !"),
-            backgroundColor: AppColors.card,
-          ),
-        );
-        Navigator.pop(context);
+        final nav = Navigator.of(context);
+        final parentCtx = nav.context;
+        nav.pop();
+        if (parentCtx.mounted) {
+          AppSnackBar.showSuccess(parentCtx, "Profil mis à jour avec succès !");
+        }
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           _isSubmitting = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Erreur lors de la mise à jour : $e"),
-            backgroundColor: AppColors.incorrectContainer,
-          ),
-        );
+        AppSnackBar.showError(context, "Erreur lors de la mise à jour : $e");
       }
     }
   }
@@ -185,7 +170,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     style: AppTextStyles.buttonSmall.copyWith(
                       color: AppColors.skyBlue,
                       fontWeight: FontWeight.bold,
-                      fontSize: 12.sp,
                     ),
                   ),
           ),
@@ -212,14 +196,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     children: [
                       Text(
                         "Informations personnelles",
-                        style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.titleMedium.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                       SizedBox(height: 1.5.h),
 
                       // Nom complet
                       TextFormField(
                         controller: _nameController,
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                         decoration: const InputDecoration(
                           labelText: "Nom complet (Nom & Prénom) *",
                           hintText: "Ex: Georges Byona",
@@ -236,7 +224,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       // Pseudo Discord
                       TextFormField(
                         controller: _discordController,
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                         decoration: const InputDecoration(
                           labelText: "Nom d'utilisateur Discord *",
                           hintText: "Ex: georges_dev",
@@ -255,7 +245,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         label: "Pays de résidence *",
                         value: _selectedCountry,
                         options: _africanCountries,
-                        onSelected: (val) => setState(() => _selectedCountry = val),
+                        onSelected: (val) =>
+                            setState(() => _selectedCountry = val),
                         hint: "Sélectionner votre pays",
                       ),
                       SizedBox(height: 2.h),
@@ -263,7 +254,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       // Ville
                       TextFormField(
                         controller: _townController,
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                         decoration: const InputDecoration(
                           labelText: "Ville de résidence (Optionnel)",
                           hintText: "Ex: Goma, Abidjan, Yaoundé...",
@@ -286,7 +279,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         label: "Genre / Sexe *",
                         value: _selectedGender,
                         options: _genderOptions,
-                        onSelected: (val) => setState(() => _selectedGender = val),
+                        onSelected: (val) =>
+                            setState(() => _selectedGender = val),
                         hint: "Sélectionner votre genre",
                       ),
                       SizedBox(height: 3.h),
@@ -294,14 +288,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       // Section Réseaux Sociaux & Portfolio
                       Text(
                         "Réseaux Sociaux & Portfolio",
-                        style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.titleMedium.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                       SizedBox(height: 1.5.h),
 
                       // GitHub
                       TextFormField(
                         controller: _githubController,
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                         decoration: const InputDecoration(
                           labelText: "Lien GitHub (Optionnel)",
                           hintText: "https://github.com/votre_pseudo",
@@ -312,7 +310,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       // LinkedIn
                       TextFormField(
                         controller: _linkedinController,
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                         decoration: const InputDecoration(
                           labelText: "Lien LinkedIn (Optionnel)",
                           hintText: "https://linkedin.com/in/votre_pseudo",
@@ -323,7 +323,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       // Twitter / X
                       TextFormField(
                         controller: _xController,
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                         decoration: const InputDecoration(
                           labelText: "Lien X / Twitter (Optionnel)",
                           hintText: "https://x.com/votre_pseudo",
@@ -334,7 +336,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       // Portfolio / Site Web
                       TextFormField(
                         controller: _portfolioController,
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.bodySmall.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                         decoration: const InputDecoration(
                           labelText: "Portfolio ou Site Web (Optionnel)",
                           hintText: "https://votre-site.com",

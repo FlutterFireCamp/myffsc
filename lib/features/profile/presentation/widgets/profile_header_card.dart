@@ -7,10 +7,7 @@ import '../pages/edit_profile_page.dart';
 class ProfileHeaderCard extends StatelessWidget {
   final UserEntity user;
 
-  const ProfileHeaderCard({
-    super.key,
-    required this.user,
-  });
+  const ProfileHeaderCard({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +26,7 @@ class ProfileHeaderCard extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,7 +36,9 @@ class ProfileHeaderCard extends StatelessWidget {
                 imageUrl: user.photoUrl,
                 radius: 32,
                 fallbackInitial: user.firstName,
-                fallbackTextStyle: AppTextStyles.h2.copyWith(color: Colors.white),
+                fallbackTextStyle: AppTextStyles.h2.copyWith(
+                  color: Colors.white,
+                ),
               ),
               SizedBox(width: 3.5.w),
 
@@ -63,7 +62,9 @@ class ProfileHeaderCard extends StatelessWidget {
                       user.email,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -81,33 +82,45 @@ class ProfileHeaderCard extends StatelessWidget {
                 },
                 borderRadius: AppRadius.circular12,
                 child: Container(
-                  padding: EdgeInsets.all(2.5.w),
+                  padding: EdgeInsets.all(2.w),
                   decoration: BoxDecoration(
                     color: AppColors.actionBlue.withValues(alpha: 0.15),
                     borderRadius: AppRadius.circular12,
-                    border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.3)),
+                    border: Border.all(
+                      color: AppColors.actionBlue.withValues(alpha: 0.3),
+                    ),
                   ),
-                  child: AppIcons.edit(color: AppColors.skyBlue, size: 18),
+                  child: AppIcons.edit(color: AppColors.skyBlue, size: 16),
                 ),
               ),
             ],
           ),
 
           // Location & Hub/Community Badges
-          if (locationText.isNotEmpty || (hubText != null && hubText.isNotEmpty)) ...[
+          if (locationText.isNotEmpty ||
+              (hubText != null && hubText.isNotEmpty)) ...[
             SizedBox(height: 2.h),
             Wrap(
               spacing: 2.w,
               runSpacing: 0.8.h,
+              alignment: .center,
+              runAlignment: .center,
+              crossAxisAlignment: .center,
               children: [
                 if (locationText.isNotEmpty)
                   _buildBadgeChip(
-                    icon: AppIcons.location04(color: AppColors.skyBlue, size: 18),
+                    icon: AppIcons.location04(
+                      color: AppColors.skyBlue,
+                      size: 18,
+                    ),
                     text: locationText,
                   ),
                 if (hubText != null && hubText.isNotEmpty)
                   _buildBadgeChip(
-                    icon: AppIcons.userGroup(color: AppColors.skyBlue, size: 18),
+                    icon: AppIcons.userGroup(
+                      color: AppColors.skyBlue,
+                      size: 18,
+                    ),
                     text: hubText,
                   ),
               ],
@@ -120,7 +133,7 @@ class ProfileHeaderCard extends StatelessWidget {
 
   Widget _buildBadgeChip({required Widget icon, required String text}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.9.h),
+      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.8.h),
       decoration: BoxDecoration(
         color: AppColors.actionBlue.withValues(alpha: 0.12),
         borderRadius: AppRadius.circular8,

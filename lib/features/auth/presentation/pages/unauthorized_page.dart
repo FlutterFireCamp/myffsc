@@ -33,23 +33,13 @@ class UnauthorizedPage extends StatelessWidget {
       } else {
         await Clipboard.setData(const ClipboardData(text: email));
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Adresse e-mail copiée : $email'),
-              backgroundColor: AppColors.correctContainer,
-            ),
-          );
+          AppSnackBar.showSuccess(context, 'Adresse e-mail copiée : $email');
         }
       }
     } catch (e) {
       await Clipboard.setData(const ClipboardData(text: email));
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Adresse e-mail copiée : $email'),
-            backgroundColor: AppColors.correctContainer,
-          ),
-        );
+        AppSnackBar.showSuccess(context, 'Adresse e-mail copiée : $email');
       }
     }
   }

@@ -10,17 +10,12 @@ class TestsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final availableQuizzes = <TestQuizEntity>[
-      MockTestsData.sampleDartQuiz,
-    ];
+    final availableQuizzes = <TestQuizEntity>[MockTestsData.sampleDartQuiz];
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(
-          "Tests & Évaluations",
-          style: AppTextStyles.h3,
-        ),
+        title: Text("Évaluations", style: AppTextStyles.h3),
         backgroundColor: AppColors.background,
         elevation: 0,
       ),
@@ -28,21 +23,6 @@ class TestsPage extends StatelessWidget {
         primary: false,
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         children: [
-          Text(
-            "Examens Disponibles",
-            style: AppTextStyles.h3.copyWith(
-              color: AppColors.textPrimary,
-            ),
-          ),
-          SizedBox(height: 0.8.h),
-          Text(
-            "Sélectionnez une épreuve pour consulter les consignes et démarrer.",
-            style: AppTextStyles.bodySmall.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-          SizedBox(height: 2.5.h),
-
           if (availableQuizzes.isEmpty)
             _buildEmptyState()
           else
@@ -54,10 +34,15 @@ class TestsPage extends StatelessWidget {
 
   Widget _buildEmptyState() {
     return AppCard(
+      backgroundColor: AppColors.firebaseYellow.withValues(alpha: 0.15),
+      border: Border.all(
+        color: AppColors.firebaseYellow.withValues(alpha: 0.3),
+        width: 1.5,
+      ),
       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 5.h),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .center,
         children: [
           Container(
             padding: EdgeInsets.all(4.w),
@@ -69,20 +54,17 @@ class TestsPage extends StatelessWidget {
                 width: 1.5,
               ),
             ),
-            child: AppIcons.tests(
-              size: 36,
-              color: AppColors.firebaseYellow,
-            ),
+            child: AppIcons.tests(size: 36, color: AppColors.firebaseYellow),
           ),
           SizedBox(height: 2.5.h),
           Text(
-            "Aucun Quiz Actif",
+            "Pas d'évaluation disponible",
             textAlign: TextAlign.center,
             style: AppTextStyles.h3,
           ),
           SizedBox(height: 1.2.h),
           Text(
-            "Le quiz s'affichera automatiquement ici dès l'ouverture de la session par les administrateurs.",
+            "L'évaluation s'affichera automatiquement ici dès son ouverture par les organisateurs.",
             textAlign: TextAlign.center,
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textSecondary,

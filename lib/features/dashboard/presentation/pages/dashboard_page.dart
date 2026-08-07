@@ -74,22 +74,12 @@ class _DashboardPageState extends State<DashboardPage> {
     try {
       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Impossible d'ouvrir le lien : $urlString"),
-              backgroundColor: AppColors.incorrectContainer,
-            ),
-          );
+          AppSnackBar.showError(context, "Impossible d'ouvrir le lien : $urlString");
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Erreur lors de l'ouverture : $e"),
-            backgroundColor: AppColors.incorrectContainer,
-          ),
-        );
+        AppSnackBar.showError(context, "Erreur lors de l'ouverture : $e");
       }
     }
   }

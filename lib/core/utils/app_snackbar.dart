@@ -3,23 +3,27 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 
 class AppSnackBar {
+  /// Displays an error SnackBar with high-contrast text and clean styling.
   static void showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
+    if (!context.mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        elevation: 6,
+        elevation: 8,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
+          side: const BorderSide(color: AppColors.incorrectBorder, width: 1.2),
         ),
-        backgroundColor: AppColors.snackBarError,
+        backgroundColor: AppColors.incorrectContainer,
         content: Row(
           children: [
             const Icon(
               Icons.error_outline_rounded,
-              color: Colors.white,
+              color: AppColors.errorText,
               size: 22,
             ),
             const SizedBox(width: 12),
@@ -27,8 +31,8 @@ class AppSnackBar {
               child: Text(
                 _sanitizeErrorMessage(message),
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -38,23 +42,27 @@ class AppSnackBar {
     );
   }
 
+  /// Displays a success SnackBar with high-contrast text and clean styling.
   static void showSuccess(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
+    if (!context.mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        elevation: 6,
+        elevation: 8,
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: AppColors.skyBlue.withValues(alpha: 0.4), width: 1.2),
         ),
-        backgroundColor: AppColors.snackBarSuccess,
+        backgroundColor: AppColors.cardHover,
         content: Row(
           children: [
             const Icon(
               Icons.check_circle_outline_rounded,
-              color: Colors.white,
+              color: AppColors.skyBlue,
               size: 22,
             ),
             const SizedBox(width: 12),
@@ -62,8 +70,47 @@ class AppSnackBar {
               child: Text(
                 message,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Displays a network / offline warning SnackBar.
+  static void showNetworkError(BuildContext context) {
+    if (!context.mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.hideCurrentSnackBar();
+    messenger.showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        elevation: 8,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(color: AppColors.warningAmber.withValues(alpha: 0.5), width: 1.2),
+        ),
+        backgroundColor: AppColors.cardHover,
+        content: Row(
+          children: [
+            const Icon(
+              Icons.wifi_off_rounded,
+              color: AppColors.warningAmber,
+              size: 22,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                "Connexion Internet requise pour cette action.",
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
