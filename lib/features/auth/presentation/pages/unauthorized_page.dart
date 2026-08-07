@@ -103,15 +103,15 @@ class UnauthorizedPage extends StatelessWidget {
 
     final Color topIconBg = isDocMissing
         ? AppColors.incorrectContainer
-        : const Color(0xFF1E1B4B).withValues(alpha: 0.6);
+        : AppColors.unauthorizedBg.withValues(alpha: 0.6);
 
     final Color topIconBorder = isDocMissing
         ? AppColors.incorrectBorder
-        : AppColors.actionBlue.withValues(alpha: 0.3);
+        : AppColors.unauthorizedBg.withValues(alpha: 0.6);
 
     final Color topIconColor = isDocMissing
         ? AppColors.errorText
-        : const Color(0xFFA5B4FC);
+        : AppColors.unauthorizedText;
 
     return Scaffold(
       backgroundColor: AppColors.background,

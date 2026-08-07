@@ -6,10 +6,7 @@ import '../../../auth/domain/entities/user_entity.dart';
 class EditProfileHeader extends StatelessWidget {
   final UserEntity user;
 
-  const EditProfileHeader({
-    super.key,
-    required this.user,
-  });
+  const EditProfileHeader({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -57,22 +54,34 @@ class EditProfileHeader extends StatelessWidget {
                   user.email,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-                if (locationText.isNotEmpty || (hubText != null && hubText.isNotEmpty)) ...[
+                if (locationText.isNotEmpty ||
+                    (hubText != null && hubText.isNotEmpty)) ...[
                   SizedBox(height: 1.h),
                   Wrap(
                     spacing: 2.w,
                     runSpacing: 0.8.h,
+                    alignment: .center,
+                    runAlignment: .center,
+                    crossAxisAlignment: .center,
                     children: [
                       if (locationText.isNotEmpty)
                         _buildBadgeChip(
-                          icon: AppIcons.location04(color: AppColors.skyBlue, size: 18),
+                          icon: AppIcons.location04(
+                            color: AppColors.skyBlue,
+                            size: 18,
+                          ),
                           text: locationText,
                         ),
                       if (hubText != null && hubText.isNotEmpty)
                         _buildBadgeChip(
-                          icon: AppIcons.userGroup(color: AppColors.skyBlue, size: 18),
+                          icon: AppIcons.userGroup(
+                            color: AppColors.skyBlue,
+                            size: 18,
+                          ),
                           text: hubText,
                         ),
                     ],

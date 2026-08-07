@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/core.dart';
 
 enum ProgramType {
   workshop,
@@ -27,45 +28,45 @@ enum ProgramType {
   Color get badgeColor {
     switch (this) {
       case ProgramType.session:
-        return const Color(0xFFFBBF24); // 🟡 Jaune Ambre (#fbbf24)
+        return AppColors.programSessionBadge;
       case ProgramType.test:
-        return const Color(0xFFF87171); // 🔴 Rouge Corail (#f87171)
+        return AppColors.programTestBadge;
       case ProgramType.workshop:
-        return const Color(0xFF38BDF8); // 🔵 Bleu Ciel (#38bdf8)
+        return AppColors.programWorkshopBadge;
       case ProgramType.conference:
-        return const Color(0xFFC084FC); // 🟣 Violet (#c084fc)
+        return AppColors.programConferenceBadge;
       case ProgramType.studyGroup:
-        return const Color(0xFF4ADE80); // 🟢 Vert Émeraude (#4ade80)
+        return AppColors.programStudyGroupBadge;
     }
   }
 
   Color get cardBgColor {
     switch (this) {
       case ProgramType.session:
-        return const Color(0x14F59E0B); // rgba(245, 158, 11, 0.08)
+        return AppColors.programSessionBg;
       case ProgramType.test:
-        return const Color(0x14EF4444); // rgba(239, 68, 68, 0.08)
+        return AppColors.programTestBg;
       case ProgramType.workshop:
-        return const Color(0x1438BDF8); // rgba(56, 189, 248, 0.08)
+        return AppColors.programWorkshopBg;
       case ProgramType.conference:
-        return const Color(0x14A855F7); // rgba(168, 85, 247, 0.08)
+        return AppColors.programConferenceBg;
       case ProgramType.studyGroup:
-        return const Color(0x1422C55E); // rgba(34, 197, 94, 0.08)
+        return AppColors.programStudyGroupBg;
     }
   }
 
   Color get borderColor {
     switch (this) {
       case ProgramType.session:
-        return const Color(0x40F59E0B); // rgba(245, 158, 11, 0.25)
+        return AppColors.programSessionBorder;
       case ProgramType.test:
-        return const Color(0x40EF4444); // rgba(239, 68, 68, 0.25)
+        return AppColors.programTestBorder;
       case ProgramType.workshop:
-        return const Color(0x4038BDF8); // rgba(56, 189, 248, 0.25)
+        return AppColors.programWorkshopBorder;
       case ProgramType.conference:
-        return const Color(0x40A855F7); // rgba(168, 85, 247, 0.25)
+        return AppColors.programConferenceBorder;
       case ProgramType.studyGroup:
-        return const Color(0x4022C55E); // rgba(34, 197, 94, 0.25)
+        return AppColors.programStudyGroupBorder;
     }
   }
 

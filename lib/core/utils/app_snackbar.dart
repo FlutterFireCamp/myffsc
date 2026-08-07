@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 
 class AppSnackBar {
@@ -13,7 +14,7 @@ class AppSnackBar {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
-        backgroundColor: const Color(0xFF7F1D1D), // Dark Red
+        backgroundColor: AppColors.snackBarError,
         content: Row(
           children: [
             const Icon(
@@ -48,7 +49,7 @@ class AppSnackBar {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
-        backgroundColor: const Color(0xFF1E293B), // Simple Dark Card Background
+        backgroundColor: AppColors.snackBarSuccess,
         content: Row(
           children: [
             const Icon(

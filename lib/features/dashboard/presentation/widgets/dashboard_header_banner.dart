@@ -19,36 +19,36 @@ class LevelConfig {
     switch (level) {
       case 1:
         return const LevelConfig(
-          title: "Niveau 1 - Logique avec Dart",
+          title: "Niveau 1 - Logique avec Dart 🎯",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🎯",
-          gradientColors: [Color(0xFF02569B), Color(0xFF013A63)],
+          gradientColors: [AppColors.flutterBlue, AppColors.level1DarkBlue],
         );
       case 2:
         return const LevelConfig(
-          title: "Niveau 2 - UI/UX avec Flutter",
+          title: "Niveau 2 - UI/UX avec Flutter 💙",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💙",
-          gradientColors: [Color(0xFF02569B), Color(0xFF01B5F8)],
+          gradientColors: [AppColors.flutterBlue, AppColors.level2Cyan],
         );
       case 3:
         return const LevelConfig(
-          title: "Niveau 3 - Intégration Firebase",
+          title: "Niveau 3 - Intégration Firebase 🔥",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🔥",
-          gradientColors: [Color(0xFFFF8F00), Color(0xFFFF6F00)],
+          gradientColors: [AppColors.level3Amber, AppColors.level3Orange],
         );
       case 4:
       default:
         return const LevelConfig(
-          title: "Niveau 4 - Projet de Fin du Camp",
+          title: "Niveau 4 - Projet de Fin du Camp 💎",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💎",
-          gradientColors: [Color(0xFF00C6FF), Color(0xFF0072FF)],
+          gradientColors: [AppColors.level4LightBlue, AppColors.level4DeepBlue],
         );
     }
   }
@@ -204,7 +204,7 @@ class DashboardHeaderBanner extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Colors.white, Color(0xFFE0F2FE)],
+                          colors: [Colors.white, AppColors.progressBarGlow],
                         ),
                         borderRadius: AppRadius.circular10,
                       ),

@@ -43,7 +43,7 @@ class AccessCheckingPage extends StatelessWidget {
                       TextSpan(
                         text: "Flutter",
                         style: AppTextStyles.heroTitle.copyWith(
-                          color: const Color(0xFF0288D1),
+                          color: AppColors.flutterLightBlue,
                         ),
                       ),
                       TextSpan(
@@ -56,7 +56,7 @@ class AccessCheckingPage extends StatelessWidget {
                         text: "Summer ",
                         style: AppTextStyles.heroSubtitle.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: const Color(0xFFFFCA28),
+                          color: AppColors.firebaseYellow,
                         ),
                       ),
                       TextSpan(
