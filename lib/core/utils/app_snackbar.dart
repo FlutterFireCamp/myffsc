@@ -48,7 +48,7 @@ class AppSnackBar {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
-        backgroundColor: const Color(0xFF065F46), // Dark Emerald / Green
+        backgroundColor: const Color(0xFF1E293B), // Simple Dark Card Background
         content: Row(
           children: [
             const Icon(

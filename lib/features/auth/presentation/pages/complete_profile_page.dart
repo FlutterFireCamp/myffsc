@@ -92,6 +92,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       return;
     }
 
+    // Check Network Connection
+    final isOnline = await NetworkHelper.checkConnection(context);
+    if (!isOnline) return;
+
     setState(() {
       _isSubmitting = true;
     });
@@ -155,6 +159,28 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         backgroundColor: AppColors.background,
         elevation: 0,
         actions: [
+          TextButton(
+            onPressed: (_isSubmitting || currentUser == null)
+                ? null
+                : () => _submitProfile(currentUser),
+            child: _isSubmitting
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.skyBlue,
+                    ),
+                  )
+                : Text(
+                    "Valider",
+                    style: AppTextStyles.buttonSmall.copyWith(
+                      color: AppColors.skyBlue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+          ),
           IconButton(
             tooltip: "Se déconnecter",
             icon: AppIcons.logout(color: AppColors.errorText, size: 20),
@@ -162,6 +188,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               context.read<AuthBloc>().add(SignOutRequested());
             },
           ),
+          SizedBox(width: 1.w),
         ],
       ),
       body: SafeArea(
@@ -170,7 +197,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Connected Account Card Header (Fixed at top)
+              // Connected Account Card Header
               CompleteProfileHeader(
                 emailText: emailText,
                 photoUrl: photoUrl,
@@ -275,39 +302,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         hint: "Sélectionner une option",
                       ),
                       SizedBox(height: 3.h),
-
-                      // Submit Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _isSubmitting || currentUser == null
-                              ? null
-                              : () => _submitProfile(currentUser),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.skyBlue,
-                            padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: AppRadius.circular12,
-                            ),
-                          ),
-                          child: _isSubmitting
-                              ? SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: AppColors.ultraDark,
-                                  ),
-                                )
-                              : Text(
-                                  "Valider et Accéder au Portail",
-                                  style: AppTextStyles.button.copyWith(
-                                    color: AppColors.ultraDark,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

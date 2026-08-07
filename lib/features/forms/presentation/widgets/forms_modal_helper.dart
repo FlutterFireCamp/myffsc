@@ -44,6 +44,9 @@ class FormsModalHelper {
   }
 
   static Future<void> openUrl(BuildContext context, String urlString) async {
+    final isOnline = await NetworkHelper.checkConnection(context);
+    if (!isOnline) return;
+
     final Uri url = Uri.parse(urlString);
     try {
       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {

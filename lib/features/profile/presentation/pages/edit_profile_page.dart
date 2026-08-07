@@ -101,6 +101,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
       return;
     }
 
+    // Check Network Connection
+    final isOnline = await NetworkHelper.checkConnection(context);
+    if (!isOnline) return;
+
     setState(() {
       _isSubmitting = true;
     });
@@ -136,7 +140,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text("Profil mis à jour avec succès !"),
-            backgroundColor: AppColors.correctContainer,
+            backgroundColor: AppColors.card,
           ),
         );
         Navigator.pop(context);
@@ -164,6 +168,29 @@ class _EditProfilePageState extends State<EditProfilePage> {
         title: const Text("Éditer mon profil"),
         backgroundColor: AppColors.background,
         elevation: 0,
+        actions: [
+          TextButton(
+            onPressed: _isSubmitting ? null : _submitChanges,
+            child: _isSubmitting
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.skyBlue,
+                    ),
+                  )
+                : Text(
+                    "Enregistrer",
+                    style: AppTextStyles.buttonSmall.copyWith(
+                      color: AppColors.skyBlue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12.sp,
+                    ),
+                  ),
+          ),
+          SizedBox(width: 2.w),
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -171,7 +198,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Fixed Header Card (Does not scroll!)
+              // Fixed Header Card
               EditProfileHeader(user: widget.user),
               SizedBox(height: 2.h),
 
@@ -311,38 +338,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         decoration: const InputDecoration(
                           labelText: "Portfolio ou Site Web (Optionnel)",
                           hintText: "https://votre-site.com",
-                        ),
-                      ),
-                      SizedBox(height: 3.5.h),
-
-                      // Save Button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: _isSubmitting ? null : _submitChanges,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.skyBlue,
-                            padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: AppRadius.circular12,
-                            ),
-                          ),
-                          child: _isSubmitting
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: AppColors.ultraDark,
-                                  ),
-                                )
-                              : Text(
-                                  "Enregistrer les modifications",
-                                  style: AppTextStyles.button.copyWith(
-                                    color: AppColors.ultraDark,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
                         ),
                       ),
                       SizedBox(height: 4.h),

@@ -121,10 +121,14 @@ class LoginPage extends StatelessWidget {
                                       child: ElevatedButton(
                                         onPressed: isLoading
                                             ? null
-                                            : () {
-                                                context.read<AuthBloc>().add(
-                                                      SignInWithGoogleRequested(),
-                                                    );
+                                            : () async {
+                                                final isOnline = await NetworkHelper.checkConnection(context);
+                                                if (!isOnline) return;
+                                                if (context.mounted) {
+                                                  context.read<AuthBloc>().add(
+                                                        SignInWithGoogleRequested(),
+                                                      );
+                                                }
                                               },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: AppColors.skyBlue,

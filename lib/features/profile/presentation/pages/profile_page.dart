@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -10,7 +9,6 @@ import '../widgets/profile_header_card.dart';
 import '../widgets/profile_metrics_card.dart';
 import '../widgets/profile_option_tile.dart';
 import '../widgets/profile_social_links_bar.dart';
-import 'edit_profile_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -40,40 +38,18 @@ class ProfilePage extends StatelessWidget {
         children: [
           SizedBox(height: 1.h),
 
-          // User Header Card
+          // 1. User Header Card (Photo, Name, Email, Badges + Edit Button)
           ProfileHeaderCard(user: currentUser),
           SizedBox(height: 3.h),
 
-          // Social Links Bar
+          // 2. Social Links Bar
           ProfileSocialLinksBar(user: currentUser),
 
-          // Metrics Summary Card
+          // 3. Metrics Summary Card (Level & Points)
           ProfileMetricsCard(user: currentUser),
           SizedBox(height: 3.h),
 
-          // Profile Options Tiles
-          ProfileOptionTile(
-            icon: AppIcons.edit(color: AppColors.skyBlue, size: AppSizes.iconMd),
-            title: "Modifier mon Profil",
-            subtitle: "Changer vos coordonnées et vos liens sociaux",
-            onTap: () {
-              Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(
-                  builder: (context) => EditProfilePage(user: currentUser),
-                ),
-              );
-            },
-          ),
-          SizedBox(height: 1.5.h),
-          ProfileOptionTile(
-            icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconMd),
-            title: "Notifications & Rappels",
-            subtitle: "Consulter les annonces, flashs et rappels",
-            onTap: () {
-              context.go('/announcements');
-            },
-          ),
-          SizedBox(height: 1.5.h),
+          // 4. Logout Button Tile
           ProfileOptionTile(
             icon: AppIcons.logout(color: AppColors.errorText, size: AppSizes.iconMd),
             title: "Déconnexion",
