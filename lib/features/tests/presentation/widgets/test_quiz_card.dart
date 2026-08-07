@@ -16,9 +16,9 @@ class TestQuizCard extends StatelessWidget {
       padding: EdgeInsets.all(5.w),
       decoration: BoxDecoration(
         borderRadius: AppRadius.circular16,
-        color: AppColors.firebaseYellow.withValues(alpha: 0.15),
+        color: AppColors.actionBlue.withValues(alpha: 0.12),
         border: Border.all(
-          color: AppColors.firebaseYellow.withValues(alpha: 0.3),
+          color: AppColors.skyBlue.withValues(alpha: 0.3),
           width: 1.5,
         ),
       ),
@@ -59,7 +59,7 @@ class TestQuizCard extends StatelessWidget {
               Text(
                 "${quiz.totalPoints} Pts",
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.firebaseYellow,
+                  color: AppColors.skyBlue,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -86,19 +86,19 @@ class TestQuizCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
             decoration: BoxDecoration(
-              color: AppColors.firebaseYellow.withValues(alpha: 0.3),
+              color: AppColors.actionBlue.withValues(alpha: 0.15),
               borderRadius: AppRadius.circular8,
-              border: Border.all(color: AppColors.firebaseYellow),
+              border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.4)),
             ),
             child: Row(
               children: [
-                AppIcons.calendar(size: 16, color: AppColors.firebaseYellow),
+                AppIcons.calendar(size: 16, color: AppColors.skyBlue),
                 SizedBox(width: 2.w),
                 Expanded(
                   child: Text(
                     quiz.localAvailabilityRangeText,
                     style: AppTextStyles.caption.copyWith(
-                      color: AppColors.firebaseYellow,
+                      color: AppColors.skyBlue,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -121,7 +121,7 @@ class TestQuizCard extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 1.5.h),
-                backgroundColor: AppColors.firebaseYellow,
+                backgroundColor: AppColors.skyBlue,
                 shape: const RoundedRectangleBorder(
                   borderRadius: AppRadius.circular12,
                 ),
@@ -130,7 +130,7 @@ class TestQuizCard extends StatelessWidget {
               label: Text(
                 "Consulter & Débuter",
                 style: AppTextStyles.button.copyWith(
-                  color: AppColors.background,
+                  color: AppColors.ultraDark,
                   fontWeight: FontWeight.bold,
                 ),
               ),

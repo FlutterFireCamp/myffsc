@@ -384,7 +384,7 @@ class _TestTakingPageState extends State<TestTakingPage> {
                             : _onNextOrSubmit,
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 1.5.h),
-                          backgroundColor: const Color(0xFF2563EB),
+                          backgroundColor: AppColors.actionBlue,
                           disabledBackgroundColor: AppColors.cardHover,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(24),

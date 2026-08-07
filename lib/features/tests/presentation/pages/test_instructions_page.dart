@@ -27,168 +27,168 @@ class TestInstructionsPage extends StatelessWidget {
                 primary: false,
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                 children: [
-                  // // Quiz Banner Card
-                  // Container(
-                  //   width: double.infinity,
-                  //   padding: EdgeInsets.all(5.w),
-                  //   decoration: BoxDecoration(
-                  //     color: AppColors.card,
-                  //     borderRadius: AppRadius.circular16,
-                  //     border: Border.all(
-                  //       color: AppColors.actionBlue.withValues(alpha: 0.3),
-                  //       width: 1.5,
-                  //     ),
-                  //   ),
-                  //   child: Column(
-                  //     crossAxisAlignment: CrossAxisAlignment.start,
-                  //     children: [
-                  //       Row(
-                  //         children: [
-                  //           Container(
-                  //             padding: EdgeInsets.symmetric(
-                  //               horizontal: 3.w,
-                  //               vertical: 0.6.h,
-                  //             ),
-                  //             decoration: BoxDecoration(
-                  //               color: AppColors.actionBlue.withValues(
-                  //                 alpha: 0.15,
-                  //               ),
-                  //               borderRadius: AppRadius.circular8,
-                  //               border: Border.all(
-                  //                 color: AppColors.actionBlue.withValues(
-                  //                   alpha: 0.4,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //             child: Text(
-                  //               "EXAMEN OFFICIEL",
-                  //               style: AppTextStyles.badgeSmall.copyWith(
-                  //                 color: AppColors.skyBlue,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           const Spacer(),
-                  //           Text(
-                  //             "${quiz.totalPoints} Pts",
-                  //             style: AppTextStyles.h3.copyWith(
-                  //               color: AppColors.firebaseYellow,
-                  //               fontWeight: FontWeight.bold,
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //       SizedBox(height: 1.8.h),
-                  //       Text(
-                  //         quiz.title,
-                  //         style: AppTextStyles.h2.copyWith(
-                  //           color: AppColors.textPrimary,
-                  //         ),
-                  //       ),
-                  //       SizedBox(height: 1.h),
-                  //       Text(
-                  //         quiz.description,
-                  //         style: AppTextStyles.bodyMedium.copyWith(
-                  //           color: AppColors.textSecondary,
-                  //         ),
-                  //       ),
-                  //       SizedBox(height: 2.h),
+                  // Quiz Banner Card
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(5.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.card,
+                      borderRadius: AppRadius.circular16,
+                      border: Border.all(
+                        color: AppColors.actionBlue.withValues(alpha: 0.3),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 3.w,
+                                vertical: 0.6.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.actionBlue.withValues(
+                                  alpha: 0.15,
+                                ),
+                                borderRadius: AppRadius.circular8,
+                                border: Border.all(
+                                  color: AppColors.actionBlue.withValues(
+                                    alpha: 0.4,
+                                  ),
+                                ),
+                              ),
+                              child: Text(
+                                "EXAMEN OFFICIEL",
+                                style: AppTextStyles.badgeSmall.copyWith(
+                                  color: AppColors.skyBlue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              "${quiz.totalPoints} Pts",
+                              style: AppTextStyles.h3.copyWith(
+                                color: AppColors.skyBlue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 1.8.h),
+                        Text(
+                          quiz.title,
+                          style: AppTextStyles.h2.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 1.h),
+                        Text(
+                          quiz.description,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
 
-                  //       // Badges Row
-                  //       Wrap(
-                  //         spacing: 3.w,
-                  //         runSpacing: 1.h,
-                  //         children: [
-                  //           _buildMetaBadge(
-                  //             icon: AppIcons.timer(
-                  //               size: 16,
-                  //               color: AppColors.skyBlue,
-                  //             ),
-                  //             label: "${quiz.totalDurationMinutes} Minutes",
-                  //           ),
-                  //           _buildMetaBadge(
-                  //             icon: AppIcons.forms(
-                  //               size: 16,
-                  //               color: AppColors.firebaseYellow,
-                  //             ),
-                  //             label: "${quiz.questions.length} Questions",
-                  //           ),
-                  //           _buildMetaBadge(
-                  //             icon: AppIcons.info(
-                  //               size: 16,
-                  //               color: AppColors.correctText,
-                  //             ),
-                  //             label: quiz.avgTimePerQuestionText,
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(height: 2.5.h),
+                        // Badges Row
+                        Wrap(
+                          spacing: 3.w,
+                          runSpacing: 1.h,
+                          children: [
+                            _buildMetaBadge(
+                              icon: AppIcons.timer(
+                                size: 16,
+                                color: AppColors.skyBlue,
+                              ),
+                              label: "${quiz.totalDurationMinutes} Minutes",
+                            ),
+                            _buildMetaBadge(
+                              icon: AppIcons.forms(
+                                size: 16,
+                                color: AppColors.skyBlue,
+                              ),
+                              label: "${quiz.questions.length} Questions",
+                            ),
+                            _buildMetaBadge(
+                              icon: AppIcons.info(
+                                size: 16,
+                                color: AppColors.correctText,
+                              ),
+                              label: quiz.avgTimePerQuestionText,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 2.5.h),
 
-                  // // Local Availability Time Window Card
-                  // Container(
-                  //   width: double.infinity,
-                  //   padding: EdgeInsets.all(4.w),
-                  //   decoration: BoxDecoration(
-                  //     color: AppColors.cardHover,
-                  //     borderRadius: AppRadius.circular12,
-                  //     border: Border.all(
-                  //       color: AppColors.firebaseOrange.withValues(
-                  //         alpha: 0.4,
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   child: Row(
-                  //     children: [
-                  //       Container(
-                  //         padding: EdgeInsets.all(2.5.w),
-                  //         decoration: BoxDecoration(
-                  //           color: AppColors.firebaseOrange.withValues(
-                  //             alpha: 0.15,
-                  //           ),
-                  //           shape: BoxShape.circle,
-                  //         ),
-                  //         child: AppIcons.calendar(
-                  //           color: AppColors.firebaseOrange,
-                  //           size: 22,
-                  //         ),
-                  //       ),
-                  //       SizedBox(width: 3.5.w),
-                  //       Expanded(
-                  //         child: Column(
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Text(
-                  //               "Plage Horaire d'Accessibilité",
-                  //               style: AppTextStyles.caption.copyWith(
-                  //                 color: AppColors.textMuted,
-                  //                 fontWeight: FontWeight.w600,
-                  //               ),
-                  //             ),
-                  //             SizedBox(height: 0.4.h),
-                  //             Text(
-                  //               quiz.localAvailabilityRangeText,
-                  //               style: AppTextStyles.bodyMedium.copyWith(
-                  //                 color: AppColors.firebaseYellow,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // SizedBox(height: 3.h),
+                  // Local Availability Time Window Card
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(4.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardHover,
+                      borderRadius: AppRadius.circular12,
+                      border: Border.all(
+                        color: AppColors.skyBlue.withValues(
+                          alpha: 0.4,
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(2.5.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.actionBlue.withValues(
+                              alpha: 0.15,
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                          child: AppIcons.calendar(
+                            color: AppColors.skyBlue,
+                            size: 22,
+                          ),
+                        ),
+                        SizedBox(width: 3.5.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Plage Horaire d'Accessibilité",
+                                style: AppTextStyles.caption.copyWith(
+                                  color: AppColors.textMuted,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 0.4.h),
+                              Text(
+                                quiz.localAvailabilityRangeText,
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.skyBlue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 3.h),
 
                   // Rule 1: No Backward Navigation
                   InstructionRuleCard(
                     icon: AppIcons.warning(size: 20, color: AppColors.alertRed),
                     title: "Pas de retour en arrière",
                     description:
-                        "Une fois que vous validez une question et passez à la suivante, il est strictement impossible de revenir en arrière.",
+                        "Une fois que vous validez une question et passez à la suivante, il est strictly impossible de revenir en arrière.",
                   ),
                   SizedBox(height: 1.5.h),
 
@@ -205,7 +205,7 @@ class TestInstructionsPage extends StatelessWidget {
                   InstructionRuleCard(
                     icon: AppIcons.lock(
                       size: 20,
-                      color: const Color(0xFFA5B4FC),
+                      color: AppColors.unauthorizedText,
                     ),
                     title: "Protection Anti-Capture d'Écran",
                     description:
@@ -272,28 +272,28 @@ class TestInstructionsPage extends StatelessWidget {
     );
   }
 
-  // Widget _buildMetaBadge({required Widget icon, required String label}) {
-  //   return Container(
-  //     padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
-  //     decoration: BoxDecoration(
-  //       color: AppColors.ultraDark,
-  //       borderRadius: AppRadius.circular8,
-  //       border: Border.all(color: AppColors.borderSubtle),
-  //     ),
-  //     child: Row(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: [
-  //         icon,
-  //         SizedBox(width: 1.8.w),
-  //         Text(
-  //           label,
-  //           style: AppTextStyles.caption.copyWith(
-  //             color: AppColors.textSecondary,
-  //             fontWeight: FontWeight.w600,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget _buildMetaBadge({required Widget icon, required String label}) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.8.h),
+      decoration: BoxDecoration(
+        color: AppColors.ultraDark,
+        borderRadius: AppRadius.circular8,
+        border: Border.all(color: AppColors.borderSubtle),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          icon,
+          SizedBox(width: 1.8.w),
+          Text(
+            label,
+            style: AppTextStyles.caption.copyWith(
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

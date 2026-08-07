@@ -34,27 +34,27 @@ class TestsPage extends StatelessWidget {
 
   Widget _buildEmptyState() {
     return AppCard(
-      backgroundColor: AppColors.firebaseYellow.withValues(alpha: 0.15),
+      backgroundColor: AppColors.skyBlue.withValues(alpha: 0.12),
       border: Border.all(
-        color: AppColors.firebaseYellow.withValues(alpha: 0.3),
+        color: AppColors.skyBlue.withValues(alpha: 0.3),
         width: 1.5,
       ),
       padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 5.h),
       child: Column(
-        mainAxisAlignment: .center,
-        crossAxisAlignment: .center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             padding: EdgeInsets.all(4.w),
             decoration: BoxDecoration(
-              color: AppColors.firebaseYellow.withValues(alpha: 0.15),
+              color: AppColors.skyBlue.withValues(alpha: 0.15),
               shape: BoxShape.circle,
               border: Border.all(
-                color: AppColors.firebaseYellow.withValues(alpha: 0.3),
+                color: AppColors.skyBlue.withValues(alpha: 0.3),
                 width: 1.5,
               ),
             ),
-            child: AppIcons.tests(size: 36, color: AppColors.firebaseYellow),
+            child: AppIcons.tests(size: 36, color: AppColors.skyBlue),
           ),
           SizedBox(height: 2.5.h),
           Text(

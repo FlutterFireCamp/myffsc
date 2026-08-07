@@ -37,12 +37,12 @@ class QuizOptionTile extends StatelessWidget {
 
     if (isSubmitted) {
       if (isCorrect) {
-        optionBg = const Color(0xFF0F5122); // Deep Green
+        optionBg = AppColors.correctContainer;
         optionBorder = AppColors.correctBorder;
         textColor = AppColors.textPrimary;
         prefixColor = AppColors.correctText;
       } else if (isSelected && !isCorrect) {
-        optionBg = const Color(0xFF3F1214); // Deep Red
+        optionBg = AppColors.incorrectContainer;
         optionBorder = AppColors.incorrectBorder;
         textColor = AppColors.errorText;
         prefixColor = AppColors.errorText;

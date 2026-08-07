@@ -131,14 +131,14 @@ class MainNavigationScaffold extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      color: AppColors.firebaseYellow.withValues(alpha: 0.18),
+                      color: AppColors.actionBlue.withValues(alpha: 0.18),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppColors.firebaseYellow,
+                        color: AppColors.skyBlue.withValues(alpha: 0.5),
                         width: 1.5,
                       ),
                     ),
-                    child: AppIcons.tests(color: AppColors.firebaseYellow, size: AppSizes.iconLg),
+                    child: AppIcons.tests(color: AppColors.skyBlue, size: AppSizes.iconLg),
                   ),
                 ),
                 activeIcon: Transform.translate(
@@ -146,10 +146,10 @@ class MainNavigationScaffold extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                      color: AppColors.firebaseYellow,
+                      color: AppColors.skyBlue,
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: AppColors.firebaseYellow,
+                        color: AppColors.skyBlue,
                         width: 1.5,
                       ),
                     ),
