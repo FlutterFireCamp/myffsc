@@ -8,6 +8,7 @@ import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../domain/entities/podium_user_entity.dart';
 import '../widgets/current_user_rank_card.dart';
 import '../widgets/leaderboard_user_row.dart';
+import '../widgets/podium_shimmer.dart';
 import '../widgets/top_three_podium.dart';
 
 class PodiumPage extends StatefulWidget {
@@ -124,16 +125,7 @@ class _PodiumPageState extends State<PodiumPage> {
       ),
       body: SafeArea(
         child: _isLoading
-            ? ListView(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                children: const [
-                  AppShimmer(child: AppCardShimmer()),
-                  SizedBox(height: 16),
-                  AppShimmer(child: AppCardShimmer()),
-                  SizedBox(height: 16),
-                  AppShimmer(child: AppCardShimmer()),
-                ],
-              )
+            ? const PodiumShimmer()
             : _errorMessage != null
                 ? AppEmptyState(
                     title: "Erreur de chargement",

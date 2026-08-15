@@ -6,6 +6,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../bloc/bloc.dart';
 import '../widgets/test_correction_bottom_sheet.dart';
+import '../widgets/tests_shimmer.dart';
 import '../widgets/test_quiz_card.dart';
 
 class TestsPage extends StatefulWidget {
@@ -54,14 +55,7 @@ class _TestsPageState extends State<TestsPage> {
         child: BlocBuilder<TestBloc, TestState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return ListView(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                children: const [
-                  AppShimmer(child: AppCardShimmer()),
-                  SizedBox(height: 16),
-                  AppShimmer(child: AppCardShimmer()),
-                ],
-              );
+              return const TestsShimmer();
             }
 
             final quiz = state.activeQuiz;

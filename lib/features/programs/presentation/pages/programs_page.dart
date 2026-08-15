@@ -6,6 +6,7 @@ import '../../../../core/core.dart';
 import '../../domain/entities/program_item.dart';
 import '../widgets/program_card.dart';
 import '../widgets/program_filter_tabs.dart';
+import '../widgets/programs_shimmer.dart';
 
 class ProgramsPage extends StatefulWidget {
   const ProgramsPage({super.key});
@@ -176,7 +177,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
           // Body Content
           Expanded(
             child: _isLoadingInitial
-                ? const AppListShimmer(itemCount: 4)
+                ? const ProgramsShimmer()
                 : _programs.isEmpty
                     ? _buildEmptyState()
                     : RefreshIndicator(

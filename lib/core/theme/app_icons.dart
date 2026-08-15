@@ -65,6 +65,12 @@ class AppIcons {
   static Widget link({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedLink01, color: color, size: size);
 
+  static Widget globe({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedGlobe02, color: color, size: size);
+
+  static Widget globe02({Color color = Colors.white, double size = 24.0}) =>
+      globe(color: color, size: size);
+
   static Widget send({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedSent, color: color, size: size);
 

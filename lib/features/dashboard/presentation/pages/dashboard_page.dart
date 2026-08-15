@@ -9,6 +9,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../programs/domain/entities/program_item.dart';
 import '../widgets/dashboard_header_banner.dart';
+import '../widgets/dashboard_shimmer.dart';
 import '../widgets/quick_action_card.dart';
 import '../widgets/today_program_card.dart';
 
@@ -151,9 +152,11 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
-      body: ListView(
-        primary: false,
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+      body: _isLoadingTodayProgram
+          ? const DashboardShimmer()
+          : ListView(
+              primary: false,
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
         children: [
           // Header Level Progress Banner
           DashboardHeaderBanner(

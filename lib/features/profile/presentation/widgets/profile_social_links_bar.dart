@@ -53,25 +53,25 @@ class ProfileSocialLinksBar extends StatelessWidget {
           children: [
             if (user.github != null && user.github!.isNotEmpty)
               _buildSocialIconButton(
-                icon: AppIcons.github(size: 20),
+                icon: AppIcons.github(size: 16),
                 tooltip: "GitHub",
                 onTap: () => _launchExternalUrl(context, user.github),
               ),
             if (user.linkedin != null && user.linkedin!.isNotEmpty)
               _buildSocialIconButton(
-                icon: AppIcons.linkedin(size: 20),
+                icon: AppIcons.linkedin(size: 16),
                 tooltip: "LinkedIn",
                 onTap: () => _launchExternalUrl(context, user.linkedin),
               ),
             if (user.x != null && user.x!.isNotEmpty)
               _buildSocialIconButton(
-                icon: AppIcons.twitter(size: 20),
+                icon: AppIcons.twitter(size: 16),
                 tooltip: "X / Twitter",
                 onTap: () => _launchExternalUrl(context, user.x),
               ),
             if (user.portfolio != null && user.portfolio!.isNotEmpty)
               _buildSocialIconButton(
-                icon: AppIcons.link(size: 20),
+                icon: AppIcons.globe02(size: 16),
                 tooltip: "Portfolio",
                 onTap: () => _launchExternalUrl(context, user.portfolio),
               ),
@@ -88,14 +88,14 @@ class ProfileSocialLinksBar extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return Padding(
-      padding: EdgeInsets.only(right: 3.w),
+      padding: EdgeInsets.only(right: 2.5.w),
       child: Tooltip(
         message: tooltip,
         child: InkWell(
           onTap: onTap,
           borderRadius: AppRadius.circular12,
           child: Container(
-            padding: EdgeInsets.all(3.w),
+            padding: EdgeInsets.all(2.2.w),
             decoration: BoxDecoration(
               color: AppColors.card,
               borderRadius: AppRadius.circular12,

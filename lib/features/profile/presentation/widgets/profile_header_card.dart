@@ -34,13 +34,13 @@ class ProfileHeaderCard extends StatelessWidget {
               // Avatar Left
               AppCachedAvatar(
                 imageUrl: user.photoUrl,
-                radius: 32,
+                radius: 26,
                 fallbackInitial: user.firstName,
-                fallbackTextStyle: AppTextStyles.h2.copyWith(
+                fallbackTextStyle: AppTextStyles.h3.copyWith(
                   color: Colors.white,
                 ),
               ),
-              SizedBox(width: 3.5.w),
+              SizedBox(width: 3.w),
 
               // Name & Email Column (single line max, ellipsis overflow)
               Expanded(
@@ -52,17 +52,17 @@ class ProfileHeaderCard extends StatelessWidget {
                       user.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.h3.copyWith(
+                      style: AppTextStyles.titleMedium.copyWith(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 0.3.h),
+                    SizedBox(height: 0.2.h),
                     Text(
                       user.email,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.bodySmall.copyWith(
+                      style: AppTextStyles.caption.copyWith(
                         color: AppColors.textSecondary,
                       ),
                     ),
@@ -90,7 +90,7 @@ class ProfileHeaderCard extends StatelessWidget {
                       color: AppColors.actionBlue.withValues(alpha: 0.3),
                     ),
                   ),
-                  child: AppIcons.edit(color: AppColors.skyBlue, size: 16),
+                  child: AppIcons.edit(color: AppColors.skyBlue, size: 14),
                 ),
               ),
             ],
@@ -99,7 +99,7 @@ class ProfileHeaderCard extends StatelessWidget {
           // Location & Hub/Community Badges
           if (locationText.isNotEmpty ||
               (hubText != null && hubText.isNotEmpty)) ...[
-            SizedBox(height: 2.h),
+            SizedBox(height: 1.5.h),
             Wrap(
               spacing: 2.w,
               runSpacing: 0.8.h,
@@ -111,7 +111,7 @@ class ProfileHeaderCard extends StatelessWidget {
                   _buildBadgeChip(
                     icon: AppIcons.location04(
                       color: AppColors.skyBlue,
-                      size: 18,
+                      size: 14,
                     ),
                     text: locationText,
                   ),
@@ -119,7 +119,7 @@ class ProfileHeaderCard extends StatelessWidget {
                   _buildBadgeChip(
                     icon: AppIcons.userGroup(
                       color: AppColors.skyBlue,
-                      size: 18,
+                      size: 14,
                     ),
                     text: hubText,
                   ),
@@ -133,7 +133,7 @@ class ProfileHeaderCard extends StatelessWidget {
 
   Widget _buildBadgeChip({required Widget icon, required String text}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.8.h),
+      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
       decoration: BoxDecoration(
         color: AppColors.actionBlue.withValues(alpha: 0.12),
         borderRadius: AppRadius.circular8,
@@ -143,16 +143,16 @@ class ProfileHeaderCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           icon,
-          SizedBox(width: 2.w),
+          SizedBox(width: 1.5.w),
           Flexible(
             child: Text(
               text,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.bodyMedium.copyWith(
+              style: AppTextStyles.caption.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w600,
-                fontSize: 12.5.sp,
+                fontSize: 10.5.sp,
               ),
             ),
           ),

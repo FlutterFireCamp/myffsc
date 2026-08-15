@@ -5,6 +5,7 @@ import '../../../../core/core.dart';
 import '../../domain/entities/announcement_item.dart';
 import '../widgets/announcement_card.dart';
 import '../widgets/announcement_filter_tabs.dart';
+import '../widgets/announcements_shimmer.dart';
 
 class AnnouncementsPage extends StatefulWidget {
   const AnnouncementsPage({super.key});
@@ -168,7 +169,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
           // Body Content
           Expanded(
             child: _isLoadingInitial
-                ? const AppListShimmer(itemCount: 4)
+                ? const AnnouncementsShimmer()
                 : _announcements.isEmpty
                     ? _buildEmptyState()
                     : RefreshIndicator(
