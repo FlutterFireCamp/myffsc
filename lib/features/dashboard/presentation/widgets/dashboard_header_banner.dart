@@ -6,13 +6,13 @@ class LevelConfig {
   final String title;
   final String subtitle;
   final String emoji;
-  final List<Color> gradientColors;
+  final Color levelColor;
 
   const LevelConfig({
     required this.title,
     required this.subtitle,
     required this.emoji,
-    required this.gradientColors,
+    required this.levelColor,
   });
 
   static LevelConfig fromLevel(int level) {
@@ -23,7 +23,7 @@ class LevelConfig {
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🎯",
-          gradientColors: [AppColors.flutterBlue, AppColors.level1DarkBlue],
+          levelColor: AppColors.skyBlue,
         );
       case 2:
         return const LevelConfig(
@@ -31,7 +31,7 @@ class LevelConfig {
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💙",
-          gradientColors: [AppColors.flutterBlue, AppColors.level2Cyan],
+          levelColor: AppColors.actionBlue,
         );
       case 3:
         return const LevelConfig(
@@ -39,7 +39,7 @@ class LevelConfig {
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🔥",
-          gradientColors: [AppColors.level3Amber, AppColors.level3Orange],
+          levelColor: AppColors.warningAmber,
         );
       case 4:
       default:
@@ -48,7 +48,7 @@ class LevelConfig {
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💎",
-          gradientColors: [AppColors.level4LightBlue, AppColors.level4DeepBlue],
+          levelColor: AppColors.purpleConference,
         );
     }
   }
@@ -93,28 +93,20 @@ class DashboardHeaderBanner extends StatelessWidget {
       totalPoints,
     );
     final levelConfig = LevelConfig.fromLevel(userLevel);
+    final levelColor = levelConfig.levelColor;
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(5.w),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: levelConfig.gradientColors,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: AppColors.card,
         borderRadius: AppRadius.circular20,
-        boxShadow: [
-          BoxShadow(
-            color: levelConfig.gradientColors.first.withValues(alpha: 0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Level Title Badge & Level Emoji
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -124,16 +116,16 @@ class DashboardHeaderBanner extends StatelessWidget {
                   vertical: 0.7.h,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.22),
+                  color: levelColor.withValues(alpha: 0.15),
                   borderRadius: AppRadius.circular10,
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.35),
+                    color: levelColor.withValues(alpha: 0.4),
                   ),
                 ),
                 child: Text(
                   levelConfig.title,
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: Colors.white,
+                    color: levelColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -141,10 +133,10 @@ class DashboardHeaderBanner extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(1.w),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.5),
+                  color: levelColor.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.35),
+                    color: levelColor.withValues(alpha: 0.4),
                   ),
                 ),
                 child: Text(
@@ -155,15 +147,16 @@ class DashboardHeaderBanner extends StatelessWidget {
             ],
           ),
           SizedBox(height: 2.h),
+
           Text(
             "Ravis de te revoir !",
-            style: AppTextStyles.h3.copyWith(color: Colors.white),
+            style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
           ),
           SizedBox(height: 0.6.h),
           Text(
             levelConfig.subtitle,
             style: AppTextStyles.bodySmall.copyWith(
-              color: Colors.white.withValues(alpha: 0.9),
+              color: AppColors.textSecondary,
             ),
           ),
           SizedBox(height: 2.h),
@@ -175,14 +168,14 @@ class DashboardHeaderBanner extends StatelessWidget {
               Text(
                 "Progression Globale",
                 style: AppTextStyles.bodySmall.copyWith(
-                  color: Colors.white.withValues(alpha: 0.85),
+                  color: AppColors.textSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
                 "$progressPct%",
                 style: AppTextStyles.titleMedium.copyWith(
-                  color: Colors.white,
+                  color: levelColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -196,16 +189,14 @@ class DashboardHeaderBanner extends StatelessWidget {
             child: Container(
               height: 8,
               width: double.infinity,
-              color: Colors.black.withValues(alpha: 0.25),
+              color: AppColors.ultraDark,
               child: Stack(
                 children: [
                   FractionallySizedBox(
                     widthFactor: (progressPct / 100).clamp(0.0, 1.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Colors.white, AppColors.progressBarGlow],
-                        ),
+                        color: levelColor,
                         borderRadius: AppRadius.circular10,
                       ),
                     ),

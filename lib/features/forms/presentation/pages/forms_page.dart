@@ -35,11 +35,7 @@ class FormsPage extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(5.w),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.ultraDark, AppColors.card],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              color: AppColors.card,
               borderRadius: AppRadius.circular20,
               border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
             ),

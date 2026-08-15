@@ -28,13 +28,6 @@ class CurrentUserRankCard extends StatelessWidget {
           color: AppColors.skyBlue.withValues(alpha: 0.5),
           width: 1.5,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.4),
-            blurRadius: 12,
-            offset: const Offset(0, -4),
-          ),
-        ],
       ),
       child: Row(
         children: [

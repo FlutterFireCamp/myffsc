@@ -109,13 +109,6 @@ class TopThreePodium extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: badgeColor,
                     borderRadius: AppRadius.circular12,
-                    boxShadow: [
-                      BoxShadow(
-                        color: badgeColor.withValues(alpha: 0.4),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
                   ),
                   child: Text(
                     rankText,
@@ -159,19 +152,9 @@ class TopThreePodium extends StatelessWidget {
             height: pedestalHeight,
             padding: EdgeInsets.symmetric(vertical: 1.2.h),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: isFirst
-                    ? [
-                        badgeColor.withValues(alpha: 0.25),
-                        badgeColor.withValues(alpha: 0.08),
-                      ]
-                    : [
-                        AppColors.cardHover,
-                        AppColors.modalBackground,
-                      ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+              color: isFirst
+                  ? badgeColor.withValues(alpha: 0.12)
+                  : AppColors.cardHover,
               borderRadius: AppRadius.circular14,
               border: Border.all(
                 color: isFirst
