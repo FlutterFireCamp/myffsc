@@ -49,6 +49,25 @@ class TestFirestoreService {
     return null;
   }
 
+  /// Fetch a test by its ID from /tests
+  Future<TestQuizEntity?> fetchTestById(String quizId) async {
+    try {
+      final doc = await _firestore.collection('tests').doc(quizId).get();
+      if (doc.exists && doc.data() != null) {
+        return _parseTestQuizEntity(doc.id, doc.data()!);
+      }
+      final snapshot = await _firestore.collection('tests').get();
+      for (final d in snapshot.docs) {
+        if (d.id == quizId || d.data()['id'] == quizId) {
+          return _parseTestQuizEntity(d.id, d.data());
+        }
+      }
+    } catch (e) {
+      debugPrint("Error fetching test by id: $e");
+    }
+    return null;
+  }
+
   /// Check if user has already submitted the test today under /users/{userId}/tests/{quizId}_{YYYY-MM-DD}
   Future<Map<String, dynamic>?> checkUserSubmission(
       String userId, String quizId) async {

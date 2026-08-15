@@ -2,11 +2,77 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
+import '../../../tests/data/services/test_firestore_service.dart';
+import '../../../tests/domain/entities/question_item_entity.dart';
+import '../../../tests/domain/entities/test_quiz_entity.dart';
+import '../../../tests/presentation/widgets/test_correction_bottom_sheet.dart';
 
 class ProfileTestHistorySection extends StatelessWidget {
   final String userId;
 
   const ProfileTestHistorySection({super.key, required this.userId});
+
+  Future<void> _handleViewDetails(
+    BuildContext context,
+    Map<String, dynamic> data,
+  ) async {
+    final quizId = data['quizId'] as String? ?? 'ffsc_exam_2026';
+    final quizTitle = data['quizTitle'] as String? ?? 'Évaluation FFSC';
+    final score = (data['score'] as num?)?.toInt() ?? 0;
+    final rawAnswers = data['answers'] as Map<String, dynamic>? ?? {};
+
+    // Parse answers back to Map<int, dynamic>
+    final Map<int, dynamic> userAnswers = {};
+    rawAnswers.forEach((key, value) {
+      final intKey = int.tryParse(key);
+      if (intKey != null) {
+        userAnswers[intKey] = value;
+      }
+    });
+
+    // Try fetching official quiz from Firestore /tests
+    TestQuizEntity? quiz = await TestFirestoreService().fetchTestById(quizId);
+
+    // Fallback: build a mock quiz structure matching answers if not found in /tests
+    if (quiz == null) {
+      final List<QuestionItemEntity> fallbackQuestions = [];
+      userAnswers.forEach((idx, val) {
+        fallbackQuestions.add(
+          QuestionItemEntity(
+            id: "q_$idx",
+            title: "Question ${idx + 1}",
+            type: val is int ? 'choice' : 'text',
+            level: 1,
+            modules: const [1],
+            points: 25,
+            timingSeconds: 60,
+            options: val is int ? const ["Option A", "Option B", "Option C", "Option D"] : null,
+            correctAnswers: val is int ? [val] : null,
+            explanation: "Explication détaillée de la réponse.",
+          ),
+        );
+      });
+
+      quiz = TestQuizEntity(
+        id: quizId,
+        title: quizTitle,
+        description: "Évaluation enregistrée",
+        totalDurationMinutes: 10,
+        totalPoints: (data['totalPossibleScore'] as num?)?.toInt() ?? 100,
+        questions: fallbackQuestions,
+        status: 'active',
+      );
+    }
+
+    if (context.mounted) {
+      TestCorrectionBottomSheet.show(
+        context,
+        quiz: quiz,
+        userAnswers: userAnswers,
+        totalScore: score,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,108 +142,119 @@ class ProfileTestHistorySection extends StatelessWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: docs.length,
-              separatorBuilder: (context, index) => SizedBox(height: 1.2.h),
+              separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
               itemBuilder: (context, index) {
                 final data = docs[index].data();
                 final quizTitle = data['quizTitle'] as String? ?? "Évaluation FFSC";
                 final score = (data['score'] as num?)?.toInt() ?? 0;
                 final totalPossible = (data['totalPossibleScore'] as num?)?.toInt() ?? 100;
                 final dateStr = data['date'] as String? ?? '';
-                final timeSpentSeconds = (data['timeSpentSeconds'] as num?)?.toInt() ?? 0;
-                final minutes = timeSpentSeconds ~/ 60;
-                final seconds = timeSpentSeconds % 60;
-
-                final percentage = totalPossible > 0
-                    ? ((score / totalPossible) * 100).round()
-                    : 0;
 
                 return Container(
-                  padding: EdgeInsets.all(3.5.w),
+                  padding: EdgeInsets.all(4.5.w),
                   decoration: BoxDecoration(
                     color: AppColors.card,
-                    borderRadius: AppRadius.circular14,
-                    border: Border.all(
-                      color: percentage >= 50
-                          ? AppColors.correctBorder.withValues(alpha: 0.4)
-                          : AppColors.incorrectBorder.withValues(alpha: 0.4),
-                    ),
+                    borderRadius: AppRadius.circular16,
+                    border: Border.all(color: AppColors.borderSubtle),
                   ),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(2.5.w),
-                        decoration: BoxDecoration(
-                          color: percentage >= 50
-                              ? AppColors.correctContainer
-                              : AppColors.incorrectContainer,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          "$percentage%",
-                          style: AppTextStyles.caption.copyWith(
-                            color: percentage >= 50
-                                ? AppColors.correctText
-                                : AppColors.errorText,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10.sp,
+                      // Top Row: Title + Date (Left) & CORRIGÉ Badge (Right)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                quizTitle,
+                                style: AppTextStyles.titleMedium.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 0.4.h),
+                              Text(
+                                "Date : $dateStr",
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ),
-                      SizedBox(width: 3.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              quizTitle,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.textPrimary,
-                                fontWeight: FontWeight.bold,
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 3.w,
+                              vertical: 0.6.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.successGreen.withValues(alpha: 0.15),
+                              borderRadius: AppRadius.circular20,
+                              border: Border.all(
+                                color: AppColors.successGreen.withValues(alpha: 0.3),
                               ),
                             ),
-                            SizedBox(height: 0.3.h),
-                            Row(
-                              children: [
-                                AppIcons.calendar(color: AppColors.textMuted, size: 12),
-                                SizedBox(width: 1.w),
-                                Text(
-                                  dateStr,
-                                  style: AppTextStyles.caption.copyWith(
-                                    color: AppColors.textMuted,
-                                    fontSize: 9.5.sp,
-                                  ),
-                                ),
-                                SizedBox(width: 3.w),
-                                AppIcons.time(color: AppColors.textMuted, size: 12),
-                                SizedBox(width: 1.w),
-                                Text(
-                                  "${minutes}m ${seconds}s",
-                                  style: AppTextStyles.caption.copyWith(
-                                    color: AppColors.textMuted,
-                                    fontSize: 9.5.sp,
-                                  ),
-                                ),
-                              ],
+                            child: Text(
+                              "CORRIGÉ",
+                              style: AppTextStyles.badge.copyWith(
+                                color: AppColors.correctText,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 9.sp,
+                                letterSpacing: 0.5,
+                              ),
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+
+                      // Divider Line
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 1.5.h),
+                        child: const Divider(
+                          color: AppColors.borderSubtle,
+                          height: 1,
+                          thickness: 0.8,
                         ),
                       ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.actionBlue.withValues(alpha: 0.15),
-                          borderRadius: AppRadius.circular8,
-                        ),
-                        child: Text(
-                          "$score / $totalPossible Pts",
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.skyBlue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10.sp,
+
+                      // Bottom Row: Score (Left) & Voir détails Button (Right)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "$score / $totalPossible pts",
+                            style: AppTextStyles.titleMedium.copyWith(
+                              color: AppColors.skyBlue,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
+                          InkWell(
+                            onTap: () => _handleViewDetails(context, data),
+                            borderRadius: AppRadius.circular12,
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.w,
+                                vertical: 1.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.skyBlue.withValues(alpha: 0.12),
+                                borderRadius: AppRadius.circular12,
+                                border: Border.all(
+                                  color: AppColors.skyBlue.withValues(alpha: 0.3),
+                                ),
+                              ),
+                              child: Text(
+                                "Voir détails",
+                                style: AppTextStyles.buttonSmall.copyWith(
+                                  color: AppColors.skyBlue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

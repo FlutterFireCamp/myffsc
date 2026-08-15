@@ -30,29 +30,41 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("Profil Apprenant"),
+        title: const Text("Profil"),
         backgroundColor: AppColors.background,
         elevation: 0,
         actions: [
-          IconButton(
-            tooltip: "Se déconnecter",
-            icon: AppIcons.logout(color: AppColors.errorText, size: 20),
-            onPressed: () {
-              AppConfirmationDialog.show(
-                context,
-                title: "Déconnexion",
-                message:
-                    "Êtes-vous sûr de vouloir vous déconnecter du Portail Apprenant FFSC ?",
-                confirmText: "Se déconnecter",
-                cancelText: "Annuler",
-                isDestructive: true,
-                onConfirm: () {
-                  context.read<AuthBloc>().add(SignOutRequested());
-                },
-              );
-            },
+          Container(
+            margin: EdgeInsets.only(right: 3.w),
+            decoration: BoxDecoration(
+              color: AppColors.errorText.withValues(alpha: 0.15),
+              borderRadius: AppRadius.circular12,
+              border: Border.all(
+                color: AppColors.errorText.withValues(alpha: 0.35),
+                width: 1,
+              ),
+            ),
+            child: IconButton(
+              tooltip: "Se déconnecter",
+              padding: EdgeInsets.all(2.w),
+              constraints: const BoxConstraints(),
+              icon: AppIcons.logout(color: AppColors.errorText, size: 18),
+              onPressed: () {
+                AppConfirmationDialog.show(
+                  context,
+                  title: "Déconnexion",
+                  message:
+                      "Êtes-vous sûr de vouloir vous déconnecter du Portail Apprenant FFSC ?",
+                  confirmText: "Se déconnecter",
+                  cancelText: "Annuler",
+                  isDestructive: true,
+                  onConfirm: () {
+                    context.read<AuthBloc>().add(SignOutRequested());
+                  },
+                );
+              },
+            ),
           ),
-          SizedBox(width: 2.w),
         ],
       ),
       body: ListView(
@@ -72,7 +84,7 @@ class ProfilePage extends StatelessWidget {
           ProfileMetricsCard(user: currentUser),
           SizedBox(height: 3.h),
 
-          // 4. Test History Section
+          // 4. Test History Section (Matches image design)
           ProfileTestHistorySection(userId: currentUser.id),
           SizedBox(height: 5.h),
         ],
