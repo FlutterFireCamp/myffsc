@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/test_quiz_entity.dart';
+import '../bloc/bloc.dart';
 import '../widgets/instruction_rule_card.dart';
 import 'test_taking_page.dart';
 
@@ -15,7 +17,7 @@ class TestInstructionsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("Consignes de l'Examen"),
+        title: const Text("Consignes & Règlement"),
         backgroundColor: AppColors.background,
         elevation: 0,
       ),
@@ -61,7 +63,7 @@ class TestInstructionsPage extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                "EXAMEN OFFICIEL",
+                                "ÉVALUATION OFFICIELLE",
                                 style: AppTextStyles.badgeSmall.copyWith(
                                   color: AppColors.skyBlue,
                                   fontWeight: FontWeight.bold,
@@ -135,9 +137,7 @@ class TestInstructionsPage extends StatelessWidget {
                       color: AppColors.cardHover,
                       borderRadius: AppRadius.circular12,
                       border: Border.all(
-                        color: AppColors.skyBlue.withValues(
-                          alpha: 0.4,
-                        ),
+                        color: AppColors.skyBlue.withValues(alpha: 0.4),
                       ),
                     ),
                     child: Row(
@@ -145,9 +145,7 @@ class TestInstructionsPage extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(2.5.w),
                           decoration: BoxDecoration(
-                            color: AppColors.actionBlue.withValues(
-                              alpha: 0.15,
-                            ),
+                            color: AppColors.actionBlue.withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: AppIcons.calendar(
@@ -183,54 +181,76 @@ class TestInstructionsPage extends StatelessWidget {
                   ),
                   SizedBox(height: 3.h),
 
-                  // Rule 1: No Backward Navigation
+                  // 9 Detailed Rules
                   InstructionRuleCard(
                     icon: AppIcons.warning(size: 20, color: AppColors.alertRed),
-                    title: "Pas de retour en arrière",
+                    title: "1. Pas de retour en arrière",
                     description:
-                        "Une fois que vous validez une question et passez à la suivante, il est strictly impossible de revenir en arrière.",
+                        "Une fois qu'une question est validée et que vous passez à la suivante, il est impossible de revenir en arrière.",
                   ),
                   SizedBox(height: 1.5.h),
 
-                  // Rule 2: Timing & Bonus Time
                   InstructionRuleCard(
                     icon: AppIcons.timer(size: 20, color: AppColors.skyBlue),
-                    title: "Gestion du temps & Décompte global",
+                    title: "2. Banque de Temps Bonus",
                     description:
-                        "Le chronomètre total descend en temps réel. Si vous répondez rapidement aux questions QCM, le temps économisé sera conservé pour les questions pratiques ou écrites à la fin.",
+                        "Le temps inutilisé sur une question QCM est automatiquement crédité à votre Banque de Bonus pour les questions suivantes.",
                   ),
                   SizedBox(height: 1.5.h),
 
-                  // Rule 3: Anti Screenshot Protection
                   InstructionRuleCard(
-                    icon: AppIcons.lock(
-                      size: 20,
-                      color: AppColors.unauthorizedText,
-                    ),
-                    title: "Protection Anti-Capture d'Écran",
+                    icon: AppIcons.lock(size: 20, color: AppColors.unauthorizedText),
+                    title: "3. Protection Anti-Capture (FLAG_SECURE)",
                     description:
-                        "Le système sécurisé de l'application bloque automatiquement les captures d'écran et les enregistrements vidéos de l'examen.",
+                        "Le système bloque nativement les captures d'écran et les enregistrements vidéo durant toute la durée de l'épreuve.",
                   ),
                   SizedBox(height: 1.5.h),
 
-                  // Rule 4: No Copy Paste
                   InstructionRuleCard(
-                    icon: AppIcons.cancel(
-                      size: 20,
-                      color: AppColors.warningAmber,
-                    ),
-                    title: "Copier-Coller Désactivé",
+                    icon: AppIcons.alert02(size: 20, color: AppColors.warningAmber),
+                    title: "4. Détection de Changement d'App (3 Max)",
                     description:
-                        "La sélection de texte, la copie et le collage d'éléments externes sont totalement désactivés durant toute la durée du test.",
+                        "Quitter l'application ou passer en arrière-plan enregistre un avertissement. À 3 sorties, le test est automatiquement soumis.",
                   ),
                   SizedBox(height: 1.5.h),
 
-                  // Rule 5: AI Content Detection
+                  InstructionRuleCard(
+                    icon: AppIcons.cancel(size: 20, color: AppColors.errorText),
+                    title: "5. Copier-Coller Désactivé",
+                    description:
+                        "La sélection de texte, la copie et le collage depuis des sources externes sont strictement bloqués.",
+                  ),
+                  SizedBox(height: 1.5.h),
+
                   InstructionRuleCard(
                     icon: AppIcons.star(size: 20, color: AppColors.correctText),
-                    title: "Détection Automatique d'IA",
+                    title: "6. Détection Automatique d'IA",
                     description:
-                        "Les contenus générés ou assistés par une intelligence artificielle sont automatiquement détectés et disqualifieront l'épreuve.",
+                        "Les réponses rédigées ou snippets de code générés par IA seront disqualifiés lors de la correction backend.",
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  InstructionRuleCard(
+                    icon: AppIcons.forms(size: 20, color: AppColors.skyBlue),
+                    title: "7. Évaluation Hybride",
+                    description:
+                        "L'épreuve combine des QCM auto-corrigés (25 pts/QCM) et des questions de code Dart / rédaction.",
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  InstructionRuleCard(
+                    icon: AppIcons.info(size: 20, color: AppColors.skyBlue),
+                    title: "8. Tentative Unique par Jour",
+                    description:
+                        "Une seule soumission est autorisée par participant par session d'examen quotidienne.",
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  InstructionRuleCard(
+                    icon: AppIcons.time(size: 20, color: AppColors.skyBlue),
+                    title: "9. Soumission Automatique à zéro",
+                    description:
+                        "Dès que le chrono global ou de dernière question atteint zéro, vos réponses sont immédiatement transmises.",
                   ),
                   SizedBox(height: 2.5.h),
                 ],
@@ -243,6 +263,8 @@ class TestInstructionsPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
+                  context.read<TestBloc>().add(const StartQuizEvent());
+
                   Navigator.of(context, rootNavigator: true).push(
                     MaterialPageRoute(
                       builder: (context) => TestTakingPage(quiz: quiz),
@@ -258,7 +280,7 @@ class TestInstructionsPage extends StatelessWidget {
                   elevation: 0,
                 ),
                 label: Text(
-                  "Commencer l'examen",
+                  "Commencer l'évaluation",
                   style: AppTextStyles.button.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,

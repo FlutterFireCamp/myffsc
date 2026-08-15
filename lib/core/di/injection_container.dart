@@ -10,6 +10,9 @@ import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/auth_usecases.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 
+import '../../features/tests/data/services/test_firestore_service.dart';
+import '../../features/tests/presentation/bloc/test_bloc.dart';
+
 final sl = GetIt.instance;
 
 Future<void> initInjector() async {
@@ -26,13 +29,16 @@ Future<void> initInjector() async {
   );
   sl.registerLazySingleton<FirebaseFirestore>(() => firestore);
 
-  // Data Sources
+  // Data Sources & Services
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
       firebaseAuth: sl(),
       googleSignIn: sl(),
       firestore: sl(),
     ),
+  );
+  sl.registerLazySingleton<TestFirestoreService>(
+    () => TestFirestoreService(firestore: sl()),
   );
 
   // Repositories
@@ -52,6 +58,9 @@ Future<void> initInjector() async {
       signInWithGoogleUseCase: sl(),
       signOutUseCase: sl(),
     ),
+  );
+  sl.registerFactory(
+    () => TestBloc(firestoreService: sl()),
   );
 
   dev.log('Dependency Injection Container initialized successfully', name: 'DI_CONTAINER');

@@ -1,5 +1,9 @@
 export 'domain/entities/question_item_entity.dart';
 export 'domain/entities/test_quiz_entity.dart';
+export 'data/services/test_firestore_service.dart';
+export 'presentation/bloc/bloc.dart';
 export 'presentation/pages/tests_page.dart';
 export 'presentation/pages/test_instructions_page.dart';
 export 'presentation/pages/test_taking_page.dart';
+export 'presentation/pages/test_results_page.dart';
+export 'presentation/widgets/test_correction_bottom_sheet.dart';

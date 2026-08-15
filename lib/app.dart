@@ -4,13 +4,22 @@ import 'package:sizer/sizer.dart';
 import 'core/core.dart';
 import 'features/auth/auth.dart';
 
+import 'features/tests/tests.dart';
+
 class MyFFSCApp extends StatelessWidget {
   const MyFFSCApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>(
-      create: (_) => sl<AuthBloc>()..add(CheckAuthEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (_) => sl<AuthBloc>()..add(CheckAuthEvent()),
+        ),
+        BlocProvider<TestBloc>(
+          create: (_) => sl<TestBloc>(),
+        ),
+      ],
       child: Sizer(
         builder: (context, orientation, deviceType) {
           return const AppRouterApp();
