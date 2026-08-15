@@ -153,6 +153,19 @@ class ProfileTestHistorySection extends StatelessWidget {
                     (data['totalPossibleScore'] as num?)?.toInt() ?? 100;
                 final dateStr = data['date'] as String? ?? '';
 
+                final rawStatus = data['status'] as String?;
+                final isGraded = data['isGraded'] as bool? ?? (rawStatus == 'CORRIGÉ');
+                final isPending = rawStatus == 'EN ATTENTE' || !isGraded;
+
+                final badgeLabel = isPending ? "EN ATTENTE" : "CORRIGÉ";
+                final badgeColor = isPending ? AppColors.skyBlue : AppColors.correctText;
+                final badgeBg = isPending
+                    ? AppColors.actionBlue.withValues(alpha: 0.15)
+                    : AppColors.successGreen.withValues(alpha: 0.15);
+                final badgeBorder = isPending
+                    ? AppColors.actionBlue.withValues(alpha: 0.3)
+                    : AppColors.successGreen.withValues(alpha: 0.3);
+
                 return Container(
                   padding: EdgeInsets.all(4.5.w),
                   decoration: BoxDecoration(
@@ -163,7 +176,7 @@ class ProfileTestHistorySection extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Top Row: Title + Date (Left) & CORRIGÉ Badge (Right)
+                      // Top Row: Title + Date (Left) & CORRIGÉ / EN ATTENTE Badge (Right)
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,20 +206,14 @@ class ProfileTestHistorySection extends StatelessWidget {
                               vertical: 0.6.h,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.successGreen.withValues(
-                                alpha: 0.15,
-                              ),
+                              color: badgeBg,
                               borderRadius: AppRadius.circular20,
-                              border: Border.all(
-                                color: AppColors.successGreen.withValues(
-                                  alpha: 0.3,
-                                ),
-                              ),
+                              border: Border.all(color: badgeBorder),
                             ),
                             child: Text(
-                              "CORRIGÉ",
+                              badgeLabel,
                               style: AppTextStyles.badge.copyWith(
-                                color: AppColors.correctText,
+                                color: badgeColor,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 9.sp,
                                 letterSpacing: 0.5,

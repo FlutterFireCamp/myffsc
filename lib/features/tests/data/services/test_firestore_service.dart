@@ -206,6 +206,9 @@ class TestFirestoreService {
               .length *
           25;
 
+      final hasTextQuestions = quiz.questions.any((q) => q.type != 'choice');
+      final String evaluationStatus = hasTextQuestions ? "EN ATTENTE" : "CORRIGÉ";
+
       final submissionData = {
         'quizId': quiz.id,
         'quizTitle': quiz.title,
@@ -217,6 +220,8 @@ class TestFirestoreService {
         'tabSwitchCount': tabSwitchCount,
         'answers': formattedAnswers,
         'submitted': true,
+        'status': evaluationStatus,
+        'isGraded': !hasTextQuestions,
       };
 
       // Safely set document with merge: true
