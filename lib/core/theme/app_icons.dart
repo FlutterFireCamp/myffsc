@@ -21,6 +21,12 @@ class AppIcons {
   static Widget profile({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedUser, color: color, size: size);
 
+  static Widget trophy({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedAward01, color: color, size: size);
+
+  static Widget podium({Color color = Colors.white, double size = 24.0}) =>
+      trophy(color: color, size: size);
+
   // Time & Countdown Icons
   static Widget time({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedTime02, color: color, size: size);

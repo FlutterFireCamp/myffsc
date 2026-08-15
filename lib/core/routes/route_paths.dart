@@ -8,5 +8,6 @@ class RoutePaths {
   static const String announcements = '/announcements';
   static const String forms = '/forms';
   static const String tests = '/tests';
+  static const String podium = '/podium';
   static const String profile = '/profile';
 }

@@ -4,6 +4,7 @@ export 'di/injection_container.dart';
 export 'error/failures.dart';
 export 'utils/usecase.dart';
 export 'utils/app_snackbar.dart';
+export 'utils/country_flag_helper.dart';
 export 'helpers/network_helper.dart';
 export 'widgets/widgets.dart';
 export 'routes/routes.dart';

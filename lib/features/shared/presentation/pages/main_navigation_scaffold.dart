@@ -121,47 +121,24 @@ class MainNavigationScaffold extends StatelessWidget {
                 label: "Accueil",
               ),
               BottomNavigationBarItem(
-                icon: AppIcons.programs(color: AppColors.textMuted, size: AppSizes.iconLg),
-                activeIcon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconLg),
-                label: "Programs",
+                icon: AppIcons.tests(color: AppColors.textMuted, size: AppSizes.iconLg),
+                activeIcon: AppIcons.tests(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                label: "Quiz",
               ),
               BottomNavigationBarItem(
-                icon: Transform.translate(
-                  offset: const Offset(0, 3),
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: AppColors.actionBlue.withValues(alpha: 0.18),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.skyBlue.withValues(alpha: 0.5),
-                        width: 1.5,
-                      ),
-                    ),
-                    child: AppIcons.tests(color: AppColors.skyBlue, size: AppSizes.iconLg),
-                  ),
-                ),
-                activeIcon: Transform.translate(
-                  offset: const Offset(0, 3),
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: AppColors.skyBlue,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.skyBlue,
-                        width: 1.5,
-                      ),
-                    ),
-                    child: AppIcons.tests(color: AppColors.ultraDark, size: AppSizes.iconLg),
-                  ),
-                ),
-                label: "",
+                icon: AppIcons.programs(color: AppColors.textMuted, size: AppSizes.iconLg),
+                activeIcon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                label: "Agenda",
               ),
               BottomNavigationBarItem(
                 icon: AppIcons.announcements(color: AppColors.textMuted, size: AppSizes.iconLg),
                 activeIcon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconLg),
                 label: "Annonces",
+              ),
+              BottomNavigationBarItem(
+                icon: AppIcons.podium(color: AppColors.textMuted, size: AppSizes.iconLg),
+                activeIcon: AppIcons.podium(color: AppColors.skyBlue, size: AppSizes.iconLg),
+                label: "Podium",
               ),
               BottomNavigationBarItem(
                 icon: _buildProfileTabIcon(context, false),

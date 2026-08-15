@@ -7,6 +7,7 @@ import '../../features/announcements/announcements.dart';
 import '../../features/auth/auth.dart';
 import '../../features/dashboard/dashboard.dart';
 import '../../features/forms/forms.dart';
+import '../../features/podium/podium.dart';
 import '../../features/profile/profile.dart';
 import '../../features/programs/programs.dart';
 import '../../features/shared/presentation/pages/main_navigation_scaffold.dart';
@@ -147,15 +148,6 @@ class RoutesConfig {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                name: RouteNames.programs,
-                path: RoutePaths.programs,
-                builder: (context, state) => const ProgramsPage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
                 name: RouteNames.tests,
                 path: RoutePaths.tests,
                 builder: (context, state) => const TestsPage(),
@@ -165,9 +157,27 @@ class RoutesConfig {
           StatefulShellBranch(
             routes: [
               GoRoute(
+                name: RouteNames.programs,
+                path: RoutePaths.programs,
+                builder: (context, state) => const ProgramsPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
                 name: RouteNames.announcements,
                 path: RoutePaths.announcements,
                 builder: (context, state) => const AnnouncementsPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                name: RouteNames.podium,
+                path: RoutePaths.podium,
+                builder: (context, state) => const PodiumPage(),
               ),
             ],
           ),
