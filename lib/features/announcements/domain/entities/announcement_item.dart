@@ -20,37 +20,78 @@ enum AnnouncementType {
     }
   }
 
+  /// Icône HugeIcons exacte
   Widget get icon {
     switch (this) {
       case AnnouncementType.info:
-        return AppIcons.infoCircle(color: AppColors.skyBlue, size: 20);
+        return AppIcons.infoCircle(color: color, size: 20); // strokeRoundedInformationCircle
       case AnnouncementType.important:
-        return AppIcons.flashInfo(color: AppColors.firebaseYellow, size: 20);
+        return AppIcons.flashInfo(color: color, size: 20); // strokeRoundedFlash
       case AnnouncementType.urgent:
-        return AppIcons.alert02(color: AppColors.errorText, size: 20);
+        return AppIcons.infoDiamond(color: color, size: 20); // strokeRoundedInformationDiamond
     }
   }
 
+  /// Couleur Principale (Texte & Icônes)
   Color get color {
     switch (this) {
       case AnnouncementType.info:
-        return AppColors.skyBlue;
+        return AppColors.announcementInfoColor; // #38BDF8 (Bleu Cyan)
       case AnnouncementType.important:
-        return AppColors.firebaseYellow;
+        return AppColors.announcementImportantColor; // #FBBF24 (Jaune Amber Warm)
       case AnnouncementType.urgent:
-        return AppColors.errorText;
+        return AppColors.announcementUrgentColor; // #F87171 (Rouge Corail)
+    }
+  }
+
+  /// Fond du Badge (Overlay)
+  Color get badgeBgColor {
+    switch (this) {
+      case AnnouncementType.info:
+        return AppColors.announcementInfoBadgeBg; // rgba(56, 189, 248, 0.12)
+      case AnnouncementType.important:
+        return AppColors.announcementImportantBadgeBg; // rgba(245, 158, 11, 0.12)
+      case AnnouncementType.urgent:
+        return AppColors.announcementUrgentBadgeBg; // rgba(239, 68, 68, 0.12)
+    }
+  }
+
+  /// Bordure du Badge
+  Color get borderColor {
+    switch (this) {
+      case AnnouncementType.info:
+        return AppColors.announcementInfoBorder; // rgba(56, 189, 248, 0.30)
+      case AnnouncementType.important:
+        return AppColors.announcementImportantBorder; // rgba(245, 158, 11, 0.30)
+      case AnnouncementType.urgent:
+        return AppColors.announcementUrgentBorder; // rgba(239, 68, 68, 0.30)
+    }
+  }
+
+  /// Fond de la Carte (Card Glass)
+  Color get cardBgColor {
+    switch (this) {
+      case AnnouncementType.info:
+        return AppColors.announcementInfoCardBg; // rgba(56, 189, 248, 0.06)
+      case AnnouncementType.important:
+        return AppColors.announcementImportantCardBg; // rgba(245, 158, 11, 0.06)
+      case AnnouncementType.urgent:
+        return AppColors.announcementUrgentCardBg; // rgba(239, 68, 68, 0.06)
     }
   }
 
   static AnnouncementType fromString(String? typeStr) {
     switch (typeStr?.toLowerCase()) {
       case 'urgent':
+      case 'urgente':
         return AnnouncementType.urgent;
       case 'important':
       case 'flash':
       case 'flash_info':
+      case 'flashinfo':
         return AnnouncementType.important;
       case 'info':
+      case 'information':
       default:
         return AnnouncementType.info;
     }

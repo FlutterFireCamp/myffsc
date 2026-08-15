@@ -41,9 +41,9 @@ class ProgramCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
                 decoration: BoxDecoration(
-                  color: badgeColor.withValues(alpha: 0.15),
+                  color: item.type.badgeBgColor,
                   borderRadius: AppRadius.circular8,
-                  border: Border.all(color: badgeColor.withValues(alpha: 0.3)),
+                  border: Border.all(color: borderColor),
                 ),
                 child: Text(
                   item.type.label,

@@ -25,63 +25,107 @@ enum ProgramType {
     }
   }
 
+  /// Couleur Principale (Texte & Icônes)
   Color get badgeColor {
     switch (this) {
-      case ProgramType.session:
-        return AppColors.programSessionBadge;
-      case ProgramType.test:
-        return AppColors.programTestBadge;
       case ProgramType.workshop:
+        return AppColors.programWorkshopBadge; // #4ADE80
+      case ProgramType.session:
+        return AppColors.programSessionBadge; // #38BDF8
+      case ProgramType.conference:
+        return AppColors.programConferenceBadge; // #C084FC
+      case ProgramType.test:
+        return AppColors.programTestBadge; // #FBBF24
+      case ProgramType.studyGroup:
         return AppColors.programWorkshopBadge;
-      case ProgramType.conference:
-        return AppColors.programConferenceBadge;
-      case ProgramType.studyGroup:
-        return AppColors.programStudyGroupBadge;
     }
   }
 
-  Color get cardBgColor {
+  /// Fond du Badge (Overlay)
+  Color get badgeBgColor {
     switch (this) {
-      case ProgramType.session:
-        return AppColors.programSessionBg;
-      case ProgramType.test:
-        return AppColors.programTestBg;
       case ProgramType.workshop:
-        return AppColors.programWorkshopBg;
+        return AppColors.programWorkshopBadgeBg; // rgba(34, 197, 94, 0.15)
+      case ProgramType.session:
+        return AppColors.programSessionBadgeBg; // rgba(56, 189, 248, 0.15)
       case ProgramType.conference:
-        return AppColors.programConferenceBg;
+        return AppColors.programConferenceBadgeBg; // rgba(168, 85, 247, 0.15)
+      case ProgramType.test:
+        return AppColors.programTestBadgeBg; // rgba(251, 191, 36, 0.15)
       case ProgramType.studyGroup:
-        return AppColors.programStudyGroupBg;
+        return AppColors.programWorkshopBadgeBg;
     }
   }
 
+  /// Bordure du Badge
   Color get borderColor {
     switch (this) {
-      case ProgramType.session:
-        return AppColors.programSessionBorder;
-      case ProgramType.test:
-        return AppColors.programTestBorder;
       case ProgramType.workshop:
-        return AppColors.programWorkshopBorder;
+        return AppColors.programWorkshopBorder; // rgba(34, 197, 94, 0.30)
+      case ProgramType.session:
+        return AppColors.programSessionBorder; // rgba(56, 189, 248, 0.30)
       case ProgramType.conference:
-        return AppColors.programConferenceBorder;
+        return AppColors.programConferenceBorder; // rgba(168, 85, 247, 0.30)
+      case ProgramType.test:
+        return AppColors.programTestBorder; // rgba(251, 191, 36, 0.30)
       case ProgramType.studyGroup:
-        return AppColors.programStudyGroupBorder;
+        return AppColors.programWorkshopBorder;
+    }
+  }
+
+  /// Fond de la Carte (Card Glass)
+  Color get cardBgColor {
+    switch (this) {
+      case ProgramType.workshop:
+        return AppColors.programWorkshopBg; // rgba(34, 197, 94, 0.08)
+      case ProgramType.session:
+        return AppColors.programSessionBg; // rgba(56, 189, 248, 0.08)
+      case ProgramType.conference:
+        return AppColors.programConferenceBg; // rgba(168, 85, 247, 0.08)
+      case ProgramType.test:
+        return AppColors.programTestBg; // rgba(245, 158, 11, 0.08)
+      case ProgramType.studyGroup:
+        return AppColors.programWorkshopBg;
+    }
+  }
+
+  /// Icône HugeIcons correspondante
+  Widget buildIcon({double size = 24.0}) {
+    switch (this) {
+      case ProgramType.workshop:
+        return AppIcons.star(color: badgeColor, size: size); // Star / Code01
+      case ProgramType.session:
+        return AppIcons.video(color: badgeColor, size: size); // Video01
+      case ProgramType.conference:
+        return AppIcons.userGroup(color: badgeColor, size: size); // UserGroup
+      case ProgramType.test:
+        return AppIcons.tests(color: badgeColor, size: size); // Quiz02
+      case ProgramType.studyGroup:
+        return AppIcons.userGroup(color: badgeColor, size: size);
     }
   }
 
   static ProgramType fromString(String? typeStr) {
     switch (typeStr?.toLowerCase()) {
       case 'workshop':
+      case 'atelier':
         return ProgramType.workshop;
       case 'session':
+      case 'live':
+      case 'cours':
         return ProgramType.session;
       case 'conference':
+      case 'conférence':
+      case 'talk':
         return ProgramType.conference;
       case 'study_group':
       case 'studygroup':
         return ProgramType.studyGroup;
       case 'test':
+      case 'quiz':
+      case 'evaluation':
+      case 'évaluation':
+      case 'examen':
         return ProgramType.test;
       default:
         return ProgramType.session;

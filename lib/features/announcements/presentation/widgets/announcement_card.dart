@@ -16,10 +16,10 @@ class AnnouncementCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(4.5.w),
       decoration: BoxDecoration(
-        color: AppColors.card,
+        color: item.type.cardBgColor,
         borderRadius: AppRadius.circular16,
         border: Border.all(
-          color: item.type.color.withValues(alpha: 0.5),
+          color: item.type.borderColor,
           width: item.type == AnnouncementType.urgent ? 1.5 : 1.0,
         ),
       ),
@@ -32,9 +32,9 @@ class AnnouncementCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
                 decoration: BoxDecoration(
-                  color: item.type.color.withValues(alpha: 0.15),
+                  color: item.type.badgeBgColor,
                   borderRadius: AppRadius.circular8,
-                  border: Border.all(color: item.type.color.withValues(alpha: 0.3)),
+                  border: Border.all(color: item.type.borderColor),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

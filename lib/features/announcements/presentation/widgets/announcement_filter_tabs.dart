@@ -41,9 +41,9 @@ class AnnouncementFilterTabs extends StatelessWidget {
           _buildFilterTab(
             label: "Flash Info",
             isSelected: selectedTypeFilter == AnnouncementType.important,
-            badgeColor: AppColors.firebaseYellow,
+            badgeColor: AnnouncementType.important.color,
             icon: AppIcons.flashInfo(
-              color: AppColors.firebaseYellow,
+              color: AnnouncementType.important.color,
               size: 16,
             ),
             onTap: () => onSelectFilter(AnnouncementType.important),
@@ -52,11 +52,8 @@ class AnnouncementFilterTabs extends StatelessWidget {
           _buildFilterTab(
             label: "Urgences",
             isSelected: selectedTypeFilter == AnnouncementType.urgent,
-            badgeColor: AppColors.errorText,
-            icon: AppIcons.alert02(
-              color: AppColors.errorText,
-              size: 16,
-            ),
+            badgeColor: AnnouncementType.urgent.color,
+            icon: AnnouncementType.urgent.icon,
             onTap: () => onSelectFilter(AnnouncementType.urgent),
           ),
         ],
