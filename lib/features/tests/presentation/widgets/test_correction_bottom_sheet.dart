@@ -207,37 +207,143 @@ class TestCorrectionBottomSheet extends StatelessWidget {
                       ),
                       SizedBox(height: 1.5.h),
 
-                      // Your Answer Box
-                      Text(
-                        "Votre réponse :",
-                        style: AppTextStyles.caption.copyWith(
-                          color: AppColors.textMuted,
-                          fontWeight: FontWeight.w600,
+                      // Options & Answers List
+                      if (isChoice && question.options != null) ...[
+                        Column(
+                          children: List.generate(question.options!.length, (optIdx) {
+                            final isOptionCorrect =
+                                question.correctAnswers?.contains(optIdx) ?? false;
+                            final isUserSelected = userAnswer == optIdx;
+
+                            Color optBg = AppColors.card;
+                            Color optBorder = AppColors.borderSubtle;
+                            Widget badgeWidget = const SizedBox.shrink();
+
+                            if (isOptionCorrect && isUserSelected) {
+                              optBg = AppColors.correctContainer;
+                              optBorder = AppColors.correctBorder;
+                              badgeWidget = Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  AppIcons.check(color: AppColors.correctText, size: 14),
+                                  SizedBox(width: 1.w),
+                                  Text(
+                                    "✓ Correct (Votre réponse)",
+                                    style: AppTextStyles.caption.copyWith(
+                                      color: AppColors.correctText,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 8.5.sp,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else if (isOptionCorrect && !isUserSelected) {
+                              optBg = AppColors.correctContainer.withValues(alpha: 0.5);
+                              optBorder = AppColors.correctBorder.withValues(alpha: 0.6);
+                              badgeWidget = Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  AppIcons.check(color: AppColors.correctText, size: 14),
+                                  SizedBox(width: 1.w),
+                                  Text(
+                                    "✓ Bonne réponse",
+                                    style: AppTextStyles.caption.copyWith(
+                                      color: AppColors.correctText,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 8.5.sp,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else if (isUserSelected && !isOptionCorrect) {
+                              optBg = AppColors.incorrectContainer;
+                              optBorder = AppColors.incorrectBorder;
+                              badgeWidget = Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  AppIcons.cancel(color: AppColors.errorText, size: 14),
+                                  SizedBox(width: 1.w),
+                                  Text(
+                                    "✕ Votre choix (Incorrect)",
+                                    style: AppTextStyles.caption.copyWith(
+                                      color: AppColors.errorText,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 8.5.sp,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            final letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+                            final letter = optIdx < letters.length ? letters[optIdx] : '${optIdx + 1}';
+
+                            return Container(
+                              margin: EdgeInsets.only(bottom: 0.8.h),
+                              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
+                              decoration: BoxDecoration(
+                                color: optBg,
+                                borderRadius: AppRadius.circular10,
+                                border: Border.all(color: optBorder),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "$letter. ",
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: isOptionCorrect
+                                          ? AppColors.correctText
+                                          : (isUserSelected
+                                              ? AppColors.errorText
+                                              : AppColors.textSecondary),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      question.options![optIdx],
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: AppColors.textPrimary,
+                                        fontWeight: isUserSelected || isOptionCorrect
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                  badgeWidget,
+                                ],
+                              ),
+                            );
+                          }),
                         ),
-                      ),
-                      SizedBox(height: 0.4.h),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(3.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.ultraDark,
-                          borderRadius: AppRadius.circular10,
-                          border: Border.all(color: AppColors.borderSubtle),
-                        ),
-                        child: Text(
-                          userAnswer != null
-                              ? (isChoice && question.options != null
-                                  ? question.options![userAnswer as int]
-                                  : userAnswer.toString())
-                              : "Aucune réponse fournie",
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: userAnswer != null
-                                ? AppColors.textPrimary
-                                : AppColors.textMuted,
-                            fontStyle: userAnswer == null ? FontStyle.italic : FontStyle.normal,
+                      ] else ...[
+                        Text(
+                          "Votre réponse :",
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.textMuted,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
+                        SizedBox(height: 0.4.h),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(3.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.ultraDark,
+                            borderRadius: AppRadius.circular10,
+                            border: Border.all(color: AppColors.borderSubtle),
+                          ),
+                          child: Text(
+                            userAnswer != null ? userAnswer.toString() : "Aucune réponse fournie",
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: userAnswer != null
+                                  ? AppColors.textPrimary
+                                  : AppColors.textMuted,
+                              fontStyle: userAnswer == null ? FontStyle.italic : FontStyle.normal,
+                            ),
+                          ),
+                        ),
+                      ],
                       SizedBox(height: 1.5.h),
 
                       // Explanation Text
