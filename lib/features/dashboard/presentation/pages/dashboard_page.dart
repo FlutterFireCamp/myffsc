@@ -194,7 +194,7 @@ class _DashboardPageState extends State<DashboardPage> {
               Expanded(
                 child: QuickActionCard(
                   title: "Programmes",
-                  subtitle: "Syllabus complet & cours",
+                  subtitle: "Agenda complet du programme",
                   icon: AppIcons.programs(
                     color: AppColors.actionBlue,
                     size: AppSizes.iconLg,

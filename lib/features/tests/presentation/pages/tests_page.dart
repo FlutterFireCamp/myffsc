@@ -54,8 +54,13 @@ class _TestsPageState extends State<TestsPage> {
         child: BlocBuilder<TestBloc, TestState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: AppColors.skyBlue),
+              return ListView(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                children: const [
+                  AppShimmer(child: AppCardShimmer()),
+                  SizedBox(height: 16),
+                  AppShimmer(child: AppCardShimmer()),
+                ],
               );
             }
 

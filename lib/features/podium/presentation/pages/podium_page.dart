@@ -124,8 +124,15 @@ class _PodiumPageState extends State<PodiumPage> {
       ),
       body: SafeArea(
         child: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(color: AppColors.skyBlue),
+            ? ListView(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                children: const [
+                  AppShimmer(child: AppCardShimmer()),
+                  SizedBox(height: 16),
+                  AppShimmer(child: AppCardShimmer()),
+                  SizedBox(height: 16),
+                  AppShimmer(child: AppCardShimmer()),
+                ],
               )
             : _errorMessage != null
                 ? AppEmptyState(

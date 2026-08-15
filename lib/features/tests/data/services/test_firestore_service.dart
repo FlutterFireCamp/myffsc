@@ -28,22 +28,25 @@ class TestFirestoreService {
         // Check if scheduled date matches today or if test is marked active
         final isDateMatch = scheduledDate == null || scheduledDate == todayStr;
         if (status == 'active' && isDateMatch) {
-          return _parseTestQuizEntity(doc.id, data);
+          final quiz = _parseTestQuizEntity(doc.id, data);
+          if (quiz != null) return quiz;
         }
       }
 
-      // Fallback: If no document matches exact scheduledDate in /tests, check for any active test doc
+      // Fallback: Check for any active test doc in /tests
       if (snapshot.docs.isNotEmpty) {
-        final activeDoc = snapshot.docs.firstWhere(
-          (doc) => (doc.data()['status'] as String? ?? 'active') == 'active',
-          orElse: () => snapshot.docs.first,
-        );
-        return _parseTestQuizEntity(activeDoc.id, activeDoc.data());
+        for (final doc in snapshot.docs) {
+          final data = doc.data();
+          if ((data['status'] as String? ?? 'active') == 'active') {
+            final quiz = _parseTestQuizEntity(doc.id, data);
+            if (quiz != null) return quiz;
+          }
+        }
       }
     } catch (e) {
       debugPrint("Error fetching today test: $e");
     }
-    return _createMockEvaluationIfEmpty();
+    return null;
   }
 
   /// Check if user has already submitted the test today under /users/{userId}/tests/{quizId}_{YYYY-MM-DD}
@@ -126,7 +129,7 @@ class TestFirestoreService {
     }
   }
 
-  TestQuizEntity _parseTestQuizEntity(String docId, Map<String, dynamic> data) {
+  TestQuizEntity? _parseTestQuizEntity(String docId, Map<String, dynamic> data) {
     final rawQuestions = data['questions'] as List<dynamic>? ?? [];
     final List<QuestionItemEntity> questions = [];
 
@@ -157,106 +160,18 @@ class TestFirestoreService {
     }
 
     if (questions.isEmpty) {
-      return _createDefaultQuiz(docId, data);
+      return null;
     }
 
     return TestQuizEntity(
       id: docId,
-      title: data['title'] as String? ?? "Examen de Validation FFSC 2026",
+      title: data['title'] as String? ?? "Examen de Validation FFSC",
       description: data['description'] as String? ??
           "Évaluation officielle couvrant la logique Dart et les composants Flutter.",
       totalDurationMinutes: (data['totalDurationMinutes'] as num?)?.toInt() ?? 10,
       totalPoints: (data['totalPoints'] as num?)?.toInt() ?? 100,
       questions: questions,
       status: data['status'] as String? ?? 'active',
-    );
-  }
-
-  TestQuizEntity _createDefaultQuiz(String id, Map<String, dynamic> data) {
-    return _createMockEvaluationIfEmpty();
-  }
-
-  TestQuizEntity _createMockEvaluationIfEmpty() {
-    return const TestQuizEntity(
-      id: "ffsc_exam_2026",
-      title: "Examen de Validation FFSC 2026",
-      description:
-          "Test officiel hybride couvrant la syntaxe Dart, le state management Flutter et les principes d'optimisation.",
-      totalDurationMinutes: 10,
-      totalPoints: 100,
-      status: "active",
-      questions: [
-        QuestionItemEntity(
-          id: "q1",
-          title:
-              "Quelle est la différence fondamentale entre les mots-clés `final` et `const` en Dart ?",
-          type: "choice",
-          level: 1,
-          modules: [1],
-          points: 25,
-          timingSeconds: 60,
-          options: [
-            "`final` est évalué à la compilation, `const` à l'exécution.",
-            "`const` est une constante à la compilation, `final` est initialisé une seule fois à l'exécution.",
-            "Il n'y a aucune différence, ce sont de simples synonymes.",
-            "`final` ne s'applique qu'aux classes, `const` aux fonctions."
-          ],
-          correctAnswers: [1],
-          explanation:
-              "`const` crée des constantes au moment de la compilation (compile-time constant), tandis que `final` est assigné une seule fois lors du runtime.",
-        ),
-        QuestionItemEntity(
-          id: "q2",
-          title:
-              "Quel widget Flutter est recommandé pour construire des listes très longues ou infinies de manière performante ?",
-          type: "choice",
-          level: 2,
-          modules: [2],
-          points: 25,
-          timingSeconds: 60,
-          options: [
-            "ListView classique avec children",
-            "SingleChildScrollView avec Column",
-            "ListView.builder avec un itemBuilder lazy",
-            "Stack avec Positioned"
-          ],
-          correctAnswers: [2],
-          explanation:
-              "`ListView.builder` instancie et détruit dynamiquement les éléments visibles à l'écran, économisant ainsi la mémoire.",
-        ),
-        QuestionItemEntity(
-          id: "q3",
-          title:
-              "Comment empêcher la reconstruction inutile d'un widget Stateless quand ses dépendances ne changent pas ?",
-          type: "choice",
-          level: 2,
-          modules: [2],
-          points: 25,
-          timingSeconds: 60,
-          options: [
-            "En utilisant le constructeur `const`",
-            "En appelant setState() dans build",
-            "En encapsulant le widget dans un Timer",
-            "En utilisant dynamic au lieu de Widget"
-          ],
-          correctAnswers: [0],
-          explanation:
-              "Utiliser `const` permet à Flutter de réutiliser la même instance de widget en mémoire sans re-exécuter la méthode build.",
-        ),
-        QuestionItemEntity(
-          id: "q4",
-          title:
-              "Question Pratique : Écrivez un snippet Dart qui filtre une liste d'entiers `[1, 2, 3, 4, 5, 6]` pour ne garder que les nombres pairs.",
-          type: "text",
-          level: 3,
-          modules: [1, 2],
-          points: 25,
-          timingSeconds: 120,
-          expectedText: "numbers.where((n) => n.isEven).toList()",
-          explanation:
-              "La méthode `.where()` combinée avec la propriété `.isEven` de int est l'approche idiatique en Dart.",
-        ),
-      ],
     );
   }
 }
