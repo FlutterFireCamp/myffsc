@@ -15,32 +15,30 @@ class LeaderboardUserRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final community = user.displayCommunity;
-
     return Container(
-      margin: EdgeInsets.only(bottom: 1.5.h),
-      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.8.h),
+      margin: EdgeInsets.only(bottom: 1.2.h),
+      padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 1.2.h),
       decoration: BoxDecoration(
         color: isCurrentUser
             ? AppColors.actionBlue.withValues(alpha: 0.15)
             : AppColors.card,
-        borderRadius: AppRadius.circular16,
+        borderRadius: AppRadius.circular14,
         border: Border.all(
           color: isCurrentUser
               ? AppColors.skyBlue.withValues(alpha: 0.5)
               : AppColors.borderSubtle,
-          width: isCurrentUser ? 1.5 : 1.0,
+          width: isCurrentUser ? 1.4 : 1.0,
         ),
       ),
       child: Row(
         children: [
-          // Rank Badge Box
+          // Rank Badge Box (#4, #5, ...)
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.6.h),
+            padding: EdgeInsets.symmetric(horizontal: 2.2.w, vertical: 0.5.h),
             decoration: BoxDecoration(
-              color: AppColors.ultraDark,
+              color: AppColors.cardHover,
               borderRadius: AppRadius.circular8,
-              border: Border.all(color: AppColors.borderSubtle),
+              border: Border.all(color: AppColors.borderSubtle.withValues(alpha: 0.5)),
             ),
             child: Text(
               "#${user.rank}",
@@ -51,53 +49,41 @@ class LeaderboardUserRow extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 3.5.w),
+          SizedBox(width: 3.w),
 
-          // User Avatar
+          // Small User Avatar
           AppCachedAvatar(
             imageUrl: user.photoUrl,
-            radius: 20,
+            radius: 15,
             fallbackInitial: user.name.isNotEmpty ? user.name[0] : 'A',
-            fallbackTextStyle: AppTextStyles.titleMedium.copyWith(color: Colors.white),
+            fallbackTextStyle: AppTextStyles.bodyMedium.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          SizedBox(width: 3.5.w),
+          SizedBox(width: 3.w),
 
-          // User Details (Name, Flag, Community)
+          // User Name (Enlarged) & Country Flag Below
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        user.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                    ),
-                    if (user.flag.isNotEmpty) ...[
-                      SizedBox(width: 1.5.w),
-                      Text(user.flag, style: TextStyle(fontSize: 11.sp)),
-                    ],
-                  ],
+                Text(
+                  user.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13.sp,
+                  ),
                 ),
-                if (community.isNotEmpty) ...[
-                  SizedBox(height: 0.3.h),
+                if (user.flag.isNotEmpty) ...[
+                  SizedBox(height: 0.2.h),
                   Text(
-                    "• $community",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.skyBlue,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 9.5.sp,
-                    ),
+                    user.flag,
+                    style: TextStyle(fontSize: 12.sp),
                   ),
                 ],
               ],
@@ -105,19 +91,20 @@ class LeaderboardUserRow extends StatelessWidget {
           ),
           SizedBox(width: 2.w),
 
-          // Points & Level Column
+          // Points & Level Right Column
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 "${user.totalPoints} pts",
-                style: AppTextStyles.bodyMedium.copyWith(
+                style: AppTextStyles.bodyLarge.copyWith(
                   color: AppColors.skyBlue,
                   fontWeight: FontWeight.bold,
-                  fontSize: 12.sp,
+                  fontSize: 12.5.sp,
                 ),
               ),
-              SizedBox(height: 0.3.h),
+              SizedBox(height: 0.2.h),
               Text(
                 "Niv. ${user.level}",
                 style: AppTextStyles.caption.copyWith(

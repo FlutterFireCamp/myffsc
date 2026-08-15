@@ -10,19 +10,7 @@ class PodiumShimmer extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
       children: [
-        // 1. Current User Rank Card Skeleton
-        AppShimmer(
-          child: Container(
-            height: 8.h,
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: AppRadius.circular16,
-            ),
-          ),
-        ),
-        SizedBox(height: 3.h),
-
-        // 2. Top 3 Podium Pillars Skeleton
+        // 1. Top 3 Podium Pillars Skeleton
         AppShimmer(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -62,7 +50,7 @@ class PodiumShimmer extends StatelessWidget {
         ),
         SizedBox(height: 4.h),
 
-        // 3. Leaderboard Rows Skeleton
+        // 2. Leaderboard Rows Skeleton
         ...List.generate(
           4,
           (index) => Padding(

@@ -18,7 +18,7 @@ class TopThreePodium extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 3.h),
+      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: AppRadius.circular20,
@@ -34,27 +34,29 @@ class TopThreePodium extends StatelessWidget {
               user: second,
               rankText: "2e",
               badgeColor: const Color(0xFF94A3B8), // Silver
-              pedestalHeight: 9.h,
+              badgeTextColor: Colors.white,
+              pedestalHeight: 8.h,
               isFirst: false,
             )
           else
             const Expanded(child: SizedBox.shrink()),
 
-          SizedBox(width: 2.w),
+          SizedBox(width: 1.5.w),
 
           // 1st Place (Center - Elevated)
           if (first != null)
             _buildPodiumColumn(
               user: first,
               rankText: "1er",
-              badgeColor: const Color(0xFFF59E0B), // Gold
-              pedestalHeight: 12.h,
+              badgeColor: const Color(0xFFFBBF24), // Gold
+              badgeTextColor: Colors.black,
+              pedestalHeight: 10.5.h,
               isFirst: true,
             )
           else
             const Expanded(child: SizedBox.shrink()),
 
-          SizedBox(width: 2.w),
+          SizedBox(width: 1.5.w),
 
           // 3rd Place (Right)
           if (third != null)
@@ -62,7 +64,8 @@ class TopThreePodium extends StatelessWidget {
               user: third,
               rankText: "3e",
               badgeColor: const Color(0xFFD97706), // Bronze
-              pedestalHeight: 8.h,
+              badgeTextColor: Colors.white,
+              pedestalHeight: 7.5.h,
               isFirst: false,
             )
           else
@@ -76,10 +79,11 @@ class TopThreePodium extends StatelessWidget {
     required PodiumUserEntity user,
     required String rankText,
     required Color badgeColor,
+    required Color badgeTextColor,
     required double pedestalHeight,
     required bool isFirst,
   }) {
-    final avatarRadius = isFirst ? 28.0 : 22.0;
+    final avatarRadius = isFirst ? 26.0 : 20.0;
 
     return Expanded(
       child: Column(
@@ -99,13 +103,13 @@ class TopThreePodium extends StatelessWidget {
                   imageUrl: user.photoUrl,
                   radius: avatarRadius,
                   fallbackInitial: user.name.isNotEmpty ? user.name[0] : 'A',
-                  fallbackTextStyle: AppTextStyles.h3.copyWith(color: Colors.white),
+                  fallbackTextStyle: AppTextStyles.titleMedium.copyWith(color: Colors.white),
                 ),
               ),
               Positioned(
-                bottom: -10,
+                bottom: -8,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.2.h),
+                  padding: EdgeInsets.symmetric(horizontal: 2.2.w, vertical: 0.2.h),
                   decoration: BoxDecoration(
                     color: badgeColor,
                     borderRadius: AppRadius.circular12,
@@ -113,16 +117,16 @@ class TopThreePodium extends StatelessWidget {
                   child: Text(
                     rankText,
                     style: AppTextStyles.caption.copyWith(
-                      color: Colors.black,
+                      color: badgeTextColor,
                       fontWeight: FontWeight.bold,
-                      fontSize: 9.sp,
+                      fontSize: 8.5.sp,
                     ),
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 1.5.h),
 
           // User Name
           Text(
@@ -133,32 +137,32 @@ class TopThreePodium extends StatelessWidget {
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textPrimary,
               fontWeight: FontWeight.bold,
-              fontSize: isFirst ? 13.sp : 11.5.sp,
+              fontSize: isFirst ? 12.sp : 10.5.sp,
             ),
           ),
-          SizedBox(height: 0.3.h),
+          SizedBox(height: 0.2.h),
 
           // Country Flag
           if (user.flag.isNotEmpty)
             Text(
               user.flag,
-              style: TextStyle(fontSize: isFirst ? 14.sp : 12.sp),
+              style: TextStyle(fontSize: isFirst ? 13.sp : 11.5.sp),
             ),
-          SizedBox(height: 1.2.h),
+          SizedBox(height: 1.h),
 
-          // Pedestal Card Box
+          // Pedestal Box
           Container(
             width: double.infinity,
             height: pedestalHeight,
-            padding: EdgeInsets.symmetric(vertical: 1.2.h),
+            padding: EdgeInsets.symmetric(vertical: 1.h),
             decoration: BoxDecoration(
               color: isFirst
                   ? badgeColor.withValues(alpha: 0.12)
-                  : AppColors.cardHover,
+                  : AppColors.cardHover.withValues(alpha: 0.8),
               borderRadius: AppRadius.circular14,
               border: Border.all(
                 color: isFirst
-                    ? badgeColor.withValues(alpha: 0.6)
+                    ? badgeColor.withValues(alpha: 0.7)
                     : AppColors.borderSubtle,
                 width: isFirst ? 1.5 : 1.0,
               ),
@@ -172,16 +176,16 @@ class TopThreePodium extends StatelessWidget {
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: isFirst ? badgeColor : AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
-                    fontSize: isFirst ? 13.sp : 11.5.sp,
+                    fontSize: isFirst ? 12.sp : 10.5.sp,
                   ),
                 ),
-                SizedBox(height: 0.3.h),
+                SizedBox(height: 0.2.h),
                 Text(
                   "Niv. ${user.level}",
                   textAlign: TextAlign.center,
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textMuted,
-                    fontSize: 9.sp,
+                    fontSize: 8.5.sp,
                   ),
                 ),
               ],

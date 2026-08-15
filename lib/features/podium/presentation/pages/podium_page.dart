@@ -38,17 +38,23 @@ class _PodiumPageState extends State<PodiumPage> {
     });
 
     try {
-      final querySnapshot = await _firestore.collection('users').get();
+      // Query strictly top 10 users from Firestore
+      QuerySnapshot<Map<String, dynamic>> querySnapshot;
+      try {
+        querySnapshot = await _firestore
+            .collection('users')
+            .orderBy('totalPoints', descending: true)
+            .limit(10)
+            .get();
+      } catch (_) {
+        // Fallback query if index is not ready
+        querySnapshot = await _firestore.collection('users').get();
+      }
 
       final List<Map<String, dynamic>> rawDocs = querySnapshot.docs.map((doc) {
         final data = doc.data();
         data['id'] = doc.id;
         return data;
-      }).where((data) {
-        final status = data['status'] as String?;
-        final role = data['role'] as String?;
-        // Include accepted students or normal valid users
-        return status == null || status == 'accepted' || role == 'student';
       }).toList();
 
       // Sort by totalPoints descending, then by name ascending
@@ -64,7 +70,8 @@ class _PodiumPageState extends State<PodiumPage> {
       });
 
       final List<PodiumUserEntity> sortedUsers = [];
-      for (int i = 0; i < rawDocs.length; i++) {
+      final limitCount = rawDocs.length > 10 ? 10 : rawDocs.length;
+      for (int i = 0; i < limitCount; i++) {
         final doc = rawDocs[i];
         final id = doc['id'] as String;
         sortedUsers.add(PodiumUserEntity.fromFirestore(doc, id, i + 1));
