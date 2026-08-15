@@ -39,7 +39,8 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       if (!_isLoadingMore && _hasMore && !_isLoadingInitial) {
         _fetchAnnouncements(isInitial: false);
       }
@@ -81,7 +82,9 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
         // Filter by selected AnnouncementType
         final filteredItems = _selectedTypeFilter == null
             ? allItems
-            : allItems.where((item) => item.type == _selectedTypeFilter).toList();
+            : allItems
+                  .where((item) => item.type == _selectedTypeFilter)
+                  .toList();
 
         setState(() {
           _announcements.clear();
@@ -117,7 +120,10 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     if (_selectedTypeFilter == null) {
       return AppEmptyState(
         title: "Aucune annonce disponible",
-        icon: AppIcons.announcements(color: AppColors.skyBlue, size: AppSizes.iconXl),
+        icon: AppIcons.announcements(
+          color: AppColors.skyBlue,
+          size: AppSizes.iconXl,
+        ),
         accentColor: AppColors.skyBlue,
         actionLabel: "Actualiser",
         onAction: () => _fetchAnnouncements(isInitial: true),
@@ -127,7 +133,8 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     final categoryColor = _selectedTypeFilter!.color;
 
     return AppEmptyState(
-      title: "Aucune annonce pour la catégorie \"${_selectedTypeFilter!.label}\"",
+      title:
+          "Aucune annonce pour la catégorie \"${_selectedTypeFilter!.label}\"",
       icon: _buildCategoryIcon(_selectedTypeFilter!, categoryColor),
       accentColor: categoryColor,
       actionLabel: "Actualiser",
@@ -138,11 +145,11 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
   Widget _buildCategoryIcon(AnnouncementType type, Color color) {
     switch (type) {
       case AnnouncementType.info:
-        return AppIcons.infoCircle(color: color, size: AppSizes.iconXl);
+        return AnnouncementType.info.icon;
       case AnnouncementType.important:
-        return AppIcons.flashInfo(color: color, size: AppSizes.iconXl);
+        return AnnouncementType.important.icon;
       case AnnouncementType.urgent:
-        return AppIcons.alert02(color: color, size: AppSizes.iconXl);
+        return AnnouncementType.urgent.icon;
     }
   }
 
@@ -151,10 +158,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(
-          "Fil d'Annonces",
-          style: AppTextStyles.h3,
-        ),
+        title: Text("Fil d'Annonces", style: AppTextStyles.h3),
         backgroundColor: AppColors.background,
         elevation: 0,
       ),
@@ -171,30 +175,34 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
             child: _isLoadingInitial
                 ? const AnnouncementsShimmer()
                 : _announcements.isEmpty
-                    ? _buildEmptyState()
-                    : RefreshIndicator(
-                        color: AppColors.skyBlue,
-                        onRefresh: () => _fetchAnnouncements(isInitial: true),
-                        child: ListView.separated(
-                          controller: _scrollController,
-                          padding: EdgeInsets.all(4.w),
-                          itemCount: _announcements.length + (_isLoadingMore ? 1 : 0),
-                          separatorBuilder: (context, index) => SizedBox(height: 2.h),
-                          itemBuilder: (context, index) {
-                            if (index == _announcements.length) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 2.h),
-                                child: const Center(
-                                  child: CircularProgressIndicator(color: AppColors.skyBlue),
-                                ),
-                              );
-                            }
+                ? _buildEmptyState()
+                : RefreshIndicator(
+                    color: AppColors.skyBlue,
+                    onRefresh: () => _fetchAnnouncements(isInitial: true),
+                    child: ListView.separated(
+                      controller: _scrollController,
+                      padding: EdgeInsets.all(4.w),
+                      itemCount:
+                          _announcements.length + (_isLoadingMore ? 1 : 0),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 2.h),
+                      itemBuilder: (context, index) {
+                        if (index == _announcements.length) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.h),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.skyBlue,
+                              ),
+                            ),
+                          );
+                        }
 
-                            final item = _announcements[index];
-                            return AnnouncementCard(item: item);
-                          },
-                        ),
-                      ),
+                        final item = _announcements[index];
+                        return AnnouncementCard(item: item);
+                      },
+                    ),
+                  ),
           ),
         ],
       ),

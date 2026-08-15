@@ -19,7 +19,7 @@ class LevelConfig {
     switch (level) {
       case 1:
         return const LevelConfig(
-          title: "Niveau 1 - Logique avec Dart 🎯",
+          title: "Niveau 1 - Logique avec Dart",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🎯",
@@ -27,7 +27,7 @@ class LevelConfig {
         );
       case 2:
         return const LevelConfig(
-          title: "Niveau 2 - UI/UX avec Flutter 💙",
+          title: "Niveau 2 - UI/UX avec Flutter",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💙",
@@ -35,7 +35,7 @@ class LevelConfig {
         );
       case 3:
         return const LevelConfig(
-          title: "Niveau 3 - Intégration Firebase 🔥",
+          title: "Niveau 3 - Intégration Firebase",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "🔥",
@@ -44,7 +44,7 @@ class LevelConfig {
       case 4:
       default:
         return const LevelConfig(
-          title: "Niveau 4 - Projet de Fin du Camp 💎",
+          title: "Niveau 4 - Projet de Fin du Camp",
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💎",
@@ -118,9 +118,7 @@ class DashboardHeaderBanner extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: levelColor.withValues(alpha: 0.15),
                   borderRadius: AppRadius.circular10,
-                  border: Border.all(
-                    color: levelColor.withValues(alpha: 0.4),
-                  ),
+                  border: Border.all(color: levelColor.withValues(alpha: 0.4)),
                 ),
                 child: Text(
                   levelConfig.title,
@@ -135,9 +133,7 @@ class DashboardHeaderBanner extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: levelColor.withValues(alpha: 0.15),
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: levelColor.withValues(alpha: 0.4),
-                  ),
+                  border: Border.all(color: levelColor.withValues(alpha: 0.4)),
                 ),
                 child: Text(
                   levelConfig.emoji,

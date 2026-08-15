@@ -26,10 +26,10 @@ class ProfileHeaderCard extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: .center,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: .center,
             children: [
               // Avatar Left
               AppCachedAvatar(

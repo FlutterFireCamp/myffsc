@@ -75,7 +75,10 @@ class _DashboardPageState extends State<DashboardPage> {
     try {
       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         if (mounted) {
-          AppSnackBar.showError(context, "Impossible d'ouvrir le lien : $urlString");
+          AppSnackBar.showError(
+            context,
+            "Impossible d'ouvrir le lien : $urlString",
+          );
         }
       }
     } catch (e) {
@@ -139,7 +142,7 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
             child: Row(
               children: [
-                AppIcons.star(size: 18, color: AppColors.firebaseYellow),
+                Text("🏆"),
                 SizedBox(width: 1.w),
                 Text(
                   "${currentUser.totalPoints} pts",
@@ -157,71 +160,74 @@ class _DashboardPageState extends State<DashboardPage> {
           : ListView(
               primary: false,
               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        children: [
-          // Header Level Progress Banner
-          DashboardHeaderBanner(
-            userLevel: currentUser.level,
-            totalPoints: currentUser.totalPoints,
-            onActionTap: handlePrograms,
-          ),
-          SizedBox(height: 2.h),
+              children: [
+                // Header Level Progress Banner
+                DashboardHeaderBanner(
+                  userLevel: currentUser.level,
+                  totalPoints: currentUser.totalPoints,
+                  onActionTap: handlePrograms,
+                ),
+                SizedBox(height: 2.h),
 
-          // Programme du jour ou à venir
-          Text(
-            (_todayProgram != null && _todayProgram!.isToday)
-                ? "Programme du jour"
-                : "Programme à venir",
-            style: AppTextStyles.titleLarge,
-          ),
-          SizedBox(height: 1.h),
-          _isLoadingTodayProgram
-              ? const AppShimmer(child: AppCardShimmer())
-              : _todayProgram == null
-              ? const AppEmptyState(
-                  title: "Aucun programme prévu aujourd'hui",
-                  message:
-                      "Consultez l'onglet Programmes pour découvrir les prochaines sessions.",
-                )
-              : TodayProgramCard(
-                  program: _todayProgram!,
-                  onLaunchUrl: _launchExternalUrl,
+                // Programme du jour ou à venir
+                Text(
+                  (_todayProgram != null && _todayProgram!.isToday)
+                      ? "Programme du jour"
+                      : "Programme à venir",
+                  style: AppTextStyles.titleLarge,
                 ),
-          SizedBox(height: 2.h),
+                SizedBox(height: 1.h),
+                _isLoadingTodayProgram
+                    ? const AppShimmer(child: AppCardShimmer())
+                    : _todayProgram == null
+                    ? const AppEmptyState(
+                        title: "Aucun programme prévu aujourd'hui",
+                        message:
+                            "Consultez l'onglet Programmes pour découvrir les prochaines sessions.",
+                      )
+                    : TodayProgramCard(
+                        program: _todayProgram!,
+                        onLaunchUrl: _launchExternalUrl,
+                      ),
+                SizedBox(height: 2.h),
 
-          // Quick Actions Grid
-          Text("Aujourd'hui dans le Camp", style: AppTextStyles.titleLarge),
-          SizedBox(height: 1.h),
-          Row(
-            spacing: 3.w,
-            children: [
-              Expanded(
-                child: QuickActionCard(
-                  title: "Programmes",
-                  subtitle: "Agenda complet du programme",
-                  icon: AppIcons.programs(
-                    color: AppColors.actionBlue,
-                    size: AppSizes.iconLg,
-                  ),
-                  backgroundColor: AppColors.actionBlue,
-                  onTap: handlePrograms,
+                // Quick Actions Grid
+                Text(
+                  "Aujourd'hui dans le Camp",
+                  style: AppTextStyles.titleLarge,
                 ),
-              ),
-              Expanded(
-                child: QuickActionCard(
-                  title: "Annonces",
-                  subtitle: "Fil d'actualité",
-                  icon: AppIcons.announcements(
-                    color: AppColors.skyBlue,
-                    size: AppSizes.iconLg,
-                  ),
-                  backgroundColor: AppColors.skyBlue,
-                  onTap: handleAnnouncements,
+                SizedBox(height: 1.h),
+                Row(
+                  spacing: 3.w,
+                  children: [
+                    Expanded(
+                      child: QuickActionCard(
+                        title: "Programmes",
+                        subtitle: "Agenda complet",
+                        icon: AppIcons.programs(
+                          color: AppColors.actionBlue,
+                          size: AppSizes.iconLg,
+                        ),
+                        backgroundColor: AppColors.actionBlue,
+                        onTap: handlePrograms,
+                      ),
+                    ),
+                    Expanded(
+                      child: QuickActionCard(
+                        title: "Annonces",
+                        subtitle: "Fil d'actualité",
+                        icon: AppIcons.announcements(
+                          color: AppColors.skyBlue,
+                          size: AppSizes.iconLg,
+                        ),
+                        backgroundColor: AppColors.skyBlue,
+                        onTap: handleAnnouncements,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
+              ],
+            ),
     );
   }
 }

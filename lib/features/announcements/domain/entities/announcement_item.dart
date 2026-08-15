@@ -24,11 +24,17 @@ enum AnnouncementType {
   Widget get icon {
     switch (this) {
       case AnnouncementType.info:
-        return AppIcons.infoCircle(color: color, size: 20); // strokeRoundedInformationCircle
+        return AppIcons.infoCircle(
+          color: color,
+          size: 20,
+        ); // strokeRoundedInformationCircle
       case AnnouncementType.important:
         return AppIcons.flashInfo(color: color, size: 20); // strokeRoundedFlash
       case AnnouncementType.urgent:
-        return AppIcons.infoDiamond(color: color, size: 20); // strokeRoundedInformationDiamond
+        return AppIcons.alert02(
+          color: color,
+          size: 20,
+        ); // strokeRoundedInformationDiamond
     }
   }
 
@@ -38,7 +44,8 @@ enum AnnouncementType {
       case AnnouncementType.info:
         return AppColors.announcementInfoColor; // #38BDF8 (Bleu Cyan)
       case AnnouncementType.important:
-        return AppColors.announcementImportantColor; // #FBBF24 (Jaune Amber Warm)
+        return AppColors
+            .announcementImportantColor; // #FBBF24 (Jaune Amber Warm)
       case AnnouncementType.urgent:
         return AppColors.announcementUrgentColor; // #F87171 (Rouge Corail)
     }
@@ -50,7 +57,8 @@ enum AnnouncementType {
       case AnnouncementType.info:
         return AppColors.announcementInfoBadgeBg; // rgba(56, 189, 248, 0.12)
       case AnnouncementType.important:
-        return AppColors.announcementImportantBadgeBg; // rgba(245, 158, 11, 0.12)
+        return AppColors
+            .announcementImportantBadgeBg; // rgba(245, 158, 11, 0.12)
       case AnnouncementType.urgent:
         return AppColors.announcementUrgentBadgeBg; // rgba(239, 68, 68, 0.12)
     }
@@ -62,7 +70,8 @@ enum AnnouncementType {
       case AnnouncementType.info:
         return AppColors.announcementInfoBorder; // rgba(56, 189, 248, 0.30)
       case AnnouncementType.important:
-        return AppColors.announcementImportantBorder; // rgba(245, 158, 11, 0.30)
+        return AppColors
+            .announcementImportantBorder; // rgba(245, 158, 11, 0.30)
       case AnnouncementType.urgent:
         return AppColors.announcementUrgentBorder; // rgba(239, 68, 68, 0.30)
     }
@@ -74,7 +83,8 @@ enum AnnouncementType {
       case AnnouncementType.info:
         return AppColors.announcementInfoCardBg; // rgba(56, 189, 248, 0.06)
       case AnnouncementType.important:
-        return AppColors.announcementImportantCardBg; // rgba(245, 158, 11, 0.06)
+        return AppColors
+            .announcementImportantCardBg; // rgba(245, 158, 11, 0.06)
       case AnnouncementType.urgent:
         return AppColors.announcementUrgentCardBg; // rgba(239, 68, 68, 0.06)
     }
@@ -176,7 +186,9 @@ class AnnouncementItem extends Equatable {
     return date;
   }
 
-  factory AnnouncementItem.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory AnnouncementItem.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final data = doc.data() ?? {};
     DateTime? parsedCreatedAt;
     if (data['createdAt'] is Timestamp) {
@@ -203,18 +215,20 @@ class AnnouncementItem extends Equatable {
       'title': title,
       'description': description,
       'date': date,
-      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      'createdAt': createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
     };
   }
 
   @override
   List<Object?> get props => [
-        id,
-        type,
-        targetRole,
-        title,
-        description,
-        date,
-        createdAt,
-      ];
+    id,
+    type,
+    targetRole,
+    title,
+    description,
+    date,
+    createdAt,
+  ];
 }

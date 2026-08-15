@@ -35,7 +35,7 @@ class TopThreePodium extends StatelessWidget {
               rankText: "2e",
               badgeColor: const Color(0xFF94A3B8), // Silver
               badgeTextColor: Colors.white,
-              pedestalHeight: 8.h,
+              pedestalHeight: 8.5.h,
               isFirst: false,
             )
           else
@@ -97,19 +97,27 @@ class TopThreePodium extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: badgeColor, width: isFirst ? 2.5 : 1.8),
+                  border: Border.all(
+                    color: badgeColor,
+                    width: isFirst ? 2.5 : 1.8,
+                  ),
                 ),
                 child: AppCachedAvatar(
                   imageUrl: user.photoUrl,
                   radius: avatarRadius,
                   fallbackInitial: user.name.isNotEmpty ? user.name[0] : 'A',
-                  fallbackTextStyle: AppTextStyles.titleMedium.copyWith(color: Colors.white),
+                  fallbackTextStyle: AppTextStyles.titleMedium.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
               Positioned(
                 bottom: -8,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 2.2.w, vertical: 0.2.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 2.2.w,
+                    vertical: 0.2.h,
+                  ),
                   decoration: BoxDecoration(
                     color: badgeColor,
                     borderRadius: AppRadius.circular12,
@@ -119,7 +127,7 @@ class TopThreePodium extends StatelessWidget {
                     style: AppTextStyles.caption.copyWith(
                       color: badgeTextColor,
                       fontWeight: FontWeight.bold,
-                      fontSize: 8.5.sp,
+                      fontSize: isFirst ? 14.sp : 13.sp,
                     ),
                   ),
                 ),
@@ -130,14 +138,13 @@ class TopThreePodium extends StatelessWidget {
 
           // User Name
           Text(
-            user.name,
+            user.name.split(' ').first,
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textPrimary,
               fontWeight: FontWeight.bold,
-              fontSize: isFirst ? 12.sp : 10.5.sp,
             ),
           ),
           SizedBox(height: 0.2.h),
@@ -146,7 +153,7 @@ class TopThreePodium extends StatelessWidget {
           if (user.flag.isNotEmpty)
             Text(
               user.flag,
-              style: TextStyle(fontSize: isFirst ? 13.sp : 11.5.sp),
+              style: TextStyle(fontSize: isFirst ? 16.sp : 14.sp),
             ),
           SizedBox(height: 1.h),
 
@@ -176,7 +183,7 @@ class TopThreePodium extends StatelessWidget {
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: isFirst ? badgeColor : AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
-                    fontSize: isFirst ? 12.sp : 10.5.sp,
+                    fontSize: isFirst ? 16.sp : 14.sp,
                   ),
                 ),
                 SizedBox(height: 0.2.h),
@@ -185,7 +192,6 @@ class TopThreePodium extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: AppTextStyles.caption.copyWith(
                     color: AppColors.textMuted,
-                    fontSize: 8.5.sp,
                   ),
                 ),
               ],

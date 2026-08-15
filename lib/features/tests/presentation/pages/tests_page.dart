@@ -62,16 +62,23 @@ class _TestsPageState extends State<TestsPage> {
 
             // State 3: Aucun test disponible
             if (quiz == null) {
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                child: AppEmptyState(
-                  title: "Aucune évaluation disponible",
-                  message:
-                      "Les épreuves programmées s'afficheront automatiquement ici dès le lancement de la session.",
-                  icon: AppIcons.tests(color: AppColors.skyBlue, size: AppSizes.iconXl),
-                  accentColor: AppColors.skyBlue,
-                  actionLabel: "Actualiser",
-                  onAction: _fetchTodayTest,
+              return RefreshIndicator(
+                color: AppColors.skyBlue,
+                onRefresh: () async => _fetchTodayTest(),
+                child: ListView(
+                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                  children: [
+                    SizedBox(height: 10.h),
+                    AppEmptyState(
+                      title: "Aucune évaluation disponible",
+                      message:
+                          "Les épreuves programmées s'afficheront automatiquement ici dès le lancement de la session.",
+                      icon: AppIcons.tests(color: AppColors.skyBlue, size: AppSizes.iconXl),
+                      accentColor: AppColors.skyBlue,
+                      actionLabel: "Actualiser",
+                      onAction: _fetchTodayTest,
+                    ),
+                  ],
                 ),
               );
             }

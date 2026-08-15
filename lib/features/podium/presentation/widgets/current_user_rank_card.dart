@@ -38,10 +38,7 @@ class CurrentUserRankCard extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.skyBlue.withValues(alpha: 0.15),
-              border: Border.all(
-                color: AppColors.skyBlue,
-                width: 1.2,
-              ),
+              border: Border.all(color: AppColors.skyBlue, width: 1.2),
             ),
             child: Center(
               child: Text(
@@ -49,7 +46,6 @@ class CurrentUserRankCard extends StatelessWidget {
                 style: AppTextStyles.caption.copyWith(
                   color: AppColors.skyBlue,
                   fontWeight: FontWeight.bold,
-                  fontSize: 9.5.sp,
                 ),
               ),
             ),
@@ -59,23 +55,34 @@ class CurrentUserRankCard extends StatelessWidget {
           // Title & Details Center
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: .start,
+              mainAxisSize: .min,
               children: [
                 Text(
                   "Votre Position Actuelle",
-                  style: AppTextStyles.bodyMedium.copyWith(
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
-                    fontSize: 11.sp,
                   ),
                 ),
                 SizedBox(height: 0.2.h),
-                Text(
-                  "${userRank}e sur $totalParticipants participants",
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textSecondary,
-                    fontSize: 9.5.sp,
+                Text.rich(
+                  TextSpan(
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "${userRank}e",
+                        style: TextStyle(fontWeight: .bold),
+                      ),
+                      TextSpan(text: " sur "),
+                      TextSpan(
+                        text: totalParticipants.toString(),
+                        style: TextStyle(fontWeight: .bold),
+                      ),
+                      TextSpan(text: " participants"),
+                    ],
                   ),
                 ),
               ],
@@ -85,14 +92,14 @@ class CurrentUserRankCard extends StatelessWidget {
 
           // Points & Level Right
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: .end,
+            mainAxisSize: .min,
             children: [
               Text(
                 "$totalPoints pts",
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.skyBlue,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                   fontSize: 11.5.sp,
                 ),
               ),

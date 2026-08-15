@@ -46,7 +46,9 @@ class ProfileTestHistorySection extends StatelessWidget {
             modules: const [1],
             points: 25,
             timingSeconds: 60,
-            options: val is int ? const ["Option A", "Option B", "Option C", "Option D"] : null,
+            options: val is int
+                ? const ["Option A", "Option B", "Option C", "Option D"]
+                : null,
             correctAnswers: val is int ? [val] : null,
             explanation: "Explication détaillée de la réponse.",
           ),
@@ -89,7 +91,6 @@ class ProfileTestHistorySection extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            AppIcons.tests(color: AppColors.skyBlue, size: 18),
           ],
         ),
         SizedBox(height: 1.5.h),
@@ -145,9 +146,11 @@ class ProfileTestHistorySection extends StatelessWidget {
               separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
               itemBuilder: (context, index) {
                 final data = docs[index].data();
-                final quizTitle = data['quizTitle'] as String? ?? "Évaluation FFSC";
+                final quizTitle =
+                    data['quizTitle'] as String? ?? "Évaluation FFSC";
                 final score = (data['score'] as num?)?.toInt() ?? 0;
-                final totalPossible = (data['totalPossibleScore'] as num?)?.toInt() ?? 100;
+                final totalPossible =
+                    (data['totalPossibleScore'] as num?)?.toInt() ?? 100;
                 final dateStr = data['date'] as String? ?? '';
 
                 return Container(
@@ -190,10 +193,14 @@ class ProfileTestHistorySection extends StatelessWidget {
                               vertical: 0.6.h,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.successGreen.withValues(alpha: 0.15),
+                              color: AppColors.successGreen.withValues(
+                                alpha: 0.15,
+                              ),
                               borderRadius: AppRadius.circular20,
                               border: Border.all(
-                                color: AppColors.successGreen.withValues(alpha: 0.3),
+                                color: AppColors.successGreen.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             child: Text(
@@ -239,10 +246,14 @@ class ProfileTestHistorySection extends StatelessWidget {
                                 vertical: 1.h,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.skyBlue.withValues(alpha: 0.12),
+                                color: AppColors.skyBlue.withValues(
+                                  alpha: 0.12,
+                                ),
                                 borderRadius: AppRadius.circular12,
                                 border: Border.all(
-                                  color: AppColors.skyBlue.withValues(alpha: 0.3),
+                                  color: AppColors.skyBlue.withValues(
+                                    alpha: 0.3,
+                                  ),
                                 ),
                               ),
                               child: Text(
