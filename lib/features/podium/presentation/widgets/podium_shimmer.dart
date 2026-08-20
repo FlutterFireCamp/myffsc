@@ -7,65 +7,72 @@ class PodiumShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 1. Top 3 Podium Skeletons
-        Container(
-          padding: EdgeInsets.fromLTRB(2.w, 2.h, 2.w, 0),
-          decoration: const BoxDecoration(
-            color: AppColors.card,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            border: Border(
-              top: BorderSide(color: AppColors.borderSubtle),
-              left: BorderSide(color: AppColors.borderSubtle),
-              right: BorderSide(color: AppColors.borderSubtle),
-              bottom: BorderSide.none,
+        // 1. Top 3 Podium Skeletons (Fixed)
+        Padding(
+          padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 0),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(2.w, 2.h, 2.w, 0),
+            decoration: const BoxDecoration(
+              color: AppColors.card,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              border: Border(
+                top: BorderSide(color: AppColors.borderSubtle),
+                left: BorderSide(color: AppColors.borderSubtle),
+                right: BorderSide(color: AppColors.borderSubtle),
+                bottom: BorderSide.none,
+              ),
             ),
-          ),
-          child: AppShimmer(
-            child: Row(
-              mainAxisAlignment: .spaceEvenly,
-              crossAxisAlignment: .end,
-              children: [
-                // Rank 2 (Silver)
-                _buildPodiumStepSkeleton(
-                  avatarRadius: 22,
-                  pillarHeight: 13.h,
-                ),
-                // Rank 1 (Gold)
-                _buildPodiumStepSkeleton(
-                  avatarRadius: 28,
-                  pillarHeight: 18.h,
-                  hasCrown: true,
-                ),
-                // Rank 3 (Bronze)
-                _buildPodiumStepSkeleton(
-                  avatarRadius: 22,
-                  pillarHeight: 10.h,
-                ),
-              ],
+            child: AppShimmer(
+              child: Row(
+                mainAxisAlignment: .spaceEvenly,
+                crossAxisAlignment: .end,
+                children: [
+                  // Rank 2 (Silver)
+                  _buildPodiumStepSkeleton(
+                    avatarRadius: 22,
+                    pillarHeight: 13.h,
+                  ),
+                  // Rank 1 (Gold)
+                  _buildPodiumStepSkeleton(
+                    avatarRadius: 28,
+                    pillarHeight: 18.h,
+                    hasCrown: true,
+                  ),
+                  // Rank 3 (Bronze)
+                  _buildPodiumStepSkeleton(
+                    avatarRadius: 22,
+                    pillarHeight: 10.h,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-        SizedBox(height: 3.h),
+        SizedBox(height: 2.h),
 
-        // Section Title
-        AppShimmer(
-          child: AppShimmerBox(
-            width: 40.w,
-            height: 2.2.h,
-            borderRadius: AppRadius.circular6,
+        // Section Title (Fixed)
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.w),
+          child: AppShimmer(
+            child: AppShimmerBox(
+              width: 40.w,
+              height: 2.2.h,
+              borderRadius: AppRadius.circular6,
+            ),
           ),
         ),
-        SizedBox(height: 1.5.h),
+        SizedBox(height: 1.h),
 
         // 2. Leaderboard List Rows (Ranks 4+)
-        ...List.generate(
-          4,
-          (index) => Padding(
-            padding: EdgeInsets.only(bottom: 1.2.h),
-            child: Container(
+        Expanded(
+          child: ListView.separated(
+            padding: EdgeInsets.only(left: 5.w, right: 5.w, top: 0.5.h, bottom: 4.h),
+            itemCount: 4,
+            separatorBuilder: (context, index) => SizedBox(height: 1.2.h),
+            itemBuilder: (context, index) => Container(
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
               decoration: BoxDecoration(
                 color: AppColors.card,

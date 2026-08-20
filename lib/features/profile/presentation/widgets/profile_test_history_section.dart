@@ -251,7 +251,7 @@ class ProfileTestHistorySection extends StatelessWidget {
                                 child: Text(
                                   "Voir détails",
                                   style: AppTextStyles.buttonSmall.copyWith(
-                                    color: AppColors.actionBlue,
+                                    color: AppColors.skyBlue,
                                   ),
                                 ),
                               ),

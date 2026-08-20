@@ -11,10 +11,7 @@ import '../../../forms/presentation/widgets/forms_modal_helper.dart';
 class MainNavigationScaffold extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
-  const MainNavigationScaffold({
-    super.key,
-    required this.navigationShell,
-  });
+  const MainNavigationScaffold({super.key, required this.navigationShell});
 
   void _onTap(int index) {
     navigationShell.goBranch(
@@ -35,7 +32,9 @@ class MainNavigationScaffold extends StatelessWidget {
         decoration: BoxDecoration(
           shape: .circle,
           border: Border.all(
-            color: isActive ? AppColors.actionBlue : AppColors.textMuted.withValues(alpha: 0.3),
+            color: isActive
+                ? AppColors.actionBlue
+                : AppColors.textMuted.withValues(alpha: 0.3),
             width: isActive ? 2.0 : 1.0,
           ),
         ),
@@ -76,14 +75,19 @@ class MainNavigationScaffold extends StatelessWidget {
           ActionButton(
             tooltip: "Idées & Suggestions",
             onPressed: () => FormsModalHelper.openIdeaForm(context),
-            icon: AppIcons.idea(color: AppColors.ultraDark, size: AppSizes.iconMd),
+            icon: AppIcons.idea(
+              color: AppColors.ultraDark,
+              size: AppSizes.iconMd,
+            ),
             color: AppColors.ideaAmber,
           ),
           ActionButton(
             tooltip: "Soumettre Certificat",
             onPressed: () {
               final authState = context.read<AuthBloc>().state;
-              final userLevel = authState is AuthenticatedState ? authState.user.level : 1;
+              final userLevel = authState is AuthenticatedState
+                  ? authState.user.level
+                  : 1;
               FormsModalHelper.openCertificateForm(context, userLevel);
             },
             icon: AppIcons.badge(color: Colors.white, size: AppSizes.iconMd),
@@ -112,32 +116,64 @@ class MainNavigationScaffold extends StatelessWidget {
             backgroundColor: AppColors.ultraDark,
             selectedItemColor: AppColors.actionBlue,
             unselectedItemColor: AppColors.textMuted,
-            selectedLabelStyle: AppTextStyles.navLabelActive.copyWith(color: AppColors.actionBlue),
+            selectedLabelStyle: AppTextStyles.navLabelActive.copyWith(
+              color: AppColors.actionBlue,
+            ),
             unselectedLabelStyle: AppTextStyles.navLabel,
             items: [
               BottomNavigationBarItem(
-                icon: AppIcons.dashboard(color: AppColors.textMuted, size: AppSizes.iconLg),
-                activeIcon: AppIcons.dashboard(color: AppColors.actionBlue, size: AppSizes.iconLg),
+                icon: AppIcons.dashboard(
+                  color: AppColors.textMuted,
+                  size: AppSizes.iconLg,
+                ),
+                activeIcon: AppIcons.dashboard(
+                  color: AppColors.actionBlue,
+                  size: AppSizes.iconLg,
+                ),
                 label: "Accueil",
               ),
               BottomNavigationBarItem(
-                icon: AppIcons.tests(color: AppColors.textMuted, size: AppSizes.iconLg),
-                activeIcon: AppIcons.tests(color: AppColors.actionBlue, size: AppSizes.iconLg),
+                icon: AppIcons.tests(
+                  color: AppColors.textMuted,
+                  size: AppSizes.iconLg,
+                ),
+                activeIcon: AppIcons.tests(
+                  color: AppColors.actionBlue,
+                  size: AppSizes.iconLg,
+                ),
                 label: "Tests",
               ),
               BottomNavigationBarItem(
-                icon: AppIcons.programs(color: AppColors.textMuted, size: AppSizes.iconLg),
-                activeIcon: AppIcons.programs(color: AppColors.actionBlue, size: AppSizes.iconLg),
+                icon: AppIcons.programs(
+                  color: AppColors.textMuted,
+                  size: AppSizes.iconLg,
+                ),
+                activeIcon: AppIcons.programs(
+                  color: AppColors.actionBlue,
+                  size: AppSizes.iconLg,
+                ),
                 label: "Agenda",
               ),
               BottomNavigationBarItem(
-                icon: AppIcons.announcements(color: AppColors.textMuted, size: AppSizes.iconLg),
-                activeIcon: AppIcons.announcements(color: AppColors.actionBlue, size: AppSizes.iconLg),
+                icon: AppIcons.announcements(
+                  color: AppColors.textMuted,
+                  size: AppSizes.iconLg,
+                ),
+                activeIcon: AppIcons.announcements(
+                  color: AppColors.actionBlue,
+                  size: AppSizes.iconLg,
+                ),
                 label: "Annonces",
               ),
               BottomNavigationBarItem(
-                icon: AppIcons.podium(color: AppColors.textMuted, size: AppSizes.iconLg),
-                activeIcon: AppIcons.podium(color: AppColors.actionBlue, size: AppSizes.iconLg),
+                icon: AppIcons.podium(
+                  color: AppColors.textMuted,
+                  size: AppSizes.iconLg,
+                ),
+                activeIcon: AppIcons.podium(
+                  color: AppColors.actionBlue,
+                  size: AppSizes.iconLg,
+                ),
                 label: "Podium",
               ),
               BottomNavigationBarItem(

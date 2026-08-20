@@ -129,32 +129,28 @@ class _PodiumPageState extends State<PodiumPage> {
 
                 return Stack(
                   children: [
-                    RefreshIndicator(
-                      color: AppColors.actionBlue,
-                      onRefresh: () async => _fetchLeaderboard(isRefresh: true),
-                      child: ListView(
-                        padding: EdgeInsets.only(
-                          left: 5.w,
-                          right: 5.w,
-                          top: 1.h,
-                          bottom: currentUser != null ? 10.h : 4.h,
-                        ),
-                        children: [
-                          // Top 3 Podium Card
-                          if (topThree.isNotEmpty) ...[
-                            TopThreePodium(topThree: topThree),
-                            SizedBox(height: 2.h),
-                          ],
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // 1. Top 3 Podium Card (Fixed - Not scrollable)
+                        if (topThree.isNotEmpty)
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(5.w, 1.h, 5.w, 0),
+                            child: TopThreePodium(topThree: topThree),
+                          ),
+                        SizedBox(height: 1.5.h),
 
-                          // Top 10 Section Header
-                          Row(
-                            mainAxisAlignment: .spaceBetween,
+                        // 2. Top 10 Section Header (Fixed - Not scrollable)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 "Top 10 (Places 4 à 10)",
                                 style: AppTextStyles.titleSmall.copyWith(
                                   color: AppColors.textPrimary,
-                                  fontWeight: .bold,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                               Text(
@@ -165,20 +161,36 @@ class _PodiumPageState extends State<PodiumPage> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 1.5.h),
+                        ),
+                        SizedBox(height: 1.h),
 
-                          // Remaining Users Rows
-                          ...remainingUsers.map((user) {
-                            final isMe =
-                                currentUser != null &&
-                                user.id == currentUser.id;
-                            return LeaderboardUserRow(
-                              user: user,
-                              isCurrentUser: isMe,
-                            );
-                          }),
-                        ],
-                      ),
+                        // 3. Scrollable List of Ranks 4 to 10 Only
+                        Expanded(
+                          child: RefreshIndicator(
+                            color: AppColors.actionBlue,
+                            onRefresh: () async =>
+                                _fetchLeaderboard(isRefresh: true),
+                            child: ListView.builder(
+                              padding: EdgeInsets.only(
+                                left: 5.w,
+                                right: 5.w,
+                                top: 0.5.h,
+                                bottom: currentUser != null ? 10.h : 4.h,
+                              ),
+                              itemCount: remainingUsers.length,
+                              itemBuilder: (context, index) {
+                                final user = remainingUsers[index];
+                                final isMe = currentUser != null &&
+                                    user.id == currentUser.id;
+                                return LeaderboardUserRow(
+                                  user: user,
+                                  isCurrentUser: isMe,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
 
                     // Current User Rank Sticky Card Footer
