@@ -111,35 +111,62 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       } else if (rawAnswers is Map) {
         final sortedKeys = rawAnswers.keys.toList()
           ..sort((a, b) {
-            final intA = int.tryParse(a.toString()) ?? 0;
-            final intB = int.tryParse(b.toString()) ?? 0;
-            return intA.compareTo(intB);
+            final matchA = RegExp(r'\d+').firstMatch(a.toString());
+            final matchB = RegExp(r'\d+').firstMatch(b.toString());
+            final intA =
+                matchA != null ? (int.tryParse(matchA.group(0)!) ?? 0) : 0;
+            final intB =
+                matchB != null ? (int.tryParse(matchB.group(0)!) ?? 0) : 0;
+            if (intA != intB) return intA.compareTo(intB);
+            return a.toString().compareTo(b.toString());
           });
 
         for (final key in sortedKeys) {
           final val = rawAnswers[key];
           if (val is Map) {
-            userAnswersList.add(Map<String, dynamic>.from(val));
+            final mapVal = Map<String, dynamic>.from(val);
+            if (!mapVal.containsKey('questionId')) {
+              mapVal['questionId'] = key.toString();
+            }
+            userAnswersList.add(mapVal);
           } else {
-            userAnswersList.add({'studentAnswer': val.toString()});
+            userAnswersList.add({
+              'questionId': key.toString(),
+              'studentAnswer': val.toString(),
+            });
           }
         }
       }
 
       // Merge: Combine /tests principal test questions with user subcollection answers
       final List<UserQuestionCorrection> corrections = [];
-      final int questionCount = mainQuiz != null && mainQuiz.questions.isNotEmpty
-          ? mainQuiz.questions.length
-          : userAnswersList.length;
+      final int questionCount =
+          mainQuiz != null && mainQuiz.questions.isNotEmpty
+              ? mainQuiz.questions.length
+              : userAnswersList.length;
 
       for (int i = 0; i < questionCount; i++) {
         final mainQ = (mainQuiz != null && i < mainQuiz.questions.length)
             ? mainQuiz.questions[i]
             : null;
 
-        final userAnsData = i < userAnswersList.length
-            ? userAnswersList[i]
-            : null;
+        // Find user answer by matching questionId, title or fallback to index i
+        Map<String, dynamic>? userAnsData;
+        if (mainQ != null) {
+          for (final ans in userAnswersList) {
+            final qId = ans['questionId']?.toString();
+            if (qId != null &&
+                (qId == mainQ.id ||
+                    qId == "q_${i + 1}" ||
+                    qId == "q$i" ||
+                    qId == i.toString() ||
+                    qId == (i + 1).toString())) {
+              userAnsData = ans;
+              break;
+            }
+          }
+        }
+        userAnsData ??= (i < userAnswersList.length ? userAnswersList[i] : null);
 
         final studentAns = userAnsData != null
             ? (userAnsData['studentAnswer'] ??

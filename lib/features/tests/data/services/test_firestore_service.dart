@@ -318,9 +318,14 @@ class TestFirestoreService {
     } else if (rawField is Map) {
       final sortedKeys = rawField.keys.toList()
         ..sort((a, b) {
-          final intA = int.tryParse(a.toString()) ?? 0;
-          final intB = int.tryParse(b.toString()) ?? 0;
-          return intA.compareTo(intB);
+          final matchA = RegExp(r'\d+').firstMatch(a.toString());
+          final matchB = RegExp(r'\d+').firstMatch(b.toString());
+          final intA =
+              matchA != null ? (int.tryParse(matchA.group(0)!) ?? 0) : 0;
+          final intB =
+              matchB != null ? (int.tryParse(matchB.group(0)!) ?? 0) : 0;
+          if (intA != intB) return intA.compareTo(intB);
+          return a.toString().compareTo(b.toString());
         });
       for (final k in sortedKeys) {
         rawQuestions.add(rawField[k]);
