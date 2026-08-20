@@ -43,9 +43,9 @@ class _AppShimmerState extends State<AppShimmer>
           shaderCallback: (bounds) {
             return LinearGradient(
               colors: const [
-                Color(0xFF222F44), // Base sombre bleutée
-                Color(0xFF3E5478), // Lueur brillante bien visible
-                Color(0xFF222F44), // Retour base
+                AppColors.shimmerBase,
+                AppColors.shimmerHighlight,
+                AppColors.shimmerBase,
               ],
               stops: const [0.0, 0.5, 1.0],
               begin: Alignment(-1.2 + (_controller.value * 3.4), -0.2),
@@ -81,7 +81,7 @@ class AppShimmerBox extends StatelessWidget {
       width: width ?? double.infinity,
       height: height,
       decoration: BoxDecoration(
-        color: color ?? const Color(0xFF222F44),
+        color: color ?? AppColors.shimmerBase,
         borderRadius: borderRadius ?? AppRadius.circular6,
       ),
     );
@@ -105,7 +105,7 @@ class AppShimmerCircle extends StatelessWidget {
       width: radius * 2,
       height: radius * 2,
       decoration: BoxDecoration(
-        color: color ?? const Color(0xFF222F44),
+        color: color ?? AppColors.shimmerBase,
         shape: .circle,
       ),
     );

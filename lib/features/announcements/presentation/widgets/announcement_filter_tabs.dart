@@ -61,10 +61,10 @@ class AnnouncementFilterTabs extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     final textColor =
-        isSelected ? const Color(0xFF111827) : AppColors.textSecondary;
+        isSelected ? AppColors.activeTabText : AppColors.textSecondary;
 
     final iconColor =
-        isSelected ? const Color(0xFF111827) : AppColors.textSecondary;
+        isSelected ? AppColors.activeTabText : AppColors.textSecondary;
 
     return InkWell(
       onTap: onTap,

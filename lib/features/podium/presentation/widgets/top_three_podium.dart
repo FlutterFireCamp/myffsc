@@ -39,15 +39,15 @@ class TopThreePodium extends StatelessWidget {
             _buildPodiumColumn(
               user: second,
               rankText: "2e",
-              badgeColor: const Color(0xFF94A3B8), // Silver
+              badgeColor: AppColors.podiumSilver,
               badgeTextColor: Colors.white,
               pedestalHeight: 8.5.h,
               isFirst: false,
               gradientColors: [
-                const Color(0xFF334155).withValues(alpha: 0.40),
-                const Color(0xFF1E293B).withValues(alpha: 0.10),
+                AppColors.podiumSilverGradientTop.withValues(alpha: 0.40),
+                AppColors.podiumSilverGradientBottom.withValues(alpha: 0.10),
               ],
-              borderColor: const Color(0xFF64748B),
+              borderColor: AppColors.podiumSilverBorder,
               pointsTextColor: Colors.white,
               levelTextColor: Colors.white.withValues(alpha: 0.65),
             )
@@ -59,17 +59,17 @@ class TopThreePodium extends StatelessWidget {
             _buildPodiumColumn(
               user: first,
               rankText: "1er",
-              badgeColor: const Color(0xFFFBBF24), // Gold
+              badgeColor: AppColors.podiumGold,
               badgeTextColor: Colors.black,
               pedestalHeight: 11.h,
               isFirst: true,
               gradientColors: [
-                const Color(0xFFF59E0B).withValues(alpha: 0.28),
-                const Color(0xFFB45309).withValues(alpha: 0.06),
+                AppColors.podiumGoldGradientTop.withValues(alpha: 0.28),
+                AppColors.podiumGoldGradientBottom.withValues(alpha: 0.06),
               ],
-              borderColor: const Color(0xFFFBBF24),
-              pointsTextColor: const Color(0xFFFBBF24),
-              levelTextColor: const Color(0xFFFBBF24).withValues(alpha: 0.80),
+              borderColor: AppColors.podiumGoldBorder,
+              pointsTextColor: AppColors.podiumGold,
+              levelTextColor: AppColors.podiumGold.withValues(alpha: 0.80),
             )
           else
             const Expanded(child: SizedBox.shrink()),
@@ -79,17 +79,17 @@ class TopThreePodium extends StatelessWidget {
             _buildPodiumColumn(
               user: third,
               rankText: "3e",
-              badgeColor: const Color(0xFFD97706), // Bronze
+              badgeColor: AppColors.podiumBronze,
               badgeTextColor: Colors.white,
               pedestalHeight: 7.5.h,
               isFirst: false,
               gradientColors: [
-                const Color(0xFFEA580C).withValues(alpha: 0.28),
-                const Color(0xFF7C2D12).withValues(alpha: 0.08),
+                AppColors.podiumBronzeGradientTop.withValues(alpha: 0.28),
+                AppColors.podiumBronzeGradientBottom.withValues(alpha: 0.08),
               ],
-              borderColor: const Color(0xFFD97706),
-              pointsTextColor: const Color(0xFFD97706),
-              levelTextColor: const Color(0xFFD97706).withValues(alpha: 0.80),
+              borderColor: AppColors.podiumBronzeBorder,
+              pointsTextColor: AppColors.podiumBronze,
+              levelTextColor: AppColors.podiumBronze.withValues(alpha: 0.80),
             )
           else
             const Expanded(child: SizedBox.shrink()),

@@ -12,6 +12,10 @@ class AppColors {
   static const Color borderSubtle = Color.fromRGBO(255, 255, 255, 0.12);
   static const Color borderMedium = Color(0xFF334155);
 
+  // Shimmer Skeleton
+  static const Color shimmerBase = Color(0xFF222F44);
+  static const Color shimmerHighlight = Color(0xFF3E5478);
+
   // Surfaces, Modales & Conteneurs Quiz
   static const Color navySurface = Color(0xFF131D33);
   static const Color navyDarkSurface = Color(0xFF111D30);
@@ -29,13 +33,30 @@ class AppColors {
   static const Color flutterBlue = Color(0xFF02569B);
   static const Color flutterLightBlue = Color(0xFF0288D1);
   static const Color skyBlue = Color(0xFF38BDF8); // Sky 400
+  static const Color actionBlue = skyBlue; // Sky 400 (Boutons d'action)
 
-  // Podium & Médailles
+  // Podium & Médailles Palette
   static const Color gold = Color(0xFFFBBF24); // Gold / Amber #FBBF24
   static const Color silver = Color(0xFF94A3B8); // Silver / Slate 400 #94A3B8
   static const Color bronze = Color(0xFFD97706); // Bronze / Amber 600 #D97706
   static const Color goldSurface = Color(0xFF18181B);
   static const Color silverSurface = Color(0xFF161F2E);
+
+  // Top 3 Podium Cards Style Colors
+  static const Color podiumGold = gold;
+  static const Color podiumGoldBorder = gold;
+  static const Color podiumGoldGradientTop = Color(0xFFF59E0B);
+  static const Color podiumGoldGradientBottom = Color(0xFFB45309);
+
+  static const Color podiumSilver = silver;
+  static const Color podiumSilverBorder = Color(0xFF64748B);
+  static const Color podiumSilverGradientTop = Color(0xFF334155);
+  static const Color podiumSilverGradientBottom = Color(0xFF1E293B);
+
+  static const Color podiumBronze = bronze;
+  static const Color podiumBronzeBorder = bronze;
+  static const Color podiumBronzeGradientTop = Color(0xFFEA580C);
+  static const Color podiumBronzeGradientBottom = Color(0xFF7C2D12);
 
   // Les Jaunes & Oranges (Accents Firebase & Compteurs)
   static const Color firebaseOrange = Color(0xFFF57C00);
@@ -69,6 +90,11 @@ class AppColors {
   static const Color incorrectLabel = Color(0xFFFF8595);
 
   // Niveaux & Gradients
+  static const Color level1Dart = skyBlue;
+  static const Color level2Flutter = flutterLightBlue;
+  static const Color level3Firebase = warningAmber;
+  static const Color level4Project = purpleConference;
+
   static const Color level1DarkBlue = Color(0xFF013A63);
   static const Color level2Cyan = Color(0xFF01B5F8);
   static const Color level3Amber = Color(0xFFFF8F00);
@@ -80,14 +106,14 @@ class AppColors {
   static Color getLevelColor(int level) {
     switch (level) {
       case 1:
-        return skyBlue;
+        return level1Dart;
       case 2:
-        return flutterLightBlue;
+        return level2Flutter;
       case 3:
-        return warningAmber;
+        return level3Firebase;
       case 4:
       default:
-        return purpleConference;
+        return level4Project;
     }
   }
 
@@ -191,4 +217,5 @@ class AppColors {
   static const Color textPrimary = Color(0xFFF8FAFC);
   static const Color textSecondary = Color(0xFFCBD5E1);
   static const Color textMuted = silver;
+  static const Color activeTabText = Color(0xFF111827);
 }
