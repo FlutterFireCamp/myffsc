@@ -10,32 +10,36 @@ class ProgramsShimmer extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
       children: [
-        // 1. Filter Chips Row Skeleton
+        // 1. Filter Chips Row Skeleton (Horizontally scrollable to avoid any RenderFlex overflow)
         AppShimmer(
-          child: Row(
-            spacing: 2.w,
-            children: [
-              AppShimmerBox(
-                width: 18.w,
-                height: 3.8.h,
-                borderRadius: AppRadius.circular12,
-              ),
-              AppShimmerBox(
-                width: 24.w,
-                height: 3.8.h,
-                borderRadius: AppRadius.circular12,
-              ),
-              AppShimmerBox(
-                width: 26.w,
-                height: 3.8.h,
-                borderRadius: AppRadius.circular12,
-              ),
-              AppShimmerBox(
-                width: 20.w,
-                height: 3.8.h,
-                borderRadius: AppRadius.circular12,
-              ),
-            ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const NeverScrollableScrollPhysics(),
+            child: Row(
+              spacing: 2.w,
+              children: [
+                AppShimmerBox(
+                  width: 20.w,
+                  height: 3.8.h,
+                  borderRadius: AppRadius.circular12,
+                ),
+                AppShimmerBox(
+                  width: 26.w,
+                  height: 3.8.h,
+                  borderRadius: AppRadius.circular12,
+                ),
+                AppShimmerBox(
+                  width: 28.w,
+                  height: 3.8.h,
+                  borderRadius: AppRadius.circular12,
+                ),
+                AppShimmerBox(
+                  width: 24.w,
+                  height: 3.8.h,
+                  borderRadius: AppRadius.circular12,
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(height: 2.5.h),
