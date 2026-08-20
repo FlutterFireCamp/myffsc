@@ -176,7 +176,7 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
     final isSearchable = widget.enableSearch;
 
     return Container(
-      height: 85.h,
+      height: isSearchable ? 85.h : null,
       constraints: BoxConstraints(maxHeight: 85.h),
       decoration: const BoxDecoration(
         color: AppColors.modalBackground,
@@ -190,7 +190,7 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
           child: Column(
-            mainAxisSize: .max,
+            mainAxisSize: isSearchable ? MainAxisSize.max : MainAxisSize.min,
             children: [
               // Handle bar indicator
               Container(
@@ -205,16 +205,16 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
 
               // Modal Header
               Row(
-                mainAxisAlignment: .spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Text(
                       widget.title,
                       style: AppTextStyles.titleMedium.copyWith(
                         color: AppColors.textPrimary,
-                        fontWeight: .bold,
+                        fontWeight: FontWeight.bold,
                       ),
-                      overflow: .ellipsis,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   IconButton(
@@ -257,9 +257,9 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
                         color: AppColors.borderSubtle,
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
+                    focusedBorder: const OutlineInputBorder(
                       borderRadius: AppRadius.circular12,
-                      borderSide: const BorderSide(
+                      borderSide: BorderSide(
                         color: AppColors.skyBlue,
                         width: 1.5,
                       ),
@@ -267,10 +267,22 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
                   ),
                 ),
                 SizedBox(height: 1.5.h),
+                // Options List in Expanded when searchable
+                Expanded(
+                  child: _buildOptionsListView(
+                    primary: false,
+                    shrinkWrap: false,
+                  ),
+                ),
+              ] else ...[
+                // Options List wrapping content when non-searchable
+                Flexible(
+                  child: _buildOptionsListView(
+                    primary: false,
+                    shrinkWrap: true,
+                  ),
+                ),
               ],
-
-              // Options List
-              Expanded(child: _buildOptionsListView(primary: false)),
             ],
           ),
         ),
@@ -278,7 +290,10 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
     );
   }
 
-  Widget _buildOptionsListView({required bool primary}) {
+  Widget _buildOptionsListView({
+    required bool primary,
+    required bool shrinkWrap,
+  }) {
     if (_filteredOptions.isEmpty) {
       return Center(
         child: Padding(
@@ -295,6 +310,7 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
 
     return ListView.separated(
       primary: primary,
+      shrinkWrap: shrinkWrap,
       itemCount: _filteredOptions.length,
       separatorBuilder: (context, index) =>
           const Divider(color: AppColors.borderSubtle, height: 1),
@@ -325,7 +341,8 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
                       color: isSelected
                           ? AppColors.skyBlue
                           : AppColors.textPrimary,
-                      fontWeight: isSelected ? .bold : .normal,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                 ),
