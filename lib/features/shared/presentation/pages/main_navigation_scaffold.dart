@@ -141,7 +141,7 @@ class MainNavigationScaffold extends StatelessWidget {
                   color: AppColors.skyBlue,
                   size: AppSizes.iconLg,
                 ),
-                label: "Évaluation",
+                label: "Test",
               ),
               BottomNavigationBarItem(
                 icon: AppIcons.programs(

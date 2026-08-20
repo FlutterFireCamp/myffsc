@@ -12,12 +12,30 @@ class TestFirestoreService {
 
   String get _todayDateFormatted => DateTimeHelper.formatYmd(DateTime.now());
 
-  /// Returns true if date corresponds to today (or if null/empty)
-  bool _isTodayOrValid(dynamic rawDate) {
-    if (rawDate == null) return true;
-    final localDt = DateTimeHelper.parseToLocal(rawDate);
-    if (localDt == null) return true;
-    return DateTimeHelper.isToday(localDt);
+  /// Returns true if date corresponds strictly to today
+  bool _isTestForToday(String docId, Map<String, dynamic> data) {
+    final rawDate = data['scheduledDate'] ??
+        data['date'] ??
+        data['scheduled_date'] ??
+        data['scheduledAt'];
+
+    if (rawDate != null) {
+      final localDt = DateTimeHelper.parseToLocal(rawDate);
+      if (localDt != null) {
+        return DateTimeHelper.isToday(localDt);
+      }
+    }
+
+    // Check if docId itself contains today's date (e.g., 2026-08-20)
+    final match = RegExp(r'\d{4}-\d{2}-\d{2}').firstMatch(docId);
+    if (match != null) {
+      final dt = DateTimeHelper.parseToLocal(match.group(0));
+      if (dt != null) {
+        return DateTimeHelper.isToday(dt);
+      }
+    }
+
+    return false;
   }
 
   /// Returns true if status is active/valid
@@ -37,7 +55,7 @@ class TestFirestoreService {
     ].contains(s);
   }
 
-  /// Fetch active test scheduled for today from /tests
+  /// Fetch active test scheduled strictly for today from /tests
   Future<TestQuizEntity?> fetchTodayTest() async {
     try {
       dev.log('Recherche du test du jour dans /tests...', name: 'TEST_FIRESTORE_SERVICE');
@@ -48,16 +66,12 @@ class TestFirestoreService {
         return null;
       }
 
-      // 1. First pass: look for status & date match
+      // Check documents strictly matching today's date & active status
       for (final doc in snapshot.docs) {
         final data = doc.data();
-        final rawDate = data['scheduledDate'] ??
-            data['date'] ??
-            data['scheduled_date'] ??
-            data['scheduledAt'];
         final rawStatus = data['status'];
 
-        if (_isValidStatus(rawStatus) && _isTodayOrValid(rawDate)) {
+        if (_isValidStatus(rawStatus) && _isTestForToday(doc.id, data)) {
           final quiz = await _parseTestQuizEntity(doc);
           if (quiz != null && quiz.questions.isNotEmpty) {
             dev.log('Test du jour trouvé avec succès: ${quiz.title}', name: 'TEST_FIRESTORE_SERVICE');
@@ -66,23 +80,8 @@ class TestFirestoreService {
         }
       }
 
-      // 2. Second pass: fallback to any active document in /tests
-      for (final doc in snapshot.docs) {
-        final data = doc.data();
-        final rawStatus = data['status'];
-
-        if (_isValidStatus(rawStatus)) {
-          final quiz = await _parseTestQuizEntity(doc);
-          if (quiz != null && quiz.questions.isNotEmpty) {
-            dev.log('Test actif de repli trouvé: ${quiz.title}', name: 'TEST_FIRESTORE_SERVICE');
-            return quiz;
-          }
-        }
-      }
-
-      // 3. Final fallback: parse the very first doc in /tests
-      final firstDoc = snapshot.docs.first;
-      return await _parseTestQuizEntity(firstDoc);
+      dev.log('Aucun test prévu pour aujourd’hui dans /tests.', name: 'TEST_FIRESTORE_SERVICE');
+      return null;
     } catch (e, stackTrace) {
       dev.log(
         'Erreur lors de la récupération du test du jour',
@@ -90,8 +89,8 @@ class TestFirestoreService {
         error: e,
         stackTrace: stackTrace,
       );
+      return null;
     }
-    return null;
   }
 
   /// Fetch test definition from principal /tests collection matching quizId, date or docId
