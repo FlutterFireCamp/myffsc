@@ -67,19 +67,14 @@ class LeaderboardUserRow extends StatelessWidget {
                   user.name,
                   maxLines: 1,
                   overflow: .ellipsis,
-                  style: AppTextStyles.bodyLarge.copyWith(
-                    fontWeight: .bold,
-                  ),
+                  style: AppTextStyles.bodyLarge.copyWith(fontWeight: .bold),
                 ),
                 if (hasFlag || hasCommunity)
                   Row(
                     mainAxisSize: .min,
                     children: [
                       if (hasFlag)
-                        Text(
-                          user.flag,
-                          style: const TextStyle(fontSize: 13),
-                        ),
+                        Text(user.flag, style: const TextStyle(fontSize: 13)),
                       if (hasFlag && hasCommunity)
                         Text(
                           " • ",
@@ -93,8 +88,8 @@ class LeaderboardUserRow extends StatelessWidget {
                             user.displayCommunity,
                             maxLines: 1,
                             overflow: .ellipsis,
-                            style: AppTextStyles.captionSmall.copyWith(
-                              color: AppColors.actionBlue,
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.skyBlue,
                               fontWeight: .w600,
                             ),
                           ),
@@ -117,10 +112,7 @@ class LeaderboardUserRow extends StatelessWidget {
                   color: AppColors.skyBlue,
                 ),
               ),
-              Text(
-                "Niv. ${user.level}",
-                style: AppTextStyles.metricLabel,
-              ),
+              Text("Niv. ${user.level}", style: AppTextStyles.metricLabel),
             ],
           ),
         ],

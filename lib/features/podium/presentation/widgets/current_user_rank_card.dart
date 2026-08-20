@@ -25,7 +25,7 @@ class CurrentUserRankCard extends StatelessWidget {
         color: AppColors.card,
         borderRadius: AppRadius.circular14,
         border: Border.all(
-          color: AppColors.actionBlue.withValues(alpha: 0.4),
+          color: AppColors.skyBlue.withValues(alpha: 0.4),
           width: 1.2,
         ),
       ),
@@ -38,14 +38,14 @@ class CurrentUserRankCard extends StatelessWidget {
             height: 9.w,
             decoration: BoxDecoration(
               shape: .circle,
-              color: AppColors.actionBlue.withValues(alpha: 0.15),
-              border: Border.all(color: AppColors.actionBlue, width: 1.2),
+              color: AppColors.skyBlue.withValues(alpha: 0.15),
+              border: Border.all(color: AppColors.skyBlue, width: 1.2),
             ),
             child: Center(
               child: Text(
                 "${userRank}e",
                 style: AppTextStyles.caption.copyWith(
-                  color: AppColors.actionBlue,
+                  color: AppColors.skyBlue,
                   fontWeight: .bold,
                 ),
               ),
@@ -101,10 +101,7 @@ class CurrentUserRankCard extends StatelessWidget {
                   color: AppColors.skyBlue,
                 ),
               ),
-              Text(
-                "Niv. $level",
-                style: AppTextStyles.metricLabel,
-              ),
+              Text("Niv. $level", style: AppTextStyles.metricLabel),
             ],
           ),
         ],
