@@ -320,48 +320,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
           // Correct / Expected Answer Box
           _buildExpectedAnswerBox(q),
 
-          // Optional Explanation Box
-          if (q.explanation != null && q.explanation!.trim().isNotEmpty) ...[
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(3.w),
-              decoration: BoxDecoration(
-                color: AppColors.navyDarkSurface,
-                borderRadius: BorderRadius.circular(8),
-                border: const Border(
-                  left: BorderSide(color: AppColors.actionBlue, width: 3),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: .start,
-                spacing: 0.4.h,
-                children: [
-                  Text(
-                    "Explication :",
-                    style: AppTextStyles.caption.copyWith(
-                      color: AppColors.actionBlue,
-                      fontWeight: .bold,
-                    ),
-                  ),
-                  MarkdownBody(
-                    data: q.explanation!.trim(),
-                    styleSheet: MarkdownStyleSheet(
-                      p: AppTextStyles.bodySmall.copyWith(
-                        color: Colors.white70,
-                        height: 1.35,
-                      ),
-                      code: TextStyle(
-                        fontFamily: 'monospace',
-                        fontSize: 9.sp,
-                        color: AppColors.actionBlue,
-                        backgroundColor: AppColors.codeHighlightBg,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+
         ],
       ),
     );

@@ -104,8 +104,8 @@ class PodiumRulesDialog extends StatelessWidget {
             _buildRuleCard(
               icon: AppIcons.medalThirdPlace(color: AppColors.bronze, size: 28),
               title: "Temps de Réponse au Dernier Test",
-              titleColor: AppColors.skyBlue,
-              borderColor: AppColors.skyBlue.withValues(alpha: 0.35),
+              titleColor: AppColors.bronze,
+              borderColor: AppColors.bronze.withValues(alpha: 0.35),
               bgColor: AppColors.navySurface,
               description:
                   "Croissant : En cas d'égalité, la réponse la plus rapide prévaut.",
@@ -117,10 +117,10 @@ class PodiumRulesDialog extends StatelessWidget {
               padding: .symmetric(horizontal: 3.5.w, vertical: 1.2.h),
               margin: .symmetric(vertical: 0.5.h),
               decoration: BoxDecoration(
-                color: AppColors.actionBlue.withValues(alpha: 0.08),
+                color: AppColors.skyBlue.withValues(alpha: 0.08),
                 borderRadius: AppRadius.circular12,
                 border: .all(
-                  color: AppColors.actionBlue.withValues(alpha: 0.3),
+                  color: AppColors.skyBlue.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -129,15 +129,15 @@ class PodiumRulesDialog extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: "Évolution dynamique : ",
-                      style: AppTextStyles.caption.copyWith(
-                        color: AppColors.actionBlue,
+                      style: AppTextStyles.bodySmall.copyWith(
+                        color: AppColors.skyBlue,
                         fontWeight: .bold,
                       ),
                     ),
                     TextSpan(
                       text:
                           "Le classement est mis à jour en temps réel et peut évoluer au cours de la semaine.",
-                      style: AppTextStyles.caption.copyWith(
+                      style: AppTextStyles.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                         height: 1.35,
                       ),
