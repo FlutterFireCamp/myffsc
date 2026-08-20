@@ -68,11 +68,8 @@ class ProgramFilterTabs extends StatelessWidget {
     required Color badgeColor,
     required VoidCallback onTap,
   }) {
-    final isAllTab =
-        label.toLowerCase() == "tous" || label.toLowerCase() == "toutes";
-    final textColor = isSelected
-        ? (isAllTab ? Colors.white : const Color(0xFF111827))
-        : AppColors.textSecondary;
+    final textColor =
+        isSelected ? const Color(0xFF111827) : AppColors.textSecondary;
 
     return InkWell(
       onTap: onTap,

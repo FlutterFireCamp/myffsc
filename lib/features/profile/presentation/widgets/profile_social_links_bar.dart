@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
@@ -10,10 +11,11 @@ class ProfileSocialLinksBar extends StatelessWidget {
   const ProfileSocialLinksBar({super.key, required this.user});
 
   bool get hasSocialLinks =>
-      (user.github != null && user.github!.isNotEmpty) ||
-      (user.linkedin != null && user.linkedin!.isNotEmpty) ||
-      (user.x != null && user.x!.isNotEmpty) ||
-      (user.portfolio != null && user.portfolio!.isNotEmpty);
+      (user.discordUsername != null && user.discordUsername!.trim().isNotEmpty) ||
+      (user.github != null && user.github!.trim().isNotEmpty) ||
+      (user.linkedin != null && user.linkedin!.trim().isNotEmpty) ||
+      (user.x != null && user.x!.trim().isNotEmpty) ||
+      (user.portfolio != null && user.portfolio!.trim().isNotEmpty);
 
   Future<void> _launchExternalUrl(
     BuildContext context,
@@ -39,6 +41,22 @@ class ProfileSocialLinksBar extends StatelessWidget {
     }
   }
 
+  Future<void> _handleDiscordTap(BuildContext context, String? discord) async {
+    if (discord == null || discord.trim().isEmpty) return;
+    final val = discord.trim();
+    if (val.startsWith('http://') || val.startsWith('https://')) {
+      _launchExternalUrl(context, val);
+    } else {
+      await Clipboard.setData(ClipboardData(text: val));
+      if (context.mounted) {
+        AppSnackBar.showSuccess(
+          context,
+          "Pseudo Discord copié : $val",
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!hasSocialLinks) return const SizedBox.shrink();
@@ -47,25 +65,36 @@ class ProfileSocialLinksBar extends StatelessWidget {
       mainAxisAlignment: .center,
       spacing: 2.5.w,
       children: [
-        if (user.github != null && user.github!.isNotEmpty)
+        // 1. Discord (Au premier rang)
+        if (user.discordUsername != null && user.discordUsername!.trim().isNotEmpty)
+          _buildSocialIconButton(
+            icon: AppIcons.discord(size: 16),
+            tooltip: "Discord : ${user.discordUsername}",
+            onTap: () => _handleDiscordTap(context, user.discordUsername),
+          ),
+        // 2. GitHub
+        if (user.github != null && user.github!.trim().isNotEmpty)
           _buildSocialIconButton(
             icon: AppIcons.github(size: 16),
             tooltip: "GitHub",
             onTap: () => _launchExternalUrl(context, user.github),
           ),
-        if (user.linkedin != null && user.linkedin!.isNotEmpty)
+        // 3. LinkedIn
+        if (user.linkedin != null && user.linkedin!.trim().isNotEmpty)
           _buildSocialIconButton(
             icon: AppIcons.linkedin(size: 16),
             tooltip: "LinkedIn",
             onTap: () => _launchExternalUrl(context, user.linkedin),
           ),
-        if (user.x != null && user.x!.isNotEmpty)
+        // 4. X / Twitter
+        if (user.x != null && user.x!.trim().isNotEmpty)
           _buildSocialIconButton(
             icon: AppIcons.twitter(size: 16),
             tooltip: "X / Twitter",
             onTap: () => _launchExternalUrl(context, user.x),
           ),
-        if (user.portfolio != null && user.portfolio!.isNotEmpty)
+        // 5. Portfolio
+        if (user.portfolio != null && user.portfolio!.trim().isNotEmpty)
           _buildSocialIconButton(
             icon: AppIcons.globe02(size: 16),
             tooltip: "Portfolio",
