@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_icons.dart';
+import '../theme/app_text_styles.dart';
 
 class AppCachedAvatar extends StatelessWidget {
   final String? imageUrl;
@@ -20,10 +21,17 @@ class AppCachedAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle defaultStyle = TextStyle(
+      fontFamily: AppTextStyles.fontFamily,
       fontSize: radius * 0.8,
       color: Colors.white,
-      fontWeight: .bold,
+      fontWeight: FontWeight.bold,
     );
+
+    final TextStyle resolvedStyle = fallbackTextStyle != null
+        ? (fallbackTextStyle!.fontFamily == null
+            ? fallbackTextStyle!.copyWith(fontFamily: AppTextStyles.fontFamily)
+            : fallbackTextStyle!)
+        : defaultStyle;
 
     if (imageUrl == null || imageUrl!.trim().isEmpty) {
       return CircleAvatar(
@@ -31,7 +39,7 @@ class AppCachedAvatar extends StatelessWidget {
         backgroundColor: AppColors.skyBlue,
         child: Text(
           fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
-          style: fallbackTextStyle ?? defaultStyle,
+          style: resolvedStyle,
         ),
       );
     }
@@ -50,7 +58,7 @@ class AppCachedAvatar extends StatelessWidget {
         backgroundColor: AppColors.skyBlue,
         child: Text(
           fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
-          style: fallbackTextStyle ?? defaultStyle,
+          style: resolvedStyle,
         ),
       ),
     );
