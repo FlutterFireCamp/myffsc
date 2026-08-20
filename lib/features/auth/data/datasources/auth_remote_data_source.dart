@@ -161,7 +161,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  /// Vérifie si l'adresse e-mail figure dans la collection/document config/participants-emails.
+  /// Vérifie si l'adresse e-mail figure dans le document config/participants-emails (champ emails).
   Future<bool> _isEmailInParticipantsList(String email) async {
     if (email.trim().isEmpty) return false;
     final normalizedEmail = email.trim().toLowerCase();
@@ -169,51 +169,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       dev.log('Vérification de $normalizedEmail dans config/participants-emails...', name: 'AUTH_REMOTE_DS');
 
-      // 1. Recherche dans le document config/participants-emails (tableau 'emails' ou 'list')
       final docSnap = await firestore.collection('config').doc('participants-emails').get();
       if (docSnap.exists && docSnap.data() != null) {
         final data = docSnap.data()!;
-        final rawEmails = data['emails'] ?? data['list'] ?? data['participants'] ?? data['data'];
+        final rawEmails = data['emails'];
         if (rawEmails is List) {
           final isFound = rawEmails.any((e) => e.toString().trim().toLowerCase() == normalizedEmail);
           if (isFound) {
-            dev.log('E-mail $normalizedEmail trouvé dans config/participants-emails (List)', name: 'AUTH_REMOTE_DS');
-            return true;
-          }
-        } else if (rawEmails is Map) {
-          if (rawEmails.containsKey(normalizedEmail) || rawEmails.containsKey(email)) {
-            dev.log('E-mail $normalizedEmail trouvé dans config/participants-emails (Map)', name: 'AUTH_REMOTE_DS');
-            return true;
-          }
-        } else {
-          if (data.containsKey(normalizedEmail) || data.containsKey(email)) {
+            dev.log('E-mail $normalizedEmail confirmé dans config/participants-emails (emails)', name: 'AUTH_REMOTE_DS');
             return true;
           }
         }
-      }
-
-      // 2. Variante avec underscore : config/participants_emails
-      final docSnapUnderscore = await firestore.collection('config').doc('participants_emails').get();
-      if (docSnapUnderscore.exists && docSnapUnderscore.data() != null) {
-        final data = docSnapUnderscore.data()!;
-        final rawEmails = data['emails'] ?? data['list'] ?? data['participants'];
-        if (rawEmails is List) {
-          final isFound = rawEmails.any((e) => e.toString().trim().toLowerCase() == normalizedEmail);
-          if (isFound) {
-            dev.log('E-mail $normalizedEmail trouvé dans config/participants_emails (List)', name: 'AUTH_REMOTE_DS');
-            return true;
-          }
-        }
-      }
-
-      // 3. Collection directe : participants-emails/{normalizedEmail}
-      final directColDoc = await firestore.collection('participants-emails').doc(normalizedEmail).get();
-      if (directColDoc.exists) {
-        dev.log('E-mail $normalizedEmail trouvé dans la collection participants-emails', name: 'AUTH_REMOTE_DS');
-        return true;
       }
     } catch (e, st) {
-      dev.log('Erreur lors de la vérification de la liste des participants', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+      dev.log('Erreur lors de la vérification dans config/participants-emails', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
     }
 
     return false;
