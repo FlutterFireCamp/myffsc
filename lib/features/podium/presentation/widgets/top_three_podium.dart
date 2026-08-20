@@ -88,7 +88,7 @@ class TopThreePodium extends StatelessWidget {
                 const Color(0xFF7C2D12).withValues(alpha: 0.08),
               ],
               borderColor: const Color(0xFFD97706),
-              pointsTextColor: Colors.white,
+              pointsTextColor: const Color(0xFFD97706),
               levelTextColor: const Color(0xFFD97706).withValues(alpha: 0.80),
             )
           else
@@ -164,7 +164,7 @@ class TopThreePodium extends StatelessWidget {
 
           // User Name
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 1.w),
+            padding: .symmetric(horizontal: 1.w),
             child: Text(
               user.name.split(' ').first.toUpperCase(),
               textAlign: .center,
@@ -180,24 +180,23 @@ class TopThreePodium extends StatelessWidget {
 
           // Country Flag
           if (user.flag.isNotEmpty)
-            Text(
-              user.flag,
-              style: const TextStyle(fontSize: 14),
-            ),
+            Text(user.flag, style: const TextStyle(fontSize: 14)),
           SizedBox(height: 1.h),
 
           // Pedestal Box (Without bottom border, with top-down gradient)
           Container(
             width: double.infinity,
             height: pedestalHeight,
-            padding: EdgeInsets.symmetric(vertical: 0.8.h),
+            padding: .symmetric(vertical: 0.8.h),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: gradientColors,
               ),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
               border: Border(
                 top: BorderSide(color: borderColor, width: 1.5),
                 left: BorderSide(color: borderColor, width: 1.5),
@@ -215,7 +214,7 @@ class TopThreePodium extends StatelessWidget {
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: pointsTextColor,
                     fontWeight: .bold,
-                    fontSize: isFirst ? 14.sp : 13.sp,
+                    fontSize: isFirst ? 15.sp : 14.sp,
                   ),
                 ),
                 Text(
