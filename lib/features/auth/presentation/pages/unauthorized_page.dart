@@ -15,7 +15,7 @@ class UnauthorizedPage extends StatelessWidget {
   const UnauthorizedPage({super.key, this.user});
 
   Future<void> _launchEmail(BuildContext context) async {
-    const email = 'flutterfiresummer@gmail.com';
+    const email = 'support@flutterfirecamp.dev';
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: email,
@@ -276,7 +276,7 @@ class UnauthorizedPage extends StatelessWidget {
                               AppIcons.mail(color: AppColors.skyBlue, size: 18),
                               Flexible(
                                 child: Text(
-                                  "flutterfiresummer@gmail.com",
+                                  "support@flutterfirecamp.dev",
                                   style: AppTextStyles.bodyMedium.copyWith(
                                     color: AppColors.skyBlue,
                                     fontWeight: .w600,
