@@ -5,6 +5,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// Handler top-level pour traiter les messages FCM en arrière-plan et écran verrouillé.
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  dev.log(
+    'Message FCM d’arrière-plan reçu: ${message.messageId}, data: ${message.data}',
+    name: 'NOTIFICATION_SERVICE',
+  );
+}
+
 /// Service centralisé pour la gestion des notifications push Firebase (FCM)
 /// et des notifications locales avec redirection interactive.
 class NotificationService {
@@ -33,20 +42,22 @@ class NotificationService {
     try {
       dev.log('Initialisation du NotificationService...', name: 'NOTIFICATION_SERVICE');
 
-      // 1. Demande des permissions utilisateur (iOS & Android 13+)
-      final settings = await _fcm.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-        provisional: false,
-      );
+      // 1. Enregistrement du background message handler FCM
+      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
-      dev.log(
-        'Statut des permissions FCM: ${settings.authorizationStatus}',
-        name: 'NOTIFICATION_SERVICE',
-      );
+      // 2. Demande des permissions utilisateur (iOS, Web & Android 13+)
+      try {
+        await _fcm.requestPermission(
+          alert: true,
+          badge: true,
+          sound: true,
+          provisional: false,
+        );
+      } catch (e) {
+        dev.log('Avertissement FCM requestPermission: $e', name: 'NOTIFICATION_SERVICE');
+      }
 
-      // 2. Configuration des notifications locales pour le premier plan
+      // 3. Configuration des notifications locales pour le premier plan
       const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosInit = DarwinInitializationSettings(
         requestAlertPermission: true,
@@ -60,25 +71,33 @@ class NotificationService {
       );
 
       await _localNotifications.initialize(
-        initSettings,
+        settings: initSettings,
         onDidReceiveNotificationResponse: (NotificationResponse response) {
           _handleNotificationPayload(response.payload, onNavigate: onNavigate);
         },
       );
 
-      // 3. Création du canal Android haute importance
-      const androidChannel = AndroidNotificationChannel(
-        _channelId,
-        _channelName,
-        description: _channelDescription,
-        importance: Importance.max,
-        playSound: true,
-      );
-
-      await _localNotifications
+      // 4. Création du canal Android haute importance et demande permission native Android 13+
+      final androidPlugin = _localNotifications
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(androidChannel);
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      if (androidPlugin != null) {
+        try {
+          await androidPlugin.requestNotificationsPermission();
+        } catch (_) {}
+
+        const androidChannel = AndroidNotificationChannel(
+          _channelId,
+          _channelName,
+          description: _channelDescription,
+          importance: Importance.max,
+          playSound: true,
+          enableVibration: true,
+        );
+
+        await androidPlugin.createNotificationChannel(androidChannel);
+      }
 
       // 4. Écoute des messages en avant-plan (Foreground)
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -122,7 +141,13 @@ class NotificationService {
   /// Synchronise le token FCM de l'utilisateur dans son document Firestore.
   Future<void> syncUserFcmToken(String userId) async {
     try {
-      final token = await _fcm.getToken();
+      String? token;
+      try {
+        token = await _fcm.getToken();
+      } catch (e) {
+        dev.log('Impossible de récupérer le token FCM pour l’instant: $e', name: 'NOTIFICATION_SERVICE');
+      }
+
       if (token != null && token.isNotEmpty) {
         dev.log('Enregistrement du token FCM pour l’utilisateur $userId: $token', name: 'NOTIFICATION_SERVICE');
         await _firestore.collection('users').doc(userId).set({
@@ -147,6 +172,8 @@ class NotificationService {
             stackTrace: stackTrace,
           );
         }
+      }, onError: (err) {
+        dev.log('Erreur stream onTokenRefresh: $err', name: 'NOTIFICATION_SERVICE');
       });
     } catch (e, stackTrace) {
       dev.log(
@@ -184,10 +211,10 @@ class NotificationService {
       final payload = jsonEncode(data);
 
       await _localNotifications.show(
-        DateTime.now().millisecondsSinceEpoch ~/ 1000,
-        title,
-        body,
-        notificationDetails,
+        id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title: title,
+        body: body,
+        notificationDetails: notificationDetails,
         payload: payload,
       );
     } catch (e, stackTrace) {
