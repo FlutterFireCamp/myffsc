@@ -164,11 +164,12 @@ class LoginPage extends StatelessWidget {
                                               },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: AppColors.skyBlue,
-                                          foregroundColor: Colors.white,
+                                          foregroundColor: const Color(0xFF070A13),
                                           disabledBackgroundColor: AppColors
                                               .skyBlue
                                               .withValues(alpha: 0.65),
-                                          disabledForegroundColor: Colors.white,
+                                          disabledForegroundColor:
+                                              const Color(0xFF070A13),
                                           padding: EdgeInsets.symmetric(
                                             vertical: 1.8.h,
                                           ),
@@ -179,8 +180,7 @@ class LoginPage extends StatelessWidget {
                                         ),
                                         child: isLoading
                                             ? Row(
-                                                mainAxisAlignment: .center,
-                                                spacing: 3.w,
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   const SizedBox(
                                                     width: 22,
@@ -188,32 +188,33 @@ class LoginPage extends StatelessWidget {
                                                     child:
                                                         CircularProgressIndicator(
                                                           strokeWidth: 2.5,
-                                                          color: Colors.white,
+                                                          color: Color(0xFF070A13),
                                                         ),
                                                   ),
+                                                  SizedBox(width: 3.w),
                                                   Text(
                                                     "Connexion en cours...",
                                                     style: AppTextStyles.button
                                                         .copyWith(
-                                                          color: Colors.white,
-                                                          fontWeight: .bold,
+                                                          color: const Color(0xFF070A13),
+                                                          fontWeight: FontWeight.bold,
                                                         ),
                                                   ),
                                                 ],
                                               )
                                             : Row(
-                                                mainAxisAlignment: .center,
-                                                spacing: 3.w,
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   AppIcons.google(
-                                                    color: Colors.white,
+                                                    color: const Color(0xFF070A13),
                                                     size: 20,
                                                   ),
+                                                  SizedBox(width: 3.w),
                                                   Text(
                                                     "Continuer avec Google",
                                                     style: AppTextStyles.button
                                                         .copyWith(
-                                                          color: Colors.white,
+                                                          color: const Color(0xFF070A13),
                                                           fontWeight: FontWeight.bold,
                                                         ),
                                                   ),
