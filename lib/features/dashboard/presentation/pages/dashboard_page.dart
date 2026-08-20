@@ -2,52 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
-import '../bloc/dashboard_bloc.dart';
-import '../bloc/dashboard_event.dart';
-import '../bloc/dashboard_state.dart';
 import '../widgets/dashboard_header_banner.dart';
-import '../widgets/dashboard_shimmer.dart';
 import '../widgets/quick_action_card.dart';
-import '../widgets/today_program_card.dart';
 
-class DashboardPage extends StatefulWidget {
+class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
-
-  @override
-  State<DashboardPage> createState() => _DashboardPageState();
-}
-
-class _DashboardPageState extends State<DashboardPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<DashboardBloc>().add(const FetchDashboardDataEvent());
-  }
-
-  Future<void> _launchExternalUrl(String? urlString) async {
-    if (urlString == null || urlString.trim().isEmpty) return;
-    final Uri url = Uri.parse(
-      urlString.startsWith('http') ? urlString : 'https://$urlString',
-    );
-    try {
-      if (!await launchUrl(url, mode: .externalApplication)) {
-        if (mounted) {
-          AppSnackBar.showError(
-            context,
-            "Impossible d'ouvrir le lien : $urlString",
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        AppSnackBar.showError(context, "Erreur lors de l'ouverture : $e");
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +27,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
     void handlePrograms() => context.go('/programs');
     void handleAnnouncements() => context.go('/announcements');
+    void handleTests() => context.go('/tests');
+    void handlePodium() => context.go('/podium');
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -116,93 +80,88 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
-      body: BlocBuilder<DashboardBloc, DashboardState>(
-        builder: (context, state) {
-          if (state is DashboardLoadingState || state is DashboardInitialState) {
-            return const DashboardShimmer();
-          }
+      body: ListView(
+        primary: false,
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        children: [
+          // Header Level Progress Banner
+          DashboardHeaderBanner(
+            userLevel: currentUser.level,
+            totalPoints: currentUser.totalPoints,
+            onActionTap: handlePrograms,
+          ),
+          SizedBox(height: 3.h),
 
-          final todayProgram =
-              state is DashboardLoadedState ? state.todayProgram : null;
+          // Quick Actions Grid Header
+          Text(
+            "Aujourd'hui dans le Camp",
+            style: AppTextStyles.titleLarge,
+          ),
+          SizedBox(height: 1.5.h),
 
-          return RefreshIndicator(
-            color: AppColors.skyBlue,
-            onRefresh: () async {
-              context
-                  .read<DashboardBloc>()
-                  .add(const FetchDashboardDataEvent(isRefresh: true));
-            },
-            child: ListView(
-              primary: false,
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-              children: [
-                // Header Level Progress Banner
-                DashboardHeaderBanner(
-                  userLevel: currentUser.level,
-                  totalPoints: currentUser.totalPoints,
-                  onActionTap: handlePrograms,
+          // Row 1: Programmes & Annonces
+          Row(
+            spacing: 3.w,
+            children: [
+              Expanded(
+                child: QuickActionCard(
+                  title: "Programmes",
+                  subtitle: "Agenda complet",
+                  icon: AppIcons.programs(
+                    color: AppColors.actionBlue,
+                    size: AppSizes.iconLg,
+                  ),
+                  backgroundColor: AppColors.actionBlue,
+                  onTap: handlePrograms,
                 ),
-                SizedBox(height: 2.h),
+              ),
+              Expanded(
+                child: QuickActionCard(
+                  title: "Annonces",
+                  subtitle: "Fil d'actualité",
+                  icon: AppIcons.announcements(
+                    color: AppColors.skyBlue,
+                    size: AppSizes.iconLg,
+                  ),
+                  backgroundColor: AppColors.skyBlue,
+                  onTap: handleAnnouncements,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 1.5.h),
 
-                // Programme du jour ou à venir
-                Text(
-                  (todayProgram != null && todayProgram.isToday)
-                      ? "Programme du jour"
-                      : "Programme à venir",
-                  style: AppTextStyles.titleLarge,
+          // Row 2: Évaluations & Podium
+          Row(
+            spacing: 3.w,
+            children: [
+              Expanded(
+                child: QuickActionCard(
+                  title: "Évaluations",
+                  subtitle: "Tests du jour",
+                  icon: AppIcons.tests(
+                    color: AppColors.programTestBadge,
+                    size: AppSizes.iconLg,
+                  ),
+                  backgroundColor: AppColors.programTestBadge,
+                  onTap: handleTests,
                 ),
-                SizedBox(height: 1.h),
-                todayProgram == null
-                    ? const AppEmptyState(
-                        title: "Aucun programme prévu aujourd'hui",
-                        message:
-                            "Consultez l'onglet Programmes pour découvrir les prochaines sessions.",
-                      )
-                    : TodayProgramCard(
-                        program: todayProgram,
-                        onLaunchUrl: _launchExternalUrl,
-                      ),
-                SizedBox(height: 2.h),
-
-                // Quick Actions Grid
-                Text(
-                  "Aujourd'hui dans le Camp",
-                  style: AppTextStyles.titleLarge,
+              ),
+              Expanded(
+                child: QuickActionCard(
+                  title: "Podium",
+                  subtitle: "Classement général",
+                  icon: AppIcons.podium(
+                    color: AppColors.gold,
+                    size: AppSizes.iconLg,
+                  ),
+                  backgroundColor: AppColors.gold,
+                  onTap: handlePodium,
                 ),
-                SizedBox(height: 1.h),
-                Row(
-                  spacing: 3.w,
-                  children: [
-                    Expanded(
-                      child: QuickActionCard(
-                        title: "Programmes",
-                        subtitle: "Agenda complet",
-                        icon: AppIcons.programs(
-                          color: AppColors.actionBlue,
-                          size: AppSizes.iconLg,
-                        ),
-                        backgroundColor: AppColors.actionBlue,
-                        onTap: handlePrograms,
-                      ),
-                    ),
-                    Expanded(
-                      child: QuickActionCard(
-                        title: "Annonces",
-                        subtitle: "Fil d'actualité",
-                        icon: AppIcons.announcements(
-                          color: AppColors.skyBlue,
-                          size: AppSizes.iconLg,
-                        ),
-                        backgroundColor: AppColors.skyBlue,
-                        onTap: handleAnnouncements,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

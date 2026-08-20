@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class AppRadius {
   AppRadius._();
 
+  static const double r4 = 4.0;
   static const double r6 = 6.0;
   static const double r8 = 8.0;
   static const double r10 = 10.0;
@@ -16,6 +17,7 @@ class AppRadius {
   static const double r32 = 32.0;
   static const double circular = 999.0;
 
+  static const BorderRadius circular4 = BorderRadius.all(Radius.circular(r4));
   static const BorderRadius circular6 = BorderRadius.all(Radius.circular(r6));
   static const BorderRadius circular8 = BorderRadius.all(Radius.circular(r8));
   static const BorderRadius circular10 = BorderRadius.all(Radius.circular(r10));

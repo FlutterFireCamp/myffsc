@@ -30,7 +30,8 @@ class TestAlreadySubmittedCard extends StatelessWidget {
       if (q.type == 'choice' && q.correctAnswers != null && ans != null) {
         final intAns = ans is int ? ans : int.tryParse(ans.toString());
         if (intAns != null) {
-          isCorrect = q.correctAnswers!.contains(intAns) ||
+          isCorrect =
+              q.correctAnswers!.contains(intAns) ||
               q.correctAnswers!.contains(intAns - 1) ||
               q.correctAnswers!.contains(intAns + 1);
         }
@@ -66,14 +67,11 @@ class TestAlreadySubmittedCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(5.w),
+      padding: .all(5.w),
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: AppRadius.circular20,
-        border: Border.all(
-          color: AppColors.correctBorder,
-          width: 1.5,
-        ),
+        border: .all(color: AppColors.programTestBorder, width: 1.5),
       ),
       child: Column(
         crossAxisAlignment: .start,
@@ -83,26 +81,20 @@ class TestAlreadySubmittedCard extends StatelessWidget {
             mainAxisAlignment: .spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 3.w,
-                  vertical: 0.6.h,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
                 decoration: BoxDecoration(
-                  color: AppColors.correctContainer,
+                  color: AppColors.programTestBadgeBg,
                   borderRadius: AppRadius.circular8,
                 ),
                 child: Row(
                   mainAxisSize: .min,
                   spacing: 1.w,
                   children: [
-                    AppIcons.check(
-                      color: AppColors.correctText,
-                      size: 16,
-                    ),
+                    AppIcons.check(color: AppColors.programTestBadge, size: 16),
                     Text(
                       "DÉJÀ SOUMIS",
                       style: AppTextStyles.badgeSmall.copyWith(
-                        color: AppColors.correctText,
+                        color: AppColors.programTestBadge,
                         fontWeight: .bold,
                       ),
                     ),

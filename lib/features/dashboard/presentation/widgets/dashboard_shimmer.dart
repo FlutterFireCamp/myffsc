@@ -7,75 +7,154 @@ class DashboardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.all(5.w),
-      children: [
-        // 1. Header Banner Skeleton
-        AppShimmer(
-          child: Container(
-            height: 18.h,
+    return AppShimmer(
+      child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        children: [
+          // 1. Header Level Progress Banner Skeleton
+          Container(
+            padding: EdgeInsets.all(5.w),
             decoration: BoxDecoration(
               color: AppColors.card,
               borderRadius: AppRadius.circular20,
+              border: Border.all(color: AppColors.borderSubtle),
+            ),
+            child: Column(
+              crossAxisAlignment: .start,
+              children: [
+                Row(
+                  mainAxisAlignment: .spaceBetween,
+                  children: [
+                    AppShimmerBox(
+                      width: 45.w,
+                      height: 3.h,
+                      borderRadius: AppRadius.circular10,
+                      color: const Color(0xFF26354D),
+                    ),
+                    const AppShimmerCircle(
+                      radius: 16,
+                      color: Color(0xFF26354D),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 2.h),
+                AppShimmerBox(
+                  width: 55.w,
+                  height: 2.6.h,
+                  color: const Color(0xFF2E3E59),
+                ),
+                SizedBox(height: 0.8.h),
+                AppShimmerBox(
+                  width: 85.w,
+                  height: 1.6.h,
+                  color: const Color(0xFF1E293B),
+                ),
+                SizedBox(height: 2.h),
+                Row(
+                  mainAxisAlignment: .spaceBetween,
+                  children: [
+                    AppShimmerBox(
+                      width: 35.w,
+                      height: 1.8.h,
+                      color: const Color(0xFF222F44),
+                    ),
+                    AppShimmerBox(
+                      width: 12.w,
+                      height: 1.8.h,
+                      color: const Color(0xFF26354D),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 1.h),
+                AppShimmerBox(
+                  width: double.infinity,
+                  height: 8,
+                  borderRadius: AppRadius.circular10,
+                  color: const Color(0xFF1E293B),
+                ),
+              ],
             ),
           ),
-        ),
-        SizedBox(height: 2.5.h),
+          SizedBox(height: 2.5.h),
 
-        // 2. Quick Action Cards Row Skeleton
-        Row(
-          spacing: 3.w,
-          children: [
-            Expanded(
-              child: AppShimmer(
+          // 2. Section Header
+          AppShimmerBox(
+            width: 50.w,
+            height: 2.4.h,
+            color: const Color(0xFF26354D),
+          ),
+          SizedBox(height: 1.5.h),
+
+          // 3. Quick Action Cards Row Skeleton
+          Row(
+            spacing: 3.w,
+            children: [
+              Expanded(
                 child: Container(
-                  height: 12.h,
+                  padding: EdgeInsets.all(4.w),
                   decoration: BoxDecoration(
                     color: AppColors.card,
                     borderRadius: AppRadius.circular16,
+                    border: Border.all(color: AppColors.borderSubtle),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    children: [
+                      const AppShimmerCircle(
+                        radius: 18,
+                        color: Color(0xFF26354D),
+                      ),
+                      SizedBox(height: 1.5.h),
+                      AppShimmerBox(
+                        width: 25.w,
+                        height: 2.h,
+                        color: const Color(0xFF2E3E59),
+                      ),
+                      SizedBox(height: 0.6.h),
+                      AppShimmerBox(
+                        width: 20.w,
+                        height: 1.4.h,
+                        color: const Color(0xFF1E293B),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            Expanded(
-              child: AppShimmer(
+              Expanded(
                 child: Container(
-                  height: 12.h,
+                  padding: EdgeInsets.all(4.w),
                   decoration: BoxDecoration(
                     color: AppColors.card,
                     borderRadius: AppRadius.circular16,
+                    border: Border.all(color: AppColors.borderSubtle),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    children: [
+                      const AppShimmerCircle(
+                        radius: 18,
+                        color: Color(0xFF26354D),
+                      ),
+                      SizedBox(height: 1.5.h),
+                      AppShimmerBox(
+                        width: 25.w,
+                        height: 2.h,
+                        color: const Color(0xFF2E3E59),
+                      ),
+                      SizedBox(height: 0.6.h),
+                      AppShimmerBox(
+                        width: 20.w,
+                        height: 1.4.h,
+                        color: const Color(0xFF1E293B),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 3.h),
-
-        // 3. Section Header Skeleton
-        AppShimmer(
-          child: Container(
-            height: 2.5.h,
-            width: 40.w,
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: AppRadius.circular8,
-            ),
+            ],
           ),
-        ),
-        SizedBox(height: 1.5.h),
-
-        // 4. Program Card Skeleton
-        AppShimmer(
-          child: Container(
-            height: 20.h,
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: AppRadius.circular16,
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
