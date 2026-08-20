@@ -18,7 +18,7 @@ class TopThreePodium extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
+      padding: EdgeInsets.fromLTRB(2.w, 2.h, 2.w, 0),
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: AppRadius.circular20,
@@ -29,41 +29,62 @@ class TopThreePodium extends StatelessWidget {
         crossAxisAlignment: .end,
         spacing: 1.5.w,
         children: [
-          // 2nd Place (Left)
+          // 2nd Place (Left - Silver)
           if (second != null)
             _buildPodiumColumn(
               user: second,
               rankText: "2e",
-              badgeColor: AppColors.silver,
+              badgeColor: const Color(0xFF94A3B8), // Silver
               badgeTextColor: Colors.white,
               pedestalHeight: 8.5.h,
               isFirst: false,
+              gradientColors: [
+                const Color(0xFF334155).withValues(alpha: 0.40),
+                const Color(0xFF1E293B).withValues(alpha: 0.10),
+              ],
+              borderColor: const Color(0xFF64748B),
+              pointsTextColor: Colors.white,
+              levelTextColor: Colors.white.withValues(alpha: 0.65),
             )
           else
             const Expanded(child: SizedBox.shrink()),
 
-          // 1st Place (Center - Elevated)
+          // 1st Place (Center - Gold Elevated)
           if (first != null)
             _buildPodiumColumn(
               user: first,
               rankText: "1er",
-              badgeColor: AppColors.gold,
+              badgeColor: const Color(0xFFFBBF24), // Gold
               badgeTextColor: Colors.black,
-              pedestalHeight: 10.5.h,
+              pedestalHeight: 11.h,
               isFirst: true,
+              gradientColors: [
+                const Color(0xFFF59E0B).withValues(alpha: 0.28),
+                const Color(0xFFB45309).withValues(alpha: 0.06),
+              ],
+              borderColor: const Color(0xFFFBBF24),
+              pointsTextColor: const Color(0xFFFBBF24),
+              levelTextColor: const Color(0xFFFBBF24).withValues(alpha: 0.80),
             )
           else
             const Expanded(child: SizedBox.shrink()),
 
-          // 3rd Place (Right)
+          // 3rd Place (Right - Bronze)
           if (third != null)
             _buildPodiumColumn(
               user: third,
               rankText: "3e",
-              badgeColor: AppColors.bronze,
+              badgeColor: const Color(0xFFD97706), // Bronze
               badgeTextColor: Colors.white,
               pedestalHeight: 7.5.h,
               isFirst: false,
+              gradientColors: [
+                const Color(0xFFEA580C).withValues(alpha: 0.28),
+                const Color(0xFF7C2D12).withValues(alpha: 0.08),
+              ],
+              borderColor: const Color(0xFFD97706),
+              pointsTextColor: Colors.white,
+              levelTextColor: const Color(0xFFD97706).withValues(alpha: 0.80),
             )
           else
             const Expanded(child: SizedBox.shrink()),
@@ -79,6 +100,10 @@ class TopThreePodium extends StatelessWidget {
     required Color badgeTextColor,
     required double pedestalHeight,
     required bool isFirst,
+    required List<Color> gradientColors,
+    required Color borderColor,
+    required Color pointsTextColor,
+    required Color levelTextColor,
   }) {
     final avatarRadius = isFirst ? 26.0 : 20.0;
 
@@ -123,6 +148,7 @@ class TopThreePodium extends StatelessWidget {
                     rankText,
                     style: AppTextStyles.badge.copyWith(
                       color: badgeTextColor,
+                      fontWeight: .bold,
                     ),
                   ),
                 ),
@@ -132,54 +158,68 @@ class TopThreePodium extends StatelessWidget {
           SizedBox(height: 1.5.h),
 
           // User Name
-          Text(
-            user.name.split(' ').first,
-            textAlign: .center,
-            maxLines: 1,
-            overflow: .ellipsis,
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: .bold,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 1.w),
+            child: Text(
+              user.name.split(' ').first.toUpperCase(),
+              textAlign: .center,
+              maxLines: 1,
+              overflow: .ellipsis,
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: .bold,
+              ),
             ),
           ),
-          SizedBox(height: 0.2.h),
+          SizedBox(height: 0.3.h),
 
           // Country Flag
-          if (user.flag.isNotEmpty) Text(user.flag),
+          if (user.flag.isNotEmpty)
+            Text(
+              user.flag,
+              style: const TextStyle(fontSize: 14),
+            ),
           SizedBox(height: 1.h),
 
-          // Pedestal Box
+          // Pedestal Box (Without bottom border, with top-down gradient)
           Container(
             width: double.infinity,
             height: pedestalHeight,
-            padding: EdgeInsets.symmetric(vertical: 1.h),
+            padding: EdgeInsets.symmetric(vertical: 0.8.h),
             decoration: BoxDecoration(
-              color: isFirst
-                  ? badgeColor.withValues(alpha: 0.12)
-                  : AppColors.cardHover.withValues(alpha: 0.8),
-              borderRadius: AppRadius.circular14,
-              border: Border.all(
-                color: isFirst
-                    ? badgeColor.withValues(alpha: 0.7)
-                    : AppColors.borderSubtle,
-                width: isFirst ? 1.5 : 1.0,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: gradientColors,
+              ),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+              border: Border(
+                top: BorderSide(color: borderColor, width: 1.5),
+                left: BorderSide(color: borderColor, width: 1.5),
+                right: BorderSide(color: borderColor, width: 1.5),
+                bottom: BorderSide.none, // Pas de bordure en bas
               ),
             ),
             child: Column(
               mainAxisAlignment: .center,
-              spacing: 0.2.h,
+              spacing: 0.3.h,
               children: [
                 Text(
                   "${user.totalPoints} pts",
                   textAlign: .center,
-                  style: AppTextStyles.metricValue.copyWith(
-                    color: isFirst ? badgeColor : AppColors.textPrimary,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: pointsTextColor,
+                    fontWeight: .bold,
+                    fontSize: isFirst ? 14.sp : 13.sp,
                   ),
                 ),
                 Text(
                   "Niv. ${user.level}",
                   textAlign: .center,
-                  style: AppTextStyles.metricLabel,
+                  style: AppTextStyles.captionSmall.copyWith(
+                    color: levelTextColor,
+                    fontWeight: .w600,
+                  ),
                 ),
               ],
             ),

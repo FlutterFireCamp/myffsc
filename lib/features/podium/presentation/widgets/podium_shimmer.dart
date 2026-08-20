@@ -12,7 +12,7 @@ class PodiumShimmer extends StatelessWidget {
       children: [
         // 1. Top 3 Podium Skeletons
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 2.h),
+          padding: EdgeInsets.fromLTRB(2.w, 2.h, 2.w, 0),
           decoration: BoxDecoration(
             color: AppColors.card,
             borderRadius: AppRadius.circular20,
