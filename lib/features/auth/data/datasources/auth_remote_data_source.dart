@@ -161,9 +161,65 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  /// Finds an existing user document where `email == user.email` (or docId == firebaseUid).
-  /// Updates only `photoUrl` if changed and returns the UserModel.
-  /// Never creates a new document in Firestore.
+  /// Vérifie si l'adresse e-mail figure dans la collection/document config/participants-emails.
+  Future<bool> _isEmailInParticipantsList(String email) async {
+    if (email.trim().isEmpty) return false;
+    final normalizedEmail = email.trim().toLowerCase();
+
+    try {
+      dev.log('Vérification de $normalizedEmail dans config/participants-emails...', name: 'AUTH_REMOTE_DS');
+
+      // 1. Recherche dans le document config/participants-emails (tableau 'emails' ou 'list')
+      final docSnap = await firestore.collection('config').doc('participants-emails').get();
+      if (docSnap.exists && docSnap.data() != null) {
+        final data = docSnap.data()!;
+        final rawEmails = data['emails'] ?? data['list'] ?? data['participants'] ?? data['data'];
+        if (rawEmails is List) {
+          final isFound = rawEmails.any((e) => e.toString().trim().toLowerCase() == normalizedEmail);
+          if (isFound) {
+            dev.log('E-mail $normalizedEmail trouvé dans config/participants-emails (List)', name: 'AUTH_REMOTE_DS');
+            return true;
+          }
+        } else if (rawEmails is Map) {
+          if (rawEmails.containsKey(normalizedEmail) || rawEmails.containsKey(email)) {
+            dev.log('E-mail $normalizedEmail trouvé dans config/participants-emails (Map)', name: 'AUTH_REMOTE_DS');
+            return true;
+          }
+        } else {
+          if (data.containsKey(normalizedEmail) || data.containsKey(email)) {
+            return true;
+          }
+        }
+      }
+
+      // 2. Variante avec underscore : config/participants_emails
+      final docSnapUnderscore = await firestore.collection('config').doc('participants_emails').get();
+      if (docSnapUnderscore.exists && docSnapUnderscore.data() != null) {
+        final data = docSnapUnderscore.data()!;
+        final rawEmails = data['emails'] ?? data['list'] ?? data['participants'];
+        if (rawEmails is List) {
+          final isFound = rawEmails.any((e) => e.toString().trim().toLowerCase() == normalizedEmail);
+          if (isFound) {
+            dev.log('E-mail $normalizedEmail trouvé dans config/participants_emails (List)', name: 'AUTH_REMOTE_DS');
+            return true;
+          }
+        }
+      }
+
+      // 3. Collection directe : participants-emails/{normalizedEmail}
+      final directColDoc = await firestore.collection('participants-emails').doc(normalizedEmail).get();
+      if (directColDoc.exists) {
+        dev.log('E-mail $normalizedEmail trouvé dans la collection participants-emails', name: 'AUTH_REMOTE_DS');
+        return true;
+      }
+    } catch (e, st) {
+      dev.log('Erreur lors de la vérification de la liste des participants', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+    }
+
+    return false;
+  }
+
+  /// Recherche un document existant ou vérifie la liste de configuration des participants.
   Future<UserModel> _fetchAndSyncExistingUserDoc({
     required String firebaseUid,
     required String? email,
@@ -172,7 +228,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     QueryDocumentSnapshot<Map<String, dynamic>>? existingDoc;
 
-    // 1. Primary search: Query Firestore for existing document where email == user.email
+    // 1. Recherche primaire : Document existant où email == user.email dans /users
     if (email != null && email.isNotEmpty) {
       final querySnap = await firestore
           .collection('users')
@@ -185,7 +241,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     }
 
-    // 2. Secondary search: Check doc with ID matching firebaseUid
+    // 2. Recherche secondaire : Document avec ID matching firebaseUid dans /users
     DocumentSnapshot<Map<String, dynamic>>? docByIdSnap;
     if (existingDoc == null) {
       final docSnap = await firestore.collection('users').doc(firebaseUid).get();
@@ -193,6 +249,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         docByIdSnap = docSnap;
       }
     }
+
+    final isParticipantInConfig = await _isEmailInParticipantsList(email ?? '');
 
     final docRefToUpdate = existingDoc != null
         ? existingDoc.reference
@@ -206,18 +264,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         ? existingDoc.id
         : (docByIdSnap != null ? docByIdSnap.id : firebaseUid);
 
+    // Cas 1 : Le document utilisateur existe déjà dans /users
     if (data != null && docRefToUpdate != null) {
-      // Sync photoUrl if present and changed
+      final updates = <String, dynamic>{};
+
+      // Si l'e-mail est dans la liste de configuration des participants et que le statut est en attente ou absent
+      if (isParticipantInConfig && (data['status'] == 'pending' || data['status'] == 'not_found')) {
+        dev.log('Validation automatique du statut utilisateur à "accepted" grâce à config/participants-emails', name: 'AUTH_REMOTE_DS');
+        updates['status'] = 'accepted';
+        data['status'] = 'accepted';
+      }
+
+      // Synchronisation photo de profil Google
       if (googlePhotoUrl != null && googlePhotoUrl.isNotEmpty) {
         if (data['photoUrl'] != googlePhotoUrl) {
-          dev.log('Updating photoUrl in existing user doc ($docId) to $googlePhotoUrl', name: 'AUTH_REMOTE_DS');
-          await docRefToUpdate.update({'photoUrl': googlePhotoUrl});
+          dev.log('Mise à jour photoUrl dans le document utilisateur ($docId)', name: 'AUTH_REMOTE_DS');
+          updates['photoUrl'] = googlePhotoUrl;
           data['photoUrl'] = googlePhotoUrl;
         }
       }
 
-      dev.log('Found existing user doc for email ($email) / docId ($docId)', name: 'AUTH_REMOTE_DS');
-      
+      if (updates.isNotEmpty) {
+        updates['updatedAt'] = FieldValue.serverTimestamp();
+        await docRefToUpdate.update(updates);
+      }
+
+      dev.log('Document utilisateur synchronisé pour $email ($docId)', name: 'AUTH_REMOTE_DS');
+
       // Synchronisation asynchrone du token FCM
       try {
         if (sl.isRegistered<NotificationService>()) {
@@ -230,10 +303,47 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return UserModel.fromMap(data, docId);
     }
 
-    // 3. If NO document exists in Firestore for this email/UID:
-    // DO NOT create a new document in Firestore per user requirements.
+    // Cas 2 : Aucun document dans /users mais l'e-mail EST dans config/participants-emails
+    if (isParticipantInConfig) {
+      dev.log('Création du document initial pour le participant $email ($firebaseUid) avec statut accepted', name: 'AUTH_REMOTE_DS');
+      final newUserData = <String, dynamic>{
+        'name': displayName ?? 'Apprenant FFSC',
+        'email': email ?? '',
+        'role': 'student',
+        'level': 1,
+        'status': 'accepted',
+        'totalPoints': 0,
+        'photoUrl': googlePhotoUrl,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      await firestore.collection('users').doc(firebaseUid).set(newUserData);
+
+      try {
+        if (sl.isRegistered<NotificationService>()) {
+          sl<NotificationService>().syncUserFcmToken(firebaseUid);
+        }
+      } catch (e, st) {
+        dev.log('Erreur lors du déclenchement syncUserFcmToken', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+      }
+
+      return UserModel(
+        id: firebaseUid,
+        name: displayName ?? 'Apprenant FFSC',
+        email: email ?? '',
+        role: 'student',
+        level: 1,
+        status: 'accepted',
+        totalPoints: 0,
+        photoUrl: googlePhotoUrl,
+        createdAt: DateTime.now().toIso8601String(),
+      );
+    }
+
+    // Cas 3 : Non trouvé dans /users ET non trouvé dans config/participants-emails
     dev.log(
-      'No pre-existing Firestore document found for email: $email. Returning unapproved user state (not_found) without creating Firestore doc.',
+      'Aucun document Firestore trouvé et e-mail non autorisé ($email). Statut: not_found.',
       name: 'AUTH_REMOTE_DS',
     );
     return UserModel(

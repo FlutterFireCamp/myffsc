@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
@@ -8,6 +9,27 @@ import '../bloc/auth_state.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
+
+  Future<void> _launchPrivacyPolicy(BuildContext context) async {
+    final isOnline = await NetworkHelper.checkConnection(context);
+    if (!isOnline) return;
+
+    final Uri url = Uri.parse('https://www.flutterfirecamp.dev/legal');
+    try {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        if (context.mounted) {
+          AppSnackBar.showError(
+            context,
+            "Impossible d'ouvrir le lien : https://www.flutterfirecamp.dev/legal",
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        AppSnackBar.showError(context, "Erreur lors de l'ouverture : $e");
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,11 +214,35 @@ class LoginPage extends StatelessWidget {
                                                     style: AppTextStyles.button
                                                         .copyWith(
                                                           color: Colors.white,
-                                                          fontWeight: .bold,
+                                                          fontWeight: FontWeight.bold,
                                                         ),
                                                   ),
                                                 ],
                                               ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 2.h),
+                                    Center(
+                                      child: InkWell(
+                                        onTap: () => _launchPrivacyPolicy(context),
+                                        borderRadius: AppRadius.circular8,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 2.w,
+                                            vertical: 0.8.h,
+                                          ),
+                                          child: Text(
+                                            "Politique de Confidentialité",
+                                            style: AppTextStyles.bodySmall
+                                                .copyWith(
+                                                  color: AppColors.skyBlue,
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  decorationColor:
+                                                      AppColors.skyBlue,
+                                                ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
