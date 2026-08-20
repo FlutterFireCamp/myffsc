@@ -13,51 +13,48 @@
 
 ## 📸 Aperçu & Fonctionnalités
 
-- 🔐 **Authentification & Contrôle d'Accès** : Authentification sécurisée via Google Sign-In avec vérification automatique des autorisations de l'apprenant. Les comptes non autorisés sont automatiquement redirigés vers un écran d'accès restreint.
-- 🖼️ **Gestion de Profil & Avatar** : Synchronisation automatique de la photo de profil utilisateur lors de la première connexion pour une expérience personnalisée.
-- ⚡ **Dashboard dynamique** : Salutation personnalisée (`Salut, {First_name} 👋🏾`), suivi de la progression par niveaux (Niveaux 1 à 4), résumé des points FFSC et accès direct à la prochaine session live.
-- 📚 **Programme d'Immersion** : Consultation des modules de formation et accès direct aux liens de sessions Meet live ou aux replays vidéo.
-- 📢 **Annonces du Camp** : Fil d'actualité en temps réel filtré par priorité (Urgent, Important, Info) et par niveau.
-- 📝 **Hub de Formulaires (Expandable FAB)** : Floating Action Button extensible permettant de soumettre :
-  - 🚀 Standups hebdomadaires
-  - 💻 Rendu de projets / liens GitHub
-  - 💬 Feedback & mentorat
+- 🔐 **Authentification & Contrôle d'Accès** : Authentification sécurisée via Google Sign-In avec vérification automatique des autorisations de l'apprenant. Les comptes en attente ou non autorisés sont redirigés vers un écran d'accès restreint.
+- 🖼️ **Gestion de Profil & Niveaux** : Photo de profil Google/avatar dynamique, suivi du statut d'acceptation, liens réseaux sociaux (Discord, GitHub, LinkedIn, Twitter/X) et historique complet des évaluations avec correction interactive.
+- ⚡ **Dashboard Dynamique** : Salutation personnalisée (`Salut, {First_name} 👋🏾`), suivi de progression par niveau adaptatif (Niveaux 1 à 4), résumé des points FFSC et accès rapide au programme du jour.
+- 📚 **Agenda & Programmes** : Consultation des sessions, workshops, conférences et groupes d'études avec conversion automatique des horaires GMT vers le fuseau horaire de l'appareil.
+- 📢 **Annonces en Temps Réel** : Fil d'actualité filtré par priorité (Urgent, Important, Info) et par niveau, avec support Markdown riche.
+- 🏆 **Podium & Classement** : Classement en direct des participants avec Top 3 sur socles dorés/argentés/bronzés, suivi du Top 10 et barre sticky du rang de l'utilisateur connecté.
+- 🧪 **Test & Évaluation du Jour** : Épreuve chronométrée en temps réel avec questions à choix multiples (QCM) ou ouvertes, gestion automatique du temps additionnel, détection d'arrière-plan anti-triche et soumission instantanée sur Firestore.
+- 📝 **Hub de Formulaires (Expandable FAB)** : Accès rapide aux formulaires Google officiels :
+  - 🚨 Signalements & alertes
+  - 💬 Retours sur les sessions & ateliers
   - 💡 Idées & suggestions
-  - 🚨 Signalements et alertes
-- 🧪 **Tests & Évaluations QCM** : Quiz interactifs chronométrés avec calcul du score en temps réel et explications détaillées des réponses.
-- 👤 **Profil Apprenant** : Badges, informations personnelles, indicateurs de points et déconnexion sécurisée.
+  - 🎓 Soumission de projets pour validation de certificat (Dart Niv 1, Flutter Niv 2, Firebase Niv 3)
 
 ---
 
 ## 🏗️ Architecture du Projet
 
-L'application respecte les principes de la **Clean Architecture** combinée au pattern **BLoC** (*Business Logic Component*) :
+L'application respecte les principes stricts de la **Clean Architecture** combinée au pattern **BLoC** (*Business Logic Component*) :
 
 ```text
 lib/
 ├── app.dart                    # MaterialApp.router & Sizer Setup
 ├── main.dart                   # Initialisation Firebase, GetIt & Point d'entrée
 ├── firebase_options.dart       # Configuration multi-plateformes Firebase
-├── core/                       # Ressources globales de l'application
+├── core/                       # Ressources globales du projet
 │   ├── core.dart               # Export barrel global du noyau
-│   ├── routes/                 # Gestion des routes via GoRouter
-│   │   ├── route_names.dart    # Noms des routes
-│   │   ├── route_paths.dart    # Paths des routes
-│   │   ├── routes_config.dart  # Redirections réactives & StatefulShellRoute
-│   │   └── routes.dart         # Barrel d'exportation des routes
-│   ├── theme/                  # Couleurs (#070A13), Icônes (HugeIcons), Outfit Font
+│   ├── helpers/                # LevelConfig, DateTimeHelper, NetworkHelper
+│   ├── routes/                 # Navigation déclarative GoRouter
+│   ├── theme/                  # Couleurs centralisées (AppColors), Typo Outfit, AppRadius
 │   ├── di/                     # Injection de dépendance via GetIt
 │   ├── error/                  # Gestion fonctionnelle des erreurs (fpdart)
-│   └── utils/                  # Classes de base (UseCase)
-└── features/                   # Fonctionnalités métier découpées (Data, Domain, Presentation)
-    ├── auth/
-    ├── dashboard/
-    ├── programs/
-    ├── announcements/
-    ├── forms/                  # Contient les widgets Expandable FAB
-    ├── tests/
-    ├── profile/
-    └── shared/                 # Bottom Navigation Scaffold réutilisable
+│   └── widgets/                # Composants UI partagés, EmptyState, Shimmers
+└── features/                   # Modules métiers indépendants (Data, Domain, Presentation)
+    ├── auth/                   # Connexion Google, synchronisation profil & vérification rôle
+    ├── dashboard/              # Accueil interactif & métriques
+    ├── programs/               # Agenda des sessions & filtres par type
+    ├── announcements/          # Flux d'actualités & filtres
+    ├── podium/                 # Classement général, Top 3 & Top 10
+    ├── tests/                  # Évaluation du jour, QCM chronométré & résultats
+    ├── profile/                # Profil, liens sociaux, historique d'évaluation
+    ├── forms/                  # Menu FAB d'accès aux formulaires & certificats
+    └── shared/                 # MainNavigationScaffold avec barre d'onglets persistante
 ```
 
 ---
