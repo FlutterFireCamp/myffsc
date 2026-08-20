@@ -61,27 +61,23 @@ class _TestsPageState extends State<TestsPage> {
 
             final quiz = state.activeQuiz;
 
-            // State 2: Aucun test disponible (Empty State)
+            // State 2: Aucun test disponible (Empty State centré sans ListView ni pull-to-refresh)
             if (quiz == null) {
-              return RefreshIndicator(
-                color: AppColors.skyBlue,
-                onRefresh: () async => _fetchTodayTest(),
-                child: ListView(
+              return Center(
+                child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
-                  children: [
-                    AppEmptyState(
-                      title: "Aucune évaluation disponible",
-                      message:
-                          "L'épreuve programmée s'affichera automatiquement ici dès le lancement de la session.",
-                      icon: AppIcons.tests(
-                        color: AppColors.skyBlue,
-                        size: AppSizes.iconXl,
-                      ),
-                      accentColor: AppColors.skyBlue,
-                      actionLabel: "Actualiser",
-                      onAction: _fetchTodayTest,
+                  child: AppEmptyState(
+                    title: "Aucune évaluation disponible",
+                    message:
+                        "L'épreuve programmée s'affichera automatiquement ici dès le lancement de la session.",
+                    icon: AppIcons.tests(
+                      color: AppColors.skyBlue,
+                      size: AppSizes.iconXl,
                     ),
-                  ],
+                    accentColor: AppColors.skyBlue,
+                    actionLabel: "Actualiser",
+                    onAction: _fetchTodayTest,
+                  ),
                 ),
               );
             }
@@ -96,32 +92,22 @@ class _TestsPageState extends State<TestsPage> {
               final status =
                   state.previousSubmission?['status']?.toString() ?? "Corrigé";
 
-              return RefreshIndicator(
-                color: AppColors.skyBlue,
-                onRefresh: () async => _fetchTodayTest(),
-                child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                  children: [
-                    TestAlreadySubmittedCard(
-                      quiz: quiz,
-                      score: score,
-                      totalPossibleScore: totalPossible,
-                      userAnswersMap: state.userAnswersMap,
-                      status: status,
-                    ),
-                  ],
+              return SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                child: TestAlreadySubmittedCard(
+                  quiz: quiz,
+                  score: score,
+                  totalPossibleScore: totalPossible,
+                  userAnswersMap: state.userAnswersMap,
+                  status: status,
                 ),
               );
             }
 
             // State 4: Test disponible à passer (Active Test State)
-            return RefreshIndicator(
-              color: AppColors.skyBlue,
-              onRefresh: () async => _fetchTodayTest(),
-              child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                children: [TestQuizCard(quiz: quiz)],
-              ),
+            return SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+              child: TestQuizCard(quiz: quiz),
             );
           },
         ),

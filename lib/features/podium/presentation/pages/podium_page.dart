@@ -164,31 +164,26 @@ class _PodiumPageState extends State<PodiumPage> {
                         ),
                         SizedBox(height: 1.h),
 
-                        // 3. Scrollable List of Ranks 4 to 10 Only
+                        // 3. Scrollable List of Ranks 4 to 10 Only (Refresh via AppBar Action)
                         Expanded(
-                          child: RefreshIndicator(
-                            color: AppColors.skyBlue,
-                            onRefresh: () async =>
-                                _fetchLeaderboard(isRefresh: true),
-                            child: ListView.builder(
-                              padding: EdgeInsets.only(
-                                left: 5.w,
-                                right: 5.w,
-                                top: 0.5.h,
-                                bottom: currentUser != null ? 10.h : 4.h,
-                              ),
-                              itemCount: remainingUsers.length,
-                              itemBuilder: (context, index) {
-                                final user = remainingUsers[index];
-                                final isMe =
-                                    currentUser != null &&
-                                    user.id == currentUser.id;
-                                return LeaderboardUserRow(
-                                  user: user,
-                                  isCurrentUser: isMe,
-                                );
-                              },
+                          child: ListView.builder(
+                            padding: EdgeInsets.only(
+                              left: 5.w,
+                              right: 5.w,
+                              top: 0.5.h,
+                              bottom: currentUser != null ? 10.h : 4.h,
                             ),
+                            itemCount: remainingUsers.length,
+                            itemBuilder: (context, index) {
+                              final user = remainingUsers[index];
+                              final isMe =
+                                  currentUser != null &&
+                                  user.id == currentUser.id;
+                              return LeaderboardUserRow(
+                                user: user,
+                                isCurrentUser: isMe,
+                              );
+                            },
                           ),
                         ),
                       ],
