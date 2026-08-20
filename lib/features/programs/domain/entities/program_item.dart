@@ -21,7 +21,7 @@ enum ProgramType {
       case ProgramType.studyGroup:
         return 'Groupe d\'étude';
       case ProgramType.test:
-        return 'Test / Évaluation';
+        return 'Évaluation';
     }
   }
 

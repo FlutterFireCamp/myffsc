@@ -52,7 +52,7 @@ class ProgramFilterTabs extends StatelessWidget {
             onTap: () => onSelectFilter(ProgramType.studyGroup),
           ),
           _buildFilterTab(
-            label: "Tests",
+            label: "Évaluation",
             isSelected: selectedTypeFilter == ProgramType.test,
             badgeColor: ProgramType.test.badgeColor,
             onTap: () => onSelectFilter(ProgramType.test),

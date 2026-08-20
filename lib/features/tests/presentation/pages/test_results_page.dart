@@ -264,7 +264,7 @@ class TestResultsPage extends StatelessWidget {
                       elevation: 0,
                     ),
                     child: Text(
-                      "Retour au hub d'évaluations",
+                      "Retour à l'évaluation",
                       style: AppTextStyles.button.copyWith(
                         color: Colors.white,
                         fontWeight: .bold,

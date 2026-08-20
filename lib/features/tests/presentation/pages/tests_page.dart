@@ -37,7 +37,7 @@ class _TestsPageState extends State<TestsPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text("Évaluations", style: AppTextStyles.h3),
+        title: Text("Évaluation", style: AppTextStyles.h3),
         backgroundColor: AppColors.background,
         elevation: 0,
         actions: [
@@ -72,7 +72,7 @@ class _TestsPageState extends State<TestsPage> {
                     AppEmptyState(
                       title: "Aucune évaluation disponible",
                       message:
-                          "Les épreuves programmées s'afficheront automatiquement ici dès le lancement de la session.",
+                          "L'épreuve programmée s'affichera automatiquement ici dès le lancement de la session.",
                       icon: AppIcons.tests(
                         color: AppColors.skyBlue,
                         size: AppSizes.iconXl,
