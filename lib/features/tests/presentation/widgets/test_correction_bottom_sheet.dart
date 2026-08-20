@@ -91,6 +91,12 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final questions = _questions ?? [];
+    final isPending = widget.status == 'pending';
+
+    final badgeLabel = isPending ? "En Attente" : "Corrigé";
+    final badgeColor = isPending
+        ? AppColors.firebaseYellow
+        : AppColors.correctText;
 
     return Container(
       constraints: BoxConstraints(maxHeight: 85.h),
@@ -128,14 +134,14 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
                   children: [
                     Text(
                       "Résultats & Correction de Test",
-                      style: AppTextStyles.titleMedium.copyWith(
+                      style: AppTextStyles.titleLarge.copyWith(
                         color: Colors.white,
                         fontWeight: .bold,
                       ),
                     ),
                     Text(
                       "${widget.quizTitle} • ${widget.dateFormatted}",
-                      style: AppTextStyles.captionSmall.copyWith(
+                      style: AppTextStyles.bodySmall.copyWith(
                         color: AppColors.textMuted,
                       ),
                     ),
@@ -144,18 +150,14 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
               ),
               InkWell(
                 onTap: () => Navigator.of(context).pop(),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: .circular(20),
                 child: Container(
-                  padding: const EdgeInsets.all(6),
+                  padding: const .all(6),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.1),
                     shape: .circle,
                   ),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white70,
-                    size: 18,
-                  ),
+                  child: AppIcons.cancel(size: 18),
                 ),
               ),
             ],
@@ -165,11 +167,11 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
           // Hero Score Card
           Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
+            padding: .symmetric(vertical: 2.h, horizontal: 4.w),
             decoration: BoxDecoration(
               color: AppColors.navyCard,
               borderRadius: AppRadius.circular16,
-              border: Border.all(color: AppColors.navyBorder),
+              border: .all(color: AppColors.navyBorder),
             ),
             child: Column(
               spacing: 0.6.h,
@@ -183,10 +185,8 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
                   ),
                 ),
                 Text(
-                  widget.status,
-                  style: AppTextStyles.badgeSmall.copyWith(
-                    color: Colors.white70,
-                  ),
+                  badgeLabel,
+                  style: AppTextStyles.bodySmall.copyWith(color: badgeColor),
                 ),
               ],
             ),
@@ -209,26 +209,28 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
                 ? const Center(
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
-                      child: CircularProgressIndicator(color: AppColors.actionBlue),
+                      child: CircularProgressIndicator(
+                        color: AppColors.actionBlue,
+                      ),
                     ),
                   )
                 : questions.isEmpty
-                    ? Center(
-                        child: Text(
-                          "Aucune question disponible pour cette évaluation.",
-                          style: AppTextStyles.caption
-                              .copyWith(color: AppColors.textMuted),
-                        ),
-                      )
-                    : ListView.separated(
-                        itemCount: questions.length,
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: 2.h),
-                        itemBuilder: (context, index) {
-                          final q = questions[index];
-                          return _buildQuestionCard(q);
-                        },
+                ? Center(
+                    child: Text(
+                      "Aucune question disponible pour cette évaluation.",
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.textMuted,
                       ),
+                    ),
+                  )
+                : ListView.separated(
+                    itemCount: questions.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 2.h),
+                    itemBuilder: (context, index) {
+                      final q = questions[index];
+                      return _buildQuestionCard(q);
+                    },
+                  ),
           ),
         ],
       ),
@@ -249,6 +251,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
       ),
       child: Column(
         crossAxisAlignment: .start,
+        spacing: 1.h,
         children: [
           // Header Row: Question Index (Left) & Points Badge (Right)
           Row(
@@ -263,8 +266,10 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
                 ),
               ),
               Container(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.4.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 2.5.w,
+                  vertical: 0.4.h,
+                ),
                 decoration: BoxDecoration(
                   color: isCorrect
                       ? AppColors.correctContainerDark
@@ -278,7 +283,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
                 ),
                 child: Text(
                   isCorrect ? "✓ $earned/$max pts" : "✕ $earned/$max pts",
-                  style: AppTextStyles.badgeSmall.copyWith(
+                  style: AppTextStyles.caption.copyWith(
                     color: isCorrect
                         ? AppColors.correctText
                         : AppColors.incorrectLight,
@@ -287,8 +292,6 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
               ),
             ],
           ),
-          SizedBox(height: 1.2.h),
-
           // Statement in Markdown format
           MarkdownBody(
             data: q.displayStatement,
@@ -297,10 +300,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
                 color: Colors.white,
                 height: 1.4,
               ),
-              strong: const TextStyle(
-                fontWeight: .bold,
-                color: Colors.white,
-              ),
+              strong: const TextStyle(fontWeight: .bold, color: Colors.white),
               code: TextStyle(
                 fontFamily: 'monospace',
                 fontSize: 10.sp,
@@ -314,18 +314,14 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
               ),
             ),
           ),
-          SizedBox(height: 1.8.h),
-
           // User's Answer Box ("Votre réponse :")
           _buildUserAnswerBox(q),
 
           // Correct / Expected Answer Box
-          SizedBox(height: 1.2.h),
           _buildExpectedAnswerBox(q),
 
           // Optional Explanation Box
           if (q.explanation != null && q.explanation!.trim().isNotEmpty) ...[
-            SizedBox(height: 1.2.h),
             Container(
               width: double.infinity,
               padding: EdgeInsets.all(3.w),
@@ -342,7 +338,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
                 children: [
                   Text(
                     "Explication :",
-                    style: AppTextStyles.captionSmall.copyWith(
+                    style: AppTextStyles.caption.copyWith(
                       color: AppColors.actionBlue,
                       fontWeight: .bold,
                     ),
@@ -350,7 +346,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
                   MarkdownBody(
                     data: q.explanation!.trim(),
                     styleSheet: MarkdownStyleSheet(
-                      p: AppTextStyles.caption.copyWith(
+                      p: AppTextStyles.bodySmall.copyWith(
                         color: Colors.white70,
                         height: 1.35,
                       ),
@@ -421,9 +417,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(8),
-        border: Border(
-          left: BorderSide(color: barColor, width: 3.5),
-        ),
+        border: Border(left: BorderSide(color: barColor, width: 3.5)),
       ),
       child: Column(
         crossAxisAlignment: .start,
@@ -431,7 +425,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
         children: [
           Text(
             "Votre réponse :",
-            style: AppTextStyles.captionSmall.copyWith(
+            style: AppTextStyles.caption.copyWith(
               color: labelColor,
               fontWeight: .bold,
             ),
@@ -439,7 +433,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
           MarkdownBody(
             data: answerText,
             styleSheet: MarkdownStyleSheet(
-              p: AppTextStyles.caption.copyWith(
+              p: AppTextStyles.bodySmall.copyWith(
                 color: Colors.white,
                 fontWeight: .w500,
                 height: 1.35,
@@ -486,8 +480,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
       if (q.expectedAnswer != null &&
           q.expectedAnswer.toString().trim().isNotEmpty) {
         correctText = q.expectedAnswer.toString().trim();
-      } else if (q.explanation != null &&
-          q.explanation!.trim().isNotEmpty) {
+      } else if (q.explanation != null && q.explanation!.trim().isNotEmpty) {
         correctText = q.explanation!.trim();
       } else {
         correctText = "Réponse validée selon les critères du barème.";
@@ -500,10 +493,10 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(3.w),
+      padding: .all(3.w),
       decoration: const BoxDecoration(
         color: AppColors.correctBoxBg,
-        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderRadius: .all(Radius.circular(8)),
         border: Border(
           left: BorderSide(color: AppColors.correctBar, width: 3.5),
         ),
@@ -514,7 +507,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
         children: [
           Text(
             boxTitle,
-            style: AppTextStyles.captionSmall.copyWith(
+            style: AppTextStyles.caption.copyWith(
               color: AppColors.correctText,
               fontWeight: .bold,
             ),
@@ -522,7 +515,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
           MarkdownBody(
             data: correctText,
             styleSheet: MarkdownStyleSheet(
-              p: AppTextStyles.caption.copyWith(
+              p: AppTextStyles.bodyMedium.copyWith(
                 color: Colors.white,
                 fontWeight: .w500,
                 height: 1.35,

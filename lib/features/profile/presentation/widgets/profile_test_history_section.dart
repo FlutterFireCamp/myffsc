@@ -13,10 +13,7 @@ class ProfileTestHistorySection extends StatelessWidget {
 
   const ProfileTestHistorySection({super.key, required this.userId});
 
-  void _handleViewDetails(
-    BuildContext context,
-    UserTestHistoryEntity item,
-  ) {
+  void _handleViewDetails(BuildContext context, UserTestHistoryEntity item) {
     final questionsFuture = sl<GetTestCorrectionDetailsUseCase>()(
       GetTestCorrectionDetailsParams(
         quizId: item.quizId,
@@ -148,7 +145,7 @@ class ProfileTestHistorySection extends StatelessWidget {
                     final rawStatus = item.status.trim().toLowerCase();
                     final isPending = rawStatus == 'pending';
 
-                    final badgeLabel = isPending ? "EN ATTENTE" : "CORRIGÉ";
+                    final badgeLabel = isPending ? "En Attente" : "Corrigé";
                     final badgeColor = isPending
                         ? AppColors.firebaseYellow
                         : AppColors.correctText;

@@ -8,3 +8,5 @@ export 'presentation/pages/test_instructions_page.dart';
 export 'presentation/pages/test_taking_page.dart';
 export 'presentation/pages/test_results_page.dart';
 export 'presentation/widgets/test_correction_bottom_sheet.dart';
+export 'presentation/widgets/test_quiz_card.dart';
+export 'presentation/widgets/test_already_submitted_card.dart';
