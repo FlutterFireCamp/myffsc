@@ -31,7 +31,7 @@ class LevelConfig {
           subtitle:
               "Poursuivez votre apprentissage pour valider votre cohorte 2026.",
           emoji: "💙",
-          levelColor: AppColors.actionBlue,
+          levelColor: AppColors.skyBlue,
         );
       case 3:
         return const LevelConfig(

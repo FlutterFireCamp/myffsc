@@ -56,10 +56,15 @@ class AppDropdownField extends StatelessWidget {
               child: InputDecorator(
                 decoration: InputDecoration(
                   hintText: hint,
-                  hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
+                  hintStyle: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textMuted,
+                  ),
                   filled: true,
                   fillColor: AppColors.card,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 4.w,
+                    vertical: 1.5.h,
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: AppRadius.circular12,
                     borderSide: const BorderSide(color: AppColors.borderSubtle),
@@ -67,12 +72,17 @@ class AppDropdownField extends StatelessWidget {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: AppRadius.circular12,
                     borderSide: BorderSide(
-                      color: hasError ? AppColors.errorText : AppColors.borderSubtle,
+                      color: hasError
+                          ? AppColors.errorText
+                          : AppColors.borderSubtle,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: AppRadius.circular12,
-                    borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
+                    borderSide: const BorderSide(
+                      color: AppColors.skyBlue,
+                      width: 1.5,
+                    ),
                   ),
                   suffixIconConstraints: BoxConstraints(
                     minWidth: 8.w,
@@ -102,7 +112,9 @@ class AppDropdownField extends StatelessWidget {
                 padding: EdgeInsets.only(top: 0.6.h, left: 3.w),
                 child: Text(
                   formFieldState.errorText ?? '',
-                  style: AppTextStyles.caption.copyWith(color: AppColors.errorText),
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.errorText,
+                  ),
                 ),
               ),
           ],
@@ -165,9 +177,7 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
 
     return Container(
       height: 85.h,
-      constraints: BoxConstraints(
-        maxHeight: 85.h,
-      ),
+      constraints: BoxConstraints(maxHeight: 85.h),
       decoration: const BoxDecoration(
         color: AppColors.modalBackground,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -220,24 +230,39 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
                 TextField(
                   controller: _searchController,
                   onChanged: _filter,
-                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                   decoration: InputDecoration(
                     hintText: "Rechercher...",
-                    hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
+                    hintStyle: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textMuted,
+                    ),
                     prefixIcon: Padding(
                       padding: EdgeInsets.all(3.w),
-                      child: AppIcons.search(size: 18, color: AppColors.textMuted),
+                      child: AppIcons.search(
+                        size: 18,
+                        color: AppColors.textMuted,
+                      ),
                     ),
                     filled: true,
                     fillColor: AppColors.card,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 3.w,
+                      vertical: 1.2.h,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: AppRadius.circular12,
-                      borderSide: const BorderSide(color: AppColors.borderSubtle),
+                      borderSide: const BorderSide(
+                        color: AppColors.borderSubtle,
+                      ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: AppRadius.circular12,
-                      borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
+                      borderSide: const BorderSide(
+                        color: AppColors.skyBlue,
+                        width: 1.5,
+                      ),
                     ),
                   ),
                 ),
@@ -245,9 +270,7 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
               ],
 
               // Options List
-              Expanded(
-                child: _buildOptionsListView(primary: false),
-              ),
+              Expanded(child: _buildOptionsListView(primary: false)),
             ],
           ),
         ),
@@ -262,7 +285,9 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
           padding: EdgeInsets.symmetric(vertical: 3.h),
           child: Text(
             "Aucun résultat trouvé",
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textMuted,
+            ),
           ),
         ),
       );
@@ -287,7 +312,7 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
             padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.8.h),
             decoration: BoxDecoration(
               color: isSelected
-                  ? AppColors.actionBlue.withValues(alpha: 0.12)
+                  ? AppColors.skyBlue.withValues(alpha: 0.12)
                   : Colors.transparent,
               borderRadius: AppRadius.circular8,
             ),
@@ -297,13 +322,15 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
                   child: Text(
                     item,
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: isSelected ? AppColors.actionBlue : AppColors.textPrimary,
+                      color: isSelected
+                          ? AppColors.skyBlue
+                          : AppColors.textPrimary,
                       fontWeight: isSelected ? .bold : .normal,
                     ),
                   ),
                 ),
                 if (isSelected)
-                  AppIcons.check(color: AppColors.actionBlue, size: 18),
+                  AppIcons.check(color: AppColors.skyBlue, size: 18),
               ],
             ),
           ),

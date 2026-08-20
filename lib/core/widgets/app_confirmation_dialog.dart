@@ -60,10 +60,7 @@ class AppConfirmationDialog extends StatelessWidget {
           crossAxisAlignment: .start,
           children: [
             // Title matching Dashboard greeting style (AppTextStyles.h3)
-            Text(
-              title,
-              style: AppTextStyles.h3,
-            ),
+            Text(title, style: AppTextStyles.h3),
             SizedBox(height: 1.5.h),
 
             // Short Message
@@ -86,7 +83,10 @@ class AppConfirmationDialog extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.textSecondary,
                     side: const BorderSide(color: AppColors.borderSubtle),
-                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.2.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.w,
+                      vertical: 1.2.h,
+                    ),
                     shape: const RoundedRectangleBorder(
                       borderRadius: AppRadius.circular12,
                     ),
@@ -106,9 +106,14 @@ class AppConfirmationDialog extends StatelessWidget {
                     onConfirm?.call();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isDestructive ? AppColors.errorText : AppColors.actionBlue,
+                    backgroundColor: isDestructive
+                        ? AppColors.errorText
+                        : AppColors.skyBlue,
                     foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.2.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 1.2.h,
+                    ),
                     elevation: 0,
                     shape: const RoundedRectangleBorder(
                       borderRadius: AppRadius.circular12,

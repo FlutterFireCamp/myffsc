@@ -24,7 +24,7 @@ class AnnouncementFilterTabs extends StatelessWidget {
           _buildFilterTab(
             label: "Toutes",
             isSelected: selectedTypeFilter == null,
-            badgeColor: AppColors.actionBlue,
+            badgeColor: AppColors.skyBlue,
             onTap: () => onSelectFilter(null),
           ),
           _buildFilterTab(
@@ -60,7 +60,8 @@ class AnnouncementFilterTabs extends StatelessWidget {
     Widget Function(Color color)? iconBuilder,
     required VoidCallback onTap,
   }) {
-    final isAllTab = label.toLowerCase() == "toutes" || label.toLowerCase() == "tous";
+    final isAllTab =
+        label.toLowerCase() == "toutes" || label.toLowerCase() == "tous";
     final textColor = isSelected
         ? (isAllTab ? Colors.white : const Color(0xFF111827))
         : AppColors.textSecondary;

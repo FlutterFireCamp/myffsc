@@ -12,10 +12,7 @@ import '../bloc/auth_state.dart';
 class UnauthorizedPage extends StatelessWidget {
   final UserEntity? user;
 
-  const UnauthorizedPage({
-    super.key,
-    this.user,
-  });
+  const UnauthorizedPage({super.key, this.user});
 
   Future<void> _launchEmail(BuildContext context) async {
     const email = 'flutterfiresummer@gmail.com';
@@ -47,7 +44,8 @@ class UnauthorizedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
-    final currentUser = user ?? (authState is UnauthorizedState ? authState.user : null);
+    final currentUser =
+        user ?? (authState is UnauthorizedState ? authState.user : null);
 
     final emailText = currentUser?.email.isNotEmpty == true
         ? currentUser!.email
@@ -108,9 +106,7 @@ class UnauthorizedPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
-            constraints: BoxConstraints(
-              minHeight: 90.h,
-            ),
+            constraints: BoxConstraints(minHeight: 90.h),
             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
             child: Column(
               mainAxisAlignment: .center,
@@ -128,10 +124,7 @@ class UnauthorizedPage extends StatelessWidget {
                     border: Border.all(color: topIconBorder, width: 1.5),
                   ),
                   child: Center(
-                    child: AppIcons.userRemove(
-                      size: 9.w,
-                      color: topIconColor,
-                    ),
+                    child: AppIcons.userRemove(size: 9.w, color: topIconColor),
                   ),
                 ),
                 SizedBox(height: 3.h),
@@ -149,7 +142,10 @@ class UnauthorizedPage extends StatelessWidget {
 
                 // User Email Chip Box
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.2.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 4.w,
+                    vertical: 1.2.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.card,
                     borderRadius: AppRadius.circular12,
@@ -159,10 +155,7 @@ class UnauthorizedPage extends StatelessWidget {
                     mainAxisSize: .min,
                     spacing: 2.w,
                     children: [
-                      AppIcons.mail(
-                        color: AppColors.textSecondary,
-                        size: 18,
-                      ),
+                      AppIcons.mail(color: AppColors.textSecondary, size: 18),
                       Flexible(
                         child: Text(
                           emailText,
@@ -193,7 +186,10 @@ class UnauthorizedPage extends StatelessWidget {
                 if (!isDocMissing) ...[
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 4.w,
+                      vertical: 1.5.h,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.card.withValues(alpha: 0.5),
                       borderRadius: AppRadius.circular12,
@@ -209,11 +205,16 @@ class UnauthorizedPage extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 3.w,
+                            vertical: 0.6.h,
+                          ),
                           decoration: BoxDecoration(
                             color: statusColor.withValues(alpha: 0.15),
                             borderRadius: AppRadius.circular8,
-                            border: Border.all(color: statusColor.withValues(alpha: 0.5)),
+                            border: Border.all(
+                              color: statusColor.withValues(alpha: 0.5),
+                            ),
                           ),
                           child: Text(
                             statusBadgeText,
@@ -256,12 +257,15 @@ class UnauthorizedPage extends StatelessWidget {
                         borderRadius: AppRadius.circular12,
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 1.5.h,
+                            horizontal: 3.w,
+                          ),
                           decoration: BoxDecoration(
-                            color: AppColors.actionBlue.withValues(alpha: 0.12),
+                            color: AppColors.skyBlue.withValues(alpha: 0.12),
                             borderRadius: AppRadius.circular12,
                             border: Border.all(
-                              color: AppColors.actionBlue.withValues(alpha: 0.4),
+                              color: AppColors.skyBlue.withValues(alpha: 0.4),
                               width: 1.2,
                             ),
                           ),
@@ -269,15 +273,12 @@ class UnauthorizedPage extends StatelessWidget {
                             mainAxisAlignment: .center,
                             spacing: 2.5.w,
                             children: [
-                              AppIcons.mail(
-                                color: AppColors.actionBlue,
-                                size: 18,
-                              ),
+                              AppIcons.mail(color: AppColors.skyBlue, size: 18),
                               Flexible(
                                 child: Text(
                                   "flutterfiresummer@gmail.com",
                                   style: AppTextStyles.bodyMedium.copyWith(
-                                    color: AppColors.actionBlue,
+                                    color: AppColors.skyBlue,
                                     fontWeight: .w600,
                                   ),
                                   overflow: .ellipsis,
@@ -298,9 +299,17 @@ class UnauthorizedPage extends StatelessWidget {
                     context.read<AuthBloc>().add(SignOutRequested());
                   },
                   style: OutlinedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 1.8.h, horizontal: 7.w),
-                    backgroundColor: AppColors.incorrectContainer.withValues(alpha: 0.4),
-                    side: const BorderSide(color: AppColors.incorrectBorder, width: 1.2),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 1.8.h,
+                      horizontal: 7.w,
+                    ),
+                    backgroundColor: AppColors.incorrectContainer.withValues(
+                      alpha: 0.4,
+                    ),
+                    side: const BorderSide(
+                      color: AppColors.incorrectBorder,
+                      width: 1.2,
+                    ),
                     shape: const RoundedRectangleBorder(
                       borderRadius: AppRadius.circular14,
                     ),

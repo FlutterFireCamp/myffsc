@@ -29,7 +29,6 @@ class AppColors {
   static const Color flutterBlue = Color(0xFF02569B);
   static const Color flutterLightBlue = Color(0xFF0288D1);
   static const Color skyBlue = Color(0xFF38BDF8); // Sky 400
-  static const Color actionBlue = Color(0xFF38BDF8); // Sky 400 (Remis en skyBlue)
 
   // Podium & Médailles
   static const Color gold = Color(0xFFFBBF24); // Gold / Amber #FBBF24
@@ -83,7 +82,7 @@ class AppColors {
       case 1:
         return skyBlue;
       case 2:
-        return actionBlue;
+        return flutterLightBlue;
       case 3:
         return warningAmber;
       case 4:
@@ -108,8 +107,18 @@ class AppColors {
   static const Color programSessionBg = Color.fromRGBO(56, 189, 248, 0.08);
 
   static const Color programConferenceBadge = purpleConference;
-  static const Color programConferenceBadgeBg = Color.fromRGBO(168, 85, 247, 0.15);
-  static const Color programConferenceBorder = Color.fromRGBO(168, 85, 247, 0.30);
+  static const Color programConferenceBadgeBg = Color.fromRGBO(
+    168,
+    85,
+    247,
+    0.15,
+  );
+  static const Color programConferenceBorder = Color.fromRGBO(
+    168,
+    85,
+    247,
+    0.30,
+  );
   static const Color programConferenceBg = Color.fromRGBO(168, 85, 247, 0.08);
 
   static const Color programTestBadge = gold;
@@ -119,19 +128,64 @@ class AppColors {
 
   // ANNONCES Palette Exacte
   static const Color announcementInfoColor = skyBlue;
-  static const Color announcementInfoBadgeBg = Color.fromRGBO(56, 189, 248, 0.12);
-  static const Color announcementInfoBorder = Color.fromRGBO(56, 189, 248, 0.30);
-  static const Color announcementInfoCardBg = Color.fromRGBO(56, 189, 248, 0.06);
+  static const Color announcementInfoBadgeBg = Color.fromRGBO(
+    56,
+    189,
+    248,
+    0.12,
+  );
+  static const Color announcementInfoBorder = Color.fromRGBO(
+    56,
+    189,
+    248,
+    0.30,
+  );
+  static const Color announcementInfoCardBg = Color.fromRGBO(
+    56,
+    189,
+    248,
+    0.06,
+  );
 
   static const Color announcementImportantColor = gold;
-  static const Color announcementImportantBadgeBg = Color.fromRGBO(245, 158, 11, 0.12);
-  static const Color announcementImportantBorder = Color.fromRGBO(245, 158, 11, 0.30);
-  static const Color announcementImportantCardBg = Color.fromRGBO(245, 158, 11, 0.06);
+  static const Color announcementImportantBadgeBg = Color.fromRGBO(
+    245,
+    158,
+    11,
+    0.12,
+  );
+  static const Color announcementImportantBorder = Color.fromRGBO(
+    245,
+    158,
+    11,
+    0.30,
+  );
+  static const Color announcementImportantCardBg = Color.fromRGBO(
+    245,
+    158,
+    11,
+    0.06,
+  );
 
   static const Color announcementUrgentColor = alertRed;
-  static const Color announcementUrgentBadgeBg = Color.fromRGBO(239, 68, 68, 0.12);
-  static const Color announcementUrgentBorder = Color.fromRGBO(239, 68, 68, 0.30);
-  static const Color announcementUrgentCardBg = Color.fromRGBO(239, 68, 68, 0.06);
+  static const Color announcementUrgentBadgeBg = Color.fromRGBO(
+    239,
+    68,
+    68,
+    0.12,
+  );
+  static const Color announcementUrgentBorder = Color.fromRGBO(
+    239,
+    68,
+    68,
+    0.30,
+  );
+  static const Color announcementUrgentCardBg = Color.fromRGBO(
+    239,
+    68,
+    68,
+    0.06,
+  );
 
   // Textes Typographiques (Contrastes Clairs & Lisibles)
   static const Color textPrimary = Color(0xFFF8FAFC);

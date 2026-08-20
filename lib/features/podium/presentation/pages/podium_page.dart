@@ -74,12 +74,12 @@ class _PodiumPageState extends State<PodiumPage> {
           actions: [
             IconButton(
               tooltip: "Règles du Classement",
-              icon: AppIcons.infoCircle(color: AppColors.actionBlue, size: 20),
+              icon: AppIcons.infoCircle(color: AppColors.skyBlue, size: 20),
               onPressed: () => PodiumRulesDialog.show(context),
             ),
             IconButton(
               tooltip: "Actualiser",
-              icon: AppIcons.refresh03(color: AppColors.actionBlue, size: 20),
+              icon: AppIcons.refresh03(color: AppColors.skyBlue, size: 20),
               onPressed: () => _fetchLeaderboard(isRefresh: true),
             ),
             SizedBox(width: 2.w),
@@ -118,10 +118,10 @@ class _PodiumPageState extends State<PodiumPage> {
                     message:
                         "Les participants apparaîtront ici dès que les points seront enregistrés.",
                     icon: AppIcons.podium(
-                      color: AppColors.actionBlue,
+                      color: AppColors.skyBlue,
                       size: AppSizes.iconXl,
                     ),
-                    accentColor: AppColors.actionBlue,
+                    accentColor: AppColors.skyBlue,
                     actionLabel: "Actualiser",
                     onAction: () => _fetchLeaderboard(isRefresh: true),
                   );
@@ -167,7 +167,7 @@ class _PodiumPageState extends State<PodiumPage> {
                         // 3. Scrollable List of Ranks 4 to 10 Only
                         Expanded(
                           child: RefreshIndicator(
-                            color: AppColors.actionBlue,
+                            color: AppColors.skyBlue,
                             onRefresh: () async =>
                                 _fetchLeaderboard(isRefresh: true),
                             child: ListView.builder(
@@ -180,7 +180,8 @@ class _PodiumPageState extends State<PodiumPage> {
                               itemCount: remainingUsers.length,
                               itemBuilder: (context, index) {
                                 final user = remainingUsers[index];
-                                final isMe = currentUser != null &&
+                                final isMe =
+                                    currentUser != null &&
                                     user.id == currentUser.id;
                                 return LeaderboardUserRow(
                                   user: user,

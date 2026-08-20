@@ -36,7 +36,9 @@ class AppTheme {
         elevation: 0,
         clipBehavior: .antiAlias,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r28)),
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.r28),
+          ),
         ),
       ),
       cardTheme: CardThemeData(
@@ -58,7 +60,7 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.actionBlue,
+          backgroundColor: AppColors.skyBlue,
           foregroundColor: AppColors.textPrimary,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: const RoundedRectangleBorder(
@@ -81,13 +83,18 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.card,
-        labelStyle: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+        labelStyle: AppTextStyles.bodySmall.copyWith(
+          color: AppColors.textSecondary,
+        ),
         floatingLabelStyle: AppTextStyles.bodySmall.copyWith(
           color: AppColors.skyBlue,
           fontWeight: .w600,
         ),
         hintStyle: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: const OutlineInputBorder(
           borderRadius: AppRadius.circular12,
           borderSide: BorderSide(color: AppColors.borderSubtle),

@@ -46,7 +46,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final user = widget.user;
 
     _nameController = TextEditingController(text: user.name);
-    _discordController = TextEditingController(text: user.discordUsername ?? '');
+    _discordController = TextEditingController(
+      text: user.discordUsername ?? '',
+    );
     _townController = TextEditingController(text: user.town ?? '');
     _githubController = TextEditingController(text: user.github ?? '');
     _linkedinController = TextEditingController(text: user.linkedin ?? '');
@@ -89,7 +91,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
       return;
     }
     if (_selectedCountry == null) {
-      AppSnackBar.showError(context, "Veuillez sélectionner votre pays de résidence.");
+      AppSnackBar.showError(
+        context,
+        "Veuillez sélectionner votre pays de résidence.",
+      );
       return;
     }
 
@@ -113,11 +118,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (mounted) {
       context.read<ProfileBloc>().add(
-            UpdateProfileSubmittedEvent(
-              userId: widget.user.id,
-              data: updatedData,
-            ),
-          );
+        UpdateProfileSubmittedEvent(userId: widget.user.id, data: updatedData),
+      );
     }
   }
 
@@ -161,13 +163,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         height: 18,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: AppColors.actionBlue,
+                          color: AppColors.skyBlue,
                         ),
                       )
                     : Text(
                         "Enregistrer",
                         style: AppTextStyles.buttonSmall.copyWith(
-                          color: AppColors.actionBlue,
+                          color: AppColors.skyBlue,
                           fontWeight: .bold,
                         ),
                       ),
@@ -199,12 +201,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   // Nom Complet
                   Text(
                     "Nom complet *",
-                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   SizedBox(height: 0.8.h),
                   TextFormField(
                     controller: _nameController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                     decoration: const InputDecoration(
                       hintText: "Votre nom complet",
                     ),
@@ -220,15 +226,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   // Pseudo Discord
                   Text(
                     "Pseudo Discord *",
-                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   SizedBox(height: 0.8.h),
                   TextFormField(
                     controller: _discordController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: const InputDecoration(
-                      hintText: "ex: username",
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
                     ),
+                    decoration: const InputDecoration(hintText: "ex: username"),
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
                         return "Le pseudo Discord est obligatoire";
@@ -282,12 +290,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   // Ville
                   Text(
                     "Ville",
-                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   SizedBox(height: 0.8.h),
                   TextFormField(
                     controller: _townController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                     decoration: const InputDecoration(
                       hintText: "ex: Goma, Kinshasa, Paris...",
                     ),
@@ -321,12 +333,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   // GitHub
                   Text(
                     "Profil GitHub",
-                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   SizedBox(height: 0.8.h),
                   TextFormField(
                     controller: _githubController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                     decoration: const InputDecoration(
                       hintText: "ex: https://github.com/votre_profil",
                     ),
@@ -336,12 +352,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   // LinkedIn
                   Text(
                     "Profil LinkedIn",
-                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   SizedBox(height: 0.8.h),
                   TextFormField(
                     controller: _linkedinController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                     decoration: const InputDecoration(
                       hintText: "ex: https://linkedin.com/in/votre_profil",
                     ),
@@ -351,12 +371,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   // X / Twitter
                   Text(
                     "Profil X (Twitter)",
-                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   SizedBox(height: 0.8.h),
                   TextFormField(
                     controller: _xController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                     decoration: const InputDecoration(
                       hintText: "ex: https://x.com/votre_profil",
                     ),
@@ -366,12 +390,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   // Portfolio
                   Text(
                     "Portfolio / Site Web",
-                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   SizedBox(height: 0.8.h),
                   TextFormField(
                     controller: _portfolioController,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                     decoration: const InputDecoration(
                       hintText: "ex: https://monsite.dev",
                     ),

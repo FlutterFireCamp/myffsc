@@ -65,7 +65,7 @@ class TestResultsPage extends StatelessWidget {
                         border: Border.all(
                           color: isPassed
                               ? AppColors.correctBorder
-                              : AppColors.actionBlue.withValues(alpha: 0.4),
+                              : AppColors.skyBlue.withValues(alpha: 0.4),
                           width: 1.5,
                         ),
                       ),
@@ -76,7 +76,7 @@ class TestResultsPage extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: isPassed
                                   ? AppColors.correctContainer
-                                  : AppColors.actionBlue.withValues(alpha: 0.15),
+                                  : AppColors.skyBlue.withValues(alpha: 0.15),
                               shape: .circle,
                             ),
                             child: AppIcons.trophy(
@@ -89,19 +89,26 @@ class TestResultsPage extends StatelessWidget {
                           SizedBox(height: 2.h),
                           Text(
                             isPassed ? "Félicitations ! 🎉" : "Examen Soumis !",
-                            style: AppTextStyles.h2.copyWith(color: AppColors.textPrimary),
+                            style: AppTextStyles.h2.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
                           ),
                           SizedBox(height: 0.8.h),
                           Text(
                             quiz.title,
                             textAlign: .center,
-                            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
                           ),
                           SizedBox(height: 2.5.h),
 
                           // Score Pill
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.2.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 1.2.h,
+                            ),
                             decoration: BoxDecoration(
                               color: AppColors.ultraDark,
                               borderRadius: AppRadius.circular14,
@@ -111,7 +118,9 @@ class TestResultsPage extends StatelessWidget {
                               children: [
                                 Text(
                                   "Score Auto QCM",
-                                  style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
+                                  style: AppTextStyles.caption.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
                                 ),
                                 SizedBox(height: 0.4.h),
                                 Text(
@@ -124,7 +133,9 @@ class TestResultsPage extends StatelessWidget {
                                 Text(
                                   "$percentage% de réussite",
                                   style: AppTextStyles.bodySmall.copyWith(
-                                    color: isPassed ? AppColors.correctText : AppColors.textSecondary,
+                                    color: isPassed
+                                        ? AppColors.correctText
+                                        : AppColors.textSecondary,
                                     fontWeight: .bold,
                                   ),
                                 ),
@@ -142,7 +153,10 @@ class TestResultsPage extends StatelessWidget {
                       children: [
                         Expanded(
                           child: _buildStatItem(
-                            icon: AppIcons.time(color: AppColors.skyBlue, size: 20),
+                            icon: AppIcons.time(
+                              color: AppColors.skyBlue,
+                              size: 20,
+                            ),
                             label: "Temps passé",
                             value: _formatDuration(timeSpentSeconds),
                           ),
@@ -176,10 +190,15 @@ class TestResultsPage extends StatelessWidget {
                         final q = quiz.questions[i];
                         final ans = userAnswers[i];
                         bool isCorrect = false;
-                        if (q.type == 'choice' && q.correctAnswers != null && ans != null) {
-                          final intAns = ans is int ? ans : int.tryParse(ans.toString());
+                        if (q.type == 'choice' &&
+                            q.correctAnswers != null &&
+                            ans != null) {
+                          final intAns = ans is int
+                              ? ans
+                              : int.tryParse(ans.toString());
                           if (intAns != null) {
-                            isCorrect = q.correctAnswers!.contains(intAns) ||
+                            isCorrect =
+                                q.correctAnswers!.contains(intAns) ||
                                 q.correctAnswers!.contains(intAns - 1) ||
                                 q.correctAnswers!.contains(intAns + 1);
                           }
@@ -237,7 +256,7 @@ class TestResultsPage extends StatelessWidget {
                       Navigator.of(context).pop(); // Back to hub
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.actionBlue,
+                      backgroundColor: AppColors.skyBlue,
                       padding: EdgeInsets.symmetric(vertical: 1.8.h),
                       shape: const RoundedRectangleBorder(
                         borderRadius: AppRadius.circular14,
@@ -278,7 +297,10 @@ class TestResultsPage extends StatelessWidget {
         children: [
           icon,
           SizedBox(height: 1.h),
-          Text(label, style: AppTextStyles.caption.copyWith(color: AppColors.textMuted)),
+          Text(
+            label,
+            style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
+          ),
           SizedBox(height: 0.3.h),
           Text(
             value,

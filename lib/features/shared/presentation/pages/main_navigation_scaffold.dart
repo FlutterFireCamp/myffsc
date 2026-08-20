@@ -33,7 +33,7 @@ class MainNavigationScaffold extends StatelessWidget {
           shape: .circle,
           border: Border.all(
             color: isActive
-                ? AppColors.actionBlue
+                ? AppColors.skyBlue
                 : AppColors.textMuted.withValues(alpha: 0.3),
             width: isActive ? 2.0 : 1.0,
           ),
@@ -47,7 +47,7 @@ class MainNavigationScaffold extends StatelessWidget {
     }
 
     return AppIcons.profile(
-      color: isActive ? AppColors.actionBlue : AppColors.textMuted,
+      color: isActive ? AppColors.skyBlue : AppColors.textMuted,
       size: AppSizes.iconLg,
     );
   }
@@ -70,7 +70,7 @@ class MainNavigationScaffold extends StatelessWidget {
             tooltip: "Sessions & Ateliers",
             onPressed: () => FormsModalHelper.openFeedbackForm(context),
             icon: AppIcons.feedback(color: Colors.white, size: AppSizes.iconMd),
-            color: AppColors.actionBlue,
+            color: AppColors.skyBlue,
           ),
           ActionButton(
             tooltip: "Idées & Suggestions",
@@ -114,10 +114,10 @@ class MainNavigationScaffold extends StatelessWidget {
             onTap: _onTap,
             type: .fixed,
             backgroundColor: AppColors.ultraDark,
-            selectedItemColor: AppColors.actionBlue,
+            selectedItemColor: AppColors.skyBlue,
             unselectedItemColor: AppColors.textMuted,
             selectedLabelStyle: AppTextStyles.navLabelActive.copyWith(
-              color: AppColors.actionBlue,
+              color: AppColors.skyBlue,
             ),
             unselectedLabelStyle: AppTextStyles.navLabel,
             items: [
@@ -127,7 +127,7 @@ class MainNavigationScaffold extends StatelessWidget {
                   size: AppSizes.iconLg,
                 ),
                 activeIcon: AppIcons.dashboard(
-                  color: AppColors.actionBlue,
+                  color: AppColors.skyBlue,
                   size: AppSizes.iconLg,
                 ),
                 label: "Accueil",
@@ -138,7 +138,7 @@ class MainNavigationScaffold extends StatelessWidget {
                   size: AppSizes.iconLg,
                 ),
                 activeIcon: AppIcons.tests(
-                  color: AppColors.actionBlue,
+                  color: AppColors.skyBlue,
                   size: AppSizes.iconLg,
                 ),
                 label: "Tests",
@@ -149,7 +149,7 @@ class MainNavigationScaffold extends StatelessWidget {
                   size: AppSizes.iconLg,
                 ),
                 activeIcon: AppIcons.programs(
-                  color: AppColors.actionBlue,
+                  color: AppColors.skyBlue,
                   size: AppSizes.iconLg,
                 ),
                 label: "Agenda",
@@ -160,7 +160,7 @@ class MainNavigationScaffold extends StatelessWidget {
                   size: AppSizes.iconLg,
                 ),
                 activeIcon: AppIcons.announcements(
-                  color: AppColors.actionBlue,
+                  color: AppColors.skyBlue,
                   size: AppSizes.iconLg,
                 ),
                 label: "Annonces",
@@ -171,7 +171,7 @@ class MainNavigationScaffold extends StatelessWidget {
                   size: AppSizes.iconLg,
                 ),
                 activeIcon: AppIcons.podium(
-                  color: AppColors.actionBlue,
+                  color: AppColors.skyBlue,
                   size: AppSizes.iconLg,
                 ),
                 label: "Podium",

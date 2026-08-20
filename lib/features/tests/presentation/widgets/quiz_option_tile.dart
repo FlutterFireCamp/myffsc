@@ -49,8 +49,8 @@ class QuizOptionTile extends StatelessWidget {
       }
     } else if (isSelected) {
       optionBg = AppColors.cardHover;
-      optionBorder = AppColors.actionBlue;
-      prefixColor = AppColors.actionBlue;
+      optionBorder = AppColors.skyBlue;
+      prefixColor = AppColors.skyBlue;
     }
 
     return InkWell(

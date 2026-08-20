@@ -74,11 +74,7 @@ class _ExpandableFabState extends State<ExpandableFab>
         alignment: .bottomRight,
         clipBehavior: .none,
         children: [
-          if (_open)
-            GestureDetector(
-              onTap: _close,
-              behavior: .translucent,
-            ),
+          if (_open) GestureDetector(onTap: _close, behavior: .translucent),
           _buildTapToCloseFab(),
           ..._buildExpandingActionButtons(),
           _buildTapToOpenFab(),
@@ -101,7 +97,7 @@ class _ExpandableFabState extends State<ExpandableFab>
             onTap: _toggle,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: AppIcons.cancel(color: AppColors.actionBlue, size: 20),
+              child: AppIcons.cancel(color: AppColors.skyBlue, size: 20),
             ),
           ),
         ),
@@ -154,7 +150,7 @@ class _ExpandableFabState extends State<ExpandableFab>
           duration: const Duration(milliseconds: 250),
           child: FloatingActionButton(
             onPressed: _toggle,
-            backgroundColor: AppColors.actionBlue,
+            backgroundColor: AppColors.skyBlue,
             foregroundColor: Colors.white,
             elevation: 4,
             shape: const CircleBorder(),

@@ -131,7 +131,8 @@ class _DashboardPageState extends State<DashboardPage> {
           // 2. Programme du jour ou à venir (BlocBuilder ciblé)
           BlocBuilder<DashboardBloc, DashboardState>(
             builder: (context, state) {
-              if (state is DashboardLoadingState || state is DashboardInitialState) {
+              if (state is DashboardLoadingState ||
+                  state is DashboardInitialState) {
                 return Column(
                   crossAxisAlignment: .start,
                   children: [
@@ -148,8 +149,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 );
               }
 
-              final todayProgram =
-                  state is DashboardLoadedState ? state.todayProgram : null;
+              final todayProgram = state is DashboardLoadedState
+                  ? state.todayProgram
+                  : null;
 
               return Column(
                 crossAxisAlignment: .start,
@@ -178,10 +180,7 @@ class _DashboardPageState extends State<DashboardPage> {
           SizedBox(height: 2.5.h),
 
           // 3. Quick Actions Header & 2 Cards (Programmes & Annonces)
-          Text(
-            "Aujourd'hui dans le Camp",
-            style: AppTextStyles.titleLarge,
-          ),
+          Text("Aujourd'hui dans le Camp", style: AppTextStyles.titleLarge),
           SizedBox(height: 1.h),
           Row(
             spacing: 3.w,
@@ -191,10 +190,10 @@ class _DashboardPageState extends State<DashboardPage> {
                   title: "Programmes",
                   subtitle: "Agenda complet",
                   icon: AppIcons.programs(
-                    color: AppColors.actionBlue,
+                    color: AppColors.skyBlue,
                     size: AppSizes.iconLg,
                   ),
-                  backgroundColor: AppColors.actionBlue,
+                  backgroundColor: AppColors.skyBlue,
                   onTap: handlePrograms,
                 ),
               ),

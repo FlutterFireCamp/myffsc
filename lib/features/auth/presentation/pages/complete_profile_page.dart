@@ -31,24 +31,32 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   static const List<String> _genderOptions = AppDataConstants.genderOptions;
   static const List<String> _hubOptions = AppDataConstants.hubOptions;
-  static const List<String> _africanCountries = AppDataConstants.africanCountries;
+  static const List<String> _africanCountries =
+      AppDataConstants.africanCountries;
 
   @override
   void initState() {
     super.initState();
     final currentUser = widget.user;
     _nameController = TextEditingController(
-      text: currentUser?.name == 'Apprenant FFSC' ? '' : (currentUser?.name ?? ''),
+      text: currentUser?.name == 'Apprenant FFSC'
+          ? ''
+          : (currentUser?.name ?? ''),
     );
-    _discordController = TextEditingController(text: currentUser?.discordUsername ?? '');
+    _discordController = TextEditingController(
+      text: currentUser?.discordUsername ?? '',
+    );
     _townController = TextEditingController(text: currentUser?.town ?? '');
 
-    if (currentUser?.gender != null && _genderOptions.contains(currentUser!.gender)) {
+    if (currentUser?.gender != null &&
+        _genderOptions.contains(currentUser!.gender)) {
       _selectedGender = currentUser.gender;
     }
 
     if (currentUser?.country != null) {
-      final matched = AppDataConstants.matchCountryWithFlag(currentUser!.country);
+      final matched = AppDataConstants.matchCountryWithFlag(
+        currentUser!.country,
+      );
       if (matched != null && _africanCountries.contains(matched)) {
         _selectedCountry = matched;
       }
@@ -75,7 +83,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       return;
     }
     if (_selectedCountry == null) {
-      AppSnackBar.showError(context, "Veuillez sélectionner votre pays de résidence.");
+      AppSnackBar.showError(
+        context,
+        "Veuillez sélectionner votre pays de résidence.",
+      );
       return;
     }
 
@@ -83,7 +94,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     final isOnline = await NetworkHelper.checkConnection(context);
     if (!isOnline) return;
 
-    final hubValue = (_selectedHub == null || _selectedHub!.contains('Non affilié'))
+    final hubValue =
+        (_selectedHub == null || _selectedHub!.contains('Non affilié'))
         ? ''
         : _selectedHub!.trim();
 
@@ -101,10 +113,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
     if (mounted) {
       context.read<AuthBloc>().add(
-        CompleteProfileEvent(
-          userId: currentUser.id,
-          data: updateData,
-        ),
+        CompleteProfileEvent(userId: currentUser.id, data: updateData),
       );
     }
   }
@@ -154,10 +163,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
             child: Column(
               crossAxisAlignment: .start,
               children: [
-                CompleteProfileHeader(
-                  emailText: emailText,
-                  photoUrl: photoUrl,
-                ),
+                CompleteProfileHeader(emailText: emailText, photoUrl: photoUrl),
                 SizedBox(height: 2.h),
 
                 Expanded(
@@ -178,16 +184,21 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
                         Text(
                           "Nom complet (Nom & Prénom) *",
-                          style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         SizedBox(height: 0.8.h),
                         TextFormField(
                           controller: _nameController,
-                          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                           decoration: const InputDecoration(
                             hintText: "Ex: Georges Byona",
                           ),
-                          validator: (val) => (val == null || val.trim().isEmpty)
+                          validator: (val) =>
+                              (val == null || val.trim().isEmpty)
                               ? "Veuillez entrer votre nom complet."
                               : null,
                         ),
@@ -195,16 +206,21 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
                         Text(
                           "Nom d'utilisateur Discord *",
-                          style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         SizedBox(height: 0.8.h),
                         TextFormField(
                           controller: _discordController,
-                          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                           decoration: const InputDecoration(
                             hintText: "Ex: georges_dev",
                           ),
-                          validator: (val) => (val == null || val.trim().isEmpty)
+                          validator: (val) =>
+                              (val == null || val.trim().isEmpty)
                               ? "Veuillez entrer votre pseudo Discord."
                               : null,
                         ),
@@ -214,7 +230,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           label: "Genre / Sexe *",
                           value: _selectedGender,
                           options: _genderOptions,
-                          onSelected: (val) => setState(() => _selectedGender = val),
+                          onSelected: (val) =>
+                              setState(() => _selectedGender = val),
                           hint: "Sélectionnez votre genre",
                           validator: (val) => (val == null || val.isEmpty)
                               ? "Veuillez sélectionner votre genre"
@@ -227,7 +244,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           value: _selectedCountry,
                           options: _africanCountries,
                           enableSearch: true,
-                          onSelected: (val) => setState(() => _selectedCountry = val),
+                          onSelected: (val) =>
+                              setState(() => _selectedCountry = val),
                           hint: "Sélectionnez votre pays",
                           validator: (val) => (val == null || val.isEmpty)
                               ? "Veuillez sélectionner votre pays"
@@ -237,12 +255,16 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
                         Text(
                           "Ville de résidence (Optionnel)",
-                          style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                          style: AppTextStyles.bodySmall.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         SizedBox(height: 0.8.h),
                         TextFormField(
                           controller: _townController,
-                          style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
                           decoration: const InputDecoration(
                             hintText: "Ex: Goma, Abidjan, Yaoundé...",
                           ),
@@ -253,7 +275,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           label: "Hub / Communauté d'origine (Optionnel)",
                           value: _selectedHub,
                           options: _hubOptions,
-                          onSelected: (val) => setState(() => _selectedHub = val),
+                          onSelected: (val) =>
+                              setState(() => _selectedHub = val),
                           hint: "Sélectionnez votre Hub",
                         ),
                         SizedBox(height: 2.h),
@@ -261,11 +284,14 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         SwitchListTile(
                           title: Text(
                             "Accès Next Flutter Premium",
-                            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textPrimary,
+                            ),
                           ),
                           value: _hasNextFlutterPremium,
-                          activeThumbColor: AppColors.actionBlue,
-                          onChanged: (val) => setState(() => _hasNextFlutterPremium = val),
+                          activeThumbColor: AppColors.skyBlue,
+                          onChanged: (val) =>
+                              setState(() => _hasNextFlutterPremium = val),
                         ),
                       ],
                     ),
@@ -294,7 +320,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         }
                       },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.actionBlue,
+                  backgroundColor: AppColors.skyBlue,
                   foregroundColor: Colors.white,
                   shape: const RoundedRectangleBorder(
                     borderRadius: AppRadius.circular12,
@@ -306,12 +332,16 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         height: 24,
                         child: CircularProgressIndicator(
                           strokeWidth: 2.5,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
                         ),
                       )
                     : Text(
                         "Enregistrer et continuer",
-                        style: AppTextStyles.button.copyWith(color: Colors.white),
+                        style: AppTextStyles.button.copyWith(
+                          color: Colors.white,
+                        ),
                       ),
               ),
             ),

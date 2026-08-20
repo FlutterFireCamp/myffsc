@@ -45,7 +45,9 @@ class QuizHeader extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.firebaseOrange.withValues(alpha: 0.15),
                   borderRadius: AppRadius.circular8,
-                  border: Border.all(color: AppColors.firebaseOrange.withValues(alpha: 0.3)),
+                  border: Border.all(
+                    color: AppColors.firebaseOrange.withValues(alpha: 0.3),
+                  ),
                 ),
                 child: Row(
                   spacing: 1.5.w,
@@ -69,7 +71,9 @@ class QuizHeader extends StatelessWidget {
               value: progress,
               minHeight: 6,
               backgroundColor: AppColors.ultraDark,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.actionBlue),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.skyBlue,
+              ),
             ),
           ),
         ],

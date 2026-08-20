@@ -37,7 +37,7 @@ class TestInstructionsPage extends StatelessWidget {
                       color: AppColors.card,
                       borderRadius: AppRadius.circular16,
                       border: Border.all(
-                        color: AppColors.actionBlue.withValues(alpha: 0.3),
+                        color: AppColors.skyBlue.withValues(alpha: 0.3),
                         width: 1.5,
                       ),
                     ),
@@ -52,12 +52,12 @@ class TestInstructionsPage extends StatelessWidget {
                                 vertical: 0.6.h,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.actionBlue.withValues(
+                                color: AppColors.skyBlue.withValues(
                                   alpha: 0.15,
                                 ),
                                 borderRadius: AppRadius.circular8,
                                 border: Border.all(
-                                  color: AppColors.actionBlue.withValues(
+                                  color: AppColors.skyBlue.withValues(
                                     alpha: 0.4,
                                   ),
                                 ),
@@ -146,7 +146,7 @@ class TestInstructionsPage extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(2.5.w),
                           decoration: BoxDecoration(
-                            color: AppColors.actionBlue.withValues(alpha: 0.15),
+                            color: AppColors.skyBlue.withValues(alpha: 0.15),
                             shape: .circle,
                           ),
                           child: AppIcons.calendar(
@@ -199,7 +199,10 @@ class TestInstructionsPage extends StatelessWidget {
                   SizedBox(height: 1.5.h),
 
                   InstructionRuleCard(
-                    icon: AppIcons.lock(size: 20, color: AppColors.unauthorizedText),
+                    icon: AppIcons.lock(
+                      size: 20,
+                      color: AppColors.unauthorizedText,
+                    ),
                     title: "3. Protection Anti-Capture (FLAG_SECURE)",
                     description:
                         "Le système bloque nativement les captures d'écran et les enregistrements vidéo durant toute la durée de l'épreuve.",
@@ -207,7 +210,10 @@ class TestInstructionsPage extends StatelessWidget {
                   SizedBox(height: 1.5.h),
 
                   InstructionRuleCard(
-                    icon: AppIcons.alert02(size: 20, color: AppColors.warningAmber),
+                    icon: AppIcons.alert02(
+                      size: 20,
+                      color: AppColors.warningAmber,
+                    ),
                     title: "4. Détection de Changement d'App (3 Max)",
                     description:
                         "Quitter l'application ou passer en arrière-plan enregistre un avertissement. À 3 sorties, le test est automatiquement soumis.",
@@ -273,7 +279,7 @@ class TestInstructionsPage extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 1.8.h),
-                  backgroundColor: AppColors.actionBlue,
+                  backgroundColor: AppColors.skyBlue,
                   shape: const RoundedRectangleBorder(
                     borderRadius: AppRadius.circular14,
                   ),

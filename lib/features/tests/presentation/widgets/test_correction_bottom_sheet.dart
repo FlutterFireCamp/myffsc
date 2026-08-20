@@ -210,7 +210,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
                     child: Padding(
                       padding: EdgeInsets.all(32.0),
                       child: CircularProgressIndicator(
-                        color: AppColors.actionBlue,
+                        color: AppColors.skyBlue,
                       ),
                     ),
                   )
@@ -261,7 +261,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
               Text(
                 "Question ${q.index + 1}",
                 style: AppTextStyles.titleSmall.copyWith(
-                  color: AppColors.actionBlue,
+                  color: AppColors.skyBlue,
                   fontWeight: .bold,
                 ),
               ),
@@ -304,7 +304,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
               code: TextStyle(
                 fontFamily: 'monospace',
                 fontSize: 10.sp,
-                color: AppColors.actionBlue,
+                color: AppColors.skyBlue,
                 backgroundColor: AppColors.codeHighlightBg,
               ),
               codeblockDecoration: BoxDecoration(
@@ -319,8 +319,6 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
 
           // Correct / Expected Answer Box
           _buildExpectedAnswerBox(q),
-
-
         ],
       ),
     );

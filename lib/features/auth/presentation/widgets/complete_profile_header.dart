@@ -27,12 +27,12 @@ class CompleteProfileHeader extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 5.w,
-            backgroundColor: AppColors.actionBlue.withValues(alpha: 0.2),
+            backgroundColor: AppColors.skyBlue.withValues(alpha: 0.2),
             backgroundImage: (photoUrl != null && photoUrl!.isNotEmpty)
                 ? NetworkImage(photoUrl!)
                 : null,
             child: (photoUrl == null || photoUrl!.isEmpty)
-                ? AppIcons.user(size: 20, color: AppColors.actionBlue)
+                ? AppIcons.user(size: 20, color: AppColors.skyBlue)
                 : null,
           ),
           Expanded(

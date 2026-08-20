@@ -21,9 +21,7 @@ class FormsPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text("Formulaires Officiels"),
-      ),
+      appBar: AppBar(title: const Text("Formulaires Officiels")),
       body: ListView(
         primary: false,
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
@@ -35,7 +33,9 @@ class FormsPage extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.card,
               borderRadius: AppRadius.circular20,
-              border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
+              border: Border.all(
+                color: AppColors.skyBlue.withValues(alpha: 0.3),
+              ),
             ),
             child: Row(
               spacing: 4.w,
@@ -46,20 +46,22 @@ class FormsPage extends StatelessWidget {
                     color: AppColors.skyBlue.withValues(alpha: 0.15),
                     shape: .circle,
                   ),
-                  child: AppIcons.forms(color: AppColors.skyBlue, size: AppSizes.iconXl),
+                  child: AppIcons.forms(
+                    color: AppColors.skyBlue,
+                    size: AppSizes.iconXl,
+                  ),
                 ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: .start,
                     spacing: 0.5.h,
                     children: [
-                      Text(
-                        "Espace Formulaires",
-                        style: AppTextStyles.h3,
-                      ),
+                      Text("Espace Formulaires", style: AppTextStyles.h3),
                       Text(
                         "Accédez rapidement aux formulaires officiels du programme pour partager vos idées, donner votre avis ou valider vos attestations.",
-                        style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
@@ -84,7 +86,8 @@ class FormsPage extends StatelessWidget {
           _buildFormCard(
             context: context,
             title: "Idées & Suggestions",
-            subtitle: "Partagez vos propositions pour améliorer le programme et les cours",
+            subtitle:
+                "Partagez vos propositions pour améliorer le programme et les cours",
             icon: AppIcons.idea(color: AppColors.ideaAmber, size: 24),
             color: AppColors.ideaAmber,
             url: FormsModalHelper.ideaUrl,
@@ -96,9 +99,10 @@ class FormsPage extends StatelessWidget {
           _buildFormCard(
             context: context,
             title: "Feedback & Avis",
-            subtitle: "Donnez votre retour sur les sessions, les formateurs et les ateliers",
-            icon: AppIcons.feedback(color: AppColors.actionBlue, size: 24),
-            color: AppColors.actionBlue,
+            subtitle:
+                "Donnez votre retour sur les sessions, les formateurs et les ateliers",
+            icon: AppIcons.feedback(color: AppColors.skyBlue, size: 24),
+            color: AppColors.skyBlue,
             url: FormsModalHelper.feedbackUrl,
             badgeText: "Amélioration",
           ),
@@ -108,7 +112,8 @@ class FormsPage extends StatelessWidget {
           _buildFormCard(
             context: context,
             title: "Signalements & Problèmes",
-            subtitle: "Signalez un incident, un problème technique ou un comportement inapproprié",
+            subtitle:
+                "Signalez un incident, un problème technique ou un comportement inapproprié",
             icon: AppIcons.alert02(color: AppColors.errorText, size: 24),
             color: AppColors.errorText,
             url: FormsModalHelper.reportUrl,
@@ -148,7 +153,9 @@ class FormsPage extends StatelessWidget {
         color: AppColors.card,
         borderRadius: AppRadius.circular16,
         border: Border.all(
-          color: isHighlighted ? color.withValues(alpha: 0.6) : AppColors.borderSubtle,
+          color: isHighlighted
+              ? color.withValues(alpha: 0.6)
+              : AppColors.borderSubtle,
           width: isHighlighted ? 1.5 : 1.0,
         ),
       ),
@@ -192,11 +199,16 @@ class FormsPage extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.4.h),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 2.w,
+                                  vertical: 0.4.h,
+                                ),
                                 decoration: BoxDecoration(
                                   color: color.withValues(alpha: 0.15),
                                   borderRadius: AppRadius.circular8,
-                                  border: Border.all(color: color.withValues(alpha: 0.3)),
+                                  border: Border.all(
+                                    color: color.withValues(alpha: 0.3),
+                                  ),
                                 ),
                                 child: Text(
                                   badgeText,
@@ -209,7 +221,9 @@ class FormsPage extends StatelessWidget {
                           ),
                           Text(
                             subtitle,
-                            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                            style: AppTextStyles.bodySmall.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
                             maxLines: 2,
                             overflow: .ellipsis,
                           ),

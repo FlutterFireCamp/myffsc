@@ -23,12 +23,12 @@ class LeaderboardUserRow extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 1.2.h),
       decoration: BoxDecoration(
         color: isCurrentUser
-            ? AppColors.actionBlue.withValues(alpha: 0.15)
+            ? AppColors.skyBlue.withValues(alpha: 0.15)
             : AppColors.card,
         borderRadius: AppRadius.circular14,
         border: Border.all(
           color: isCurrentUser
-              ? AppColors.actionBlue.withValues(alpha: 0.5)
+              ? AppColors.skyBlue.withValues(alpha: 0.5)
               : AppColors.borderSubtle,
           width: isCurrentUser ? 1.4 : 1.0,
         ),

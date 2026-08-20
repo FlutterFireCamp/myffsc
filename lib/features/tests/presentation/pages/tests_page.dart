@@ -43,7 +43,7 @@ class _TestsPageState extends State<TestsPage> {
         actions: [
           IconButton(
             tooltip: "Actualiser",
-            icon: AppIcons.refresh03(color: AppColors.actionBlue, size: 20),
+            icon: AppIcons.refresh03(color: AppColors.skyBlue, size: 20),
             onPressed: () {
               context.read<TestBloc>().add(FetchTodayTestEvent(userId: userId));
             },
@@ -120,9 +120,7 @@ class _TestsPageState extends State<TestsPage> {
               onRefresh: () async => _fetchTodayTest(),
               child: ListView(
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                children: [
-                  TestQuizCard(quiz: quiz),
-                ],
+                children: [TestQuizCard(quiz: quiz)],
               ),
             );
           },

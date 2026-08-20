@@ -87,7 +87,7 @@ class ProfileHeaderCard extends StatelessWidget {
                           if (locationText.isNotEmpty)
                             _buildBadgeChip(
                               icon: AppIcons.location04(
-                                color: AppColors.actionBlue,
+                                color: AppColors.skyBlue,
                                 size: 14,
                               ),
                               text: locationText,
@@ -95,7 +95,7 @@ class ProfileHeaderCard extends StatelessWidget {
                           if (hubText != null && hubText.isNotEmpty)
                             _buildBadgeChip(
                               icon: AppIcons.userGroup(
-                                color: AppColors.actionBlue,
+                                color: AppColors.skyBlue,
                                 size: 14,
                               ),
                               text: hubText,
@@ -121,13 +121,13 @@ class ProfileHeaderCard extends StatelessWidget {
                 child: Container(
                   padding: .all(0.8.h),
                   decoration: BoxDecoration(
-                    color: AppColors.actionBlue.withValues(alpha: 0.15),
+                    color: AppColors.skyBlue.withValues(alpha: 0.15),
                     borderRadius: AppRadius.circular12,
                     border: .all(
-                      color: AppColors.actionBlue.withValues(alpha: 0.3),
+                      color: AppColors.skyBlue.withValues(alpha: 0.3),
                     ),
                   ),
-                  child: AppIcons.edit(color: AppColors.actionBlue, size: 14),
+                  child: AppIcons.edit(color: AppColors.skyBlue, size: 14),
                 ),
               ),
             ],
@@ -141,9 +141,9 @@ class ProfileHeaderCard extends StatelessWidget {
     return Container(
       padding: .symmetric(horizontal: 2.5.w, vertical: 0.5.h),
       decoration: BoxDecoration(
-        color: AppColors.actionBlue.withValues(alpha: 0.12),
+        color: AppColors.skyBlue.withValues(alpha: 0.12),
         borderRadius: AppRadius.circular8,
-        border: .all(color: AppColors.actionBlue.withValues(alpha: 0.25)),
+        border: .all(color: AppColors.skyBlue.withValues(alpha: 0.25)),
       ),
       child: Row(
         mainAxisSize: .min,

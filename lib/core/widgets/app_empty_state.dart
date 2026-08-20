@@ -22,7 +22,7 @@ class AppEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = accentColor ?? AppColors.actionBlue;
+    final activeColor = accentColor ?? AppColors.skyBlue;
 
     return Center(
       child: Padding(
@@ -47,9 +47,7 @@ class AppEmptyState extends StatelessWidget {
             SizedBox(height: 2.5.h),
             Text(
               title,
-              style: AppTextStyles.titleMedium.copyWith(
-                fontWeight: .bold,
-              ),
+              style: AppTextStyles.titleMedium.copyWith(fontWeight: .bold),
               textAlign: .center,
             ),
             if (actionLabel != null && onAction != null) ...[
@@ -57,7 +55,10 @@ class AppEmptyState extends StatelessWidget {
               TextButton.icon(
                 onPressed: onAction,
                 style: TextButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.2.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 5.w,
+                    vertical: 1.2.h,
+                  ),
                   shape: const RoundedRectangleBorder(
                     borderRadius: AppRadius.circular12,
                   ),
@@ -65,9 +66,7 @@ class AppEmptyState extends StatelessWidget {
                 icon: AppIcons.refresh03(color: activeColor, size: 20),
                 label: Text(
                   actionLabel!,
-                  style: AppTextStyles.buttonSmall.copyWith(
-                    color: activeColor,
-                  ),
+                  style: AppTextStyles.buttonSmall.copyWith(color: activeColor),
                 ),
               ),
             ],

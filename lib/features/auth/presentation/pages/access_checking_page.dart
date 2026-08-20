@@ -85,7 +85,9 @@ class AccessCheckingPage extends StatelessWidget {
                     child: const LinearProgressIndicator(
                       minHeight: 2,
                       backgroundColor: AppColors.ultraDark,
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.actionBlue),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.skyBlue,
+                      ),
                     ),
                   ),
                 ),

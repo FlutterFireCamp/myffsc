@@ -28,7 +28,7 @@ class AppCachedAvatar extends StatelessWidget {
     if (imageUrl == null || imageUrl!.trim().isEmpty) {
       return CircleAvatar(
         radius: radius,
-        backgroundColor: AppColors.actionBlue,
+        backgroundColor: AppColors.skyBlue,
         child: Text(
           fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
           style: fallbackTextStyle ?? defaultStyle,
@@ -38,21 +38,16 @@ class AppCachedAvatar extends StatelessWidget {
 
     return CachedNetworkImage(
       imageUrl: imageUrl!,
-      imageBuilder: (context, imageProvider) => CircleAvatar(
-        radius: radius,
-        backgroundImage: imageProvider,
-      ),
+      imageBuilder: (context, imageProvider) =>
+          CircleAvatar(radius: radius, backgroundImage: imageProvider),
       placeholder: (context, url) => CircleAvatar(
         radius: radius,
         backgroundColor: AppColors.card,
-        child: AppIcons.user(
-          color: AppColors.skyBlue,
-          size: radius * 1.1,
-        ),
+        child: AppIcons.user(color: AppColors.skyBlue, size: radius * 1.1),
       ),
       errorWidget: (context, url, error) => CircleAvatar(
         radius: radius,
-        backgroundColor: AppColors.actionBlue,
+        backgroundColor: AppColors.skyBlue,
         child: Text(
           fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
           style: fallbackTextStyle ?? defaultStyle,
@@ -92,7 +87,9 @@ class AppNetworkImage extends StatelessWidget {
         child: Center(
           child: AppIcons.user(
             color: AppColors.skyBlue,
-            size: (width != null && height != null) ? (width! < height! ? width! * 0.5 : height! * 0.5) : 24,
+            size: (width != null && height != null)
+                ? (width! < height! ? width! * 0.5 : height! * 0.5)
+                : 24,
           ),
         ),
       ),
@@ -101,19 +98,13 @@ class AppNetworkImage extends StatelessWidget {
         height: height,
         color: AppColors.card,
         child: const Center(
-          child: Icon(
-            Icons.broken_image_rounded,
-            color: AppColors.textMuted,
-          ),
+          child: Icon(Icons.broken_image_rounded, color: AppColors.textMuted),
         ),
       ),
     );
 
     if (borderRadius != null) {
-      return ClipRRect(
-        borderRadius: borderRadius!,
-        child: imageWidget,
-      );
+      return ClipRRect(borderRadius: borderRadius!, child: imageWidget);
     }
 
     return imageWidget;

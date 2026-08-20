@@ -34,7 +34,10 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: IntrinsicHeight(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 6.w,
+                            vertical: 3.h,
+                          ),
                           child: Column(
                             mainAxisAlignment: .center,
                             crossAxisAlignment: .center,
@@ -75,16 +78,18 @@ class LoginPage extends StatelessWidget {
                                     ),
                                     TextSpan(
                                       text: "Summer ",
-                                      style: AppTextStyles.heroSubtitle.copyWith(
-                                        fontWeight: .bold,
-                                        color: AppColors.firebaseYellow,
-                                      ),
+                                      style: AppTextStyles.heroSubtitle
+                                          .copyWith(
+                                            fontWeight: .bold,
+                                            color: AppColors.firebaseYellow,
+                                          ),
                                     ),
                                     TextSpan(
                                       text: "Camp 💙☀️",
-                                      style: AppTextStyles.heroSubtitle.copyWith(
-                                        color: AppColors.textPrimary,
-                                      ),
+                                      style: AppTextStyles.heroSubtitle
+                                          .copyWith(
+                                            color: AppColors.textPrimary,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -104,7 +109,9 @@ class LoginPage extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: AppColors.card,
                                   borderRadius: AppRadius.circular20,
-                                  border: Border.all(color: AppColors.borderSubtle),
+                                  border: Border.all(
+                                    color: AppColors.borderSubtle,
+                                  ),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: .stretch,
@@ -122,20 +129,27 @@ class LoginPage extends StatelessWidget {
                                         onPressed: isLoading
                                             ? null
                                             : () async {
-                                                final isOnline = await NetworkHelper.checkConnection(context);
+                                                final isOnline =
+                                                    await NetworkHelper.checkConnection(
+                                                      context,
+                                                    );
                                                 if (!isOnline) return;
                                                 if (context.mounted) {
                                                   context.read<AuthBloc>().add(
-                                                        SignInWithGoogleRequested(),
-                                                      );
+                                                    SignInWithGoogleRequested(),
+                                                  );
                                                 }
                                               },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: AppColors.actionBlue,
+                                          backgroundColor: AppColors.skyBlue,
                                           foregroundColor: Colors.white,
-                                          disabledBackgroundColor: AppColors.actionBlue.withValues(alpha: 0.65),
+                                          disabledBackgroundColor: AppColors
+                                              .skyBlue
+                                              .withValues(alpha: 0.65),
                                           disabledForegroundColor: Colors.white,
-                                          padding: EdgeInsets.symmetric(vertical: 1.8.h),
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: 1.8.h,
+                                          ),
                                           shape: const RoundedRectangleBorder(
                                             borderRadius: AppRadius.circular14,
                                           ),
@@ -149,17 +163,19 @@ class LoginPage extends StatelessWidget {
                                                   const SizedBox(
                                                     width: 22,
                                                     height: 22,
-                                                    child: CircularProgressIndicator(
-                                                      strokeWidth: 2.5,
-                                                      color: Colors.white,
-                                                    ),
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                          strokeWidth: 2.5,
+                                                          color: Colors.white,
+                                                        ),
                                                   ),
                                                   Text(
                                                     "Connexion en cours...",
-                                                    style: AppTextStyles.button.copyWith(
-                                                      color: Colors.white,
-                                                      fontWeight: .bold,
-                                                    ),
+                                                    style: AppTextStyles.button
+                                                        .copyWith(
+                                                          color: Colors.white,
+                                                          fontWeight: .bold,
+                                                        ),
                                                   ),
                                                 ],
                                               )
@@ -173,10 +189,11 @@ class LoginPage extends StatelessWidget {
                                                   ),
                                                   Text(
                                                     "Continuer avec Google",
-                                                    style: AppTextStyles.button.copyWith(
-                                                      color: Colors.white,
-                                                      fontWeight: .bold,
-                                                    ),
+                                                    style: AppTextStyles.button
+                                                        .copyWith(
+                                                          color: Colors.white,
+                                                          fontWeight: .bold,
+                                                        ),
                                                   ),
                                                 ],
                                               ),

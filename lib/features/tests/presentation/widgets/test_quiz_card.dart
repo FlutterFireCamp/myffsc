@@ -16,7 +16,7 @@ class TestQuizCard extends StatelessWidget {
       padding: EdgeInsets.all(5.w),
       decoration: BoxDecoration(
         borderRadius: AppRadius.circular16,
-        color: AppColors.actionBlue.withValues(alpha: 0.12),
+        color: AppColors.skyBlue.withValues(alpha: 0.12),
         border: Border.all(
           color: AppColors.skyBlue.withValues(alpha: 0.3),
           width: 1.5,
@@ -86,9 +86,11 @@ class TestQuizCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
             decoration: BoxDecoration(
-              color: AppColors.actionBlue.withValues(alpha: 0.15),
+              color: AppColors.skyBlue.withValues(alpha: 0.15),
               borderRadius: AppRadius.circular8,
-              border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.4)),
+              border: Border.all(
+                color: AppColors.skyBlue.withValues(alpha: 0.4),
+              ),
             ),
             child: Row(
               spacing: 2.w,
@@ -121,7 +123,7 @@ class TestQuizCard extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 1.5.h),
-                backgroundColor: AppColors.actionBlue,
+                backgroundColor: AppColors.skyBlue,
                 shape: const RoundedRectangleBorder(
                   borderRadius: AppRadius.circular12,
                 ),

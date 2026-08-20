@@ -10,8 +10,10 @@ class EditProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final countryWithFlag =
-        AppDataConstants.formatWithFlag(user.country, flagAtEnd: true);
+    final countryWithFlag = AppDataConstants.formatWithFlag(
+      user.country,
+      flagAtEnd: true,
+    );
     final locationText = [
       if (user.town != null && user.town!.isNotEmpty) user.town,
       if (countryWithFlag.isNotEmpty) countryWithFlag,
@@ -73,7 +75,7 @@ class EditProfileHeader extends StatelessWidget {
                       if (locationText.isNotEmpty)
                         _buildBadgeChip(
                           icon: AppIcons.location04(
-                            color: AppColors.actionBlue,
+                            color: AppColors.skyBlue,
                             size: 18,
                           ),
                           text: locationText,
@@ -81,7 +83,7 @@ class EditProfileHeader extends StatelessWidget {
                       if (hubText != null && hubText.isNotEmpty)
                         _buildBadgeChip(
                           icon: AppIcons.userGroup(
-                            color: AppColors.actionBlue,
+                            color: AppColors.skyBlue,
                             size: 18,
                           ),
                           text: hubText,
@@ -101,9 +103,9 @@ class EditProfileHeader extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.8.h),
       decoration: BoxDecoration(
-        color: AppColors.actionBlue.withValues(alpha: 0.12),
+        color: AppColors.skyBlue.withValues(alpha: 0.12),
         borderRadius: AppRadius.circular8,
-        border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.25)),
+        border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.25)),
       ),
       child: Row(
         mainAxisSize: .min,

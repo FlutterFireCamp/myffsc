@@ -44,7 +44,7 @@ class QuizSegmentedProgressBar extends StatelessWidget {
             segmentColor = AppColors.alertRed; // #fca5a5
             iconWidget = const Icon(Icons.close, color: Colors.white, size: 10);
           } else {
-            segmentColor = AppColors.actionBlue;
+            segmentColor = AppColors.skyBlue;
           }
         } else if (isCurrent) {
           segmentColor = AppColors.skyBlue;

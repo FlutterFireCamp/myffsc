@@ -37,7 +37,7 @@ class PodiumRulesDialog extends StatelessWidget {
                 Row(
                   spacing: 2.5.w,
                   children: [
-                    AppIcons.podium(color: AppColors.actionBlue, size: 24),
+                    AppIcons.podium(color: AppColors.skyBlue, size: 24),
                     Text(
                       "Règles du Classement FFSC",
                       style: AppTextStyles.titleMedium.copyWith(
