@@ -51,6 +51,7 @@ flutter:
   assets:
     - assets/fonts/
     - assets/images/
+    - shorebird.yaml
 
   fonts:
     - family: Outfit
