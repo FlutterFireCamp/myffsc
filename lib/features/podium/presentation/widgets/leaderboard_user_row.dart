@@ -112,7 +112,13 @@ class LeaderboardUserRow extends StatelessWidget {
                   color: AppColors.skyBlue,
                 ),
               ),
-              Text("Niv. ${user.level}", style: AppTextStyles.metricLabel),
+              Text(
+                "Niv. ${user.level}",
+                style: AppTextStyles.metricLabel.copyWith(
+                  color: AppColors.getLevelColor(user.level),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ],

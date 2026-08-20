@@ -59,6 +59,7 @@ class _ProfileMetricsCardState extends State<ProfileMetricsCard> {
             child: _MetricItem(
               title: "Niveau",
               value: "Niveau ${widget.user.level}",
+              valueColor: AppColors.getLevelColor(widget.user.level),
               icon: AppIcons.badge(
                 color: AppColors.getLevelColor(widget.user.level),
                 size: AppSizes.iconLg,
@@ -97,11 +98,13 @@ class _MetricItem extends StatelessWidget {
   final String title;
   final String value;
   final Widget icon;
+  final Color? valueColor;
 
   const _MetricItem({
     required this.title,
     required this.value,
     required this.icon,
+    this.valueColor,
   });
 
   @override
@@ -113,7 +116,12 @@ class _MetricItem extends StatelessWidget {
         icon,
         FittedBox(
           fit: .scaleDown,
-          child: Text(value, style: AppTextStyles.metricValue),
+          child: Text(
+            value,
+            style: valueColor != null
+                ? AppTextStyles.metricValue.copyWith(color: valueColor)
+                : AppTextStyles.metricValue,
+          ),
         ),
         Text(title, style: AppTextStyles.metricLabel),
       ],

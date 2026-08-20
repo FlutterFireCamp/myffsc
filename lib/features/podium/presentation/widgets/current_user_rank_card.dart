@@ -101,7 +101,13 @@ class CurrentUserRankCard extends StatelessWidget {
                   color: AppColors.skyBlue,
                 ),
               ),
-              Text("Niv. $level", style: AppTextStyles.metricLabel),
+              Text(
+                "Niv. $level",
+                style: AppTextStyles.metricLabel.copyWith(
+                  color: AppColors.getLevelColor(level),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ],
