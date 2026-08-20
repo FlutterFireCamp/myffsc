@@ -78,6 +78,20 @@ class AppColors {
   static const Color level4DeepBlue = Color(0xFF0072FF);
   static const Color progressBarGlow = Color(0xFFE0F2FE);
 
+  static Color getLevelColor(int level) {
+    switch (level) {
+      case 1:
+        return skyBlue;
+      case 2:
+        return actionBlue;
+      case 3:
+        return warningAmber;
+      case 4:
+      default:
+        return purpleConference;
+    }
+  }
+
   // Unauthorized Page Colors
   static const Color unauthorizedBg = Color(0xFF1E1B4B);
   static const Color unauthorizedText = Color(0xFFA5B4FC);

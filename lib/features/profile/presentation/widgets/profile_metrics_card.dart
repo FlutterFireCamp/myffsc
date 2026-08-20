@@ -60,7 +60,7 @@ class _ProfileMetricsCardState extends State<ProfileMetricsCard> {
               title: "Niveau",
               value: "Niveau ${widget.user.level}",
               icon: AppIcons.badge(
-                color: AppColors.actionBlue,
+                color: AppColors.getLevelColor(widget.user.level),
                 size: AppSizes.iconLg,
               ),
             ),
