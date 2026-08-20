@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
+import '../../../dashboard/presentation/bloc/dashboard_bloc.dart';
+import '../../../dashboard/presentation/bloc/dashboard_event.dart';
 import '../../domain/entities/program_item.dart';
 import '../bloc/programs_bloc.dart';
 import '../bloc/programs_event.dart';
@@ -35,6 +37,18 @@ class _ProgramsPageState extends State<ProgramsPage> {
     context.read<ProgramsBloc>().add(FilterProgramsEvent(type));
   }
 
+  void _refreshAll() {
+    context.read<ProgramsBloc>().add(
+          FetchProgramsEvent(
+            filterType: _selectedTypeFilter,
+            isRefresh: true,
+          ),
+        );
+    context
+        .read<DashboardBloc>()
+        .add(const FetchDashboardDataEvent(isRefresh: true));
+  }
+
   Future<void> _launchExternalUrl(BuildContext context, String? urlString) async {
     if (urlString == null || urlString.trim().isEmpty) return;
     final Uri url = Uri.parse(
@@ -60,9 +74,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
         icon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconXl),
         accentColor: AppColors.skyBlue,
         actionLabel: "Actualiser",
-        onAction: () => context.read<ProgramsBloc>().add(
-              FetchProgramsEvent(filterType: _selectedTypeFilter, isRefresh: true),
-            ),
+        onAction: _refreshAll,
       );
     }
 
@@ -73,9 +85,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
       icon: AppIcons.programs(color: categoryColor, size: AppSizes.iconXl),
       accentColor: categoryColor,
       actionLabel: "Actualiser",
-      onAction: () => context.read<ProgramsBloc>().add(
-            FetchProgramsEvent(filterType: _selectedTypeFilter, isRefresh: true),
-          ),
+      onAction: _refreshAll,
     );
   }
 
@@ -114,12 +124,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
                     icon: AppIcons.warning(color: AppColors.alertRed, size: AppSizes.iconXl),
                     accentColor: AppColors.alertRed,
                     actionLabel: "Réessayer",
-                    onAction: () => context.read<ProgramsBloc>().add(
-                          FetchProgramsEvent(
-                            filterType: _selectedTypeFilter,
-                            isRefresh: true,
-                          ),
-                        ),
+                    onAction: _refreshAll,
                   );
                 }
 
@@ -131,14 +136,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
 
                   return RefreshIndicator(
                     color: AppColors.skyBlue,
-                    onRefresh: () async {
-                      context.read<ProgramsBloc>().add(
-                            FetchProgramsEvent(
-                              filterType: _selectedTypeFilter,
-                              isRefresh: true,
-                            ),
-                          );
-                    },
+                    onRefresh: () async => _refreshAll(),
                     child: ListView.separated(
                       padding: EdgeInsets.all(4.w),
                       itemCount: programs.length,

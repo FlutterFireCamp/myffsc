@@ -7,48 +7,52 @@ class AnnouncementsShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppShimmer(
-      child: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        children: [
-          // 1. Filter Chips Row Skeleton
-          Row(
+    return ListView(
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+      children: [
+        // 1. Filter Chips Row Skeleton
+        AppShimmer(
+          child: Row(
             spacing: 2.w,
             children: [
               AppShimmerBox(
-                width: 22.w,
-                height: 4.h,
+                width: 20.w,
+                height: 3.8.h,
                 borderRadius: AppRadius.circular12,
-                color: const Color(0xFF26354D),
               ),
               AppShimmerBox(
                 width: 28.w,
-                height: 4.h,
+                height: 3.8.h,
                 borderRadius: AppRadius.circular12,
-                color: const Color(0xFF1E293B),
               ),
               AppShimmerBox(
                 width: 25.w,
-                height: 4.h,
+                height: 3.8.h,
                 borderRadius: AppRadius.circular12,
-                color: const Color(0xFF1E293B),
+              ),
+              AppShimmerBox(
+                width: 20.w,
+                height: 3.8.h,
+                borderRadius: AppRadius.circular12,
               ),
             ],
           ),
-          SizedBox(height: 2.5.h),
+        ),
+        SizedBox(height: 2.5.h),
 
-          // 2. Announcement Cards Skeletons
-          ...List.generate(
-            3,
-            (index) => Padding(
-              padding: EdgeInsets.only(bottom: 2.h),
-              child: Container(
-                padding: EdgeInsets.all(4.5.w),
-                decoration: BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: AppRadius.circular16,
-                  border: Border.all(color: AppColors.borderSubtle),
-                ),
+        // 2. Announcement Cards Skeletons
+        ...List.generate(
+          3,
+          (index) => Padding(
+            padding: EdgeInsets.only(bottom: 2.h),
+            child: Container(
+              padding: EdgeInsets.all(4.5.w),
+              decoration: BoxDecoration(
+                color: AppColors.card,
+                borderRadius: AppRadius.circular16,
+                border: Border.all(color: AppColors.borderSubtle),
+              ),
+              child: AppShimmer(
                 child: Column(
                   crossAxisAlignment: .start,
                   children: [
@@ -60,13 +64,11 @@ class AnnouncementsShimmer extends StatelessWidget {
                           width: 26.w,
                           height: 2.2.h,
                           borderRadius: AppRadius.circular6,
-                          color: const Color(0xFF26354D),
                         ),
                         AppShimmerBox(
                           width: 18.w,
                           height: 1.6.h,
                           borderRadius: AppRadius.circular4,
-                          color: const Color(0xFF1E293B),
                         ),
                       ],
                     ),
@@ -77,31 +79,28 @@ class AnnouncementsShimmer extends StatelessWidget {
                       width: 75.w,
                       height: 2.4.h,
                       borderRadius: AppRadius.circular6,
-                      color: const Color(0xFF2E3E59),
                     ),
                     SizedBox(height: 1.h),
 
                     // Content Lines
                     AppShimmerBox(
                       width: double.infinity,
-                      height: 1.5.h,
+                      height: 1.4.h,
                       borderRadius: AppRadius.circular4,
-                      color: const Color(0xFF1E293B),
                     ),
                     SizedBox(height: 0.6.h),
                     AppShimmerBox(
-                      width: 85.w,
-                      height: 1.5.h,
+                      width: 80.w,
+                      height: 1.4.h,
                       borderRadius: AppRadius.circular4,
-                      color: const Color(0xFF1E293B),
                     ),
                   ],
                 ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

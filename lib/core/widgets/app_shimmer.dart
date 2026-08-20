@@ -23,7 +23,7 @@ class _AppShimmerState extends State<AppShimmer>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1400),
+      duration: const Duration(milliseconds: 1500),
     )..repeat();
   }
 
@@ -43,9 +43,9 @@ class _AppShimmerState extends State<AppShimmer>
           shaderCallback: (bounds) {
             return LinearGradient(
               colors: const [
-                Color(0xFF1E293B), // Fond sombre bleuté bien contrasté
-                Color(0xFF3B4F6E), // Lueur claire bien visible
-                Color(0xFF1E293B), // Retour fond sombre
+                Color(0xFF222F44), // Base sombre bleutée
+                Color(0xFF3E5478), // Lueur brillante bien visible
+                Color(0xFF222F44), // Retour base
               ],
               stops: const [0.0, 0.5, 1.0],
               begin: Alignment(-1.2 + (_controller.value * 3.4), -0.2),
@@ -60,7 +60,7 @@ class _AppShimmerState extends State<AppShimmer>
   }
 }
 
-/// Un élément rectangulaire skeleton avec des bords arrondis configurables
+/// Bloc rectangulaire squelette représentant une ligne de texte, un bouton ou un badge
 class AppShimmerBox extends StatelessWidget {
   final double? width;
   final double height;
@@ -81,14 +81,14 @@ class AppShimmerBox extends StatelessWidget {
       width: width ?? double.infinity,
       height: height,
       decoration: BoxDecoration(
-        color: color ?? const Color(0xFF1E293B),
-        borderRadius: borderRadius ?? AppRadius.circular8,
+        color: color ?? const Color(0xFF222F44),
+        borderRadius: borderRadius ?? AppRadius.circular6,
       ),
     );
   }
 }
 
-/// Un élément circulaire skeleton (avatar, icône ronde, badge rond)
+/// Élément circulaire squelette pour avatars et icônes rondes
 class AppShimmerCircle extends StatelessWidget {
   final double radius;
   final Color? color;
@@ -105,14 +105,14 @@ class AppShimmerCircle extends StatelessWidget {
       width: radius * 2,
       height: radius * 2,
       decoration: BoxDecoration(
-        color: color ?? const Color(0xFF1E293B),
+        color: color ?? const Color(0xFF222F44),
         shape: .circle,
       ),
     );
   }
 }
 
-/// Carte squelette générique pour listes
+/// Carte squelette générique avec fond et bordures réelles non masquées
 class AppCardShimmer extends StatelessWidget {
   const AppCardShimmer({super.key});
 
@@ -125,66 +125,61 @@ class AppCardShimmer extends StatelessWidget {
         borderRadius: AppRadius.circular16,
         border: Border.all(color: AppColors.borderSubtle),
       ),
-      child: Column(
-        crossAxisAlignment: .start,
-        children: [
-          Row(
-            mainAxisAlignment: .spaceBetween,
-            children: [
-              AppShimmerBox(
-                width: 25.w,
-                height: 2.2.h,
-                borderRadius: AppRadius.circular8,
-                color: const Color(0xFF26354D),
-              ),
-              AppShimmerBox(
-                width: 16.w,
-                height: 1.8.h,
-                borderRadius: AppRadius.circular6,
-                color: const Color(0xFF1E293B),
-              ),
-            ],
-          ),
-          SizedBox(height: 1.8.h),
-          AppShimmerBox(
-            width: 70.w,
-            height: 2.4.h,
-            borderRadius: AppRadius.circular8,
-            color: const Color(0xFF2E3E59),
-          ),
-          SizedBox(height: 1.h),
-          AppShimmerBox(
-            width: double.infinity,
-            height: 1.5.h,
-            borderRadius: AppRadius.circular6,
-            color: const Color(0xFF1E293B),
-          ),
-          SizedBox(height: 0.8.h),
-          AppShimmerBox(
-            width: 80.w,
-            height: 1.5.h,
-            borderRadius: AppRadius.circular6,
-            color: const Color(0xFF1E293B),
-          ),
-          SizedBox(height: 2.h),
-          Row(
-            spacing: 3.w,
-            children: [
-              AppShimmerBox(
-                width: 22.w,
-                height: 1.6.h,
-                borderRadius: AppRadius.circular6,
-                color: const Color(0xFF24344C),
-              ),
-              AppShimmerBox(
-                width: 28.w,
-                height: 1.6.h,
-                borderRadius: AppRadius.circular6,
-                color: const Color(0xFF24344C),
-              ),
-            ],
-          ),
-        ],
+      child: AppShimmer(
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            Row(
+              mainAxisAlignment: .spaceBetween,
+              children: [
+                AppShimmerBox(
+                  width: 25.w,
+                  height: 2.2.h,
+                  borderRadius: AppRadius.circular8,
+                ),
+                AppShimmerBox(
+                  width: 16.w,
+                  height: 1.8.h,
+                  borderRadius: AppRadius.circular6,
+                ),
+              ],
+            ),
+            SizedBox(height: 1.8.h),
+            AppShimmerBox(
+              width: 70.w,
+              height: 2.2.h,
+              borderRadius: AppRadius.circular8,
+            ),
+            SizedBox(height: 1.h),
+            AppShimmerBox(
+              width: double.infinity,
+              height: 1.4.h,
+              borderRadius: AppRadius.circular4,
+            ),
+            SizedBox(height: 0.6.h),
+            AppShimmerBox(
+              width: 75.w,
+              height: 1.4.h,
+              borderRadius: AppRadius.circular4,
+            ),
+            SizedBox(height: 2.h),
+            Row(
+              spacing: 3.w,
+              children: [
+                AppShimmerBox(
+                  width: 22.w,
+                  height: 1.6.h,
+                  borderRadius: AppRadius.circular6,
+                ),
+                AppShimmerBox(
+                  width: 28.w,
+                  height: 1.6.h,
+                  borderRadius: AppRadius.circular6,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -200,16 +195,14 @@ class AppListShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppShimmer(
-      child: ListView.separated(
-        primary: false,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.all(4.w),
-        itemCount: itemCount,
-        separatorBuilder: (context, index) => SizedBox(height: 2.h),
-        itemBuilder: (context, index) => const AppCardShimmer(),
-      ),
+    return ListView.separated(
+      primary: false,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.all(4.w),
+      itemCount: itemCount,
+      separatorBuilder: (context, index) => SizedBox(height: 2.h),
+      itemBuilder: (context, index) => const AppCardShimmer(),
     );
   }
 }
