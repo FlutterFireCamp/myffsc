@@ -22,13 +22,13 @@ class AppCachedAvatar extends StatelessWidget {
     final TextStyle defaultStyle = TextStyle(
       fontSize: radius * 0.8,
       color: Colors.white,
-      fontWeight: FontWeight.bold,
+      fontWeight: .bold,
     );
 
     if (imageUrl == null || imageUrl!.trim().isEmpty) {
       return CircleAvatar(
         radius: radius,
-        backgroundColor: AppColors.flutterBlue,
+        backgroundColor: AppColors.actionBlue,
         child: Text(
           fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
           style: fallbackTextStyle ?? defaultStyle,
@@ -52,7 +52,7 @@ class AppCachedAvatar extends StatelessWidget {
       ),
       errorWidget: (context, url, error) => CircleAvatar(
         radius: radius,
-        backgroundColor: AppColors.flutterBlue,
+        backgroundColor: AppColors.actionBlue,
         child: Text(
           fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
           style: fallbackTextStyle ?? defaultStyle,
@@ -74,7 +74,7 @@ class AppNetworkImage extends StatelessWidget {
     required this.imageUrl,
     this.width,
     this.height,
-    this.fit = BoxFit.cover,
+    this.fit = .cover,
     this.borderRadius,
   });
 

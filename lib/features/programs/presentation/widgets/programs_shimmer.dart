@@ -13,13 +13,13 @@ class ProgramsShimmer extends StatelessWidget {
         // Filter Chips Row Skeleton
         AppShimmer(
           child: Row(
+            spacing: 2.w,
             children: List.generate(
               3,
               (i) => Container(
-                margin: EdgeInsets.only(right: 2.w),
                 width: 25.w,
                 height: 4.h,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.card,
                   borderRadius: AppRadius.circular12,
                 ),
@@ -37,7 +37,7 @@ class ProgramsShimmer extends StatelessWidget {
             child: AppShimmer(
               child: Container(
                 height: 18.h,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.card,
                   borderRadius: AppRadius.circular16,
                 ),

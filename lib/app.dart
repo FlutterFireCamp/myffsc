@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'core/core.dart';
+import 'features/announcements/announcements.dart';
 import 'features/auth/auth.dart';
-
+import 'features/dashboard/dashboard.dart';
+import 'features/podium/podium.dart';
+import 'features/profile/profile.dart';
+import 'features/programs/programs.dart';
 import 'features/tests/tests.dart';
 
 class MyFFSCApp extends StatelessWidget {
@@ -18,6 +22,21 @@ class MyFFSCApp extends StatelessWidget {
         ),
         BlocProvider<TestBloc>(
           create: (_) => sl<TestBloc>(),
+        ),
+        BlocProvider<ProgramsBloc>(
+          create: (_) => sl<ProgramsBloc>(),
+        ),
+        BlocProvider<DashboardBloc>(
+          create: (_) => sl<DashboardBloc>(),
+        ),
+        BlocProvider<AnnouncementsBloc>(
+          create: (_) => sl<AnnouncementsBloc>(),
+        ),
+        BlocProvider<PodiumBloc>(
+          create: (_) => sl<PodiumBloc>(),
+        ),
+        BlocProvider<ProfileBloc>(
+          create: (_) => sl<ProfileBloc>(),
         ),
       ],
       child: Sizer(

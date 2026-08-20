@@ -10,9 +10,11 @@ class EditProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final countryWithFlag =
+        AppDataConstants.formatWithFlag(user.country, flagAtEnd: true);
     final locationText = [
       if (user.town != null && user.town!.isNotEmpty) user.town,
-      if (user.country != null && user.country!.isNotEmpty) user.country,
+      if (countryWithFlag.isNotEmpty) countryWithFlag,
     ].join(', ');
 
     final hubText = user.hub ?? user.community;
@@ -26,7 +28,8 @@ class EditProfileHeader extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: .center,
+        spacing: 4.w,
         children: [
           AppCachedAvatar(
             imageUrl: user.photoUrl,
@@ -34,26 +37,25 @@ class EditProfileHeader extends StatelessWidget {
             fallbackInitial: user.firstName,
             fallbackTextStyle: AppTextStyles.h2.copyWith(color: Colors.white),
           ),
-          SizedBox(width: 4.w),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: .start,
+              mainAxisSize: .min,
               children: [
                 Text(
                   user.name,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   style: AppTextStyles.h3.copyWith(
                     color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
                 SizedBox(height: 0.3.h),
                 Text(
                   user.email,
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -64,14 +66,14 @@ class EditProfileHeader extends StatelessWidget {
                   Wrap(
                     spacing: 2.w,
                     runSpacing: 0.8.h,
-                    alignment: .center,
-                    runAlignment: .center,
-                    crossAxisAlignment: .center,
+                    alignment: .start,
+                    runAlignment: .start,
+                    crossAxisAlignment: .start,
                     children: [
                       if (locationText.isNotEmpty)
                         _buildBadgeChip(
                           icon: AppIcons.location04(
-                            color: AppColors.skyBlue,
+                            color: AppColors.actionBlue,
                             size: 18,
                           ),
                           text: locationText,
@@ -79,7 +81,7 @@ class EditProfileHeader extends StatelessWidget {
                       if (hubText != null && hubText.isNotEmpty)
                         _buildBadgeChip(
                           icon: AppIcons.userGroup(
-                            color: AppColors.skyBlue,
+                            color: AppColors.actionBlue,
                             size: 18,
                           ),
                           text: hubText,
@@ -104,19 +106,18 @@ class EditProfileHeader extends StatelessWidget {
         border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.25)),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
+        spacing: 2.w,
         children: [
           icon,
-          SizedBox(width: 2.w),
           Flexible(
             child: Text(
               text,
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.bodyMedium.copyWith(
+              overflow: .ellipsis,
+              style: AppTextStyles.caption.copyWith(
                 color: AppColors.textPrimary,
-                fontWeight: FontWeight.w600,
-                fontSize: 12.5.sp,
+                fontWeight: .w600,
               ),
             ),
           ),

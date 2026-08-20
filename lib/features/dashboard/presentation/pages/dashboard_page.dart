@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -7,7 +6,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
-import '../../../programs/domain/entities/program_item.dart';
+import '../bloc/dashboard_bloc.dart';
+import '../bloc/dashboard_event.dart';
+import '../bloc/dashboard_state.dart';
 import '../widgets/dashboard_header_banner.dart';
 import '../widgets/dashboard_shimmer.dart';
 import '../widgets/quick_action_card.dart';
@@ -21,50 +22,10 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  ProgramItem? _todayProgram;
-  bool _isLoadingTodayProgram = true;
-
   @override
   void initState() {
     super.initState();
-    _fetchTodayProgram();
-  }
-
-  Future<void> _fetchTodayProgram() async {
-    try {
-      final querySnapshot = await _firestore.collection('programs').get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final activePrograms = querySnapshot.docs
-            .map((doc) => ProgramItem.fromFirestore(doc))
-            .where((item) => !item.isPast)
-            .toList();
-
-        activePrograms.sort((a, b) {
-          final dtA = a.programDateTime;
-          final dtB = b.programDateTime;
-          if (dtA == null && dtB == null) return 0;
-          if (dtA == null) return 1;
-          if (dtB == null) return -1;
-          return dtA.compareTo(dtB);
-        });
-
-        if (activePrograms.isNotEmpty) {
-          setState(() {
-            _todayProgram = activePrograms.first;
-          });
-        }
-      }
-    } catch (e) {
-      debugPrint('Error fetching today program: $e');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingTodayProgram = false;
-        });
-      }
-    }
+    context.read<DashboardBloc>().add(const FetchDashboardDataEvent());
   }
 
   Future<void> _launchExternalUrl(String? urlString) async {
@@ -73,7 +34,7 @@ class _DashboardPageState extends State<DashboardPage> {
       urlString.startsWith('http') ? urlString : 'https://$urlString',
     );
     try {
-      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (!await launchUrl(url, mode: .externalApplication)) {
         if (mounted) {
           AppSnackBar.showError(
             context,
@@ -111,6 +72,7 @@ class _DashboardPageState extends State<DashboardPage> {
         backgroundColor: AppColors.background,
         elevation: 0,
         title: Row(
+          spacing: 3.w,
           children: [
             AppCachedAvatar(
               imageUrl: currentUser.photoUrl,
@@ -118,9 +80,8 @@ class _DashboardPageState extends State<DashboardPage> {
               fallbackInitial: currentUser.firstName,
               fallbackTextStyle: AppTextStyles.titleMedium,
             ),
-            SizedBox(width: 3.w),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(
                   "Salut, ${currentUser.firstName} 👋🏾",
@@ -141,9 +102,9 @@ class _DashboardPageState extends State<DashboardPage> {
               border: Border.all(color: AppColors.firebaseYellow, width: 1),
             ),
             child: Row(
+              spacing: 1.w,
               children: [
-                Text("🏆"),
-                SizedBox(width: 1.w),
+                const Text("🏆"),
                 Text(
                   "${currentUser.totalPoints} pts",
                   style: AppTextStyles.badge.copyWith(
@@ -155,9 +116,23 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
         ],
       ),
-      body: _isLoadingTodayProgram
-          ? const DashboardShimmer()
-          : ListView(
+      body: BlocBuilder<DashboardBloc, DashboardState>(
+        builder: (context, state) {
+          if (state is DashboardLoadingState || state is DashboardInitialState) {
+            return const DashboardShimmer();
+          }
+
+          final todayProgram =
+              state is DashboardLoadedState ? state.todayProgram : null;
+
+          return RefreshIndicator(
+            color: AppColors.skyBlue,
+            onRefresh: () async {
+              context
+                  .read<DashboardBloc>()
+                  .add(const FetchDashboardDataEvent(isRefresh: true));
+            },
+            child: ListView(
               primary: false,
               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
               children: [
@@ -171,22 +146,20 @@ class _DashboardPageState extends State<DashboardPage> {
 
                 // Programme du jour ou à venir
                 Text(
-                  (_todayProgram != null && _todayProgram!.isToday)
+                  (todayProgram != null && todayProgram.isToday)
                       ? "Programme du jour"
                       : "Programme à venir",
                   style: AppTextStyles.titleLarge,
                 ),
                 SizedBox(height: 1.h),
-                _isLoadingTodayProgram
-                    ? const AppShimmer(child: AppCardShimmer())
-                    : _todayProgram == null
+                todayProgram == null
                     ? const AppEmptyState(
                         title: "Aucun programme prévu aujourd'hui",
                         message:
                             "Consultez l'onglet Programmes pour découvrir les prochaines sessions.",
                       )
                     : TodayProgramCard(
-                        program: _todayProgram!,
+                        program: todayProgram,
                         onLaunchUrl: _launchExternalUrl,
                       ),
                 SizedBox(height: 2.h),
@@ -228,6 +201,9 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ],
             ),
+          );
+        },
+      ),
     );
   }
 }

@@ -10,29 +10,28 @@ class AppSnackBar {
     messenger.hideCurrentSnackBar();
     messenger.showSnackBar(
       SnackBar(
-        behavior: SnackBarBehavior.floating,
-        elevation: 8,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        behavior: .fixed,
+        elevation: 6,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: const BorderSide(color: AppColors.incorrectBorder, width: 1.2),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(14)),
+          side: BorderSide(color: AppColors.incorrectBorder, width: 1.2),
         ),
         backgroundColor: AppColors.incorrectContainer,
         content: Row(
+          spacing: 12,
           children: [
             const Icon(
               Icons.error_outline_rounded,
               color: AppColors.errorText,
               size: 22,
             ),
-            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 _sanitizeErrorMessage(message),
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                 ),
               ),
             ),
@@ -49,29 +48,30 @@ class AppSnackBar {
     messenger.hideCurrentSnackBar();
     messenger.showSnackBar(
       SnackBar(
-        behavior: SnackBarBehavior.floating,
-        elevation: 8,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        behavior: .fixed,
+        elevation: 6,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: BorderSide(color: AppColors.skyBlue.withValues(alpha: 0.4), width: 1.2),
+        shape: Border(
+          top: BorderSide(
+            color: AppColors.skyBlue.withValues(alpha: 0.4),
+            width: 1.2,
+          ),
         ),
         backgroundColor: AppColors.cardHover,
         content: Row(
+          spacing: 12,
           children: [
             const Icon(
               Icons.check_circle_outline_rounded,
               color: AppColors.skyBlue,
               size: 22,
             ),
-            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 message,
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                 ),
               ),
             ),
@@ -88,29 +88,30 @@ class AppSnackBar {
     messenger.hideCurrentSnackBar();
     messenger.showSnackBar(
       SnackBar(
-        behavior: SnackBarBehavior.floating,
-        elevation: 8,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        behavior: .fixed,
+        elevation: 6,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: BorderSide(color: AppColors.warningAmber.withValues(alpha: 0.5), width: 1.2),
+        shape: Border(
+          top: BorderSide(
+            color: AppColors.warningAmber.withValues(alpha: 0.5),
+            width: 1.2,
+          ),
         ),
         backgroundColor: AppColors.cardHover,
         content: Row(
+          spacing: 12,
           children: [
             const Icon(
               Icons.wifi_off_rounded,
               color: AppColors.warningAmber,
               size: 22,
             ),
-            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 "Connexion Internet requise pour cette action.",
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                 ),
               ),
             ),

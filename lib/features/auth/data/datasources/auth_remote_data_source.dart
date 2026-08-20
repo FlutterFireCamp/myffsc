@@ -2,6 +2,7 @@ import 'dart:developer' as dev;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../../../core/core.dart';
 import '../models/user_model.dart';
 
 class UserCanceledException implements Exception {
@@ -15,6 +16,10 @@ class UserCanceledException implements Exception {
 abstract class AuthRemoteDataSource {
   Future<UserModel> signInWithGoogle();
   Future<UserModel?> getCurrentUser();
+  Future<UserModel> completeProfile({
+    required String userId,
+    required Map<String, dynamic> data,
+  });
   Future<void> signOut();
 }
 
@@ -30,6 +35,31 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required this.firestore,
     this.serverClientId,
   });
+
+  @override
+  Future<UserModel> completeProfile({
+    required String userId,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      dev.log('Completing profile for user $userId in Firestore...', name: 'AUTH_REMOTE_DS');
+      final updatePayload = Map<String, dynamic>.from(data);
+      updatePayload['updatedAt'] = FieldValue.serverTimestamp();
+
+      final docRef = firestore.collection('users').doc(userId);
+      await docRef.update(updatePayload);
+
+      final updatedSnap = await docRef.get();
+      if (!updatedSnap.exists || updatedSnap.data() == null) {
+        throw Exception("Document utilisateur introuvable après mise à jour.");
+      }
+
+      return UserModel.fromMap(updatedSnap.data()!, updatedSnap.id);
+    } catch (e, st) {
+      dev.log('Error completing profile', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+      rethrow;
+    }
+  }
 
   @override
   Future<UserModel> signInWithGoogle() async {
@@ -187,6 +217,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       dev.log('Found existing user doc for email ($email) / docId ($docId)', name: 'AUTH_REMOTE_DS');
+      
+      // Synchronisation asynchrone du token FCM
+      try {
+        if (sl.isRegistered<NotificationService>()) {
+          sl<NotificationService>().syncUserFcmToken(docId);
+        }
+      } catch (e, st) {
+        dev.log('Erreur lors du déclenchement syncUserFcmToken', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+      }
+
       return UserModel.fromMap(data, docId);
     }
 

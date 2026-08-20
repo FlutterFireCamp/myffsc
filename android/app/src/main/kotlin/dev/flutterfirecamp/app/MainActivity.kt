@@ -1,4 +1,4 @@
-package com.flutterfirecamp.myffsc
+package dev.flutterfirecamp.app
 
 import io.flutter.embedding.android.FlutterActivity
 

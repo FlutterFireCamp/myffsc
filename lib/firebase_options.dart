@@ -31,18 +31,19 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDn4ZHi1gKT44o97Ct-SABcxAWsmR06OLE',
-    appId: '1:940039203312:android:608f9c8877c7ba5cf89535',
+    appId: '1:940039203312:android:5f10735a286a6bc0f89535',
     messagingSenderId: '940039203312',
     projectId: 'flutterfiresummercamp',
     storageBucket: 'flutterfiresummercamp.firebasestorage.app',
   );
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyApvzjpPnc_ENQuYylTPHrbeChCM2NS4Zg',
-    appId: '1:940039203312:ios:0665d074795cd11ff89535',
+    appId: '1:940039203312:ios:c709c11985543213f89535',
     messagingSenderId: '940039203312',
     projectId: 'flutterfiresummercamp',
     storageBucket: 'flutterfiresummercamp.firebasestorage.app',
-    iosClientId: '940039203312-q931og0svuemriajuv06t5hpn4746mkh.apps.googleusercontent.com',
-    iosBundleId: 'com.flutterfirecamp.myffsc',
+    androidClientId: '940039203312-rd842fs3j1sg5sm216m8ugebavb5hc55.apps.googleusercontent.com',
+    iosClientId: '940039203312-ea9sdpin97d71proch1c8uu0v9id7rai.apps.googleusercontent.com',
+    iosBundleId: 'dev.flutterfirecamp.app',
   );
 }

@@ -232,3 +232,18 @@ class AnnouncementItem extends Equatable {
     createdAt,
   ];
 }
+
+class PaginatedAnnouncementsResult extends Equatable {
+  final List<AnnouncementItem> items;
+  final DocumentSnapshot<Map<String, dynamic>>? lastDocument;
+  final bool hasMore;
+
+  const PaginatedAnnouncementsResult({
+    required this.items,
+    this.lastDocument,
+    required this.hasMore,
+  });
+
+  @override
+  List<Object?> get props => [items, lastDocument, hasMore];
+}

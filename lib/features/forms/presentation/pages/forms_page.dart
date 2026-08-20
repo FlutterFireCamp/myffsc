@@ -4,8 +4,6 @@ import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
-import '../widgets/action_button.dart';
-import '../widgets/expandable_fab.dart';
 import '../widgets/forms_modal_helper.dart';
 
 class FormsPage extends StatelessWidget {
@@ -40,25 +38,25 @@ class FormsPage extends StatelessWidget {
               border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
             ),
             child: Row(
+              spacing: 4.w,
               children: [
                 Container(
                   padding: EdgeInsets.all(3.w),
                   decoration: BoxDecoration(
                     color: AppColors.skyBlue.withValues(alpha: 0.15),
-                    shape: BoxShape.circle,
+                    shape: .circle,
                   ),
                   child: AppIcons.forms(color: AppColors.skyBlue, size: AppSizes.iconXl),
                 ),
-                SizedBox(width: 4.w),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: .start,
+                    spacing: 0.5.h,
                     children: [
                       Text(
                         "Espace Formulaires",
                         style: AppTextStyles.h3,
                       ),
-                      SizedBox(height: 0.5.h),
                       Text(
                         "Accédez rapidement aux formulaires officiels du programme pour partager vos idées, donner votre avis ou valider vos attestations.",
                         style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
@@ -98,11 +96,11 @@ class FormsPage extends StatelessWidget {
           _buildFormCard(
             context: context,
             title: "Feedback & Avis",
-            subtitle: "Donnez votre retour d'expérience sur la qualité de nos formations",
-            icon: AppIcons.feedback(color: AppColors.skyBlue, size: 24),
-            color: AppColors.skyBlue,
+            subtitle: "Donnez votre retour sur les sessions, les formateurs et les ateliers",
+            icon: AppIcons.feedback(color: AppColors.actionBlue, size: 24),
+            color: AppColors.actionBlue,
             url: FormsModalHelper.feedbackUrl,
-            badgeText: "Avis & Retour",
+            badgeText: "Amélioration",
           ),
           SizedBox(height: 2.h),
 
@@ -110,15 +108,15 @@ class FormsPage extends StatelessWidget {
           _buildFormCard(
             context: context,
             title: "Signalements & Problèmes",
-            subtitle: "Signalez un problème technique, un bug ou un abus en toute confidentialité",
+            subtitle: "Signalez un incident, un problème technique ou un comportement inapproprié",
             icon: AppIcons.alert02(color: AppColors.errorText, size: 24),
             color: AppColors.errorText,
             url: FormsModalHelper.reportUrl,
-            badgeText: "Confidentiel",
+            badgeText: "Support & Sécurité",
           ),
           SizedBox(height: 2.h),
 
-          // 4. Soumettre son Certificat (Adapté au niveau de l'apprenant)
+          // 4. Soumission Certificat
           _buildFormCard(
             context: context,
             title: certTitle,
@@ -126,39 +124,10 @@ class FormsPage extends StatelessWidget {
             icon: AppIcons.badge(color: AppColors.certificateGreen, size: 24),
             color: AppColors.certificateGreen,
             url: certUrl,
-            badgeText: "Niveau $userLevel",
+            badgeText: "Certification",
             isHighlighted: true,
           ),
-          SizedBox(height: 10.h),
-        ],
-      ),
-      floatingActionButton: ExpandableFab(
-        distance: 112,
-        children: [
-          ActionButton(
-            tooltip: "Signalements",
-            onPressed: () => FormsModalHelper.openReportForm(context),
-            icon: AppIcons.alert02(color: Colors.white, size: AppSizes.iconMd),
-            color: AppColors.errorText,
-          ),
-          ActionButton(
-            tooltip: "Feedback & Avis",
-            onPressed: () => FormsModalHelper.openFeedbackForm(context),
-            icon: AppIcons.feedback(color: AppColors.ultraDark, size: AppSizes.iconMd),
-            color: AppColors.skyBlue,
-          ),
-          ActionButton(
-            tooltip: "Idées & Suggestions",
-            onPressed: () => FormsModalHelper.openIdeaForm(context),
-            icon: AppIcons.idea(color: AppColors.ultraDark, size: AppSizes.iconMd),
-            color: AppColors.ideaAmber,
-          ),
-          ActionButton(
-            tooltip: "Soumettre Certificat",
-            onPressed: () => FormsModalHelper.openCertificateForm(context, userLevel),
-            icon: AppIcons.badge(color: Colors.white, size: AppSizes.iconMd),
-            color: AppColors.certificateGreen,
-          ),
+          SizedBox(height: 3.h),
         ],
       ),
     );
@@ -192,9 +161,10 @@ class FormsPage extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(4.5.w),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Row(
+                  spacing: 3.5.w,
                   children: [
                     Container(
                       padding: EdgeInsets.all(3.w),
@@ -204,10 +174,10 @@ class FormsPage extends StatelessWidget {
                       ),
                       child: icon,
                     ),
-                    SizedBox(width: 3.5.w),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: .start,
+                        spacing: 0.5.h,
                         children: [
                           Row(
                             children: [
@@ -216,9 +186,9 @@ class FormsPage extends StatelessWidget {
                                   title,
                                   style: AppTextStyles.titleMedium.copyWith(
                                     color: AppColors.textPrimary,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: .bold,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
+                                  overflow: .ellipsis,
                                 ),
                               ),
                               Container(
@@ -230,21 +200,18 @@ class FormsPage extends StatelessWidget {
                                 ),
                                 child: Text(
                                   badgeText,
-                                  style: AppTextStyles.caption.copyWith(
+                                  style: AppTextStyles.badgeSmall.copyWith(
                                     color: color,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 9.sp,
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 0.5.h),
                           Text(
                             subtitle,
                             style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
                             maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                           ),
                         ],
                       ),
@@ -252,16 +219,16 @@ class FormsPage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 2.h),
-                Divider(color: AppColors.borderSubtle, height: 1),
+                const Divider(color: AppColors.borderSubtle, height: 1),
                 SizedBox(height: 1.5.h),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: .spaceBetween,
                   children: [
                     Text(
                       "Ouvrir le formulaire externe",
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: color,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                     AppIcons.link(color: color, size: 18),

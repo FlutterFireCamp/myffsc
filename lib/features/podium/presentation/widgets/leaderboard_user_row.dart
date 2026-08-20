@@ -25,22 +25,22 @@ class LeaderboardUserRow extends StatelessWidget {
         borderRadius: AppRadius.circular14,
         border: Border.all(
           color: isCurrentUser
-              ? AppColors.skyBlue.withValues(alpha: 0.5)
+              ? AppColors.actionBlue.withValues(alpha: 0.5)
               : AppColors.borderSubtle,
           width: isCurrentUser ? 1.4 : 1.0,
         ),
       ),
       child: Row(
+        spacing: 3.w,
         children: [
           // Rank Badge Box (#4, #5, ...)
           Text(
             "#${user.rank}",
             style: AppTextStyles.caption.copyWith(
               color: AppColors.textSecondary,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
-          SizedBox(width: 3.w),
 
           // Small User Avatar
           AppCachedAvatar(
@@ -49,55 +49,45 @@ class LeaderboardUserRow extends StatelessWidget {
             fallbackInitial: user.name.isNotEmpty ? user.name[0] : 'F',
             fallbackTextStyle: AppTextStyles.bodyMedium.copyWith(
               color: Colors.white,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
-          SizedBox(width: 3.w),
 
           // User Name (Enlarged) & Country Flag Below
           Expanded(
             child: Column(
               crossAxisAlignment: .start,
               mainAxisSize: .min,
+              spacing: 0.2.h,
               children: [
                 Text(
                   user.name,
                   maxLines: 1,
                   overflow: .ellipsis,
                   style: AppTextStyles.bodyLarge.copyWith(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
+                    fontWeight: .bold,
                   ),
                 ),
-                if (user.flag.isNotEmpty) ...[
-                  SizedBox(height: 0.2.h),
-                  Text(user.flag, style: TextStyle(fontSize: 12.sp)),
-                ],
+                if (user.flag.isNotEmpty) Text(user.flag),
               ],
             ),
           ),
-          SizedBox(width: 2.w),
 
           // Points & Level Right Column
           Column(
             crossAxisAlignment: .end,
             mainAxisSize: .min,
+            spacing: 0.2.h,
             children: [
               Text(
                 "${user.totalPoints} pts",
-                style: AppTextStyles.bodyLarge.copyWith(
+                style: AppTextStyles.metricValue.copyWith(
                   color: AppColors.skyBlue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13.sp,
                 ),
               ),
-              SizedBox(height: 0.2.h),
               Text(
                 "Niv. ${user.level}",
-                style: AppTextStyles.caption.copyWith(
-                  color: AppColors.textMuted,
-                ),
+                style: AppTextStyles.metricLabel,
               ),
             ],
           ),

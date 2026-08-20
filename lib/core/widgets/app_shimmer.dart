@@ -38,7 +38,7 @@ class _AppShimmerState extends State<AppShimmer> with SingleTickerProviderStateM
       animation: _controller,
       builder: (context, child) {
         return ShaderMask(
-          blendMode: BlendMode.srcATop,
+          blendMode: .srcATop,
           shaderCallback: (bounds) {
             return LinearGradient(
               colors: [
@@ -49,7 +49,7 @@ class _AppShimmerState extends State<AppShimmer> with SingleTickerProviderStateM
               stops: const [0.0, 0.5, 1.0],
               begin: Alignment(-1.0 + (_controller.value * 3.0), -0.3),
               end: Alignment(1.0 + (_controller.value * 3.0), 0.3),
-              tileMode: TileMode.clamp,
+              tileMode: .clamp,
             ).createShader(bounds);
           },
           child: widget.child,
@@ -97,10 +97,10 @@ class AppCardShimmer extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle.withValues(alpha: 0.3)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               AppShimmerContainer(width: 25.w, height: 2.5.h, borderRadius: AppRadius.circular8),
               AppShimmerContainer(width: 15.w, height: 2.h, borderRadius: AppRadius.circular6),
@@ -114,9 +114,9 @@ class AppCardShimmer extends StatelessWidget {
           AppShimmerContainer(width: 80.w, height: 1.8.h, borderRadius: AppRadius.circular6),
           SizedBox(height: 2.h),
           Row(
+            spacing: 3.w,
             children: [
               AppShimmerContainer(width: 20.w, height: 1.5.h, borderRadius: AppRadius.circular6),
-              SizedBox(width: 3.w),
               AppShimmerContainer(width: 25.w, height: 1.5.h, borderRadius: AppRadius.circular6),
             ],
           ),

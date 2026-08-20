@@ -7,7 +7,7 @@ class AppTheme {
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
+      brightness: .dark,
       fontFamily: AppTextStyles.fontFamily,
       scaffoldBackgroundColor: AppColors.background,
       primaryColor: AppColors.flutterBlue,
@@ -34,7 +34,7 @@ class AppTheme {
         modalBackgroundColor: AppColors.modalBackground,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
-        clipBehavior: Clip.antiAlias,
+        clipBehavior: .antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.r28)),
         ),
@@ -84,7 +84,7 @@ class AppTheme {
         labelStyle: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
         floatingLabelStyle: AppTextStyles.bodySmall.copyWith(
           color: AppColors.skyBlue,
-          fontWeight: FontWeight.w600,
+          fontWeight: .w600,
         ),
         hintStyle: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

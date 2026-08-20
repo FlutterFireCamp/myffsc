@@ -65,3 +65,25 @@ class PodiumUserEntity extends Equatable {
         rank,
       ];
 }
+
+class LeaderboardData extends Equatable {
+  final List<PodiumUserEntity> topUsers;
+  final int totalParticipants;
+  final int currentUserRank;
+  final PodiumUserEntity? currentUserPodiumData;
+
+  const LeaderboardData({
+    required this.topUsers,
+    required this.totalParticipants,
+    required this.currentUserRank,
+    this.currentUserPodiumData,
+  });
+
+  @override
+  List<Object?> get props => [
+        topUsers,
+        totalParticipants,
+        currentUserRank,
+        currentUserPodiumData,
+      ];
+}

@@ -1,108 +1,64 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
-import '../../../tests/data/services/test_firestore_service.dart';
-import '../../../tests/domain/entities/question_item_entity.dart';
-import '../../../tests/domain/entities/test_quiz_entity.dart';
 import '../../../tests/presentation/widgets/test_correction_bottom_sheet.dart';
+import '../bloc/profile_bloc.dart';
+import '../bloc/profile_state.dart';
+import '../../domain/entities/user_test_history_entity.dart';
+import '../../domain/usecases/profile_usecases.dart';
 
 class ProfileTestHistorySection extends StatelessWidget {
   final String userId;
 
   const ProfileTestHistorySection({super.key, required this.userId});
 
-  Future<void> _handleViewDetails(
+  void _handleViewDetails(
     BuildContext context,
-    Map<String, dynamic> data,
-  ) async {
-    final quizId = data['quizId'] as String? ?? 'ffsc_exam_2026';
-    final quizTitle = data['quizTitle'] as String? ?? 'Évaluation FFSC';
-    final score = (data['score'] as num?)?.toInt() ?? 0;
-    final rawAnswers = data['answers'] as Map<String, dynamic>? ?? {};
+    UserTestHistoryEntity item,
+  ) {
+    final questionsFuture = sl<GetTestCorrectionDetailsUseCase>()(
+      GetTestCorrectionDetailsParams(
+        quizId: item.quizId,
+        dateStr: item.dateStr,
+        docId: item.docId,
+        rawAnswers: item.rawAnswers,
+      ),
+    ).then((either) => either.getOrElse((_) => []));
 
-    // Parse answers back to Map<int, dynamic>
-    final Map<int, dynamic> userAnswers = {};
-    rawAnswers.forEach((key, value) {
-      final intKey = int.tryParse(key);
-      if (intKey != null) {
-        userAnswers[intKey] = value;
-      }
-    });
-
-    // Try fetching official quiz from Firestore /tests
-    TestQuizEntity? quiz = await TestFirestoreService().fetchTestById(quizId);
-
-    // Fallback: build a mock quiz structure matching answers if not found in /tests
-    if (quiz == null) {
-      final List<QuestionItemEntity> fallbackQuestions = [];
-      userAnswers.forEach((idx, val) {
-        fallbackQuestions.add(
-          QuestionItemEntity(
-            id: "q_$idx",
-            title: "Question ${idx + 1}",
-            type: val is int ? 'choice' : 'text',
-            level: 1,
-            modules: const [1],
-            points: 25,
-            timingSeconds: 60,
-            options: val is int
-                ? const ["Option A", "Option B", "Option C", "Option D"]
-                : null,
-            correctAnswers: val is int ? [val] : null,
-            explanation: "Explication détaillée de la réponse.",
-          ),
-        );
-      });
-
-      quiz = TestQuizEntity(
-        id: quizId,
-        title: quizTitle,
-        description: "Évaluation enregistrée",
-        totalDurationMinutes: 10,
-        totalPoints: (data['totalPossibleScore'] as num?)?.toInt() ?? 100,
-        questions: fallbackQuestions,
-        status: 'active',
-      );
-    }
-
-    if (context.mounted) {
-      TestCorrectionBottomSheet.show(
-        context,
-        quiz: quiz,
-        userAnswers: userAnswers,
-        totalScore: score,
-      );
-    }
+    TestCorrectionBottomSheet.show(
+      context,
+      quizTitle: item.quizTitle,
+      dateFormatted: item.dateStr,
+      totalScore: item.score,
+      totalPossibleScore: item.totalPossibleScore,
+      status: item.status,
+      questionsFuture: questionsFuture,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Historique des Évaluations",
-              style: AppTextStyles.titleMedium.copyWith(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.bold,
+    return BlocBuilder<ProfileBloc, ProfileState>(
+      builder: (context, state) {
+        if (state.isLoadingHistory) {
+          return Column(
+            crossAxisAlignment: .start,
+            children: [
+              Row(
+                mainAxisAlignment: .spaceBetween,
+                children: [
+                  Text(
+                    "Historique des Évaluations",
+                    style: AppTextStyles.titleMedium.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: .bold,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 1.5.h),
-        StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          stream: FirebaseFirestore.instance
-              .collection('users')
-              .doc(userId)
-              .collection('tests')
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Container(
+              SizedBox(height: 1.2.h),
+              Container(
                 padding: EdgeInsets.all(4.w),
                 decoration: BoxDecoration(
                   color: AppColors.card,
@@ -110,12 +66,48 @@ class ProfileTestHistorySection extends StatelessWidget {
                   border: Border.all(color: AppColors.borderSubtle),
                 ),
                 child: const AppShimmer(child: AppCardShimmer()),
-              );
-            }
+              ),
+            ],
+          );
+        }
 
-            final docs = snapshot.data?.docs ?? [];
-            if (docs.isEmpty) {
-              return Container(
+        final allHistory = state.testHistory;
+        final totalCount = allHistory.length;
+        // Display at most 2 tests in profile
+        final displayedHistory = allHistory.take(2).toList();
+        final displayedCount = displayedHistory.length;
+
+        final countBadgeText = totalCount > 0
+            ? "($displayedCount/$totalCount)"
+            : "";
+
+        return Column(
+          crossAxisAlignment: .start,
+          children: [
+            // Section Header with (displayed / total) indicator (Fixed & Static)
+            Row(
+              mainAxisAlignment: .spaceBetween,
+              children: [
+                Text(
+                  "Historique des Évaluations",
+                  style: AppTextStyles.titleMedium.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: .bold,
+                  ),
+                ),
+                if (countBadgeText.isNotEmpty)
+                  Text(
+                    countBadgeText,
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+              ],
+            ),
+            SizedBox(height: 1.h),
+
+            if (displayedHistory.isEmpty)
+              Container(
                 padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.h),
                 decoration: BoxDecoration(
                   color: AppColors.card,
@@ -136,152 +128,147 @@ class ProfileTestHistorySection extends StatelessWidget {
                     ],
                   ),
                 ),
-              );
-            }
+              )
+            else
+              Expanded(
+                child: ListView.separated(
+                  // Only scrolls when history count is >= 2, otherwise stays static
+                  physics: displayedHistory.length > 1
+                      ? const AlwaysScrollableScrollPhysics(
+                          parent: BouncingScrollPhysics(),
+                        )
+                      : const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.only(bottom: 12.h),
+                  itemCount: displayedHistory.length,
+                  separatorBuilder: (context, index) => SizedBox(height: 1.2.h),
+                  itemBuilder: (context, index) {
+                    final item = displayedHistory[index];
 
-            return ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: docs.length,
-              separatorBuilder: (context, index) => SizedBox(height: 1.5.h),
-              itemBuilder: (context, index) {
-                final data = docs[index].data();
-                final quizTitle =
-                    data['quizTitle'] as String? ?? "Évaluation FFSC";
-                final score = (data['score'] as num?)?.toInt() ?? 0;
-                final totalPossible =
-                    (data['totalPossibleScore'] as num?)?.toInt() ?? 100;
-                final dateStr = data['date'] as String? ?? '';
+                    // Status: only 'pending' is EN ATTENTE (Yellow), everything else is CORRIGÉ (Green)
+                    final rawStatus = item.status.trim().toLowerCase();
+                    final isPending = rawStatus == 'pending';
 
-                final rawStatus = data['status'] as String?;
-                final isGraded = data['isGraded'] as bool? ?? (rawStatus == 'CORRIGÉ');
-                final isPending = rawStatus == 'EN ATTENTE' || !isGraded;
+                    final badgeLabel = isPending ? "EN ATTENTE" : "CORRIGÉ";
+                    final badgeColor = isPending
+                        ? AppColors.firebaseYellow
+                        : AppColors.correctText;
+                    final badgeBg = isPending
+                        ? AppColors.firebaseYellow.withValues(alpha: 0.15)
+                        : AppColors.successGreen.withValues(alpha: 0.15);
+                    final badgeBorder = isPending
+                        ? AppColors.firebaseYellow.withValues(alpha: 0.4)
+                        : AppColors.successGreen.withValues(alpha: 0.3);
 
-                final badgeLabel = isPending ? "EN ATTENTE" : "CORRIGÉ";
-                final badgeColor = isPending ? AppColors.skyBlue : AppColors.correctText;
-                final badgeBg = isPending
-                    ? AppColors.actionBlue.withValues(alpha: 0.15)
-                    : AppColors.successGreen.withValues(alpha: 0.15);
-                final badgeBorder = isPending
-                    ? AppColors.actionBlue.withValues(alpha: 0.3)
-                    : AppColors.successGreen.withValues(alpha: 0.3);
-
-                return Container(
-                  padding: EdgeInsets.all(4.5.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.card,
-                    borderRadius: AppRadius.circular16,
-                    border: Border.all(color: AppColors.borderSubtle),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Top Row: Title + Date (Left) & CORRIGÉ / EN ATTENTE Badge (Right)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    return Container(
+                      padding: EdgeInsets.all(4.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.card,
+                        borderRadius: AppRadius.circular16,
+                        border: Border.all(
+                          color: AppColors.borderSubtle,
+                          width: 1.2,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: .start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          // Top Row: Title + Date (Left) & Badge (Right)
+                          Row(
+                            mainAxisAlignment: .spaceBetween,
+                            crossAxisAlignment: .start,
                             children: [
-                              Text(
-                                quizTitle,
-                                style: AppTextStyles.titleMedium.copyWith(
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.bold,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: .start,
+                                  spacing: 0.4.h,
+                                  children: [
+                                    Text(
+                                      item.quizTitle,
+                                      style: AppTextStyles.titleMedium.copyWith(
+                                        color: AppColors.textPrimary,
+                                        fontWeight: .bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Date : ${item.dateStr}",
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: AppColors.textSecondary,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              SizedBox(height: 0.4.h),
-                              Text(
-                                "Date : $dateStr",
-                                style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.textSecondary,
+                              // Badge matching Home Session badge size and style
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 2.w,
+                                  vertical: 0.3.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: badgeBg,
+                                  borderRadius: AppRadius.circular6,
+                                  border: Border.all(color: badgeBorder),
+                                ),
+                                child: Text(
+                                  badgeLabel,
+                                  style: AppTextStyles.badge.copyWith(
+                                    color: badgeColor,
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 3.w,
-                              vertical: 0.6.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: badgeBg,
-                              borderRadius: AppRadius.circular20,
-                              border: Border.all(color: badgeBorder),
-                            ),
-                            child: Text(
-                              badgeLabel,
-                              style: AppTextStyles.badge.copyWith(
-                                color: badgeColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 9.sp,
-                                letterSpacing: 0.5,
-                              ),
+
+                          // Divider Line
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 1.2.h),
+                            child: const Divider(
+                              color: AppColors.borderSubtle,
+                              height: 1,
+                              thickness: 0.8,
                             ),
                           ),
-                        ],
-                      ),
 
-                      // Divider Line
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 1.5.h),
-                        child: const Divider(
-                          color: AppColors.borderSubtle,
-                          height: 1,
-                          thickness: 0.8,
-                        ),
-                      ),
-
-                      // Bottom Row: Score (Left) & Voir détails Button (Right)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "$score / $totalPossible pts",
-                            style: AppTextStyles.titleMedium.copyWith(
-                              color: AppColors.skyBlue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () => _handleViewDetails(context, data),
-                            borderRadius: AppRadius.circular12,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 4.w,
-                                vertical: 1.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.skyBlue.withValues(
-                                  alpha: 0.12,
+                          // Bottom Row: Score (Left) & Voir détails TextButton (Right)
+                          Row(
+                            mainAxisAlignment: .spaceBetween,
+                            children: [
+                              Text(
+                                "${item.score} / ${item.totalPossibleScore} pts",
+                                style: AppTextStyles.titleMedium.copyWith(
+                                  color: AppColors.skyBlue,
+                                  fontWeight: .bold,
                                 ),
-                                borderRadius: AppRadius.circular12,
-                                border: Border.all(
-                                  color: AppColors.skyBlue.withValues(
-                                    alpha: 0.3,
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    _handleViewDetails(context, item),
+                                style: TextButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 2.w,
+                                    vertical: 0.5.h,
+                                  ),
+                                  minimumSize: Size.zero,
+                                  tapTargetSize: .shrinkWrap,
+                                ),
+                                child: Text(
+                                  "Voir détails",
+                                  style: AppTextStyles.buttonSmall.copyWith(
+                                    color: AppColors.actionBlue,
                                   ),
                                 ),
                               ),
-                              child: Text(
-                                "Voir détails",
-                                style: AppTextStyles.buttonSmall.copyWith(
-                                  color: AppColors.skyBlue,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ],
+                    );
+                  },
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

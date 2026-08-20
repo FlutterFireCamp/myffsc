@@ -42,7 +42,7 @@ class TestInstructionsPage extends StatelessWidget {
                       ),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Row(
                           children: [
@@ -66,7 +66,7 @@ class TestInstructionsPage extends StatelessWidget {
                                 "ÉVALUATION OFFICIELLE",
                                 style: AppTextStyles.badgeSmall.copyWith(
                                   color: AppColors.skyBlue,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: .bold,
                                 ),
                               ),
                             ),
@@ -75,7 +75,7 @@ class TestInstructionsPage extends StatelessWidget {
                               "${quiz.totalPoints} Pts",
                               style: AppTextStyles.h3.copyWith(
                                 color: AppColors.skyBlue,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: .bold,
                               ),
                             ),
                           ],
@@ -141,36 +141,36 @@ class TestInstructionsPage extends StatelessWidget {
                       ),
                     ),
                     child: Row(
+                      spacing: 3.5.w,
                       children: [
                         Container(
                           padding: EdgeInsets.all(2.5.w),
                           decoration: BoxDecoration(
                             color: AppColors.actionBlue.withValues(alpha: 0.15),
-                            shape: BoxShape.circle,
+                            shape: .circle,
                           ),
                           child: AppIcons.calendar(
                             color: AppColors.skyBlue,
                             size: 22,
                           ),
                         ),
-                        SizedBox(width: 3.5.w),
                         Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: .start,
+                            spacing: 0.4.h,
                             children: [
                               Text(
                                 "Plage Horaire d'Accessibilité",
                                 style: AppTextStyles.caption.copyWith(
                                   color: AppColors.textMuted,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: .w600,
                                 ),
                               ),
-                              SizedBox(height: 0.4.h),
                               Text(
                                 quiz.localAvailabilityRangeText,
                                 style: AppTextStyles.bodyMedium.copyWith(
                                   color: AppColors.skyBlue,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: .bold,
                                 ),
                               ),
                             ],
@@ -283,7 +283,7 @@ class TestInstructionsPage extends StatelessWidget {
                   "Commencer l'évaluation",
                   style: AppTextStyles.button.copyWith(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
               ),
@@ -303,15 +303,15 @@ class TestInstructionsPage extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
+        spacing: 1.8.w,
         children: [
           icon,
-          SizedBox(width: 1.8.w),
           Text(
             label,
             style: AppTextStyles.caption.copyWith(
               color: AppColors.textSecondary,
-              fontWeight: FontWeight.w600,
+              fontWeight: .w600,
             ),
           ),
         ],

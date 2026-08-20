@@ -28,15 +28,16 @@ class QuizHeader extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
+        spacing: 1.5.h,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Text(
                 "Question ${currentQuestionIndex + 1} / $totalQuestions",
                 style: AppTextStyles.titleMedium.copyWith(
                   color: AppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
               Container(
@@ -47,14 +48,14 @@ class QuizHeader extends StatelessWidget {
                   border: Border.all(color: AppColors.firebaseOrange.withValues(alpha: 0.3)),
                 ),
                 child: Row(
+                  spacing: 1.5.w,
                   children: [
                     AppIcons.timer(size: 16, color: AppColors.firebaseOrange),
-                    SizedBox(width: 1.5.w),
                     Text(
                       formattedTime,
                       style: AppTextStyles.badge.copyWith(
                         color: AppColors.firebaseOrange,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ],
@@ -62,14 +63,13 @@ class QuizHeader extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 1.5.h),
           ClipRRect(
             borderRadius: AppRadius.circular6,
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 6,
               backgroundColor: AppColors.ultraDark,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.skyBlue),
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.actionBlue),
             ),
           ),
         ],

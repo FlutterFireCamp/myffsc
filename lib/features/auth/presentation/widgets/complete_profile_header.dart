@@ -23,6 +23,7 @@ class CompleteProfileHeader extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Row(
+        spacing: 3.5.w,
         children: [
           CircleAvatar(
             radius: 5.w,
@@ -31,36 +32,35 @@ class CompleteProfileHeader extends StatelessWidget {
                 ? NetworkImage(photoUrl!)
                 : null,
             child: (photoUrl == null || photoUrl!.isEmpty)
-                ? AppIcons.user(size: 20, color: AppColors.skyBlue)
+                ? AppIcons.user(size: 20, color: AppColors.actionBlue)
                 : null,
           ),
-          SizedBox(width: 3.5.w),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
+              spacing: 0.3.h,
               children: [
                 Row(
+                  spacing: 1.5.w,
                   children: [
                     Text(
                       "Compte Google",
                       style: AppTextStyles.caption.copyWith(
                         color: AppColors.textMuted,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
-                    SizedBox(width: 1.5.w),
                     AppIcons.check(color: AppColors.correctText, size: 14),
                   ],
                 ),
-                SizedBox(height: 0.3.h),
                 Text(
                   emailText,
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                   maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
               ],
             ),

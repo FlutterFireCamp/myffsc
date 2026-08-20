@@ -24,9 +24,12 @@ class ProfileSocialLinksBar extends StatelessWidget {
       urlString.startsWith('http') ? urlString : 'https://$urlString',
     );
     try {
-      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (!await launchUrl(url, mode: .externalApplication)) {
         if (context.mounted) {
-          AppSnackBar.showError(context, "Impossible d'ouvrir le lien : $urlString");
+          AppSnackBar.showError(
+            context,
+            "Impossible d'ouvrir le lien : $urlString",
+          );
         }
       }
     } catch (e) {
@@ -40,44 +43,34 @@ class ProfileSocialLinksBar extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!hasSocialLinks) return const SizedBox.shrink();
 
-    return Column(
-      crossAxisAlignment: .center,
+    return Row(
+      mainAxisAlignment: .center,
+      spacing: 2.5.w,
       children: [
-        Text(
-          "Réseaux Sociaux",
-          style: AppTextStyles.bodyLarge.copyWith(color: AppColors.textPrimary),
-        ),
-        SizedBox(height: 1.5.h),
-        Row(
-          mainAxisAlignment: .center,
-          children: [
-            if (user.github != null && user.github!.isNotEmpty)
-              _buildSocialIconButton(
-                icon: AppIcons.github(size: 16),
-                tooltip: "GitHub",
-                onTap: () => _launchExternalUrl(context, user.github),
-              ),
-            if (user.linkedin != null && user.linkedin!.isNotEmpty)
-              _buildSocialIconButton(
-                icon: AppIcons.linkedin(size: 16),
-                tooltip: "LinkedIn",
-                onTap: () => _launchExternalUrl(context, user.linkedin),
-              ),
-            if (user.x != null && user.x!.isNotEmpty)
-              _buildSocialIconButton(
-                icon: AppIcons.twitter(size: 16),
-                tooltip: "X / Twitter",
-                onTap: () => _launchExternalUrl(context, user.x),
-              ),
-            if (user.portfolio != null && user.portfolio!.isNotEmpty)
-              _buildSocialIconButton(
-                icon: AppIcons.globe02(size: 16),
-                tooltip: "Portfolio",
-                onTap: () => _launchExternalUrl(context, user.portfolio),
-              ),
-          ],
-        ),
-        SizedBox(height: 3.h),
+        if (user.github != null && user.github!.isNotEmpty)
+          _buildSocialIconButton(
+            icon: AppIcons.github(size: 16),
+            tooltip: "GitHub",
+            onTap: () => _launchExternalUrl(context, user.github),
+          ),
+        if (user.linkedin != null && user.linkedin!.isNotEmpty)
+          _buildSocialIconButton(
+            icon: AppIcons.linkedin(size: 16),
+            tooltip: "LinkedIn",
+            onTap: () => _launchExternalUrl(context, user.linkedin),
+          ),
+        if (user.x != null && user.x!.isNotEmpty)
+          _buildSocialIconButton(
+            icon: AppIcons.twitter(size: 16),
+            tooltip: "X / Twitter",
+            onTap: () => _launchExternalUrl(context, user.x),
+          ),
+        if (user.portfolio != null && user.portfolio!.isNotEmpty)
+          _buildSocialIconButton(
+            icon: AppIcons.globe02(size: 16),
+            tooltip: "Portfolio",
+            onTap: () => _launchExternalUrl(context, user.portfolio),
+          ),
       ],
     );
   }
@@ -87,22 +80,19 @@ class ProfileSocialLinksBar extends StatelessWidget {
     required String tooltip,
     required VoidCallback onTap,
   }) {
-    return Padding(
-      padding: EdgeInsets.only(right: 2.5.w),
-      child: Tooltip(
-        message: tooltip,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: AppRadius.circular12,
-          child: Container(
-            padding: EdgeInsets.all(2.2.w),
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: AppRadius.circular12,
-              border: Border.all(color: AppColors.borderSubtle),
-            ),
-            child: icon,
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadius.circular12,
+        child: Container(
+          padding: EdgeInsets.all(2.2.w),
+          decoration: BoxDecoration(
+            color: AppColors.card,
+            borderRadius: AppRadius.circular12,
+            border: Border.all(color: AppColors.borderSubtle),
           ),
+          child: icon,
         ),
       ),
     );

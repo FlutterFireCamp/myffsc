@@ -10,4 +10,5 @@ class RouteNames {
   static const String tests = 'tests';
   static const String podium = 'podium';
   static const String profile = 'profile';
+  static const String editProfile = 'editProfile';
 }

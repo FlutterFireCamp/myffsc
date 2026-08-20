@@ -13,34 +13,33 @@ class PodiumShimmer extends StatelessWidget {
         // 1. Top 3 Podium Pillars Skeleton
         AppShimmer(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: .center,
+            crossAxisAlignment: .end,
+            spacing: 3.w,
             children: [
               // Rank 2 Pillar
               Container(
                 width: 25.w,
                 height: 18.h,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.card,
                   borderRadius: AppRadius.circular16,
                 ),
               ),
-              SizedBox(width: 3.w),
               // Rank 1 Pillar
               Container(
                 width: 28.w,
                 height: 24.h,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.card,
                   borderRadius: AppRadius.circular16,
                 ),
               ),
-              SizedBox(width: 3.w),
               // Rank 3 Pillar
               Container(
                 width: 25.w,
                 height: 15.h,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.card,
                   borderRadius: AppRadius.circular16,
                 ),
@@ -58,7 +57,7 @@ class PodiumShimmer extends StatelessWidget {
             child: AppShimmer(
               child: Container(
                 height: 7.h,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.card,
                   borderRadius: AppRadius.circular14,
                 ),

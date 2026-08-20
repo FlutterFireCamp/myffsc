@@ -1,9 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/program_item.dart';
+import '../bloc/programs_bloc.dart';
+import '../bloc/programs_event.dart';
+import '../bloc/programs_state.dart';
 import '../widgets/program_card.dart';
 import '../widgets/program_filter_tabs.dart';
 import '../widgets/programs_shimmer.dart';
@@ -16,96 +19,12 @@ class ProgramsPage extends StatefulWidget {
 }
 
 class _ProgramsPageState extends State<ProgramsPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final ScrollController _scrollController = ScrollController();
-
-  final List<ProgramItem> _programs = [];
-  bool _isLoadingInitial = true;
-  bool _isLoadingMore = false;
-  bool _hasMore = false;
-
   ProgramType? _selectedTypeFilter;
 
   @override
   void initState() {
     super.initState();
-    _fetchPrograms(isInitial: true);
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      if (!_isLoadingMore && _hasMore && !_isLoadingInitial) {
-        _fetchPrograms(isInitial: false);
-      }
-    }
-  }
-
-  Future<void> _fetchPrograms({bool isInitial = false}) async {
-    if (isInitial) {
-      setState(() {
-        _isLoadingInitial = true;
-        _programs.clear();
-        _hasMore = false;
-      });
-    } else {
-      if (_isLoadingMore || !_hasMore) return;
-      setState(() {
-        _isLoadingMore = true;
-      });
-    }
-
-    try {
-      Query<Map<String, dynamic>> query = _firestore.collection('programs');
-
-      if (_selectedTypeFilter != null) {
-        query = query.where('type', isEqualTo: _selectedTypeFilter!.toDbString());
-      }
-
-      final querySnapshot = await query.get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final activeItems = querySnapshot.docs
-            .map((doc) => ProgramItem.fromFirestore(doc))
-            .where((item) => !item.isPast)
-            .toList();
-
-        // Sort ascending: nearest upcoming date first
-        activeItems.sort((a, b) {
-          final dtA = a.programDateTime;
-          final dtB = b.programDateTime;
-          if (dtA == null && dtB == null) return 0;
-          if (dtA == null) return 1;
-          if (dtB == null) return -1;
-          return dtA.compareTo(dtB);
-        });
-
-        setState(() {
-          _programs.clear();
-          _programs.addAll(activeItems);
-          _hasMore = false;
-        });
-      } else {
-        setState(() {
-          _hasMore = false;
-        });
-      }
-    } catch (e) {
-      debugPrint('Error fetching programs: $e');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingInitial = false;
-          _isLoadingMore = false;
-        });
-      }
-    }
+    context.read<ProgramsBloc>().add(const FetchProgramsEvent());
   }
 
   void _onSelectFilter(ProgramType? type) {
@@ -113,14 +32,16 @@ class _ProgramsPageState extends State<ProgramsPage> {
     setState(() {
       _selectedTypeFilter = type;
     });
-    _fetchPrograms(isInitial: true);
+    context.read<ProgramsBloc>().add(FilterProgramsEvent(type));
   }
 
   Future<void> _launchExternalUrl(BuildContext context, String? urlString) async {
     if (urlString == null || urlString.trim().isEmpty) return;
-    final Uri url = Uri.parse(urlString.startsWith('http') ? urlString : 'https://$urlString');
+    final Uri url = Uri.parse(
+      urlString.startsWith('http') ? urlString : 'https://$urlString',
+    );
     try {
-      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (!await launchUrl(url, mode: .externalApplication)) {
         if (context.mounted) {
           AppSnackBar.showError(context, "Impossible d'ouvrir le lien : $urlString");
         }
@@ -132,14 +53,16 @@ class _ProgramsPageState extends State<ProgramsPage> {
     }
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     if (_selectedTypeFilter == null) {
       return AppEmptyState(
         title: "Aucun programme disponible",
         icon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconXl),
         accentColor: AppColors.skyBlue,
         actionLabel: "Actualiser",
-        onAction: () => _fetchPrograms(isInitial: true),
+        onAction: () => context.read<ProgramsBloc>().add(
+              FetchProgramsEvent(filterType: _selectedTypeFilter, isRefresh: true),
+            ),
       );
     }
 
@@ -150,7 +73,9 @@ class _ProgramsPageState extends State<ProgramsPage> {
       icon: AppIcons.programs(color: categoryColor, size: AppSizes.iconXl),
       accentColor: categoryColor,
       actionLabel: "Actualiser",
-      onAction: () => _fetchPrograms(isInitial: true),
+      onAction: () => context.read<ProgramsBloc>().add(
+            FetchProgramsEvent(filterType: _selectedTypeFilter, isRefresh: true),
+          ),
     );
   }
 
@@ -174,38 +99,64 @@ class _ProgramsPageState extends State<ProgramsPage> {
             onSelectFilter: _onSelectFilter,
           ),
 
-          // Body Content
+          // Body Content with BlocBuilder
           Expanded(
-            child: _isLoadingInitial
-                ? const ProgramsShimmer()
-                : _programs.isEmpty
-                    ? _buildEmptyState()
-                    : RefreshIndicator(
-                        color: AppColors.skyBlue,
-                        onRefresh: () => _fetchPrograms(isInitial: true),
-                        child: ListView.separated(
-                          controller: _scrollController,
-                          padding: EdgeInsets.all(4.w),
-                          itemCount: _programs.length + (_isLoadingMore ? 1 : 0),
-                          separatorBuilder: (context, index) => SizedBox(height: 2.h),
-                          itemBuilder: (context, index) {
-                            if (index == _programs.length) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 2.h),
-                                child: const Center(
-                                  child: CircularProgressIndicator(color: AppColors.skyBlue),
-                                ),
-                              );
-                            }
+            child: BlocBuilder<ProgramsBloc, ProgramsState>(
+              builder: (context, state) {
+                if (state is ProgramsLoadingState || state is ProgramsInitialState) {
+                  return const ProgramsShimmer();
+                }
 
-                            final item = _programs[index];
-                            return ProgramCard(
-                              item: item,
-                              onLaunchUrl: (url) => _launchExternalUrl(context, url),
-                            );
-                          },
+                if (state is ProgramsErrorState) {
+                  return AppEmptyState(
+                    title: "Erreur de chargement",
+                    message: state.message,
+                    icon: AppIcons.warning(color: AppColors.alertRed, size: AppSizes.iconXl),
+                    accentColor: AppColors.alertRed,
+                    actionLabel: "Réessayer",
+                    onAction: () => context.read<ProgramsBloc>().add(
+                          FetchProgramsEvent(
+                            filterType: _selectedTypeFilter,
+                            isRefresh: true,
+                          ),
                         ),
-                      ),
+                  );
+                }
+
+                if (state is ProgramsLoadedState) {
+                  final programs = state.programs;
+                  if (programs.isEmpty) {
+                    return _buildEmptyState(context);
+                  }
+
+                  return RefreshIndicator(
+                    color: AppColors.skyBlue,
+                    onRefresh: () async {
+                      context.read<ProgramsBloc>().add(
+                            FetchProgramsEvent(
+                              filterType: _selectedTypeFilter,
+                              isRefresh: true,
+                            ),
+                          );
+                    },
+                    child: ListView.separated(
+                      padding: EdgeInsets.all(4.w),
+                      itemCount: programs.length,
+                      separatorBuilder: (context, index) => SizedBox(height: 2.h),
+                      itemBuilder: (context, index) {
+                        final item = programs[index];
+                        return ProgramCard(
+                          item: item,
+                          onLaunchUrl: (url) => _launchExternalUrl(context, url),
+                        );
+                      },
+                    ),
+                  );
+                }
+
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ],
       ),

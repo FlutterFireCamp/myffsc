@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../../auth/domain/entities/user_entity.dart';
-import '../pages/edit_profile_page.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
   final UserEntity user;
@@ -11,25 +11,32 @@ class ProfileHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final countryWithFlag = AppDataConstants.formatWithFlag(
+      user.country,
+      flagAtEnd: true,
+    );
     final locationText = [
       if (user.town != null && user.town!.isNotEmpty) user.town,
-      if (user.country != null && user.country!.isNotEmpty) user.country,
+      if (countryWithFlag.isNotEmpty) countryWithFlag,
     ].join(', ');
 
     final hubText = user.hub ?? user.community;
 
     return Container(
-      padding: EdgeInsets.all(5.w),
+      padding: .all(5.w),
       decoration: BoxDecoration(
         color: AppColors.card,
         borderRadius: AppRadius.circular20,
-        border: Border.all(color: AppColors.borderSubtle),
+        border: .all(color: AppColors.borderSubtle),
       ),
       child: Column(
-        crossAxisAlignment: .center,
+        crossAxisAlignment: .start,
+        spacing: 1.h,
         children: [
+          // Row 1: Avatar (Left) + Details (Name, Email, Location & Hub Badges)
           Row(
-            crossAxisAlignment: .center,
+            crossAxisAlignment: .start,
+            spacing: 3.w,
             children: [
               // Avatar Left
               AppCachedAvatar(
@@ -40,92 +47,91 @@ class ProfileHeaderCard extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(width: 3.w),
 
-              // Name & Email Column (single line max, ellipsis overflow)
+              // Name, Email & Badges Column (Align Start)
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: .start,
+                  mainAxisSize: .min,
+                  spacing: 0.4.h,
                   children: [
                     Text(
                       user.name,
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.titleMedium.copyWith(
+                      overflow: .ellipsis,
+                      style: AppTextStyles.titleLarge.copyWith(
                         color: AppColors.textPrimary,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
-                    SizedBox(height: 0.2.h),
                     Text(
                       user.email,
                       maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.caption.copyWith(
+                      overflow: .ellipsis,
+                      style: AppTextStyles.bodySmall.copyWith(
                         color: AppColors.textSecondary,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 2.w),
 
-              // Edit Button (Icon Only) placed at far right
-              InkWell(
-                onTap: () {
-                  Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(
-                      builder: (context) => EditProfilePage(user: user),
-                    ),
-                  );
-                },
-                borderRadius: AppRadius.circular12,
-                child: Container(
-                  padding: EdgeInsets.all(2.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.actionBlue.withValues(alpha: 0.15),
-                    borderRadius: AppRadius.circular12,
-                    border: Border.all(
-                      color: AppColors.actionBlue.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: AppIcons.edit(color: AppColors.skyBlue, size: 14),
+                    // Location & Hub/Community Badges inside the same column starting at the left
+                    if (locationText.isNotEmpty ||
+                        (hubText != null && hubText.isNotEmpty)) ...[
+                      SizedBox(height: 0.4.h),
+                      Wrap(
+                        spacing: 2.w,
+                        runSpacing: 0.8.h,
+                        alignment: .start,
+                        runAlignment: .start,
+                        crossAxisAlignment: .start,
+                        children: [
+                          if (locationText.isNotEmpty)
+                            _buildBadgeChip(
+                              icon: AppIcons.location04(
+                                color: AppColors.actionBlue,
+                                size: 14,
+                              ),
+                              text: locationText,
+                            ),
+                          if (hubText != null && hubText.isNotEmpty)
+                            _buildBadgeChip(
+                              icon: AppIcons.userGroup(
+                                color: AppColors.actionBlue,
+                                size: 14,
+                              ),
+                              text: hubText,
+                            ),
+                        ],
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ],
           ),
 
-          // Location & Hub/Community Badges
-          if (locationText.isNotEmpty ||
-              (hubText != null && hubText.isNotEmpty)) ...[
-            SizedBox(height: 1.5.h),
-            Wrap(
-              spacing: 2.w,
-              runSpacing: 0.8.h,
-              alignment: .center,
-              runAlignment: .center,
-              crossAxisAlignment: .center,
-              children: [
-                if (locationText.isNotEmpty)
-                  _buildBadgeChip(
-                    icon: AppIcons.location04(
-                      color: AppColors.skyBlue,
-                      size: 14,
+          // Row 2: Edit Button aligned to the right (.end)
+          Row(
+            mainAxisAlignment: .end,
+            children: [
+              InkWell(
+                onTap: () {
+                  context.push(RoutePaths.editProfile, extra: user);
+                },
+                borderRadius: AppRadius.circular12,
+                child: Container(
+                  padding: .all(0.8.h),
+                  decoration: BoxDecoration(
+                    color: AppColors.actionBlue.withValues(alpha: 0.15),
+                    borderRadius: AppRadius.circular12,
+                    border: .all(
+                      color: AppColors.actionBlue.withValues(alpha: 0.3),
                     ),
-                    text: locationText,
                   ),
-                if (hubText != null && hubText.isNotEmpty)
-                  _buildBadgeChip(
-                    icon: AppIcons.userGroup(
-                      color: AppColors.skyBlue,
-                      size: 14,
-                    ),
-                    text: hubText,
-                  ),
-              ],
-            ),
-          ],
+                  child: AppIcons.edit(color: AppColors.actionBlue, size: 14),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -133,26 +139,25 @@ class ProfileHeaderCard extends StatelessWidget {
 
   Widget _buildBadgeChip({required Widget icon, required String text}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.5.h),
+      padding: .symmetric(horizontal: 2.5.w, vertical: 0.5.h),
       decoration: BoxDecoration(
         color: AppColors.actionBlue.withValues(alpha: 0.12),
         borderRadius: AppRadius.circular8,
-        border: Border.all(color: AppColors.actionBlue.withValues(alpha: 0.25)),
+        border: .all(color: AppColors.actionBlue.withValues(alpha: 0.25)),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: .min,
+        spacing: 1.5.w,
         children: [
           icon,
-          SizedBox(width: 1.5.w),
           Flexible(
             child: Text(
               text,
               maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+              overflow: .ellipsis,
               style: AppTextStyles.caption.copyWith(
                 color: AppColors.textPrimary,
-                fontWeight: FontWeight.w600,
-                fontSize: 10.5.sp,
+                fontWeight: .w600,
               ),
             ),
           ),

@@ -20,7 +20,7 @@ class ActionButton extends StatelessWidget {
     final theme = Theme.of(context);
     final buttonWidget = Material(
       shape: const CircleBorder(),
-      clipBehavior: Clip.antiAlias,
+      clipBehavior: .antiAlias,
       color: color ?? theme.colorScheme.secondary,
       elevation: 4,
       child: IconButton(

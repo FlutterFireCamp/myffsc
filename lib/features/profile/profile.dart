@@ -1,2 +1,11 @@
+export 'data/datasources/profile_remote_data_source.dart';
+export 'data/models/user_test_history_model.dart';
+export 'data/repositories/profile_repository_impl.dart';
+export 'domain/entities/user_test_history_entity.dart';
+export 'domain/repositories/profile_repository.dart';
+export 'domain/usecases/profile_usecases.dart';
+export 'presentation/bloc/profile_bloc.dart';
+export 'presentation/bloc/profile_event.dart';
+export 'presentation/bloc/profile_state.dart';
 export 'presentation/pages/edit_profile_page.dart';
 export 'presentation/pages/profile_page.dart';

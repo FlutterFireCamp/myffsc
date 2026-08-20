@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/test_quiz_entity.dart';
+import '../../domain/entities/user_question_correction.dart';
 import '../widgets/test_correction_bottom_sheet.dart';
 
 class TestResultsPage extends StatelessWidget {
@@ -76,7 +77,7 @@ class TestResultsPage extends StatelessWidget {
                               color: isPassed
                                   ? AppColors.correctContainer
                                   : AppColors.actionBlue.withValues(alpha: 0.15),
-                              shape: BoxShape.circle,
+                              shape: .circle,
                             ),
                             child: AppIcons.trophy(
                               color: isPassed
@@ -93,7 +94,7 @@ class TestResultsPage extends StatelessWidget {
                           SizedBox(height: 0.8.h),
                           Text(
                             quiz.title,
-                            textAlign: TextAlign.center,
+                            textAlign: .center,
                             style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
                           ),
                           SizedBox(height: 2.5.h),
@@ -117,14 +118,14 @@ class TestResultsPage extends StatelessWidget {
                                   "$qcmScore / $totalPossibleScore Pts",
                                   style: AppTextStyles.h1.copyWith(
                                     color: AppColors.skyBlue,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: .bold,
                                   ),
                                 ),
                                 Text(
                                   "$percentage% de réussite",
                                   style: AppTextStyles.bodySmall.copyWith(
                                     color: isPassed ? AppColors.correctText : AppColors.textSecondary,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: .bold,
                                   ),
                                 ),
                               ],
@@ -170,11 +171,44 @@ class TestResultsPage extends StatelessWidget {
                 children: [
                   ElevatedButton.icon(
                     onPressed: () {
+                      final List<UserQuestionCorrection> corrections = [];
+                      for (int i = 0; i < quiz.questions.length; i++) {
+                        final q = quiz.questions[i];
+                        final ans = userAnswers[i];
+                        bool isCorrect = false;
+                        if (q.type == 'choice' && q.correctAnswers != null && ans != null) {
+                          final intAns = ans is int ? ans : int.tryParse(ans.toString());
+                          if (intAns != null) {
+                            isCorrect = q.correctAnswers!.contains(intAns) ||
+                                q.correctAnswers!.contains(intAns - 1) ||
+                                q.correctAnswers!.contains(intAns + 1);
+                          }
+                        }
+                        corrections.add(
+                          UserQuestionCorrection(
+                            index: i,
+                            questionId: q.id,
+                            title: q.title,
+                            statement: q.statement,
+                            type: q.type,
+                            studentAnswer: ans != null ? ans.toString() : "-1",
+                            earnedScore: isCorrect ? q.points : 0,
+                            maxScore: q.points > 0 ? q.points : 25,
+                            options: q.options,
+                            correctAnswers: q.correctAnswers,
+                            explanation: q.explanation,
+                          ),
+                        );
+                      }
+
                       TestCorrectionBottomSheet.show(
                         context,
-                        quiz: quiz,
-                        userAnswers: userAnswers,
+                        quizTitle: quiz.title,
+                        dateFormatted: DateTimeHelper.formatYmd(DateTime.now()),
                         totalScore: qcmScore,
+                        totalPossibleScore: totalPossibleScore,
+                        status: "Corrigé",
+                        questions: corrections,
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -192,7 +226,7 @@ class TestResultsPage extends StatelessWidget {
                       "Voir la correction détaillée",
                       style: AppTextStyles.button.copyWith(
                         color: AppColors.skyBlue,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ),
@@ -214,7 +248,7 @@ class TestResultsPage extends StatelessWidget {
                       "Retour au hub d'évaluations",
                       style: AppTextStyles.button.copyWith(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ),
@@ -240,7 +274,7 @@ class TestResultsPage extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           icon,
           SizedBox(height: 1.h),
@@ -250,7 +284,7 @@ class TestResultsPage extends StatelessWidget {
             value,
             style: AppTextStyles.titleMedium.copyWith(
               color: AppColors.textPrimary,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
         ],

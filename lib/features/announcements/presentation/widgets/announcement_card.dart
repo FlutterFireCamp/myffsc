@@ -24,10 +24,10 @@ class AnnouncementCard extends StatelessWidget {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
@@ -37,15 +37,15 @@ class AnnouncementCard extends StatelessWidget {
                   border: Border.all(color: item.type.borderColor),
                 ),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
+                  spacing: 1.5.w,
                   children: [
                     item.type.icon,
-                    SizedBox(width: 1.5.w),
                     Text(
                       item.type.label,
                       style: AppTextStyles.badge.copyWith(
                         color: item.type.color,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
                   ],
@@ -58,7 +58,7 @@ class AnnouncementCard extends StatelessWidget {
             item.title,
             style: AppTextStyles.titleLarge.copyWith(
               color: AppColors.textPrimary,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
           SizedBox(height: 1.h),
@@ -68,12 +68,12 @@ class AnnouncementCard extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Row(
+                spacing: 1.w,
                 children: [
                   AppIcons.calendar(size: 14, color: AppColors.textMuted),
-                  SizedBox(width: 1.w),
                   Text(
                     item.formattedFrenchDate,
                     style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),

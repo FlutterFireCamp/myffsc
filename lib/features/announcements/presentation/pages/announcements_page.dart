@@ -1,8 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/announcement_item.dart';
+import '../bloc/announcements_bloc.dart';
+import '../bloc/announcements_event.dart';
+import '../bloc/announcements_state.dart';
 import '../widgets/announcement_card.dart';
 import '../widgets/announcement_filter_tabs.dart';
 import '../widgets/announcements_shimmer.dart';
@@ -15,20 +18,13 @@ class AnnouncementsPage extends StatefulWidget {
 }
 
 class _AnnouncementsPageState extends State<AnnouncementsPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final ScrollController _scrollController = ScrollController();
-
-  final List<AnnouncementItem> _announcements = [];
-  bool _isLoadingInitial = true;
-  bool _isLoadingMore = false;
-  bool _hasMore = false;
-
   AnnouncementType? _selectedTypeFilter;
 
   @override
   void initState() {
     super.initState();
-    _fetchAnnouncements(isInitial: true);
+    context.read<AnnouncementsBloc>().add(const FetchAnnouncementsEvent());
     _scrollController.addListener(_onScroll);
   }
 
@@ -41,69 +37,13 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      if (!_isLoadingMore && _hasMore && !_isLoadingInitial) {
-        _fetchAnnouncements(isInitial: false);
-      }
-    }
-  }
-
-  Future<void> _fetchAnnouncements({bool isInitial = false}) async {
-    if (isInitial) {
-      setState(() {
-        _isLoadingInitial = true;
-        _announcements.clear();
-        _hasMore = false;
-      });
-    } else {
-      if (_isLoadingMore || !_hasMore) return;
-      setState(() {
-        _isLoadingMore = true;
-      });
-    }
-
-    try {
-      final querySnapshot = await _firestore.collection('announcements').get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final allItems = querySnapshot.docs
-            .map((doc) => AnnouncementItem.fromFirestore(doc))
-            .toList();
-
-        // Sort descending by createdAt or date
-        allItems.sort((a, b) {
-          final dtA = a.createdAt;
-          final dtB = b.createdAt;
-          if (dtA == null && dtB == null) return 0;
-          if (dtA == null) return 1;
-          if (dtB == null) return -1;
-          return dtB.compareTo(dtA);
-        });
-
-        // Filter by selected AnnouncementType
-        final filteredItems = _selectedTypeFilter == null
-            ? allItems
-            : allItems
-                  .where((item) => item.type == _selectedTypeFilter)
-                  .toList();
-
-        setState(() {
-          _announcements.clear();
-          _announcements.addAll(filteredItems);
-          _hasMore = false;
-        });
-      } else {
-        setState(() {
-          _hasMore = false;
-        });
-      }
-    } catch (e) {
-      debugPrint('Error fetching announcements: $e');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingInitial = false;
-          _isLoadingMore = false;
-        });
+      final state = context.read<AnnouncementsBloc>().state;
+      if (state is AnnouncementsLoadedState &&
+          state.hasMore &&
+          !state.isLoadingMore) {
+        context
+            .read<AnnouncementsBloc>()
+            .add(const LoadMoreAnnouncementsEvent());
       }
     }
   }
@@ -113,10 +53,10 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     setState(() {
       _selectedTypeFilter = type;
     });
-    _fetchAnnouncements(isInitial: true);
+    context.read<AnnouncementsBloc>().add(FilterAnnouncementsEvent(type));
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     if (_selectedTypeFilter == null) {
       return AppEmptyState(
         title: "Aucune annonce disponible",
@@ -126,19 +66,28 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
         ),
         accentColor: AppColors.skyBlue,
         actionLabel: "Actualiser",
-        onAction: () => _fetchAnnouncements(isInitial: true),
+        onAction: () => context.read<AnnouncementsBloc>().add(
+              FetchAnnouncementsEvent(
+                filterType: _selectedTypeFilter,
+                isRefresh: true,
+              ),
+            ),
       );
     }
 
     final categoryColor = _selectedTypeFilter!.color;
 
     return AppEmptyState(
-      title:
-          "Aucune annonce pour la catégorie \"${_selectedTypeFilter!.label}\"",
+      title: "Aucune annonce pour \"${_selectedTypeFilter!.label}\"",
       icon: _buildCategoryIcon(_selectedTypeFilter!, categoryColor),
       accentColor: categoryColor,
       actionLabel: "Actualiser",
-      onAction: () => _fetchAnnouncements(isInitial: true),
+      onAction: () => context.read<AnnouncementsBloc>().add(
+            FetchAnnouncementsEvent(
+              filterType: _selectedTypeFilter,
+              isRefresh: true,
+            ),
+          ),
     );
   }
 
@@ -170,24 +119,59 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
             onSelectFilter: _onSelectFilter,
           ),
 
-          // Body Content
+          // Body Content with BlocBuilder
           Expanded(
-            child: _isLoadingInitial
-                ? const AnnouncementsShimmer()
-                : _announcements.isEmpty
-                ? _buildEmptyState()
-                : RefreshIndicator(
+            child: BlocBuilder<AnnouncementsBloc, AnnouncementsState>(
+              builder: (context, state) {
+                if (state is AnnouncementsLoadingState ||
+                    state is AnnouncementsInitialState) {
+                  return const AnnouncementsShimmer();
+                }
+
+                if (state is AnnouncementsErrorState) {
+                  return AppEmptyState(
+                    title: "Erreur de chargement",
+                    message: state.message,
+                    icon: AppIcons.warning(
+                      color: AppColors.alertRed,
+                      size: AppSizes.iconXl,
+                    ),
+                    accentColor: AppColors.alertRed,
+                    actionLabel: "Réessayer",
+                    onAction: () => context.read<AnnouncementsBloc>().add(
+                          FetchAnnouncementsEvent(
+                            filterType: _selectedTypeFilter,
+                            isRefresh: true,
+                          ),
+                        ),
+                  );
+                }
+
+                if (state is AnnouncementsLoadedState) {
+                  final announcements = state.announcements;
+                  if (announcements.isEmpty) {
+                    return _buildEmptyState(context);
+                  }
+
+                  return RefreshIndicator(
                     color: AppColors.skyBlue,
-                    onRefresh: () => _fetchAnnouncements(isInitial: true),
+                    onRefresh: () async {
+                      context.read<AnnouncementsBloc>().add(
+                            FetchAnnouncementsEvent(
+                              filterType: _selectedTypeFilter,
+                              isRefresh: true,
+                            ),
+                          );
+                    },
                     child: ListView.separated(
                       controller: _scrollController,
                       padding: EdgeInsets.all(4.w),
-                      itemCount:
-                          _announcements.length + (_isLoadingMore ? 1 : 0),
+                      itemCount: announcements.length +
+                          (state.isLoadingMore ? 1 : 0),
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 2.h),
                       itemBuilder: (context, index) {
-                        if (index == _announcements.length) {
+                        if (index == announcements.length) {
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.h),
                             child: const Center(
@@ -198,11 +182,16 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                           );
                         }
 
-                        final item = _announcements[index];
+                        final item = announcements[index];
                         return AnnouncementCard(item: item);
                       },
                     ),
-                  ),
+                  );
+                }
+
+                return const SizedBox.shrink();
+              },
+            ),
           ),
         ],
       ),

@@ -71,13 +71,13 @@ class _ExpandableFabState extends State<ExpandableFab>
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: Stack(
-        alignment: Alignment.bottomRight,
-        clipBehavior: Clip.none,
+        alignment: .bottomRight,
+        clipBehavior: .none,
         children: [
           if (_open)
             GestureDetector(
               onTap: _close,
-              behavior: HitTestBehavior.translucent,
+              behavior: .translucent,
             ),
           _buildTapToCloseFab(),
           ..._buildExpandingActionButtons(),
@@ -94,14 +94,14 @@ class _ExpandableFabState extends State<ExpandableFab>
       child: Center(
         child: Material(
           shape: const CircleBorder(),
-          clipBehavior: Clip.antiAlias,
+          clipBehavior: .antiAlias,
           color: AppColors.card,
           elevation: 4,
           child: InkWell(
             onTap: _toggle,
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: AppIcons.cancel(color: AppColors.skyBlue, size: 20),
+              child: AppIcons.cancel(color: AppColors.actionBlue, size: 20),
             ),
           ),
         ),
@@ -126,7 +126,7 @@ class _ExpandableFabState extends State<ExpandableFab>
           maxDistance: widget.distance,
           progress: _expandAnimation,
           child: Listener(
-            behavior: HitTestBehavior.translucent,
+            behavior: .translucent,
             onPointerDown: (_) => _close(),
             child: widget.children[i],
           ),
@@ -140,7 +140,7 @@ class _ExpandableFabState extends State<ExpandableFab>
     return IgnorePointer(
       ignoring: _open,
       child: AnimatedContainer(
-        transformAlignment: Alignment.center,
+        transformAlignment: .center,
         transform: Matrix4.diagonal3Values(
           _open ? 0.7 : 1.0,
           _open ? 0.7 : 1.0,
@@ -154,11 +154,11 @@ class _ExpandableFabState extends State<ExpandableFab>
           duration: const Duration(milliseconds: 250),
           child: FloatingActionButton(
             onPressed: _toggle,
-            backgroundColor: AppColors.skyBlue,
-            foregroundColor: AppColors.ultraDark,
+            backgroundColor: AppColors.actionBlue,
+            foregroundColor: Colors.white,
             elevation: 4,
             shape: const CircleBorder(),
-            child: AppIcons.link(color: AppColors.ultraDark, size: AppSizes.iconLg),
+            child: AppIcons.link(color: Colors.white, size: AppSizes.iconLg),
           ),
         ),
       ),

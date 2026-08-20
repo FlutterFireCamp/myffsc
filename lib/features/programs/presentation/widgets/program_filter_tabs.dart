@@ -16,45 +16,41 @@ class ProgramFilterTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: .horizontal,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
       child: Row(
+        spacing: 2.w,
         children: [
           _buildFilterTab(
             label: "Tous",
             isSelected: selectedTypeFilter == null,
-            badgeColor: AppColors.skyBlue,
+            badgeColor: AppColors.actionBlue,
             onTap: () => onSelectFilter(null),
           ),
-          SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Sessions",
             isSelected: selectedTypeFilter == ProgramType.session,
             badgeColor: ProgramType.session.badgeColor,
             onTap: () => onSelectFilter(ProgramType.session),
           ),
-          SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Workshops",
             isSelected: selectedTypeFilter == ProgramType.workshop,
             badgeColor: ProgramType.workshop.badgeColor,
             onTap: () => onSelectFilter(ProgramType.workshop),
           ),
-          SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Conférences",
             isSelected: selectedTypeFilter == ProgramType.conference,
             badgeColor: ProgramType.conference.badgeColor,
             onTap: () => onSelectFilter(ProgramType.conference),
           ),
-          SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Groupes d'étude",
             isSelected: selectedTypeFilter == ProgramType.studyGroup,
             badgeColor: ProgramType.studyGroup.badgeColor,
             onTap: () => onSelectFilter(ProgramType.studyGroup),
           ),
-          SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Tests",
             isSelected: selectedTypeFilter == ProgramType.test,
@@ -72,6 +68,11 @@ class ProgramFilterTabs extends StatelessWidget {
     required Color badgeColor,
     required VoidCallback onTap,
   }) {
+    final isAllTab = label.toLowerCase() == "tous" || label.toLowerCase() == "toutes";
+    final textColor = isSelected
+        ? (isAllTab ? Colors.white : const Color(0xFF111827))
+        : AppColors.textSecondary;
+
     return InkWell(
       onTap: onTap,
       borderRadius: AppRadius.circular12,
@@ -79,7 +80,9 @@ class ProgramFilterTabs extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
         decoration: BoxDecoration(
-          color: isSelected ? badgeColor.withValues(alpha: 0.2) : AppColors.card,
+          color: isSelected
+              ? badgeColor
+              : AppColors.cardHover.withValues(alpha: 0.5),
           borderRadius: AppRadius.circular12,
           border: Border.all(
             color: isSelected ? badgeColor : AppColors.borderSubtle,
@@ -88,9 +91,9 @@ class ProgramFilterTabs extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: AppTextStyles.buttonSmall.copyWith(
-            color: isSelected ? badgeColor : AppColors.textPrimary,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+          style: AppTextStyles.tabLabel.copyWith(
+            color: textColor,
+            fontWeight: isSelected ? .bold : .w500,
           ),
         ),
       ),

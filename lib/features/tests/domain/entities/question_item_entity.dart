@@ -3,7 +3,8 @@ import 'package:equatable/equatable.dart';
 class QuestionItemEntity extends Equatable {
   final String id;
   final String title;
-  final String type; // 'choice' | 'text'
+  final String? statement;
+  final String type; // 'choice' | 'text' | 'open'
   final int level;
   final List<int> modules;
   final int points;
@@ -19,6 +20,7 @@ class QuestionItemEntity extends Equatable {
   const QuestionItemEntity({
     required this.id,
     required this.title,
+    this.statement,
     required this.type,
     required this.level,
     required this.modules,
@@ -33,10 +35,18 @@ class QuestionItemEntity extends Equatable {
     this.updatedAt,
   });
 
+  String get displayStatement {
+    if (statement != null && statement!.trim().isNotEmpty) {
+      return statement!.trim();
+    }
+    return title.trim();
+  }
+
   @override
   List<Object?> get props => [
         id,
         title,
+        statement,
         type,
         level,
         modules,

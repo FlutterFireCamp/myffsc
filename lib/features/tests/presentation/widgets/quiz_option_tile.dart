@@ -50,7 +50,7 @@ class QuizOptionTile extends StatelessWidget {
     } else if (isSelected) {
       optionBg = AppColors.cardHover;
       optionBorder = AppColors.actionBlue;
-      prefixColor = AppColors.skyBlue;
+      prefixColor = AppColors.actionBlue;
     }
 
     return InkWell(
@@ -68,12 +68,12 @@ class QuizOptionTile extends StatelessWidget {
           ),
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: .center,
           children: [
             Text(
               "$letterPrefix. ",
               style: AppTextStyles.bodyLarge.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: .bold,
                 color: prefixColor,
               ),
             ),
@@ -83,8 +83,8 @@ class QuizOptionTile extends StatelessWidget {
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: textColor,
                   fontWeight: isSelected || (isSubmitted && isCorrect)
-                      ? FontWeight.w600
-                      : FontWeight.normal,
+                      ? .w600
+                      : .normal,
                 ),
               ),
             ),

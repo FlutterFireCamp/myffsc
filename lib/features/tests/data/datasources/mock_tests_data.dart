@@ -4,7 +4,7 @@ import '../../domain/entities/test_quiz_entity.dart';
 class MockTestsData {
   static final TestQuizEntity sampleDartQuiz = TestQuizEntity(
     id: 'quiz_dart_01',
-    title: "Quiz d'Expertise Dart : Niveau Intermédiaire à Avancé",
+    title: "Test d'Expertise Dart : Niveau Intermédiaire à Avancé",
     description:
         "Évaluez vos compétences approfondies sur le langage Dart : collections, typage, asynchronisme, isolats et gestion de mémoire.",
     totalDurationMinutes: 20,

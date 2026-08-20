@@ -1,5 +1,9 @@
 export 'domain/entities/user_entity.dart';
 export 'domain/repositories/auth_repository.dart';
+export 'domain/usecases/auth_usecases.dart';
+export 'data/models/user_model.dart';
+export 'data/datasources/auth_remote_data_source.dart';
+export 'data/repositories/auth_repository_impl.dart';
 export 'presentation/bloc/auth_bloc.dart';
 export 'presentation/bloc/auth_event.dart';
 export 'presentation/bloc/auth_state.dart';

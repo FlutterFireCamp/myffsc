@@ -1,40 +1,97 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
-import '../../domain/entities/test_quiz_entity.dart';
+import '../../domain/entities/user_question_correction.dart';
 
-class TestCorrectionBottomSheet extends StatelessWidget {
-  final TestQuizEntity quiz;
-  final Map<int, dynamic> userAnswers;
+class TestCorrectionBottomSheet extends StatefulWidget {
+  final String quizTitle;
+  final String dateFormatted;
   final int totalScore;
+  final int totalPossibleScore;
+  final String status;
+  final List<UserQuestionCorrection>? initialQuestions;
+  final Future<List<UserQuestionCorrection>>? questionsFuture;
 
   const TestCorrectionBottomSheet({
     super.key,
-    required this.quiz,
-    required this.userAnswers,
+    required this.quizTitle,
+    required this.dateFormatted,
     required this.totalScore,
+    required this.totalPossibleScore,
+    required this.status,
+    this.initialQuestions,
+    this.questionsFuture,
   });
 
-  static void show(
+  static Future<void> show(
     BuildContext context, {
-    required TestQuizEntity quiz,
-    required Map<int, dynamic> userAnswers,
+    required String quizTitle,
+    required String dateFormatted,
     required int totalScore,
+    required int totalPossibleScore,
+    required String status,
+    List<UserQuestionCorrection>? questions,
+    Future<List<UserQuestionCorrection>>? questionsFuture,
   }) {
-    showModalBottomSheet(
+    return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => TestCorrectionBottomSheet(
-        quiz: quiz,
-        userAnswers: userAnswers,
+        quizTitle: quizTitle,
+        dateFormatted: dateFormatted,
         totalScore: totalScore,
+        totalPossibleScore: totalPossibleScore,
+        status: status,
+        initialQuestions: questions,
+        questionsFuture: questionsFuture,
       ),
     );
   }
 
   @override
+  State<TestCorrectionBottomSheet> createState() =>
+      _TestCorrectionBottomSheetState();
+}
+
+class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
+  List<UserQuestionCorrection>? _questions;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _questions = widget.initialQuestions;
+    if (_questions == null && widget.questionsFuture != null) {
+      _isLoading = true;
+      _loadQuestions();
+    }
+  }
+
+  Future<void> _loadQuestions() async {
+    try {
+      final loaded = await widget.questionsFuture!;
+      if (mounted) {
+        setState(() {
+          _questions = loaded;
+          _isLoading = false;
+        });
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _questions = [];
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final questions = _questions ?? [];
+
     return Container(
       constraints: BoxConstraints(maxHeight: 85.h),
       decoration: const BoxDecoration(
@@ -43,13 +100,13 @@ class TestCorrectionBottomSheet extends StatelessWidget {
       ),
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: .min,
+        crossAxisAlignment: .start,
         children: [
-          // Drag handle indicator
+          // Drag Handle
           Center(
             child: Container(
-              width: 12.w,
+              width: 10.w,
               height: 4,
               decoration: BoxDecoration(
                 color: AppColors.borderSubtle,
@@ -57,336 +114,424 @@ class TestCorrectionBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 1.5.h),
 
-          // Header Title & Score Badge
+          // Header Row: Title & Subtitle (Left) + Close Button (Right)
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: .start,
+            mainAxisAlignment: .spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Correction Détaillée",
-                    style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
-                  ),
-                  SizedBox(height: 0.4.h),
-                  Text(
-                    quiz.title,
-                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
-                  ),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 0.8.h),
-                decoration: BoxDecoration(
-                  color: AppColors.actionBlue.withValues(alpha: 0.15),
-                  borderRadius: AppRadius.circular12,
-                  border: Border.all(color: AppColors.skyBlue.withValues(alpha: 0.4)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: .start,
+                  spacing: 0.4.h,
+                  children: [
+                    Text(
+                      "Résultats & Correction de Test",
+                      style: AppTextStyles.titleMedium.copyWith(
+                        color: Colors.white,
+                        fontWeight: .bold,
+                      ),
+                    ),
+                    Text(
+                      "${widget.quizTitle} • ${widget.dateFormatted}",
+                      style: AppTextStyles.captionSmall.copyWith(
+                        color: AppColors.textMuted,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Text(
-                  "$totalScore Pts",
-                  style: AppTextStyles.titleMedium.copyWith(
-                    color: AppColors.skyBlue,
-                    fontWeight: FontWeight.bold,
+              ),
+              InkWell(
+                onTap: () => Navigator.of(context).pop(),
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.1),
+                    shape: .circle,
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.white70,
+                    size: 18,
                   ),
                 ),
               ),
             ],
           ),
           SizedBox(height: 2.h),
-          const Divider(color: AppColors.borderSubtle),
-          SizedBox(height: 1.h),
 
-          // Questions List
-          Expanded(
-            child: ListView.separated(
-              itemCount: quiz.questions.length,
-              separatorBuilder: (context, index) => SizedBox(height: 2.h),
-              itemBuilder: (context, index) {
-                final question = quiz.questions[index];
-                final userAnswer = userAnswers[index];
-                final isChoice = question.type == 'choice';
-
-                bool isCorrect = false;
-                if (isChoice && question.correctAnswers != null && userAnswer != null) {
-                  isCorrect = question.correctAnswers!.contains(userAnswer);
-                }
-
-                return Container(
-                  padding: EdgeInsets.all(4.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.card,
-                    borderRadius: AppRadius.circular14,
-                    border: Border.all(
-                      color: isChoice
-                          ? (isCorrect
-                              ? AppColors.correctBorder
-                              : AppColors.incorrectBorder)
-                          : AppColors.borderSubtle,
-                      width: 1.2,
-                    ),
+          // Hero Score Card
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
+            decoration: BoxDecoration(
+              color: AppColors.navyCard,
+              borderRadius: AppRadius.circular16,
+              border: Border.all(color: AppColors.navyBorder),
+            ),
+            child: Column(
+              spacing: 0.6.h,
+              children: [
+                Text(
+                  "${widget.totalScore} / ${widget.totalPossibleScore} pts",
+                  style: AppTextStyles.h2.copyWith(
+                    color: Colors.white,
+                    fontWeight: .bold,
+                    letterSpacing: -0.5,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header Row: Question # & Status Badge
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Question ${index + 1} (${question.points} Pts)",
-                            style: AppTextStyles.caption.copyWith(
-                              color: AppColors.textMuted,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          if (isChoice)
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 2.5.w,
-                                vertical: 0.4.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isCorrect
-                                    ? AppColors.correctContainer
-                                    : AppColors.incorrectContainer,
-                                borderRadius: AppRadius.circular8,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    isCorrect ? Icons.check_circle : Icons.cancel,
-                                    size: 14,
-                                    color: isCorrect
-                                        ? AppColors.correctText
-                                        : AppColors.errorText,
-                                  ),
-                                  SizedBox(width: 1.w),
-                                  Text(
-                                    isCorrect ? "Correct (+25 pts)" : "Incorrect (0 pt)",
-                                    style: AppTextStyles.caption.copyWith(
-                                      color: isCorrect
-                                          ? AppColors.correctText
-                                          : AppColors.errorText,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          else
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 2.5.w,
-                                vertical: 0.4.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.actionBlue.withValues(alpha: 0.15),
-                                borderRadius: AppRadius.circular8,
-                              ),
-                              child: Text(
-                                "En attente de correction ⏳",
-                                style: AppTextStyles.caption.copyWith(
-                                  color: AppColors.skyBlue,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      SizedBox(height: 1.h),
-
-                      // Question Title
-                      Text(
-                        question.title,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 1.5.h),
-
-                      // Options & Answers List
-                      if (isChoice && question.options != null) ...[
-                        Column(
-                          children: List.generate(question.options!.length, (optIdx) {
-                            final isOptionCorrect =
-                                question.correctAnswers?.contains(optIdx) ?? false;
-                            final isUserSelected = userAnswer == optIdx;
-
-                            Color optBg = AppColors.card;
-                            Color optBorder = AppColors.borderSubtle;
-                            Widget badgeWidget = const SizedBox.shrink();
-
-                            if (isOptionCorrect && isUserSelected) {
-                              optBg = AppColors.correctContainer;
-                              optBorder = AppColors.correctBorder;
-                              badgeWidget = Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  AppIcons.check(color: AppColors.correctText, size: 14),
-                                  SizedBox(width: 1.w),
-                                  Text(
-                                    "✓ Correct (Votre réponse)",
-                                    style: AppTextStyles.caption.copyWith(
-                                      color: AppColors.correctText,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 8.5.sp,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else if (isOptionCorrect && !isUserSelected) {
-                              optBg = AppColors.correctContainer.withValues(alpha: 0.5);
-                              optBorder = AppColors.correctBorder.withValues(alpha: 0.6);
-                              badgeWidget = Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  AppIcons.check(color: AppColors.correctText, size: 14),
-                                  SizedBox(width: 1.w),
-                                  Text(
-                                    "✓ Bonne réponse",
-                                    style: AppTextStyles.caption.copyWith(
-                                      color: AppColors.correctText,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 8.5.sp,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else if (isUserSelected && !isOptionCorrect) {
-                              optBg = AppColors.incorrectContainer;
-                              optBorder = AppColors.incorrectBorder;
-                              badgeWidget = Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  AppIcons.cancel(color: AppColors.errorText, size: 14),
-                                  SizedBox(width: 1.w),
-                                  Text(
-                                    "✕ Votre choix (Incorrect)",
-                                    style: AppTextStyles.caption.copyWith(
-                                      color: AppColors.errorText,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 8.5.sp,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
-
-                            final letters = ['A', 'B', 'C', 'D', 'E', 'F'];
-                            final letter = optIdx < letters.length ? letters[optIdx] : '${optIdx + 1}';
-
-                            return Container(
-                              margin: EdgeInsets.only(bottom: 0.8.h),
-                              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
-                              decoration: BoxDecoration(
-                                color: optBg,
-                                borderRadius: AppRadius.circular10,
-                                border: Border.all(color: optBorder),
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    "$letter. ",
-                                    style: AppTextStyles.bodySmall.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: isOptionCorrect
-                                          ? AppColors.correctText
-                                          : (isUserSelected
-                                              ? AppColors.errorText
-                                              : AppColors.textSecondary),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      question.options![optIdx],
-                                      style: AppTextStyles.bodySmall.copyWith(
-                                        color: AppColors.textPrimary,
-                                        fontWeight: isUserSelected || isOptionCorrect
-                                            ? FontWeight.bold
-                                            : FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                  badgeWidget,
-                                ],
-                              ),
-                            );
-                          }),
-                        ),
-                      ] else ...[
-                        Text(
-                          "Votre réponse :",
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.textMuted,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: 0.4.h),
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(3.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.ultraDark,
-                            borderRadius: AppRadius.circular10,
-                            border: Border.all(color: AppColors.borderSubtle),
-                          ),
-                          child: Text(
-                            userAnswer != null ? userAnswer.toString() : "Aucune réponse fournie",
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: userAnswer != null
-                                  ? AppColors.textPrimary
-                                  : AppColors.textMuted,
-                              fontStyle: userAnswer == null ? FontStyle.italic : FontStyle.normal,
-                            ),
-                          ),
-                        ),
-                      ],
-                      SizedBox(height: 1.5.h),
-
-                      // Explanation Text
-                      if (question.explanation != null && question.explanation!.isNotEmpty) ...[
-                        Text(
-                          "Explication & Solution :",
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.skyBlue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 0.4.h),
-                        Text(
-                          question.explanation!,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
-                            height: 1.4,
-                          ),
-                        ),
-                      ],
-                    ],
+                ),
+                Text(
+                  widget.status,
+                  style: AppTextStyles.badgeSmall.copyWith(
+                    color: Colors.white70,
                   ),
-                );
-              },
+                ),
+              ],
             ),
           ),
           SizedBox(height: 2.h),
 
-          // Close Button
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.actionBlue,
-                padding: EdgeInsets.symmetric(vertical: 1.6.h),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: AppRadius.circular14,
+          // Section Title
+          Text(
+            "Détail des réponses et correction",
+            style: AppTextStyles.titleSmall.copyWith(
+              color: Colors.white,
+              fontWeight: .bold,
+            ),
+          ),
+          SizedBox(height: 1.5.h),
+
+          // Body: Loader or Questions List
+          Expanded(
+            child: _isLoading
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: CircularProgressIndicator(color: AppColors.actionBlue),
+                    ),
+                  )
+                : questions.isEmpty
+                    ? Center(
+                        child: Text(
+                          "Aucune question disponible pour cette évaluation.",
+                          style: AppTextStyles.caption
+                              .copyWith(color: AppColors.textMuted),
+                        ),
+                      )
+                    : ListView.separated(
+                        itemCount: questions.length,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 2.h),
+                        itemBuilder: (context, index) {
+                          final q = questions[index];
+                          return _buildQuestionCard(q);
+                        },
+                      ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuestionCard(UserQuestionCorrection q) {
+    final isCorrect = q.isCorrect;
+    final earned = q.earnedScore;
+    final max = q.maxScore;
+
+    return Container(
+      padding: EdgeInsets.all(4.w),
+      decoration: BoxDecoration(
+        color: AppColors.navySurface,
+        borderRadius: AppRadius.circular16,
+        border: Border.all(color: AppColors.navyBorderSubtle),
+      ),
+      child: Column(
+        crossAxisAlignment: .start,
+        children: [
+          // Header Row: Question Index (Left) & Points Badge (Right)
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            crossAxisAlignment: .center,
+            children: [
+              Text(
+                "Question ${q.index + 1}",
+                style: AppTextStyles.titleSmall.copyWith(
+                  color: AppColors.actionBlue,
+                  fontWeight: .bold,
                 ),
               ),
-              child: Text(
-                "Fermer",
-                style: AppTextStyles.button.copyWith(color: Colors.white),
+              Container(
+                padding:
+                    EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.4.h),
+                decoration: BoxDecoration(
+                  color: isCorrect
+                      ? AppColors.correctContainerDark
+                      : AppColors.incorrectContainerDark,
+                  borderRadius: AppRadius.circular8,
+                  border: Border.all(
+                    color: isCorrect
+                        ? AppColors.correctBorderDark
+                        : AppColors.incorrectBorderDark,
+                  ),
+                ),
+                child: Text(
+                  isCorrect ? "✓ $earned/$max pts" : "✕ $earned/$max pts",
+                  style: AppTextStyles.badgeSmall.copyWith(
+                    color: isCorrect
+                        ? AppColors.correctText
+                        : AppColors.incorrectLight,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 1.2.h),
+
+          // Statement in Markdown format
+          MarkdownBody(
+            data: q.displayStatement,
+            styleSheet: MarkdownStyleSheet(
+              p: AppTextStyles.bodyMedium.copyWith(
+                color: Colors.white,
+                height: 1.4,
+              ),
+              strong: const TextStyle(
+                fontWeight: .bold,
+                color: Colors.white,
+              ),
+              code: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 10.sp,
+                color: AppColors.actionBlue,
+                backgroundColor: AppColors.codeHighlightBg,
+              ),
+              codeblockDecoration: BoxDecoration(
+                color: AppColors.codeBackground,
+                borderRadius: AppRadius.circular8,
+                border: Border.all(color: AppColors.navyBorderSubtle),
+              ),
+            ),
+          ),
+          SizedBox(height: 1.8.h),
+
+          // User's Answer Box ("Votre réponse :")
+          _buildUserAnswerBox(q),
+
+          // Correct / Expected Answer Box
+          SizedBox(height: 1.2.h),
+          _buildExpectedAnswerBox(q),
+
+          // Optional Explanation Box
+          if (q.explanation != null && q.explanation!.trim().isNotEmpty) ...[
+            SizedBox(height: 1.2.h),
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(3.w),
+              decoration: BoxDecoration(
+                color: AppColors.navyDarkSurface,
+                borderRadius: BorderRadius.circular(8),
+                border: const Border(
+                  left: BorderSide(color: AppColors.actionBlue, width: 3),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: .start,
+                spacing: 0.4.h,
+                children: [
+                  Text(
+                    "Explication :",
+                    style: AppTextStyles.captionSmall.copyWith(
+                      color: AppColors.actionBlue,
+                      fontWeight: .bold,
+                    ),
+                  ),
+                  MarkdownBody(
+                    data: q.explanation!.trim(),
+                    styleSheet: MarkdownStyleSheet(
+                      p: AppTextStyles.caption.copyWith(
+                        color: Colors.white70,
+                        height: 1.35,
+                      ),
+                      code: TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 9.sp,
+                        color: AppColors.actionBlue,
+                        backgroundColor: AppColors.codeHighlightBg,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUserAnswerBox(UserQuestionCorrection q) {
+    String answerText = "";
+    final ans = q.studentAnswer;
+
+    if (ans == null ||
+        ans == -1 ||
+        ans == "-1" ||
+        ans.toString().trim().isEmpty) {
+      answerText = "Aucune réponse fournie";
+    } else if (q.isChoice) {
+      final options = q.options ?? [];
+      int? ansIndex;
+      if (ans is int) {
+        ansIndex = ans;
+      } else if (ans is String) {
+        ansIndex = int.tryParse(ans.trim());
+      }
+
+      if (ansIndex != null) {
+        if (ansIndex >= 0 && ansIndex < options.length) {
+          answerText = "${ansIndex + 1}. ${options[ansIndex]}";
+        } else if (ansIndex >= 1 && ansIndex <= options.length) {
+          answerText = "$ansIndex. ${options[ansIndex - 1]}";
+        } else {
+          answerText = "$ans";
+        }
+      } else {
+        answerText = ans.toString();
+      }
+    } else {
+      answerText = ans.toString().trim();
+    }
+
+    final isCorrect = q.isCorrect;
+    final Color bgColor = isCorrect
+        ? AppColors.correctContainerDark
+        : AppColors.incorrectContainerAlt;
+    final Color barColor = isCorrect
+        ? AppColors.correctBar
+        : AppColors.incorrectBar;
+    final Color labelColor = isCorrect
+        ? AppColors.correctText
+        : AppColors.incorrectLabel;
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(3.w),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8),
+        border: Border(
+          left: BorderSide(color: barColor, width: 3.5),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: .start,
+        spacing: 0.6.h,
+        children: [
+          Text(
+            "Votre réponse :",
+            style: AppTextStyles.captionSmall.copyWith(
+              color: labelColor,
+              fontWeight: .bold,
+            ),
+          ),
+          MarkdownBody(
+            data: answerText,
+            styleSheet: MarkdownStyleSheet(
+              p: AppTextStyles.caption.copyWith(
+                color: Colors.white,
+                fontWeight: .w500,
+                height: 1.35,
+              ),
+              code: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 9.5.sp,
+                color: Colors.white,
+                backgroundColor: AppColors.codeHighlightBg,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExpectedAnswerBox(UserQuestionCorrection q) {
+    String correctText = "";
+    final isChoice = q.isChoice;
+    final options = q.options ?? [];
+
+    if (isChoice) {
+      if (q.correctAnswers != null && q.correctAnswers!.isNotEmpty) {
+        final List<String> formatted = [];
+        for (final ca in q.correctAnswers!) {
+          if (ca >= 0 && ca < options.length) {
+            formatted.add("${ca + 1}. ${options[ca]}");
+          } else if (ca >= 1 && ca <= options.length) {
+            formatted.add("$ca. ${options[ca - 1]}");
+          } else {
+            formatted.add("$ca");
+          }
+        }
+        correctText = formatted.join("\nOU\n");
+      } else if (q.expectedAnswer != null &&
+          q.expectedAnswer.toString().trim().isNotEmpty) {
+        correctText = q.expectedAnswer.toString().trim();
+      } else if (options.isNotEmpty) {
+        correctText = "1. ${options[0]}";
+      }
+    } else {
+      // Open / text / code question
+      if (q.expectedAnswer != null &&
+          q.expectedAnswer.toString().trim().isNotEmpty) {
+        correctText = q.expectedAnswer.toString().trim();
+      } else if (q.explanation != null &&
+          q.explanation!.trim().isNotEmpty) {
+        correctText = q.explanation!.trim();
+      } else {
+        correctText = "Réponse validée selon les critères du barème.";
+      }
+    }
+
+    final boxTitle = isChoice
+        ? "✓ Option correcte qu'il fallait cocher :"
+        : "✓ Réponse attendue :";
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(3.w),
+      decoration: const BoxDecoration(
+        color: AppColors.correctBoxBg,
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        border: Border(
+          left: BorderSide(color: AppColors.correctBar, width: 3.5),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: .start,
+        spacing: 0.6.h,
+        children: [
+          Text(
+            boxTitle,
+            style: AppTextStyles.captionSmall.copyWith(
+              color: AppColors.correctText,
+              fontWeight: .bold,
+            ),
+          ),
+          MarkdownBody(
+            data: correctText,
+            styleSheet: MarkdownStyleSheet(
+              p: AppTextStyles.caption.copyWith(
+                color: Colors.white,
+                fontWeight: .w500,
+                height: 1.35,
+              ),
+              code: TextStyle(
+                fontFamily: 'monospace',
+                fontSize: 9.5.sp,
+                color: AppColors.correctText,
+                backgroundColor: AppColors.correctCodeBg,
               ),
             ),
           ),

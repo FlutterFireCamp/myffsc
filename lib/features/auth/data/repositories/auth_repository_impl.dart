@@ -46,6 +46,28 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, UserEntity>> completeProfile({
+    required String userId,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      final user = await remoteDataSource.completeProfile(
+        userId: userId,
+        data: data,
+      );
+      return Right(user);
+    } catch (e, stackTrace) {
+      dev.log(
+        'AuthRepository.completeProfile failed',
+        name: 'AUTH_REPOSITORY',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, void>> signOut() async {
     try {
       await remoteDataSource.signOut();

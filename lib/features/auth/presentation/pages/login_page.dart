@@ -36,15 +36,15 @@ class LoginPage extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: .center,
+                            crossAxisAlignment: .center,
                             children: [
                               const Spacer(),
                               SizedBox(
                                 height: 22.h,
                                 child: Image.asset(
                                   'assets/images/logo.png',
-                                  fit: BoxFit.contain,
+                                  fit: .contain,
                                   errorBuilder: (context, error, stackTrace) {
                                     return Center(
                                       child: Text(
@@ -76,7 +76,7 @@ class LoginPage extends StatelessWidget {
                                     TextSpan(
                                       text: "Summer ",
                                       style: AppTextStyles.heroSubtitle.copyWith(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: .bold,
                                         color: AppColors.firebaseYellow,
                                       ),
                                     ),
@@ -88,12 +88,12 @@ class LoginPage extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                textAlign: TextAlign.center,
+                                textAlign: .center,
                               ),
                               SizedBox(height: 1.2.h),
                               Text(
                                 "Portail Apprenant",
-                                textAlign: TextAlign.center,
+                                textAlign: .center,
                                 style: AppTextStyles.bodyMedium,
                               ),
                               SizedBox(height: 3.h),
@@ -107,7 +107,7 @@ class LoginPage extends StatelessWidget {
                                   border: Border.all(color: AppColors.borderSubtle),
                                 ),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment: .stretch,
                                   children: [
                                     Text("Connexion", style: AppTextStyles.h3),
                                     SizedBox(height: 1.2.h),
@@ -131,10 +131,10 @@ class LoginPage extends StatelessWidget {
                                                 }
                                               },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: AppColors.skyBlue,
-                                          foregroundColor: AppColors.ultraDark,
-                                          disabledBackgroundColor: AppColors.skyBlue.withValues(alpha: 0.65),
-                                          disabledForegroundColor: AppColors.ultraDark,
+                                          backgroundColor: AppColors.actionBlue,
+                                          foregroundColor: Colors.white,
+                                          disabledBackgroundColor: AppColors.actionBlue.withValues(alpha: 0.65),
+                                          disabledForegroundColor: Colors.white,
                                           padding: EdgeInsets.symmetric(vertical: 1.8.h),
                                           shape: const RoundedRectangleBorder(
                                             borderRadius: AppRadius.circular14,
@@ -143,39 +143,39 @@ class LoginPage extends StatelessWidget {
                                         ),
                                         child: isLoading
                                             ? Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment: .center,
+                                                spacing: 3.w,
                                                 children: [
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 22,
                                                     height: 22,
                                                     child: CircularProgressIndicator(
                                                       strokeWidth: 2.5,
-                                                      color: AppColors.ultraDark,
+                                                      color: Colors.white,
                                                     ),
                                                   ),
-                                                  SizedBox(width: 3.w),
                                                   Text(
                                                     "Connexion en cours...",
                                                     style: AppTextStyles.button.copyWith(
-                                                      color: AppColors.ultraDark,
-                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white,
+                                                      fontWeight: .bold,
                                                     ),
                                                   ),
                                                 ],
                                               )
                                             : Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment: .center,
+                                                spacing: 3.w,
                                                 children: [
                                                   AppIcons.google(
-                                                    color: AppColors.ultraDark,
-                                                    size: AppSizes.iconMd,
+                                                    color: Colors.white,
+                                                    size: 20,
                                                   ),
-                                                  SizedBox(width: 3.w),
                                                   Text(
                                                     "Continuer avec Google",
                                                     style: AppTextStyles.button.copyWith(
-                                                      color: AppColors.ultraDark,
-                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white,
+                                                      fontWeight: .bold,
                                                     ),
                                                   ),
                                                 ],

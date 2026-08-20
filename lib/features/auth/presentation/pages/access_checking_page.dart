@@ -14,8 +14,8 @@ class AccessCheckingPage extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .center,
               children: [
                 const Spacer(flex: 2),
                 // Logo
@@ -23,7 +23,7 @@ class AccessCheckingPage extends StatelessWidget {
                   height: 20.h,
                   child: Image.asset(
                     'assets/images/logo.png',
-                    fit: BoxFit.contain,
+                    fit: .contain,
                     errorBuilder: (context, error, stackTrace) {
                       return Center(
                         child: Text(
@@ -55,7 +55,7 @@ class AccessCheckingPage extends StatelessWidget {
                       TextSpan(
                         text: "Summer ",
                         style: AppTextStyles.heroSubtitle.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: .bold,
                           color: AppColors.firebaseYellow,
                         ),
                       ),
@@ -67,12 +67,12 @@ class AccessCheckingPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                 ),
                 SizedBox(height: 1.2.h),
                 Text(
                   "Portail Apprenant",
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   style: AppTextStyles.bodyMedium,
                 ),
                 const Spacer(flex: 2),
@@ -85,14 +85,14 @@ class AccessCheckingPage extends StatelessWidget {
                     child: const LinearProgressIndicator(
                       minHeight: 2,
                       backgroundColor: AppColors.ultraDark,
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.skyBlue),
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.actionBlue),
                     ),
                   ),
                 ),
                 SizedBox(height: 1.8.h),
                 Text(
                   "Vérification de votre accès...",
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.textSecondary,
                   ),

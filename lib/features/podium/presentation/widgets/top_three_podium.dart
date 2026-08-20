@@ -25,15 +25,16 @@ class TopThreePodium extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: .spaceEvenly,
+        crossAxisAlignment: .end,
+        spacing: 1.5.w,
         children: [
           // 2nd Place (Left)
           if (second != null)
             _buildPodiumColumn(
               user: second,
               rankText: "2e",
-              badgeColor: const Color(0xFF94A3B8), // Silver
+              badgeColor: AppColors.silver,
               badgeTextColor: Colors.white,
               pedestalHeight: 8.5.h,
               isFirst: false,
@@ -41,14 +42,12 @@ class TopThreePodium extends StatelessWidget {
           else
             const Expanded(child: SizedBox.shrink()),
 
-          SizedBox(width: 1.5.w),
-
           // 1st Place (Center - Elevated)
           if (first != null)
             _buildPodiumColumn(
               user: first,
               rankText: "1er",
-              badgeColor: const Color(0xFFFBBF24), // Gold
+              badgeColor: AppColors.gold,
               badgeTextColor: Colors.black,
               pedestalHeight: 10.5.h,
               isFirst: true,
@@ -56,14 +55,12 @@ class TopThreePodium extends StatelessWidget {
           else
             const Expanded(child: SizedBox.shrink()),
 
-          SizedBox(width: 1.5.w),
-
           // 3rd Place (Right)
           if (third != null)
             _buildPodiumColumn(
               user: third,
               rankText: "3e",
-              badgeColor: const Color(0xFFD97706), // Bronze
+              badgeColor: AppColors.bronze,
               badgeTextColor: Colors.white,
               pedestalHeight: 7.5.h,
               isFirst: false,
@@ -87,16 +84,16 @@ class TopThreePodium extends StatelessWidget {
 
     return Expanded(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: .end,
         children: [
           // Avatar + Rank Badge Overlay
           Stack(
-            alignment: Alignment.topCenter,
-            clipBehavior: Clip.none,
+            alignment: .topCenter,
+            clipBehavior: .none,
             children: [
               Container(
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
+                  shape: .circle,
                   border: Border.all(
                     color: badgeColor,
                     width: isFirst ? 2.5 : 1.8,
@@ -124,10 +121,8 @@ class TopThreePodium extends StatelessWidget {
                   ),
                   child: Text(
                     rankText,
-                    style: AppTextStyles.caption.copyWith(
+                    style: AppTextStyles.badge.copyWith(
                       color: badgeTextColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: isFirst ? 14.sp : 13.sp,
                     ),
                   ),
                 ),
@@ -139,22 +134,18 @@ class TopThreePodium extends StatelessWidget {
           // User Name
           Text(
             user.name.split(' ').first,
-            textAlign: TextAlign.center,
+            textAlign: .center,
             maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            overflow: .ellipsis,
             style: AppTextStyles.bodyMedium.copyWith(
               color: AppColors.textPrimary,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
           SizedBox(height: 0.2.h),
 
           // Country Flag
-          if (user.flag.isNotEmpty)
-            Text(
-              user.flag,
-              style: TextStyle(fontSize: isFirst ? 16.sp : 14.sp),
-            ),
+          if (user.flag.isNotEmpty) Text(user.flag),
           SizedBox(height: 1.h),
 
           // Pedestal Box
@@ -175,24 +166,20 @@ class TopThreePodium extends StatelessWidget {
               ),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: .center,
+              spacing: 0.2.h,
               children: [
                 Text(
                   "${user.totalPoints} pts",
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodyMedium.copyWith(
+                  textAlign: .center,
+                  style: AppTextStyles.metricValue.copyWith(
                     color: isFirst ? badgeColor : AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: isFirst ? 16.sp : 14.sp,
                   ),
                 ),
-                SizedBox(height: 0.2.h),
                 Text(
                   "Niv. ${user.level}",
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.textMuted,
-                  ),
+                  textAlign: .center,
+                  style: AppTextStyles.metricLabel,
                 ),
               ],
             ),

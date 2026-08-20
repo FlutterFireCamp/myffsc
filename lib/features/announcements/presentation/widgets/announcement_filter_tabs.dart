@@ -16,44 +16,36 @@ class AnnouncementFilterTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: .horizontal,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
       child: Row(
+        spacing: 2.w,
         children: [
           _buildFilterTab(
             label: "Toutes",
             isSelected: selectedTypeFilter == null,
-            badgeColor: AppColors.skyBlue,
+            badgeColor: AppColors.actionBlue,
             onTap: () => onSelectFilter(null),
           ),
-          SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Informations",
             isSelected: selectedTypeFilter == AnnouncementType.info,
             badgeColor: AppColors.skyBlue,
-            icon: AppIcons.infoCircle(
-              color: AppColors.skyBlue,
-              size: 16,
-            ),
+            iconBuilder: (color) => AppIcons.infoCircle(color: color, size: 16),
             onTap: () => onSelectFilter(AnnouncementType.info),
           ),
-          SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Flash Info",
             isSelected: selectedTypeFilter == AnnouncementType.important,
             badgeColor: AnnouncementType.important.color,
-            icon: AppIcons.flashInfo(
-              color: AnnouncementType.important.color,
-              size: 16,
-            ),
+            iconBuilder: (color) => AppIcons.flashInfo(color: color, size: 16),
             onTap: () => onSelectFilter(AnnouncementType.important),
           ),
-          SizedBox(width: 2.w),
           _buildFilterTab(
             label: "Urgences",
             isSelected: selectedTypeFilter == AnnouncementType.urgent,
             badgeColor: AnnouncementType.urgent.color,
-            icon: AnnouncementType.urgent.icon,
+            iconBuilder: (color) => AppIcons.warning(color: color, size: 16),
             onTap: () => onSelectFilter(AnnouncementType.urgent),
           ),
         ],
@@ -65,9 +57,18 @@ class AnnouncementFilterTabs extends StatelessWidget {
     required String label,
     required bool isSelected,
     required Color badgeColor,
-    Widget? icon,
+    Widget Function(Color color)? iconBuilder,
     required VoidCallback onTap,
   }) {
+    final isAllTab = label.toLowerCase() == "toutes" || label.toLowerCase() == "tous";
+    final textColor = isSelected
+        ? (isAllTab ? Colors.white : const Color(0xFF111827))
+        : AppColors.textSecondary;
+
+    final iconColor = isSelected
+        ? (isAllTab ? Colors.white : const Color(0xFF111827))
+        : AppColors.textSecondary;
+
     return InkWell(
       onTap: onTap,
       borderRadius: AppRadius.circular12,
@@ -75,7 +76,9 @@ class AnnouncementFilterTabs extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
         decoration: BoxDecoration(
-          color: isSelected ? badgeColor.withValues(alpha: 0.2) : AppColors.card,
+          color: isSelected
+              ? badgeColor
+              : AppColors.cardHover.withValues(alpha: 0.5),
           borderRadius: AppRadius.circular12,
           border: Border.all(
             color: isSelected ? badgeColor : AppColors.borderSubtle,
@@ -83,17 +86,15 @@ class AnnouncementFilterTabs extends StatelessWidget {
           ),
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
+          spacing: 1.5.w,
           children: [
-            if (icon != null) ...[
-              icon,
-              SizedBox(width: 1.5.w),
-            ],
+            if (iconBuilder != null) iconBuilder(iconColor),
             Text(
               label,
-              style: AppTextStyles.buttonSmall.copyWith(
-                color: isSelected ? badgeColor : AppColors.textPrimary,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              style: AppTextStyles.tabLabel.copyWith(
+                color: textColor,
+                fontWeight: isSelected ? .bold : .w500,
               ),
             ),
           ],

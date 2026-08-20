@@ -35,24 +35,25 @@ class TodayProgramCard extends StatelessWidget {
         border: Border.all(color: borderColor, width: 1.2),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
+            spacing: 3.5.w,
             children: [
               Container(
                 padding: EdgeInsets.all(3.w),
                 decoration: BoxDecoration(
                   color: badgeColor.withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
+                  shape: .circle,
                 ),
                 child: isTest
                     ? AppIcons.tests(color: badgeColor, size: 24)
                     : AppIcons.video(color: badgeColor, size: 24),
               ),
-              SizedBox(width: 3.5.w),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
+                  spacing: 0.4.h,
                   children: [
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -68,34 +69,30 @@ class TodayProgramCard extends StatelessWidget {
                       ),
                       child: Text(
                         program.type.label,
-                        style: AppTextStyles.bodySmall.copyWith(
+                        style: AppTextStyles.badge.copyWith(
                           color: badgeColor,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    SizedBox(height: 0.5.h),
                     Text(
                       program.title,
                       style: AppTextStyles.titleMedium.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: .bold,
                       ),
                     ),
-                    SizedBox(height: 0.3.h),
                     Row(
+                      spacing: 1.w,
                       children: [
                         AppIcons.calendar(size: 13, color: badgeColor),
-                        SizedBox(width: 1.w),
                         Expanded(
                           child: Text(
                             "${program.formattedFrenchDate} ${program.time.isNotEmpty ? '• ${program.formattedLocalTime}' : ''}",
                             style: AppTextStyles.bodySmall.copyWith(
                               color: badgeColor,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: .w600,
                             ),
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            overflow: .ellipsis,
                           ),
                         ),
                       ],
@@ -108,6 +105,7 @@ class TodayProgramCard extends StatelessWidget {
           if (hasLive || hasReplay) ...[
             SizedBox(height: 2.h),
             Row(
+              spacing: 2.w,
               children: [
                 if (hasLive)
                   Expanded(
@@ -143,7 +141,6 @@ class TodayProgramCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (hasLive && hasReplay) SizedBox(width: 2.w),
                 if (hasReplay)
                   Expanded(
                     child: ElevatedButton.icon(

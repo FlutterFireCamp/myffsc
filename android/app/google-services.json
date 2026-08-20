@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:940039203312:android:608f9c8877c7ba5cf89535",
+        "mobilesdk_app_id": "1:940039203312:android:5f10735a286a6bc0f89535",
         "android_client_info": {
-          "package_name": "com.flutterfirecamp.myffsc"
+          "package_name": "dev.flutterfirecamp.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "940039203312-rd842fs3j1sg5sm216m8ugebavb5hc55.apps.googleusercontent.com",
+          "client_id": "940039203312-drobaofkj7mh4eib1h4ta4fdobe6v9a2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.flutterfirecamp.myffsc",
+            "package_name": "dev.flutterfirecamp.app",
             "certificate_hash": "170624f3813d0f28db70da3760333563fcaf5dde"
           }
         },
@@ -39,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "940039203312-q931og0svuemriajuv06t5hpn4746mkh.apps.googleusercontent.com",
+              "client_id": "940039203312-ea9sdpin97d71proch1c8uu0v9id7rai.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.flutterfirecamp.myffsc"
+                "bundle_id": "dev.flutterfirecamp.app"
               }
             }
           ]

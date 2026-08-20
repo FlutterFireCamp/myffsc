@@ -75,7 +75,7 @@ class _TestTakingPageState extends State<TestTakingPage>
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppColors.modalBackground,
-        shape: RoundedRectangleBorder(borderRadius: AppRadius.circular16),
+        shape: const RoundedRectangleBorder(borderRadius: AppRadius.circular16),
         title: Text(
           "Quitter l'examen ?",
           style: AppTextStyles.h3.copyWith(color: AppColors.alertRed),
@@ -181,9 +181,9 @@ class _TestTakingPageState extends State<TestTakingPage>
                   widget.quiz.title,
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
                 actions: [
                   Padding(
@@ -200,7 +200,7 @@ class _TestTakingPageState extends State<TestTakingPage>
                           "${question.points} Pts",
                           style: AppTextStyles.caption.copyWith(
                             color: AppColors.skyBlue,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: .bold,
                           ),
                         ),
                       ),
@@ -217,9 +217,10 @@ class _TestTakingPageState extends State<TestTakingPage>
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 5.w),
                       child: Column(
+                        spacing: 1.5.h,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: .spaceBetween,
                             children: [
                               // Timer Pill with Warning state < 15s
                               Container(
@@ -251,7 +252,7 @@ class _TestTakingPageState extends State<TestTakingPage>
                                         color: state.remainingSeconds < 15
                                             ? AppColors.alertRed
                                             : AppColors.skyBlue,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: .bold,
                                       ),
                                     ),
                                     if (state.bonusTimeBank > 0) ...[
@@ -261,16 +262,14 @@ class _TestTakingPageState extends State<TestTakingPage>
                                           horizontal: 1.8.w,
                                           vertical: 0.2.h,
                                         ),
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           color: AppColors.correctContainer,
                                           borderRadius: AppRadius.circular6,
                                         ),
                                         child: Text(
                                           "+${state.bonusTimeBank}s bonus",
-                                          style: AppTextStyles.caption.copyWith(
+                                          style: AppTextStyles.badgeSmall.copyWith(
                                             color: AppColors.correctText,
-                                            fontSize: 9.sp,
-                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
@@ -284,12 +283,11 @@ class _TestTakingPageState extends State<TestTakingPage>
                                 "${currentIdx + 1} / $totalQuestions",
                                 style: AppTextStyles.bodyMedium.copyWith(
                                   color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: .bold,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 1.5.h),
 
                           // Segmented Progress Bar with Ticks ✓ / ✕
                           QuizSegmentedProgressBar(
@@ -308,7 +306,7 @@ class _TestTakingPageState extends State<TestTakingPage>
                       child: SingleChildScrollView(
                         padding: EdgeInsets.symmetric(horizontal: 5.w),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: .start,
                           children: [
                             Text(
                               "${currentIdx + 1}. ${question.title}",
@@ -349,7 +347,8 @@ class _TestTakingPageState extends State<TestTakingPage>
                               )
                             else
                               Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: .start,
+                                spacing: 1.2.h,
                                 children: [
                                   Container(
                                     padding: EdgeInsets.all(3.w),
@@ -359,20 +358,19 @@ class _TestTakingPageState extends State<TestTakingPage>
                                       border: Border.all(color: AppColors.borderSubtle),
                                     ),
                                     child: Row(
+                                      spacing: 2.w,
                                       children: [
                                         AppIcons.forms(color: AppColors.skyBlue, size: 18),
-                                        SizedBox(width: 2.w),
                                         Text(
                                           "Zone d'écriture Dart / Code",
                                           style: AppTextStyles.caption.copyWith(
                                             color: AppColors.skyBlue,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: .bold,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 1.2.h),
                                   TextField(
                                     controller: _textAnswerController,
                                     enabled: !_isAnswerSubmittedForCurrentQuestion,
@@ -390,14 +388,14 @@ class _TestTakingPageState extends State<TestTakingPage>
                                       ),
                                       filled: true,
                                       fillColor: AppColors.card,
-                                      border: OutlineInputBorder(
+                                      border: const OutlineInputBorder(
                                         borderRadius: AppRadius.circular12,
-                                        borderSide: const BorderSide(
+                                        borderSide: BorderSide(
                                             color: AppColors.borderSubtle),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
+                                      focusedBorder: const OutlineInputBorder(
                                         borderRadius: AppRadius.circular12,
-                                        borderSide: const BorderSide(
+                                        borderSide: BorderSide(
                                           color: AppColors.actionBlue,
                                           width: 1.5,
                                         ),
@@ -426,24 +424,23 @@ class _TestTakingPageState extends State<TestTakingPage>
                                   ),
                                 ),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: .start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: .spaceBetween,
                                       children: [
                                         Row(
+                                          spacing: 2.w,
                                           children: [
                                             AppIcons.info(
                                               color: AppColors.skyBlue,
                                               size: 18,
                                             ),
-                                            SizedBox(width: 2.w),
                                             Text(
                                               "Besoin d'un indice ?",
                                               style: AppTextStyles.bodySmall.copyWith(
                                                 color: AppColors.skyBlue,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: .bold,
                                               ),
                                             ),
                                           ],
@@ -496,7 +493,7 @@ class _TestTakingPageState extends State<TestTakingPage>
                         ),
                       ),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: .spaceBetween,
                         children: [
                           Text(
                             _isAnswerSubmittedForCurrentQuestion
@@ -507,7 +504,7 @@ class _TestTakingPageState extends State<TestTakingPage>
                                     : "Sélectionnez une réponse"),
                             style: AppTextStyles.caption.copyWith(
                               color: AppColors.textMuted,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: .w600,
                             ),
                           ),
                           ElevatedButton(
@@ -542,7 +539,7 @@ class _TestTakingPageState extends State<TestTakingPage>
                                       : "Terminer"),
                               style: AppTextStyles.button.copyWith(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: .bold,
                               ),
                             ),
                           ),

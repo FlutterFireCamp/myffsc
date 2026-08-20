@@ -31,7 +31,8 @@ class QuickActionCard extends StatelessWidget {
           border: Border.all(color: AppColors.borderSubtle),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
+          spacing: 0.8.h,
           children: [
             Container(
               padding: EdgeInsets.all(2.5.w),
@@ -41,12 +42,10 @@ class QuickActionCard extends StatelessWidget {
               ),
               child: icon,
             ),
-            SizedBox(height: 1.5.h),
             Text(
               title,
               style: AppTextStyles.titleMedium,
             ),
-            SizedBox(height: 0.4.h),
             Text(
               subtitle,
               style: AppTextStyles.bodySmall,

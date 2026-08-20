@@ -1,13 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
-import '../../domain/entities/podium_user_entity.dart';
+import '../bloc/podium_bloc.dart';
+import '../bloc/podium_event.dart';
+import '../bloc/podium_state.dart';
 import '../widgets/current_user_rank_card.dart';
 import '../widgets/leaderboard_user_row.dart';
+import '../widgets/podium_rules_dialog.dart';
 import '../widgets/podium_shimmer.dart';
 import '../widgets/top_three_podium.dart';
 
@@ -19,77 +21,25 @@ class PodiumPage extends StatefulWidget {
 }
 
 class _PodiumPageState extends State<PodiumPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  List<PodiumUserEntity> _allUsers = [];
-  bool _isLoading = true;
-  String? _errorMessage;
-
   @override
   void initState() {
     super.initState();
-    _fetchLeaderboard();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchLeaderboard();
+    });
   }
 
-  Future<void> _fetchLeaderboard() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      // Query strictly top 10 users from Firestore
-      QuerySnapshot<Map<String, dynamic>> querySnapshot;
-      try {
-        querySnapshot = await _firestore
-            .collection('users')
-            .orderBy('totalPoints', descending: true)
-            .limit(10)
-            .get();
-      } catch (_) {
-        // Fallback query if index is not ready
-        querySnapshot = await _firestore.collection('users').get();
-      }
-
-      final List<Map<String, dynamic>> rawDocs = querySnapshot.docs.map((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
-        return data;
-      }).toList();
-
-      // Sort by totalPoints descending, then by name ascending
-      rawDocs.sort((a, b) {
-        final ptsA = (a['totalPoints'] as num?)?.toInt() ?? 0;
-        final ptsB = (b['totalPoints'] as num?)?.toInt() ?? 0;
-        if (ptsB != ptsA) {
-          return ptsB.compareTo(ptsA);
-        }
-        final nameA = (a['name'] as String? ?? '').toLowerCase();
-        final nameB = (b['name'] as String? ?? '').toLowerCase();
-        return nameA.compareTo(nameB);
-      });
-
-      final List<PodiumUserEntity> sortedUsers = [];
-      final limitCount = rawDocs.length > 10 ? 10 : rawDocs.length;
-      for (int i = 0; i < limitCount; i++) {
-        final doc = rawDocs[i];
-        final id = doc['id'] as String;
-        sortedUsers.add(PodiumUserEntity.fromFirestore(doc, id, i + 1));
-      }
-
-      if (mounted) {
-        setState(() {
-          _allUsers = sortedUsers;
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = "Impossible de charger le classement : $e";
-          _isLoading = false;
-        });
-      }
+  void _fetchLeaderboard({bool isRefresh = false}) {
+    final authState = context.read<AuthBloc>().state;
+    final currentUser = authState is AuthenticatedState ? authState.user : null;
+    if (currentUser != null) {
+      context.read<PodiumBloc>().add(
+        FetchLeaderboardEvent(
+          currentUserId: currentUser.id,
+          currentUserPoints: currentUser.totalPoints,
+          isRefresh: isRefresh,
+        ),
+      );
     }
   }
 
@@ -98,126 +48,164 @@ class _PodiumPageState extends State<PodiumPage> {
     final authState = context.watch<AuthBloc>().state;
     final currentUser = authState is AuthenticatedState ? authState.user : null;
 
-    final topThree = _allUsers.take(3).toList();
-    final remainingUsers = _allUsers.skip(3).toList();
-
-    int currentUserRank = 0;
-    PodiumUserEntity? currentUserPodiumData;
-
-    if (currentUser != null) {
-      final foundIndex = _allUsers.indexWhere((u) => u.id == currentUser.id);
-      if (foundIndex != -1) {
-        currentUserRank = foundIndex + 1;
-        currentUserPodiumData = _allUsers[foundIndex];
-      }
-    }
-
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(
-          "Classement Général",
-          style: AppTextStyles.h3.copyWith(fontWeight: FontWeight.bold),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthenticatedState) {
+              final podiumState = context.read<PodiumBloc>().state;
+              if (podiumState is PodiumInitialState ||
+                  podiumState is PodiumErrorState) {
+                _fetchLeaderboard();
+              }
+            }
+          },
         ),
+      ],
+      child: Scaffold(
         backgroundColor: AppColors.background,
-        elevation: 0,
-        actions: [
-          IconButton(
-            tooltip: "Actualiser",
-            icon: AppIcons.refresh03(color: AppColors.skyBlue, size: 20),
-            onPressed: _fetchLeaderboard,
+        appBar: AppBar(
+          title: Text(
+            "Classement Général",
+            style: AppTextStyles.h3.copyWith(fontWeight: .bold),
           ),
-          SizedBox(width: 2.w),
-        ],
-      ),
-      body: SafeArea(
-        child: _isLoading
-            ? const PodiumShimmer()
-            : _errorMessage != null
-                ? AppEmptyState(
-                    title: "Erreur de chargement",
-                    message: _errorMessage!,
-                    icon: AppIcons.warning(color: AppColors.alertRed, size: AppSizes.iconXl),
-                    accentColor: AppColors.alertRed,
-                    actionLabel: "Réessayer",
-                    onAction: _fetchLeaderboard,
-                  )
-                : _allUsers.isEmpty
-                    ? AppEmptyState(
-                        title: "Aucun classement disponible",
-                        message: "Les participants apparaîtront ici dès que les points seront enregistrés.",
-                        icon: AppIcons.podium(color: AppColors.skyBlue, size: AppSizes.iconXl),
-                        accentColor: AppColors.skyBlue,
-                        actionLabel: "Actualiser",
-                        onAction: _fetchLeaderboard,
-                      )
-                    : Stack(
+          backgroundColor: AppColors.background,
+          elevation: 0,
+          actions: [
+            IconButton(
+              tooltip: "Règles du Classement",
+              icon: AppIcons.infoCircle(color: AppColors.actionBlue, size: 20),
+              onPressed: () => PodiumRulesDialog.show(context),
+            ),
+            IconButton(
+              tooltip: "Actualiser",
+              icon: AppIcons.refresh03(color: AppColors.actionBlue, size: 20),
+              onPressed: () => _fetchLeaderboard(isRefresh: true),
+            ),
+            SizedBox(width: 2.w),
+          ],
+        ),
+        body: SafeArea(
+          child: BlocBuilder<PodiumBloc, PodiumState>(
+            builder: (context, state) {
+              if (state is PodiumLoadingState || state is PodiumInitialState) {
+                return const PodiumShimmer();
+              }
+
+              if (state is PodiumErrorState) {
+                return AppEmptyState(
+                  title: "Erreur de chargement",
+                  message: state.message,
+                  icon: AppIcons.warning(
+                    color: AppColors.alertRed,
+                    size: AppSizes.iconXl,
+                  ),
+                  accentColor: AppColors.alertRed,
+                  actionLabel: "Réessayer",
+                  onAction: () => _fetchLeaderboard(isRefresh: true),
+                );
+              }
+
+              if (state is PodiumLoadedState) {
+                final data = state.data;
+                final allUsers = data.topUsers;
+                final topThree = allUsers.take(3).toList();
+                final remainingUsers = allUsers.skip(3).toList();
+
+                if (allUsers.isEmpty) {
+                  return AppEmptyState(
+                    title: "Aucun classement disponible",
+                    message:
+                        "Les participants apparaîtront ici dès que les points seront enregistrés.",
+                    icon: AppIcons.podium(
+                      color: AppColors.actionBlue,
+                      size: AppSizes.iconXl,
+                    ),
+                    accentColor: AppColors.actionBlue,
+                    actionLabel: "Actualiser",
+                    onAction: () => _fetchLeaderboard(isRefresh: true),
+                  );
+                }
+
+                return Stack(
+                  children: [
+                    RefreshIndicator(
+                      color: AppColors.actionBlue,
+                      onRefresh: () async => _fetchLeaderboard(isRefresh: true),
+                      child: ListView(
+                        padding: EdgeInsets.only(
+                          left: 5.w,
+                          right: 5.w,
+                          top: 1.h,
+                          bottom: currentUser != null ? 10.h : 4.h,
+                        ),
                         children: [
-                          RefreshIndicator(
-                            color: AppColors.skyBlue,
-                            onRefresh: _fetchLeaderboard,
-                            child: ListView(
-                              padding: EdgeInsets.only(
-                                left: 5.w,
-                                right: 5.w,
-                                top: 1.h,
-                                bottom: currentUserPodiumData != null ? 14.h : 4.h,
-                              ),
-                              children: [
-                                // Top 3 Podium Card
-                                if (topThree.isNotEmpty) ...[
-                                  TopThreePodium(topThree: topThree),
-                                  SizedBox(height: 3.h),
-                                ],
+                          // Top 3 Podium Card
+                          if (topThree.isNotEmpty) ...[
+                            TopThreePodium(topThree: topThree),
+                            SizedBox(height: 2.h),
+                          ],
 
-                                // Top 10 Section Header
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Top 10 (Places 4 à 10)",
-                                      style: AppTextStyles.titleMedium.copyWith(
-                                        color: AppColors.textPrimary,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      "${_allUsers.length} inscrits",
-                                      style: AppTextStyles.bodySmall.copyWith(
-                                        color: AppColors.textMuted,
-                                      ),
-                                    ),
-                                  ],
+                          // Top 10 Section Header
+                          Row(
+                            mainAxisAlignment: .spaceBetween,
+                            children: [
+                              Text(
+                                "Top 10 (Places 4 à 10)",
+                                style: AppTextStyles.titleSmall.copyWith(
+                                  color: AppColors.textPrimary,
+                                  fontWeight: .bold,
                                 ),
-                                SizedBox(height: 1.5.h),
-
-                                // Remaining Users Rows
-                                ...remainingUsers.map((user) {
-                                  final isMe = currentUser != null && user.id == currentUser.id;
-                                  return LeaderboardUserRow(
-                                    user: user,
-                                    isCurrentUser: isMe,
-                                  );
-                                }),
-                              ],
-                            ),
-                          ),
-
-                          // Current User Rank Sticky Card Footer
-                          if (currentUser != null)
-                            Positioned(
-                              bottom: 1.5.h,
-                              left: 4.w,
-                              right: 4.w,
-                              child: CurrentUserRankCard(
-                                userRank: currentUserRank > 0 ? currentUserRank : 1,
-                                totalParticipants: _allUsers.length,
-                                totalPoints: currentUserPodiumData?.totalPoints ?? currentUser.totalPoints,
-                                level: currentUserPodiumData?.level ?? currentUser.level,
                               ),
-                            ),
+                              Text(
+                                "${data.totalParticipants} participants",
+                                style: AppTextStyles.bodySmall.copyWith(
+                                  color: AppColors.textMuted,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 1.5.h),
+
+                          // Remaining Users Rows
+                          ...remainingUsers.map((user) {
+                            final isMe =
+                                currentUser != null &&
+                                user.id == currentUser.id;
+                            return LeaderboardUserRow(
+                              user: user,
+                              isCurrentUser: isMe,
+                            );
+                          }),
                         ],
                       ),
+                    ),
+
+                    // Current User Rank Sticky Card Footer
+                    if (currentUser != null)
+                      Positioned(
+                        bottom: 1.5.h,
+                        left: 4.w,
+                        right: 4.w,
+                        child: CurrentUserRankCard(
+                          userRank: data.currentUserRank,
+                          totalParticipants: data.totalParticipants,
+                          totalPoints:
+                              data.currentUserPodiumData?.totalPoints ??
+                              currentUser.totalPoints,
+                          level:
+                              data.currentUserPodiumData?.level ??
+                              currentUser.level,
+                        ),
+                      ),
+                  ],
+                );
+              }
+
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
       ),
     );
   }

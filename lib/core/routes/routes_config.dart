@@ -54,11 +54,19 @@ class RoutesConfig {
         name: 'ROUTER',
       );
 
-      if (authState is AuthInitialState || authState is AuthLoadingState) {
+      if (authState is AuthInitialState) {
         if (!isChecking) {
-          dev.log('Displaying access checking page', name: 'ROUTER');
+          dev.log('Displaying access checking page for initial state', name: 'ROUTER');
           return RoutePaths.checking;
         }
+        return null;
+      }
+
+      if (authState is AuthLoadingState) {
+        if (isChecking || isLoggingIn) {
+          return null;
+        }
+        // Do not kick user out to /checking if they are already inside the app
         return null;
       }
 
@@ -130,6 +138,21 @@ class RoutesConfig {
         name: RouteNames.forms,
         path: RoutePaths.forms,
         builder: (context, state) => const FormsPage(),
+      ),
+      GoRoute(
+        name: RouteNames.editProfile,
+        path: RoutePaths.editProfile,
+        builder: (context, state) {
+          final user = state.extra as UserEntity?;
+          final currentUser = user ??
+              (authBloc.state is AuthenticatedState
+                  ? (authBloc.state as AuthenticatedState).user
+                  : null);
+          if (currentUser == null) {
+            return const Scaffold(body: SizedBox.shrink());
+          }
+          return EditProfilePage(user: currentUser);
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {

@@ -33,10 +33,10 @@ class ProgramCard extends StatelessWidget {
         border: Border.all(color: borderColor, width: 1.2),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.6.h),
@@ -49,20 +49,20 @@ class ProgramCard extends StatelessWidget {
                   item.type.label,
                   style: AppTextStyles.badge.copyWith(
                     color: badgeColor,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
               ),
               if (item.speaker != null && item.speaker!.isNotEmpty)
                 Row(
+                  spacing: 1.w,
                   children: [
                     AppIcons.user(size: 14, color: badgeColor),
-                    SizedBox(width: 1.w),
                     Text(
                       item.speaker!,
                       style: AppTextStyles.caption.copyWith(
                         color: badgeColor,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                   ],
@@ -74,7 +74,7 @@ class ProgramCard extends StatelessWidget {
             item.title,
             style: AppTextStyles.titleLarge.copyWith(
               color: AppColors.textPrimary,
-              fontWeight: FontWeight.bold,
+              fontWeight: .bold,
             ),
           ),
           SizedBox(height: 0.8.h),
@@ -91,45 +91,45 @@ class ProgramCard extends StatelessWidget {
             children: [
               if (item.date.isNotEmpty)
                 Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
+                  spacing: 1.w,
                   children: [
                     AppIcons.calendar(size: 14, color: badgeColor),
-                    SizedBox(width: 1.w),
                     Text(
                       item.formattedFrenchDate,
                       style: AppTextStyles.caption.copyWith(
                         color: badgeColor,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                   ],
                 ),
               if (item.time.isNotEmpty)
                 Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
+                  spacing: 1.w,
                   children: [
                     AppIcons.time(size: 14, color: badgeColor),
-                    SizedBox(width: 1.w),
                     Text(
                       item.formattedLocalTime,
                       style: AppTextStyles.caption.copyWith(
                         color: badgeColor,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                   ],
                 ),
               if (item.location != null && item.location!.isNotEmpty)
                 Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: .min,
+                  spacing: 1.w,
                   children: [
                     AppIcons.video(size: 14, color: badgeColor),
-                    SizedBox(width: 1.w),
                     Text(
                       item.location!,
                       style: AppTextStyles.caption.copyWith(
                         color: badgeColor,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: .w600,
                       ),
                     ),
                   ],
@@ -140,6 +140,7 @@ class ProgramCard extends StatelessWidget {
           if (hasLive || hasReplay) ...[
             SizedBox(height: 2.h),
             Row(
+              spacing: 2.w,
               children: [
                 if (hasLive)
                   Expanded(
@@ -167,7 +168,6 @@ class ProgramCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (hasLive && hasReplay) SizedBox(width: 2.w),
                 if (hasReplay)
                   Expanded(
                     child: ElevatedButton.icon(

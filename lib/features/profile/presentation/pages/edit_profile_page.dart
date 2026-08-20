@@ -1,11 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_event.dart';
+import '../bloc/profile_bloc.dart';
+import '../bloc/profile_event.dart';
+import '../bloc/profile_state.dart';
 import '../widgets/edit_profile_header.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -32,8 +35,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   String? _selectedCountry;
   String? _selectedHub;
 
-  bool _isSubmitting = false;
-
   static const List<String> _genderOptions = AppDataConstants.genderOptions;
   static const List<String> _hubOptions = AppDataConstants.hubOptions;
   static const List<String> _africanCountries =
@@ -45,9 +46,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final user = widget.user;
 
     _nameController = TextEditingController(text: user.name);
-    _discordController = TextEditingController(
-      text: user.discordUsername ?? '',
-    );
+    _discordController = TextEditingController(text: user.discordUsername ?? '');
     _townController = TextEditingController(text: user.town ?? '');
     _githubController = TextEditingController(text: user.github ?? '');
     _linkedinController = TextEditingController(text: user.linkedin ?? '');
@@ -58,8 +57,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
       _selectedGender = user.gender;
     }
 
-    if (user.country != null && _africanCountries.contains(user.country)) {
-      _selectedCountry = user.country;
+    if (user.country != null) {
+      final matched = AppDataConstants.matchCountryWithFlag(user.country);
+      if (matched != null && _africanCountries.contains(matched)) {
+        _selectedCountry = matched;
+      }
     }
 
     final existingHub = user.hub ?? user.community;
@@ -95,264 +97,292 @@ class _EditProfilePageState extends State<EditProfilePage> {
     final isOnline = await NetworkHelper.checkConnection(context);
     if (!isOnline) return;
 
-    setState(() {
-      _isSubmitting = true;
-    });
+    final updatedData = {
+      'name': _nameController.text.trim(),
+      'discordUsername': _discordController.text.trim(),
+      'country': _selectedCountry,
+      'town': _townController.text.trim(),
+      'hub': _selectedHub,
+      'community': _selectedHub,
+      'gender': _selectedGender,
+      'github': _githubController.text.trim(),
+      'linkedin': _linkedinController.text.trim(),
+      'x': _xController.text.trim(),
+      'portfolio': _portfolioController.text.trim(),
+    };
 
-    try {
-      final docId = widget.user.id;
-      final hubValue =
-          (_selectedHub == null || _selectedHub!.contains('Non affilié'))
-          ? ''
-          : _selectedHub!.trim();
-
-      final updateData = {
-        'name': _nameController.text.trim(),
-        'discordUsername': _discordController.text.trim(),
-        'gender': _selectedGender,
-        'country': _selectedCountry,
-        'town': _townController.text.trim(),
-        'hub': hubValue,
-        'community': hubValue,
-        'github': _githubController.text.trim(),
-        'linkedin': _linkedinController.text.trim(),
-        'x': _xController.text.trim(),
-        'portfolio': _portfolioController.text.trim(),
-        'updatedAt': DateTime.now().toIso8601String(),
-      };
-
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(docId)
-          .set(updateData, SetOptions(merge: true));
-
-      if (mounted) {
-        context.read<AuthBloc>().add(CheckAuthEvent());
-        final nav = Navigator.of(context);
-        final parentCtx = nav.context;
-        nav.pop();
-        if (parentCtx.mounted) {
-          AppSnackBar.showSuccess(parentCtx, "Profil mis à jour avec succès !");
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isSubmitting = false;
-        });
-        AppSnackBar.showError(context, "Erreur lors de la mise à jour : $e");
-      }
+    if (mounted) {
+      context.read<ProfileBloc>().add(
+            UpdateProfileSubmittedEvent(
+              userId: widget.user.id,
+              data: updatedData,
+            ),
+          );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text("Éditer mon profil"),
-        backgroundColor: AppColors.background,
-        elevation: 0,
-        actions: [
-          TextButton(
-            onPressed: _isSubmitting ? null : _submitChanges,
-            child: _isSubmitting
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: AppColors.skyBlue,
-                    ),
-                  )
-                : Text(
-                    "Enregistrer",
-                    style: AppTextStyles.buttonSmall.copyWith(
-                      color: AppColors.skyBlue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-          ),
-          SizedBox(width: 2.w),
-        ],
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Fixed Header Card
-              EditProfileHeader(user: widget.user),
-              SizedBox(height: 2.h),
+    return BlocConsumer<ProfileBloc, ProfileState>(
+      listenWhen: (previous, current) =>
+          previous.updateStatus != current.updateStatus,
+      listener: (context, state) {
+        if (state.updateStatus == ProfileUpdateStatus.success) {
+          context.read<AuthBloc>().add(SilentRefreshAuthUserEvent());
+          AppSnackBar.showSuccess(
+            context,
+            "Votre profil a été mis à jour avec succès !",
+          );
+          if (context.canPop()) {
+            context.pop();
+          }
+        } else if (state.updateStatus == ProfileUpdateStatus.failure) {
+          AppSnackBar.showError(
+            context,
+            state.updateError ?? "Erreur lors de la mise à jour du profil.",
+          );
+        }
+      },
+      builder: (context, state) {
+        final isSubmitting = state.updateStatus == ProfileUpdateStatus.loading;
 
-              // Scrollable Form Fields
-              Expanded(
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    primary: false,
-                    padding: EdgeInsets.only(bottom: 3.h),
-                    children: [
-                      Text(
-                        "Informations personnelles",
-                        style: AppTextStyles.titleMedium.copyWith(
-                          color: AppColors.textPrimary,
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            title: const Text("Éditer mon profil"),
+            backgroundColor: AppColors.background,
+            elevation: 0,
+            actions: [
+              TextButton(
+                onPressed: isSubmitting ? null : _submitChanges,
+                child: isSubmitting
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.actionBlue,
+                        ),
+                      )
+                    : Text(
+                        "Enregistrer",
+                        style: AppTextStyles.buttonSmall.copyWith(
+                          color: AppColors.actionBlue,
+                          fontWeight: .bold,
                         ),
                       ),
-                      SizedBox(height: 1.5.h),
-
-                      // Nom complet
-                      TextFormField(
-                        controller: _nameController,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                        decoration: const InputDecoration(
-                          labelText: "Nom complet (Nom & Prénom) *",
-                          hintText: "Ex: Georges Byona",
-                        ),
-                        validator: (val) {
-                          if (val == null || val.trim().isEmpty) {
-                            return "Veuillez entrer votre nom complet.";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // Pseudo Discord
-                      TextFormField(
-                        controller: _discordController,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                        decoration: const InputDecoration(
-                          labelText: "Nom d'utilisateur Discord *",
-                          hintText: "Ex: georges_dev",
-                        ),
-                        validator: (val) {
-                          if (val == null || val.trim().isEmpty) {
-                            return "Veuillez entrer votre pseudo Discord.";
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // Pays Dropdown
-                      AppDropdownField(
-                        label: "Pays de résidence *",
-                        value: _selectedCountry,
-                        options: _africanCountries,
-                        onSelected: (val) =>
-                            setState(() => _selectedCountry = val),
-                        hint: "Sélectionner votre pays",
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // Ville
-                      TextFormField(
-                        controller: _townController,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                        decoration: const InputDecoration(
-                          labelText: "Ville de résidence (Optionnel)",
-                          hintText: "Ex: Goma, Abidjan, Yaoundé...",
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // Hub Dropdown
-                      AppDropdownField(
-                        label: "Hub / Communauté Tech d'origine (Optionnel)",
-                        value: _selectedHub,
-                        options: _hubOptions,
-                        onSelected: (val) => setState(() => _selectedHub = val),
-                        hint: "Sélectionner votre hub ou GDG...",
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // Genre Dropdown
-                      AppDropdownField(
-                        label: "Genre / Sexe *",
-                        value: _selectedGender,
-                        options: _genderOptions,
-                        onSelected: (val) =>
-                            setState(() => _selectedGender = val),
-                        hint: "Sélectionner votre genre",
-                      ),
-                      SizedBox(height: 3.h),
-
-                      // Section Réseaux Sociaux & Portfolio
-                      Text(
-                        "Réseaux Sociaux & Portfolio",
-                        style: AppTextStyles.titleMedium.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                      ),
-                      SizedBox(height: 1.5.h),
-
-                      // GitHub
-                      TextFormField(
-                        controller: _githubController,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                        decoration: const InputDecoration(
-                          labelText: "Lien GitHub (Optionnel)",
-                          hintText: "https://github.com/votre_pseudo",
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // LinkedIn
-                      TextFormField(
-                        controller: _linkedinController,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                        decoration: const InputDecoration(
-                          labelText: "Lien LinkedIn (Optionnel)",
-                          hintText: "https://linkedin.com/in/votre_pseudo",
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // Twitter / X
-                      TextFormField(
-                        controller: _xController,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                        decoration: const InputDecoration(
-                          labelText: "Lien X / Twitter (Optionnel)",
-                          hintText: "https://x.com/votre_pseudo",
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-
-                      // Portfolio / Site Web
-                      TextFormField(
-                        controller: _portfolioController,
-                        style: AppTextStyles.bodySmall.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
-                        decoration: const InputDecoration(
-                          labelText: "Portfolio ou Site Web (Optionnel)",
-                          hintText: "https://votre-site.com",
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                    ],
-                  ),
-                ),
               ),
+              SizedBox(width: 2.w),
             ],
           ),
-        ),
-      ),
+          body: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: .start,
+                children: [
+                  // 1. Header Card (Read-only Email & Status)
+                  EditProfileHeader(user: widget.user),
+                  SizedBox(height: 2.5.h),
+
+                  // Section: Informations Personnelles
+                  Text(
+                    "Informations Personnelles",
+                    style: AppTextStyles.titleMedium.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: .bold,
+                    ),
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // Nom Complet
+                  Text(
+                    "Nom complet *",
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  ),
+                  SizedBox(height: 0.8.h),
+                  TextFormField(
+                    controller: _nameController,
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    decoration: const InputDecoration(
+                      hintText: "Votre nom complet",
+                    ),
+                    validator: (val) {
+                      if (val == null || val.trim().isEmpty) {
+                        return "Le nom complet est obligatoire";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // Pseudo Discord
+                  Text(
+                    "Pseudo Discord *",
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  ),
+                  SizedBox(height: 0.8.h),
+                  TextFormField(
+                    controller: _discordController,
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    decoration: const InputDecoration(
+                      hintText: "ex: username",
+                    ),
+                    validator: (val) {
+                      if (val == null || val.trim().isEmpty) {
+                        return "Le pseudo Discord est obligatoire";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // Genre
+                  AppDropdownField(
+                    label: "Genre *",
+                    value: _selectedGender,
+                    hint: "Sélectionnez votre genre",
+                    options: _genderOptions,
+                    onSelected: (val) {
+                      setState(() {
+                        _selectedGender = val;
+                      });
+                    },
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Le genre est obligatoire";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // Pays
+                  AppDropdownField(
+                    label: "Pays de résidence *",
+                    value: _selectedCountry,
+                    hint: "Sélectionnez votre pays",
+                    options: _africanCountries,
+                    enableSearch: true,
+                    onSelected: (val) {
+                      setState(() {
+                        _selectedCountry = val;
+                      });
+                    },
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        return "Le pays est obligatoire";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // Ville
+                  Text(
+                    "Ville",
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  ),
+                  SizedBox(height: 0.8.h),
+                  TextFormField(
+                    controller: _townController,
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    decoration: const InputDecoration(
+                      hintText: "ex: Goma, Kinshasa, Paris...",
+                    ),
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // Hub / Communauté
+                  AppDropdownField(
+                    label: "Hub / Communauté d'origine",
+                    value: _selectedHub,
+                    hint: "Sélectionnez votre Hub ou GDG...",
+                    options: _hubOptions,
+                    onSelected: (val) {
+                      setState(() {
+                        _selectedHub = val;
+                      });
+                    },
+                  ),
+                  SizedBox(height: 3.h),
+
+                  // Section: Réseaux Sociaux & Liens
+                  Text(
+                    "Réseaux Sociaux & Portfolio",
+                    style: AppTextStyles.titleMedium.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: .bold,
+                    ),
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // GitHub
+                  Text(
+                    "Profil GitHub",
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  ),
+                  SizedBox(height: 0.8.h),
+                  TextFormField(
+                    controller: _githubController,
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    decoration: const InputDecoration(
+                      hintText: "ex: https://github.com/votre_profil",
+                    ),
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // LinkedIn
+                  Text(
+                    "Profil LinkedIn",
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  ),
+                  SizedBox(height: 0.8.h),
+                  TextFormField(
+                    controller: _linkedinController,
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    decoration: const InputDecoration(
+                      hintText: "ex: https://linkedin.com/in/votre_profil",
+                    ),
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // X / Twitter
+                  Text(
+                    "Profil X (Twitter)",
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  ),
+                  SizedBox(height: 0.8.h),
+                  TextFormField(
+                    controller: _xController,
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    decoration: const InputDecoration(
+                      hintText: "ex: https://x.com/votre_profil",
+                    ),
+                  ),
+                  SizedBox(height: 1.5.h),
+
+                  // Portfolio
+                  Text(
+                    "Portfolio / Site Web",
+                    style: AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+                  ),
+                  SizedBox(height: 0.8.h),
+                  TextFormField(
+                    controller: _portfolioController,
+                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                    decoration: const InputDecoration(
+                      hintText: "ex: https://monsite.dev",
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

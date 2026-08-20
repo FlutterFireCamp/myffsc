@@ -22,21 +22,21 @@ class AppEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = accentColor ?? AppColors.skyBlue;
+    final activeColor = accentColor ?? AppColors.actionBlue;
 
     return Center(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: .min,
+          mainAxisAlignment: .center,
+          crossAxisAlignment: .center,
           children: [
             Container(
               padding: EdgeInsets.all(5.w),
               decoration: BoxDecoration(
                 color: activeColor.withValues(alpha: 0.12),
-                shape: BoxShape.circle,
+                shape: .circle,
                 border: Border.all(
                   color: activeColor.withValues(alpha: 0.25),
                   width: 1.5,
@@ -47,12 +47,10 @@ class AppEmptyState extends StatelessWidget {
             SizedBox(height: 2.5.h),
             Text(
               title,
-              style: AppTextStyles.h2.copyWith(
-                color: AppColors.textPrimary,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.bold,
+              style: AppTextStyles.titleMedium.copyWith(
+                fontWeight: .bold,
               ),
-              textAlign: TextAlign.center,
+              textAlign: .center,
             ),
             if (actionLabel != null && onAction != null) ...[
               SizedBox(height: 2.5.h),
@@ -67,10 +65,8 @@ class AppEmptyState extends StatelessWidget {
                 icon: AppIcons.refresh03(color: activeColor, size: 20),
                 label: Text(
                   actionLabel!,
-                  style: AppTextStyles.button.copyWith(
+                  style: AppTextStyles.buttonSmall.copyWith(
                     color: activeColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13.sp,
                   ),
                 ),
               ),

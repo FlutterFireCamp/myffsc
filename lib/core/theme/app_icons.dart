@@ -27,6 +27,18 @@ class AppIcons {
   static Widget podium({Color color = Colors.white, double size = 24.0}) =>
       trophy(color: color, size: size);
 
+  static Widget ranking({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedRanking, color: color, size: size);
+
+  static Widget medalFirstPlace({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedMedalFirstPlace, color: color, size: size);
+
+  static Widget medalSecondPlace({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedMedalSecondPlace, color: color, size: size);
+
+  static Widget medalThirdPlace({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedMedalThirdPlace, color: color, size: size);
+
   // Time & Countdown Icons
   static Widget time({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedTime02, color: color, size: size);

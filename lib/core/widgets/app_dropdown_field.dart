@@ -33,7 +33,7 @@ class AppDropdownField extends StatelessWidget {
           title: label?.replaceAll(' *', '') ?? hint,
           selectedValue: value,
           options: options,
-          enableSearch: enableSearch || options.length > 6,
+          enableSearch: enableSearch || options.length > 5,
           onSelected: onSelected,
         );
       },
@@ -48,7 +48,7 @@ class AppDropdownField extends StatelessWidget {
       builder: (formFieldState) {
         final hasError = formFieldState.hasError;
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: .start,
           children: [
             InkWell(
               onTap: () => _showModalPicker(context),
@@ -93,15 +93,15 @@ class AppDropdownField extends StatelessWidget {
                         ? AppColors.textPrimary
                         : AppColors.textMuted,
                   ),
-                  overflow: TextOverflow.ellipsis,
+                  overflow: .ellipsis,
                 ),
               ),
             ),
             if (hasError)
               Padding(
-                padding: EdgeInsets.only(top: 0.8.h, left: 3.w),
+                padding: EdgeInsets.only(top: 0.6.h, left: 3.w),
                 child: Text(
-                  formFieldState.errorText!,
+                  formFieldState.errorText ?? '',
                   style: AppTextStyles.caption.copyWith(color: AppColors.errorText),
                 ),
               ),
@@ -132,19 +132,25 @@ class _AppDropdownModalSheet extends StatefulWidget {
 }
 
 class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
-  late List<String> _filteredOptions;
   final TextEditingController _searchController = TextEditingController();
+  late List<String> _filteredOptions;
 
   @override
   void initState() {
     super.initState();
-    _filteredOptions = widget.options;
+    _filteredOptions = List.from(widget.options);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _filter(String query) {
     setState(() {
       if (query.trim().isEmpty) {
-        _filteredOptions = widget.options;
+        _filteredOptions = List.from(widget.options);
       } else {
         _filteredOptions = widget.options
             .where((opt) => opt.toLowerCase().contains(query.toLowerCase()))
@@ -154,114 +160,102 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
   }
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final isSearchable = widget.enableSearch;
 
     return Container(
+      height: 85.h,
       constraints: BoxConstraints(
-        maxHeight: isSearchable ? 85.h : 80.h,
+        maxHeight: 85.h,
       ),
       decoration: const BoxDecoration(
         color: AppColors.modalBackground,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         border: Border(
-          top: BorderSide(color: AppColors.borderSubtle, width: 1.2),
-          left: BorderSide(color: AppColors.borderSubtle, width: 1.2),
-          right: BorderSide(color: AppColors.borderSubtle, width: 1.2),
+          top: BorderSide(color: AppColors.borderSubtle, width: 1),
         ),
       ),
       child: SafeArea(
         top: false,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-            child: Column(
-              mainAxisSize: isSearchable ? MainAxisSize.max : MainAxisSize.min,
-              children: [
-                // Handle bar indicator
-                Container(
-                  width: 10.w,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.textMuted.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(2),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+          child: Column(
+            mainAxisSize: .max,
+            children: [
+              // Handle bar indicator
+              Container(
+                width: 10.w,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.textMuted.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              SizedBox(height: 1.5.h),
+
+              // Modal Header
+              Row(
+                mainAxisAlignment: .spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.title,
+                      style: AppTextStyles.titleMedium.copyWith(
+                        color: AppColors.textPrimary,
+                        fontWeight: .bold,
+                      ),
+                      overflow: .ellipsis,
+                    ),
+                  ),
+                  IconButton(
+                    icon: AppIcons.cancel(size: 18, color: AppColors.textMuted),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+              SizedBox(height: 1.h),
+
+              // Optional Search Field
+              if (isSearchable) ...[
+                TextField(
+                  controller: _searchController,
+                  onChanged: _filter,
+                  style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+                  decoration: InputDecoration(
+                    hintText: "Rechercher...",
+                    hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.all(3.w),
+                      child: AppIcons.search(size: 18, color: AppColors.textMuted),
+                    ),
+                    filled: true,
+                    fillColor: AppColors.card,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
+                    border: OutlineInputBorder(
+                      borderRadius: AppRadius.circular12,
+                      borderSide: const BorderSide(color: AppColors.borderSubtle),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: AppRadius.circular12,
+                      borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
+                    ),
                   ),
                 ),
                 SizedBox(height: 1.5.h),
-
-                // Modal Header
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.title,
-                        style: AppTextStyles.h3.copyWith(
-                          color: AppColors.textPrimary,
-                          fontSize: 13.sp,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    IconButton(
-                      icon: AppIcons.cancel(size: 18, color: AppColors.textMuted),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 1.h),
-
-                // Optional Search Field
-                if (isSearchable) ...[
-                  TextField(
-                    controller: _searchController,
-                    onChanged: _filter,
-                    style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
-                    decoration: InputDecoration(
-                      hintText: "Rechercher...",
-                      hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
-                      prefixIcon: Padding(
-                        padding: EdgeInsets.all(3.w),
-                        child: AppIcons.search(size: 18, color: AppColors.textMuted),
-                      ),
-                      filled: true,
-                      fillColor: AppColors.card,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
-                      border: OutlineInputBorder(
-                        borderRadius: AppRadius.circular12,
-                        borderSide: const BorderSide(color: AppColors.borderSubtle),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: AppRadius.circular12,
-                        borderSide: const BorderSide(color: AppColors.actionBlue, width: 1.5),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 1.5.h),
-                ],
-
-                // Options List with primary: false
-                if (isSearchable)
-                  Expanded(
-                    child: _buildOptionsListView(primary: false, shrinkWrap: false),
-                  )
-                else
-                  Flexible(
-                    child: _buildOptionsListView(primary: false, shrinkWrap: true),
-                  ),
               ],
-            ),
+
+              // Options List
+              Expanded(
+                child: _buildOptionsListView(primary: false),
+              ),
+            ],
           ),
         ),
-      );
-    }
+      ),
+    );
+  }
 
-  Widget _buildOptionsListView({required bool primary, required bool shrinkWrap}) {
+  Widget _buildOptionsListView({required bool primary}) {
     if (_filteredOptions.isEmpty) {
       return Center(
         child: Padding(
@@ -276,7 +270,6 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
 
     return ListView.separated(
       primary: primary,
-      shrinkWrap: shrinkWrap,
       itemCount: _filteredOptions.length,
       separatorBuilder: (context, index) =>
           const Divider(color: AppColors.borderSubtle, height: 1),
@@ -304,13 +297,13 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
                   child: Text(
                     item,
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: isSelected ? AppColors.skyBlue : AppColors.textPrimary,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      color: isSelected ? AppColors.actionBlue : AppColors.textPrimary,
+                      fontWeight: isSelected ? .bold : .normal,
                     ),
                   ),
                 ),
                 if (isSelected)
-                  AppIcons.check(color: AppColors.skyBlue, size: 18),
+                  AppIcons.check(color: AppColors.actionBlue, size: 18),
               ],
             ),
           ),

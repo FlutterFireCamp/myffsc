@@ -49,7 +49,7 @@ class FormsModalHelper {
 
     final Uri url = Uri.parse(urlString);
     try {
-      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      if (!await launchUrl(url, mode: .externalApplication)) {
         if (context.mounted) {
           AppSnackBar.showError(context, "Impossible d'ouvrir le formulaire : $urlString");
         }

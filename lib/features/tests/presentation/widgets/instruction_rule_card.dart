@@ -24,7 +24,8 @@ class InstructionRuleCard extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
+        spacing: 3.5.w,
         children: [
           Container(
             padding: EdgeInsets.all(2.w),
@@ -34,19 +35,18 @@ class InstructionRuleCard extends StatelessWidget {
             ),
             child: icon,
           ),
-          SizedBox(width: 3.5.w),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
+              spacing: 0.6.h,
               children: [
                 Text(
                   title,
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
-                SizedBox(height: 0.6.h),
                 Text(
                   description,
                   style: AppTextStyles.bodySmall.copyWith(

@@ -20,15 +20,15 @@ class TestsShimmer extends StatelessWidget {
               border: Border.all(color: AppColors.borderSubtle),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: .spaceBetween,
                   children: [
                     Container(
                       width: 25.w,
                       height: 3.h,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: AppColors.cardHover,
                         borderRadius: AppRadius.circular8,
                       ),
@@ -36,7 +36,7 @@ class TestsShimmer extends StatelessWidget {
                     Container(
                       width: 18.w,
                       height: 3.h,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: AppColors.cardHover,
                         borderRadius: AppRadius.circular8,
                       ),
@@ -47,7 +47,7 @@ class TestsShimmer extends StatelessWidget {
                 Container(
                   width: 70.w,
                   height: 2.5.h,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.cardHover,
                     borderRadius: AppRadius.circular6,
                   ),
@@ -56,7 +56,7 @@ class TestsShimmer extends StatelessWidget {
                 Container(
                   width: 90.w,
                   height: 1.8.h,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.cardHover,
                     borderRadius: AppRadius.circular6,
                   ),
@@ -65,7 +65,7 @@ class TestsShimmer extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   height: 5.5.h,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.cardHover,
                     borderRadius: AppRadius.circular12,
                   ),

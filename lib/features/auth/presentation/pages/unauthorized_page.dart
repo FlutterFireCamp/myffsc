@@ -29,7 +29,7 @@ class UnauthorizedPage extends StatelessWidget {
 
     try {
       if (await canLaunchUrl(emailUri)) {
-        await launchUrl(emailUri, mode: LaunchMode.externalApplication);
+        await launchUrl(emailUri, mode: .externalApplication);
       } else {
         await Clipboard.setData(const ClipboardData(text: email));
         if (context.mounted) {
@@ -113,8 +113,8 @@ class UnauthorizedPage extends StatelessWidget {
             ),
             padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 3.h),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .center,
               children: [
                 SizedBox(height: 2.h),
 
@@ -123,7 +123,7 @@ class UnauthorizedPage extends StatelessWidget {
                   width: 22.w,
                   height: 22.w,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    shape: .circle,
                     color: topIconBg,
                     border: Border.all(color: topIconBorder, width: 1.5),
                   ),
@@ -139,10 +139,10 @@ class UnauthorizedPage extends StatelessWidget {
                 // Main Title
                 Text(
                   "Accès réservé aux participants",
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   style: AppTextStyles.h2.copyWith(
                     color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
                 SizedBox(height: 1.8.h),
@@ -156,21 +156,21 @@ class UnauthorizedPage extends StatelessWidget {
                     border: Border.all(color: AppColors.borderSubtle),
                   ),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: .min,
+                    spacing: 2.w,
                     children: [
                       AppIcons.mail(
                         color: AppColors.textSecondary,
                         size: 18,
                       ),
-                      SizedBox(width: 2.w),
                       Flexible(
                         child: Text(
                           emailText,
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: AppColors.textPrimary,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: .w500,
                           ),
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                         ),
                       ),
                     ],
@@ -181,7 +181,7 @@ class UnauthorizedPage extends StatelessWidget {
                 // Explanation Text
                 Text(
                   descriptionText,
-                  textAlign: TextAlign.center,
+                  textAlign: .center,
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.textSecondary,
                     height: 1.5,
@@ -200,7 +200,7 @@ class UnauthorizedPage extends StatelessWidget {
                       border: Border.all(color: AppColors.borderSubtle),
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: .spaceBetween,
                       children: [
                         Text(
                           "Statut Actuel :",
@@ -219,7 +219,7 @@ class UnauthorizedPage extends StatelessWidget {
                             statusBadgeText,
                             style: AppTextStyles.badgeSmall.copyWith(
                               color: statusColor,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: .w600,
                             ),
                           ),
                         ),
@@ -242,7 +242,7 @@ class UnauthorizedPage extends StatelessWidget {
                     children: [
                       Text(
                         "Si vous estimez qu'il s'agit d'une erreur ou si vous souhaitez en savoir plus, vous pouvez contacter les organisateurs :",
-                        textAlign: TextAlign.center,
+                        textAlign: .center,
                         style: AppTextStyles.bodySmall.copyWith(
                           color: AppColors.textSecondary,
                           height: 1.4,
@@ -266,21 +266,21 @@ class UnauthorizedPage extends StatelessWidget {
                             ),
                           ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: .center,
+                            spacing: 2.5.w,
                             children: [
                               AppIcons.mail(
-                                color: AppColors.skyBlue,
+                                color: AppColors.actionBlue,
                                 size: 18,
                               ),
-                              SizedBox(width: 2.5.w),
                               Flexible(
                                 child: Text(
                                   "flutterfiresummer@gmail.com",
                                   style: AppTextStyles.bodyMedium.copyWith(
-                                    color: AppColors.skyBlue,
-                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.actionBlue,
+                                    fontWeight: .w600,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
+                                  overflow: .ellipsis,
                                 ),
                               ),
                             ],

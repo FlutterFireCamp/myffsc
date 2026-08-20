@@ -1,5 +1,6 @@
+import 'dart:developer' as dev;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import '../../../../core/helpers/date_time_helper.dart';
 import '../../domain/entities/question_item_entity.dart';
 import '../../domain/entities/test_quiz_entity.dart';
 
@@ -9,52 +10,14 @@ class TestFirestoreService {
   TestFirestoreService({FirebaseFirestore? firestore})
       : _firestore = firestore ?? FirebaseFirestore.instance;
 
-  String get _todayDateFormatted {
-    final now = DateTime.now();
-    return "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
-  }
+  String get _todayDateFormatted => DateTimeHelper.formatYmd(DateTime.now());
 
   /// Returns true if date corresponds to today (or if null/empty)
   bool _isTodayOrValid(dynamic rawDate) {
     if (rawDate == null) return true;
-    final now = DateTime.now();
-
-    if (rawDate is Timestamp) {
-      final dt = rawDate.toDate().toLocal();
-      return dt.year == now.year && dt.month == now.month && dt.day == now.day;
-    }
-
-    if (rawDate is String) {
-      final str = rawDate.trim();
-      if (str.isEmpty) return true;
-
-      // Try ISO parse
-      final parsed = DateTime.tryParse(str);
-      if (parsed != null) {
-        final dt = parsed.toLocal();
-        return dt.year == now.year && dt.month == now.month && dt.day == now.day;
-      }
-
-      // Try DD/MM/YYYY or YYYY-MM-DD
-      final parts = str.split(RegExp(r'[-/.]'));
-      if (parts.length == 3) {
-        int? y, m, d;
-        if (parts[0].length == 4) {
-          y = int.tryParse(parts[0]);
-          m = int.tryParse(parts[1]);
-          d = int.tryParse(parts[2]);
-        } else {
-          d = int.tryParse(parts[0]);
-          m = int.tryParse(parts[1]);
-          y = int.tryParse(parts[2]);
-        }
-        if (y != null && m != null && d != null) {
-          return y == now.year && m == now.month && d == now.day;
-        }
-      }
-    }
-
-    return true; // Default match if format unrecognized
+    final localDt = DateTimeHelper.parseToLocal(rawDate);
+    if (localDt == null) return true;
+    return DateTimeHelper.isToday(localDt);
   }
 
   /// Returns true if status is active/valid
@@ -77,10 +40,11 @@ class TestFirestoreService {
   /// Fetch active test scheduled for today from /tests
   Future<TestQuizEntity?> fetchTodayTest() async {
     try {
+      dev.log('Recherche du test du jour dans /tests...', name: 'TEST_FIRESTORE_SERVICE');
       final snapshot = await _firestore.collection('tests').get();
 
       if (snapshot.docs.isEmpty) {
-        debugPrint("No documents found in /tests collection.");
+        dev.log('Aucun document trouvé dans la collection /tests.', name: 'TEST_FIRESTORE_SERVICE');
         return null;
       }
 
@@ -96,6 +60,7 @@ class TestFirestoreService {
         if (_isValidStatus(rawStatus) && _isTodayOrValid(rawDate)) {
           final quiz = await _parseTestQuizEntity(doc);
           if (quiz != null && quiz.questions.isNotEmpty) {
+            dev.log('Test du jour trouvé avec succès: ${quiz.title}', name: 'TEST_FIRESTORE_SERVICE');
             return quiz;
           }
         }
@@ -109,6 +74,7 @@ class TestFirestoreService {
         if (_isValidStatus(rawStatus)) {
           final quiz = await _parseTestQuizEntity(doc);
           if (quiz != null && quiz.questions.isNotEmpty) {
+            dev.log('Test actif de repli trouvé: ${quiz.title}', name: 'TEST_FIRESTORE_SERVICE');
             return quiz;
           }
         }
@@ -117,29 +83,89 @@ class TestFirestoreService {
       // 3. Final fallback: parse the very first doc in /tests
       final firstDoc = snapshot.docs.first;
       return await _parseTestQuizEntity(firstDoc);
-    } catch (e) {
-      debugPrint("Error fetching today test from Firestore: $e");
+    } catch (e, stackTrace) {
+      dev.log(
+        'Erreur lors de la récupération du test du jour',
+        name: 'TEST_FIRESTORE_SERVICE',
+        error: e,
+        stackTrace: stackTrace,
+      );
+    }
+    return null;
+  }
+
+  /// Fetch test definition from principal /tests collection matching quizId, date or docId
+  Future<TestQuizEntity?> fetchTestBySubmission({
+    String? quizId,
+    String? date,
+    String? docId,
+  }) async {
+    try {
+      dev.log(
+        'Recherche du test dans /tests (quizId: $quizId, date: $date, docId: $docId)',
+        name: 'TEST_FIRESTORE_SERVICE',
+      );
+
+      // 1. Check direct quizId in /tests if given
+      if (quizId != null && quizId.trim().isNotEmpty) {
+        final doc = await _firestore.collection('tests').doc(quizId.trim()).get();
+        if (doc.exists) {
+          final parsed = await _parseTestQuizEntity(doc);
+          if (parsed != null && parsed.questions.isNotEmpty) return parsed;
+        }
+      }
+
+      // 2. Extract date pattern (e.g. 2026-08-15) from date or docId
+      String? dateTarget = date?.trim();
+      if (dateTarget == null || dateTarget.isEmpty) {
+        final match = RegExp(r'\d{4}-\d{2}-\d{2}').firstMatch(docId ?? '');
+        if (match != null) {
+          dateTarget = match.group(0);
+        }
+      }
+
+      if (dateTarget != null && dateTarget.isNotEmpty) {
+        final doc = await _firestore.collection('tests').doc(dateTarget).get();
+        if (doc.exists) {
+          final parsed = await _parseTestQuizEntity(doc);
+          if (parsed != null && parsed.questions.isNotEmpty) return parsed;
+        }
+      }
+
+      // 3. Scan documents in /tests
+      final snapshot = await _firestore.collection('tests').get();
+      for (final d in snapshot.docs) {
+        final data = d.data();
+        final docDate = (data['date'] ?? data['scheduledDate'] ?? data['scheduled_date'])?.toString();
+        if (d.id == quizId ||
+            d.id == dateTarget ||
+            (dateTarget != null && d.id.contains(dateTarget)) ||
+            (dateTarget != null && docDate != null && docDate.contains(dateTarget)) ||
+            (quizId != null && (d.id.contains(quizId) || quizId.contains(d.id)))) {
+          final parsed = await _parseTestQuizEntity(d);
+          if (parsed != null && parsed.questions.isNotEmpty) return parsed;
+        }
+      }
+
+      // 4. Fallback to any active or first available test in /tests
+      for (final d in snapshot.docs) {
+        final parsed = await _parseTestQuizEntity(d);
+        if (parsed != null && parsed.questions.isNotEmpty) return parsed;
+      }
+    } catch (e, stackTrace) {
+      dev.log(
+        'Erreur lors de la récupération du test dans /tests',
+        name: 'TEST_FIRESTORE_SERVICE',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
     return null;
   }
 
   /// Fetch a test by its ID from /tests
   Future<TestQuizEntity?> fetchTestById(String quizId) async {
-    try {
-      final doc = await _firestore.collection('tests').doc(quizId).get();
-      if (doc.exists) {
-        return await _parseTestQuizEntity(doc);
-      }
-      final snapshot = await _firestore.collection('tests').get();
-      for (final d in snapshot.docs) {
-        if (d.id == quizId || d.data()['id'] == quizId) {
-          return await _parseTestQuizEntity(d);
-        }
-      }
-    } catch (e) {
-      debugPrint("Error fetching test by id: $e");
-    }
-    return null;
+    return fetchTestBySubmission(quizId: quizId);
   }
 
   /// Check if user has already submitted the test today under /users/{userId}/tests/{quizId}_{YYYY-MM-DD}
@@ -168,8 +194,13 @@ class TestFirestoreService {
           return data;
         }
       }
-    } catch (e) {
-      debugPrint("Error checking submission: $e");
+    } catch (e, stackTrace) {
+      dev.log(
+        'Erreur lors de la vérification de la soumission de test pour $userId (quiz: $quizId)',
+        name: 'TEST_FIRESTORE_SERVICE',
+        error: e,
+        stackTrace: stackTrace,
+      );
     }
     return null;
   }
@@ -191,15 +222,40 @@ class TestFirestoreService {
       // Check if doc already exists to prevent duplicate submission
       final existingDoc = await docRef.get();
       if (existingDoc.exists && (existingDoc.data()?['submitted'] == true)) {
-        debugPrint("Test already submitted for today.");
+        dev.log('Test déjà soumis aujourd’hui pour $userId (docId: $docId)', name: 'TEST_FIRESTORE_SERVICE');
         return true;
       }
 
-      // Convert answers map to JSON string map
-      final Map<String, dynamic> formattedAnswers = {};
-      userAnswers.forEach((index, value) {
-        formattedAnswers[index.toString()] = value;
-      });
+      // Build structured answers list matching [{ questionId, questionText, score, studentAnswer, expectedAnswer }]
+      final List<Map<String, dynamic>> answersList = [];
+      for (int i = 0; i < quiz.questions.length; i++) {
+        final q = quiz.questions[i];
+        final rawAns = userAnswers[i];
+        final studentAnsStr = rawAns != null ? rawAns.toString() : "-1";
+
+        bool isCorrect = false;
+        if (q.type == 'choice' && q.correctAnswers != null && rawAns != null) {
+          final intAns = rawAns is int ? rawAns : int.tryParse(rawAns.toString());
+          if (intAns != null) {
+            isCorrect = q.correctAnswers!.contains(intAns) ||
+                q.correctAnswers!.contains(intAns - 1) ||
+                q.correctAnswers!.contains(intAns + 1);
+          }
+        }
+
+        final questionScore = isCorrect ? q.points : 0;
+        final expectedAnswerStr = (q.options != null && q.correctAnswers != null && q.correctAnswers!.isNotEmpty)
+            ? (q.correctAnswers!.first < q.options!.length ? q.options![q.correctAnswers!.first] : "")
+            : (q.expectedText ?? "");
+
+        answersList.add({
+          'questionId': q.id,
+          'questionText': q.title,
+          'score': questionScore,
+          'studentAnswer': studentAnsStr,
+          'expectedAnswer': expectedAnswerStr,
+        });
+      }
 
       final totalPossible = quiz.questions
               .where((q) => q.type == 'choice')
@@ -218,7 +274,7 @@ class TestFirestoreService {
         'totalPossibleScore': totalPossible > 0 ? totalPossible : quiz.totalPoints,
         'timeSpentSeconds': timeSpentSeconds,
         'tabSwitchCount': tabSwitchCount,
-        'answers': formattedAnswers,
+        'answers': answersList,
         'submitted': true,
         'status': evaluationStatus,
         'isGraded': !hasTextQuestions,
@@ -234,9 +290,19 @@ class TestFirestoreService {
         });
       }
 
+      dev.log(
+        'Test soumis avec succès pour $userId: score=$score, status=$evaluationStatus',
+        name: 'TEST_FIRESTORE_SERVICE',
+      );
+
       return true;
-    } catch (e) {
-      debugPrint("Error submitting test result: $e");
+    } catch (e, stackTrace) {
+      dev.log(
+        'Erreur lors de la soumission du test pour $userId (quiz: ${quiz.id})',
+        name: 'TEST_FIRESTORE_SERVICE',
+        error: e,
+        stackTrace: stackTrace,
+      );
       return false;
     }
   }
@@ -246,64 +312,135 @@ class TestFirestoreService {
     final data = doc.data() ?? {};
     final docId = doc.id;
 
-    List<dynamic> rawQuestions = (data['questions'] as List<dynamic>?) ??
-        (data['items'] as List<dynamic>?) ??
-        (data['qcm'] as List<dynamic>?) ??
-        [];
-
-    // If root document does not contain questions array, check subcollection /tests/{docId}/questions
-    if (rawQuestions.isEmpty) {
-      try {
-        final subSnap = await doc.reference.collection('questions').get();
-        if (subSnap.docs.isNotEmpty) {
-          rawQuestions = subSnap.docs.map((d) => d.data()).toList();
-        } else {
-          final subItemsSnap = await doc.reference.collection('items').get();
-          if (subItemsSnap.docs.isNotEmpty) {
-            rawQuestions = subItemsSnap.docs.map((d) => d.data()).toList();
-          }
-        }
-      } catch (e) {
-        debugPrint("Error fetching questions subcollection: $e");
+    final rawField = data['questions'] ?? data['items'] ?? data['qcm'];
+    final List<dynamic> rawQuestions = [];
+    if (rawField is List) {
+      rawQuestions.addAll(rawField);
+    } else if (rawField is Map) {
+      final sortedKeys = rawField.keys.toList()
+        ..sort((a, b) {
+          final intA = int.tryParse(a.toString()) ?? 0;
+          final intB = int.tryParse(b.toString()) ?? 0;
+          return intA.compareTo(intB);
+        });
+      for (final k in sortedKeys) {
+        rawQuestions.add(rawField[k]);
       }
     }
 
     final List<QuestionItemEntity> questions = [];
     for (int i = 0; i < rawQuestions.length; i++) {
-      if (rawQuestions[i] is! Map<String, dynamic>) continue;
-      final qData = rawQuestions[i] as Map<String, dynamic>;
+      if (rawQuestions[i] is! Map) continue;
+      final qData = Map<String, dynamic>.from(rawQuestions[i] as Map);
 
+      String statement = qData['statement'] as String? ??
+          qData['enonce'] as String? ??
+          qData['description'] as String? ??
+          '';
+
+      String title = qData['title'] as String? ??
+          qData['question'] as String? ??
+          qData['label'] as String? ??
+          '';
+
+      final contextStr = qData['context'] as String? ??
+          qData['contexte'] as String? ??
+          qData['scenario'] as String?;
+
+      if (contextStr != null && contextStr.trim().isNotEmpty) {
+        if (statement.isNotEmpty) {
+          statement = "**Contexte :**\n${contextStr.trim()}\n\n**Énoncé :**\n$statement";
+        } else if (title.isNotEmpty) {
+          statement = "**Contexte :**\n${contextStr.trim()}\n\n**Énoncé :**\n$title";
+        } else {
+          statement = "**Contexte :**\n${contextStr.trim()}";
+        }
+      }
+
+      if (statement.isEmpty && title.isNotEmpty) {
+        statement = title;
+      }
+      if (title.isEmpty && statement.isNotEmpty) {
+        title = statement;
+      }
+      if (title.isEmpty) {
+        title = "Question ${i + 1}";
+        statement = title;
+      }
+
+      // Parse options (supports List or Map)
+      List<String>? options;
+      if (qData['options'] is List) {
+        options = (qData['options'] as List).map((e) {
+          if (e is Map) {
+            return (e['text'] ?? e['option'] ?? e['title'] ?? e.toString()).toString();
+          }
+          return e.toString();
+        }).toList();
+      } else if (qData['options'] is Map) {
+        final optMap = qData['options'] as Map;
+        final sortedOptKeys = optMap.keys.toList()
+          ..sort((a, b) {
+            final intA = int.tryParse(a.toString()) ?? 0;
+            final intB = int.tryParse(b.toString()) ?? 0;
+            return intA.compareTo(intB);
+          });
+        options = sortedOptKeys.map((k) {
+          final val = optMap[k];
+          if (val is Map) {
+            return (val['text'] ?? val['option'] ?? val['title'] ?? val.toString()).toString();
+          }
+          return val.toString();
+        }).toList();
+      }
+
+      // Parse correct answers
       List<int>? parsedCorrectAnswers;
       if (qData['correctAnswers'] is List) {
-        parsedCorrectAnswers = (qData['correctAnswers'] as List)
-            .map((e) => (e as num).toInt())
-            .toList();
+        parsedCorrectAnswers = (qData['correctAnswers'] as List).map((e) {
+          if (e is num) return e.toInt();
+          final parsed = int.tryParse(e.toString());
+          return parsed ?? 0;
+        }).toList();
       } else if (qData['correctAnswer'] != null) {
-        parsedCorrectAnswers = [(qData['correctAnswer'] as num).toInt()];
+        if (qData['correctAnswer'] is num) {
+          parsedCorrectAnswers = [(qData['correctAnswer'] as num).toInt()];
+        } else {
+          final parsed = int.tryParse(qData['correctAnswer'].toString());
+          if (parsed != null) {
+            parsedCorrectAnswers = [parsed];
+          }
+        }
       }
+
+      List<int> parsedModules = [1];
+      if (qData['modules'] is List) {
+        parsedModules = (qData['modules'] as List)
+            .map((e) => (e is num) ? e.toInt() : (int.tryParse(e.toString()) ?? 1))
+            .toList();
+      }
+
+      final expectedText = qData['expectedText'] as String? ??
+          qData['expectedAnswer'] as String? ??
+          qData['reponseAttendue'] as String?;
 
       questions.add(QuestionItemEntity(
         id: qData['id'] as String? ?? 'q_$i',
-        title: qData['title'] as String? ??
-            qData['question'] as String? ??
-            'Question ${i + 1}',
-        type: qData['type'] as String? ?? 'choice',
+        title: title,
+        statement: statement,
+        type: qData['type'] as String? ?? (options != null && options.isNotEmpty ? 'choice' : 'open'),
         level: (qData['level'] as num?)?.toInt() ?? 1,
-        modules: ((qData['modules'] as List<dynamic>?) ?? [1])
-            .map((e) => (e as num).toInt())
-            .toList(),
+        modules: parsedModules,
         points: (qData['points'] as num?)?.toInt() ?? 25,
         timingSeconds: (qData['timingSeconds'] as num?)?.toInt() ??
             (qData['duration'] as num?)?.toInt() ??
             60,
-        options: (qData['options'] as List<dynamic>?)
-            ?.map((e) => e.toString())
-            .toList(),
+        options: options,
         correctAnswers: parsedCorrectAnswers,
         optionExplanations: (qData['optionExplanations'] as List<dynamic>?)
             ?.map((e) => e.toString())
             .toList(),
-        expectedText: qData['expectedText'] as String?,
+        expectedText: expectedText,
         explanation: qData['explanation'] as String?,
       ));
     }
@@ -314,9 +451,9 @@ class TestFirestoreService {
 
     return TestQuizEntity(
       id: docId,
-      title: data['title'] as String? ?? "Examen de Validation FFSC",
+      title: data['title'] as String? ?? "Évaluation FFSC",
       description: data['description'] as String? ??
-          "Évaluation officielle couvrant la logique Dart et les composants Flutter.",
+          "Évaluation officielle FFSC.",
       totalDurationMinutes: (data['totalDurationMinutes'] as num?)?.toInt() ??
           (data['durationMinutes'] as num?)?.toInt() ??
           10,

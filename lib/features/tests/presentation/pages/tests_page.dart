@@ -5,6 +5,7 @@ import '../../../../core/core.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../bloc/bloc.dart';
+import '../../domain/entities/user_question_correction.dart';
 import '../widgets/test_correction_bottom_sheet.dart';
 import '../widgets/tests_shimmer.dart';
 import '../widgets/test_quiz_card.dart';
@@ -43,7 +44,7 @@ class _TestsPageState extends State<TestsPage> {
         actions: [
           IconButton(
             tooltip: "Actualiser",
-            icon: AppIcons.refresh03(color: AppColors.skyBlue, size: 20),
+            icon: AppIcons.refresh03(color: AppColors.actionBlue, size: 20),
             onPressed: () {
               context.read<TestBloc>().add(FetchTodayTestEvent(userId: userId));
             },
@@ -103,7 +104,7 @@ class _TestsPageState extends State<TestsPage> {
                       ),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: .start,
                       children: [
                         Row(
                           children: [
@@ -117,14 +118,14 @@ class _TestsPageState extends State<TestsPage> {
                                 borderRadius: AppRadius.circular8,
                               ),
                               child: Row(
+                                spacing: 1.w,
                                 children: [
                                   AppIcons.check(color: AppColors.correctText, size: 16),
-                                  SizedBox(width: 1.w),
                                   Text(
                                     "DÉJÀ SOUMIS",
                                     style: AppTextStyles.badgeSmall.copyWith(
                                       color: AppColors.correctText,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: .bold,
                                     ),
                                   ),
                                 ],
@@ -135,7 +136,7 @@ class _TestsPageState extends State<TestsPage> {
                               "$score / $totalPossible Pts",
                               style: AppTextStyles.titleMedium.copyWith(
                                 color: AppColors.skyBlue,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: .bold,
                               ),
                             ),
                           ],
@@ -154,11 +155,45 @@ class _TestsPageState extends State<TestsPage> {
 
                         ElevatedButton.icon(
                           onPressed: () {
+                            final List<UserQuestionCorrection> corrections = [];
+                            final userAnsMap = state.userAnswersMap;
+                            for (int i = 0; i < quiz.questions.length; i++) {
+                              final q = quiz.questions[i];
+                              final ans = userAnsMap[i];
+                              bool isCorrect = false;
+                              if (q.type == 'choice' && q.correctAnswers != null && ans != null) {
+                                final intAns = ans is int ? ans : int.tryParse(ans.toString());
+                                if (intAns != null) {
+                                  isCorrect = q.correctAnswers!.contains(intAns) ||
+                                      q.correctAnswers!.contains(intAns - 1) ||
+                                      q.correctAnswers!.contains(intAns + 1);
+                                }
+                              }
+                              corrections.add(
+                                UserQuestionCorrection(
+                                  index: i,
+                                  questionId: q.id,
+                                  title: q.title,
+                                  statement: q.statement,
+                                  type: q.type,
+                                  studentAnswer: ans != null ? ans.toString() : "-1",
+                                  earnedScore: isCorrect ? q.points : 0,
+                                  maxScore: q.points > 0 ? q.points : 25,
+                                  options: q.options,
+                                  correctAnswers: q.correctAnswers,
+                                  explanation: q.explanation,
+                                ),
+                              );
+                            }
+
                             TestCorrectionBottomSheet.show(
                               context,
-                              quiz: quiz,
-                              userAnswers: state.userAnswersMap,
+                              quizTitle: quiz.title,
+                              dateFormatted: DateTimeHelper.formatYmd(DateTime.now()),
                               totalScore: score,
+                              totalPossibleScore: totalPossible,
+                              status: state.previousSubmission?['status']?.toString() ?? "Corrigé",
+                              questions: corrections,
                             );
                           },
                           style: ElevatedButton.styleFrom(

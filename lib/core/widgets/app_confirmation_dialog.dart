@@ -56,8 +56,8 @@ class AppConfirmationDialog extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(6.w),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: .min,
+          crossAxisAlignment: .start,
           children: [
             // Title matching Dashboard greeting style (AppTextStyles.h3)
             Text(
@@ -77,7 +77,8 @@ class AppConfirmationDialog extends StatelessWidget {
 
             // Action Buttons
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: .end,
+              spacing: 3.w,
               children: [
                 // Cancel Button
                 OutlinedButton(
@@ -97,7 +98,6 @@ class AppConfirmationDialog extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 3.w),
 
                 // Confirm Button
                 ElevatedButton(
@@ -106,8 +106,8 @@ class AppConfirmationDialog extends StatelessWidget {
                     onConfirm?.call();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isDestructive ? AppColors.errorText : AppColors.skyBlue,
-                    foregroundColor: isDestructive ? Colors.white : AppColors.ultraDark,
+                    backgroundColor: isDestructive ? AppColors.errorText : AppColors.actionBlue,
+                    foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.2.h),
                     elevation: 0,
                     shape: const RoundedRectangleBorder(
@@ -117,8 +117,8 @@ class AppConfirmationDialog extends StatelessWidget {
                   child: Text(
                     confirmText,
                     style: AppTextStyles.buttonSmall.copyWith(
-                      color: isDestructive ? Colors.white : AppColors.ultraDark,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontWeight: .bold,
                     ),
                   ),
                 ),

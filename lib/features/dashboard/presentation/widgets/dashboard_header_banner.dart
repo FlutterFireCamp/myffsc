@@ -104,11 +104,11 @@ class DashboardHeaderBanner extends StatelessWidget {
         border: Border.all(color: AppColors.borderSubtle),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           // Level Title Badge & Level Emoji
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Container(
                 padding: EdgeInsets.symmetric(
@@ -124,7 +124,7 @@ class DashboardHeaderBanner extends StatelessWidget {
                   levelConfig.title,
                   style: AppTextStyles.bodySmall.copyWith(
                     color: levelColor,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: .bold,
                   ),
                 ),
               ),
@@ -132,12 +132,12 @@ class DashboardHeaderBanner extends StatelessWidget {
                 padding: EdgeInsets.all(1.w),
                 decoration: BoxDecoration(
                   color: levelColor.withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
+                  shape: .circle,
                   border: Border.all(color: levelColor.withValues(alpha: 0.4)),
                 ),
                 child: Text(
                   levelConfig.emoji,
-                  style: TextStyle(fontSize: 16.sp),
+                  style: AppTextStyles.titleMedium,
                 ),
               ),
             ],
@@ -159,20 +159,20 @@ class DashboardHeaderBanner extends StatelessWidget {
 
           // Progress Bar Header
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Text(
                 "Progression Globale",
                 style: AppTextStyles.bodySmall.copyWith(
                   color: AppColors.textSecondary,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: .w600,
                 ),
               ),
               Text(
                 "$progressPct%",
                 style: AppTextStyles.titleMedium.copyWith(
                   color: levelColor,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: .bold,
                 ),
               ),
             ],

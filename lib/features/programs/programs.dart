@@ -1,2 +1,9 @@
 export 'domain/entities/program_item.dart';
+export 'domain/repositories/programs_repository.dart';
+export 'domain/usecases/programs_usecases.dart';
+export 'data/datasources/programs_remote_data_source.dart';
+export 'data/repositories/programs_repository_impl.dart';
+export 'presentation/bloc/programs_bloc.dart';
+export 'presentation/bloc/programs_event.dart';
+export 'presentation/bloc/programs_state.dart';
 export 'presentation/pages/programs_page.dart';

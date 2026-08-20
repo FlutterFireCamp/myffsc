@@ -25,12 +25,16 @@ dependencies:
   go_router: ^17.3.0
   cached_network_image: ^3.4.1
   url_launcher: ^6.3.2
-
+  firebase_messaging: ^16.5.0
+  flutter_local_notifications: ^18.0.1
+  flutter_markdown_plus: 1.0.12
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
+  bloc_test: ^10.0.0
+  mocktail: ^1.0.4
 
 flutter_launcher_icons:
   android: "ic_launcher"
