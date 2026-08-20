@@ -46,3 +46,11 @@ app.*.map.json
 /android/build/
 /android/.gradle/
 .gradle/
+
+# Android Signing Keys & Secrets
+**/key.properties
+*.jks
+*.keystore
+upload-keystore.jks
+android/app/upload-keystore.jks
+

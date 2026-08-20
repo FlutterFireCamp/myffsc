@@ -1,0 +1,8 @@
+﻿# Fichier de configuration de signature pour le Google Play Store
+# Placez votre fichier .jks / .keystore dans le dossier `android/app/` (ex: `android/app/upload-keystore.jks`)
+# IMPORTANT: Ne commitez JAMAIS `key.properties` ni vos fichiers `.jks` / `.keystore` sur Git !
+
+keyAlias=upload
+keyPassword=VOTRE_MOT_DE_PASSE_KEY
+storeFile=app/upload-keystore.jks
+storePassword=VOTRE_MOT_DE_PASSE_KEYSTORE

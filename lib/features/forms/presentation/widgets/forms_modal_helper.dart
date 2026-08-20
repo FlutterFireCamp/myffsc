@@ -4,7 +4,7 @@ import '../../../../core/core.dart';
 
 class FormsModalHelper {
   static const String ideaUrl = 'https://forms.gle/6tQUJwNjN3ma8q6a6';
-  static const String feedbackUrl = 'https://forms.gle/kFmfzJuTgFZMR25S8';
+  static const String feedbackUrl = 'https://forms.gle/m1ndUV3y9x7QLFfGA';
   static const String reportUrl = 'https://forms.gle/uPNdw1pbjbiyJQZn9';
 
   static String getCertificateUrl(int level) {
@@ -51,7 +51,10 @@ class FormsModalHelper {
     try {
       if (!await launchUrl(url, mode: .externalApplication)) {
         if (context.mounted) {
-          AppSnackBar.showError(context, "Impossible d'ouvrir le formulaire : $urlString");
+          AppSnackBar.showError(
+            context,
+            "Impossible d'ouvrir le formulaire : $urlString",
+          );
         }
       }
     } catch (e) {
