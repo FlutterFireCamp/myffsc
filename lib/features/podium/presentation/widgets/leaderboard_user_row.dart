@@ -15,6 +15,9 @@ class LeaderboardUserRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasFlag = user.flag.isNotEmpty;
+    final hasCommunity = user.displayCommunity.isNotEmpty;
+
     return Container(
       margin: EdgeInsets.only(bottom: 1.2.h),
       padding: EdgeInsets.symmetric(horizontal: 3.5.w, vertical: 1.2.h),
@@ -53,7 +56,7 @@ class LeaderboardUserRow extends StatelessWidget {
             ),
           ),
 
-          // User Name (Enlarged) & Country Flag Below
+          // User Name & Flag • Community Below
           Expanded(
             child: Column(
               crossAxisAlignment: .start,
@@ -68,7 +71,36 @@ class LeaderboardUserRow extends StatelessWidget {
                     fontWeight: .bold,
                   ),
                 ),
-                if (user.flag.isNotEmpty) Text(user.flag),
+                if (hasFlag || hasCommunity)
+                  Row(
+                    mainAxisSize: .min,
+                    children: [
+                      if (hasFlag)
+                        Text(
+                          user.flag,
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      if (hasFlag && hasCommunity)
+                        Text(
+                          " • ",
+                          style: AppTextStyles.captionSmall.copyWith(
+                            color: AppColors.textMuted,
+                          ),
+                        ),
+                      if (hasCommunity)
+                        Flexible(
+                          child: Text(
+                            user.displayCommunity,
+                            maxLines: 1,
+                            overflow: .ellipsis,
+                            style: AppTextStyles.captionSmall.copyWith(
+                              color: AppColors.actionBlue,
+                              fontWeight: .w600,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
               ],
             ),
           ),
