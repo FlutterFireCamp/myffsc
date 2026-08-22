@@ -25,16 +25,11 @@ class CompleteProfileHeader extends StatelessWidget {
       child: Row(
         spacing: 3.5.w,
         children: [
-          AppCachedAvatar(
+          AppAvatar(
             radius: 5.w,
             imageUrl: photoUrl,
             fallbackInitial: emailText.isNotEmpty ? emailText[0] : 'U',
             backgroundColor: AppColors.skyBlue.withValues(alpha: 0.2),
-            fallbackTextStyle: TextStyle(
-              fontFamily: AppTextStyles.fontFamily,
-              fontWeight: FontWeight.bold,
-              color: AppColors.skyBlue,
-            ),
           ),
           Expanded(
             child: Column(

@@ -39,7 +39,7 @@ class ProfileHeaderCard extends StatelessWidget {
             spacing: 3.w,
             children: [
               // Avatar Left
-              AppCachedAvatar(
+              AppAvatar(
                 imageUrl: user.photoUrl,
                 radius: 26,
                 fallbackInitial: user.firstName,

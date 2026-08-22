@@ -4,14 +4,14 @@ import '../theme/app_colors.dart';
 import '../theme/app_icons.dart';
 import '../theme/app_text_styles.dart';
 
-class AppCachedAvatar extends StatelessWidget {
+class AppAvatar extends StatelessWidget {
   final String? imageUrl;
   final double radius;
   final String fallbackInitial;
   final TextStyle? fallbackTextStyle;
   final Color backgroundColor;
 
-  const AppCachedAvatar({
+  const AppAvatar({
     super.key,
     required this.imageUrl,
     required this.radius,
@@ -72,7 +72,9 @@ class AppCachedAvatar extends StatelessWidget {
         : AppTextStyles.avatarInitial(radius * 1.05);
 
     // Si aucune image ou si c'est l'avatar par défaut de Google, appliquer notre design FFSC
-    if (imageUrl == null || imageUrl!.trim().isEmpty || isDefaultGoogleAvatar(imageUrl)) {
+    if (imageUrl == null ||
+        imageUrl!.trim().isEmpty ||
+        isDefaultGoogleAvatar(imageUrl)) {
       return _buildFallback(resolvedStyle);
     }
 

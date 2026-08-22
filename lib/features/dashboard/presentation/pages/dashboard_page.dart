@@ -74,11 +74,10 @@ class _DashboardPageState extends State<DashboardPage> {
         title: Row(
           spacing: 3.w,
           children: [
-            AppCachedAvatar(
+            AppAvatar(
               imageUrl: currentUser.photoUrl,
               radius: 20,
               fallbackInitial: currentUser.firstName,
-              fallbackTextStyle: AppTextStyles.titleMedium,
             ),
             Column(
               crossAxisAlignment: .start,

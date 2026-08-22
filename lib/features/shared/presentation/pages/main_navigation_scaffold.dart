@@ -38,16 +38,10 @@ class MainNavigationScaffold extends StatelessWidget {
             width: isActive ? 2.0 : 1.0,
           ),
         ),
-        child: AppCachedAvatar(
+        child: AppAvatar(
           imageUrl: photoUrl,
           radius: 11,
           fallbackInitial: initial,
-          fallbackTextStyle: TextStyle(
-            fontFamily: AppTextStyles.fontFamily,
-            fontSize: 10,
-            fontWeight: .bold,
-            color: Colors.white,
-          ),
         ),
       );
     }

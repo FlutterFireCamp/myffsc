@@ -46,14 +46,10 @@ class LeaderboardUserRow extends StatelessWidget {
           ),
 
           // Small User Avatar
-          AppCachedAvatar(
+          AppAvatar(
             imageUrl: user.photoUrl,
             radius: 15,
             fallbackInitial: user.name.isNotEmpty ? user.name[0] : 'F',
-            fallbackTextStyle: AppTextStyles.bodyMedium.copyWith(
-              color: Colors.white,
-              fontWeight: .bold,
-            ),
           ),
 
           // User Name & Flag • Community Below

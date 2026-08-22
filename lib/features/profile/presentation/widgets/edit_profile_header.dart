@@ -33,7 +33,7 @@ class EditProfileHeader extends StatelessWidget {
         crossAxisAlignment: .center,
         spacing: 4.w,
         children: [
-          AppCachedAvatar(
+          AppAvatar(
             imageUrl: user.photoUrl,
             radius: 32,
             fallbackInitial: user.firstName,

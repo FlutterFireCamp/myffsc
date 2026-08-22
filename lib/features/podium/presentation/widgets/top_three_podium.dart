@@ -129,7 +129,7 @@ class TopThreePodium extends StatelessWidget {
                     width: isFirst ? 2.5 : 1.8,
                   ),
                 ),
-                child: AppCachedAvatar(
+                child: AppAvatar(
                   imageUrl: user.photoUrl,
                   radius: avatarRadius,
                   fallbackInitial: user.name.isNotEmpty ? user.name[0] : 'A',
