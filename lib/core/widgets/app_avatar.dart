@@ -57,32 +57,19 @@ class AppCachedAvatar extends StatelessWidget {
       height: radius * 2,
       decoration: BoxDecoration(
         color: backgroundColor,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: AppColors.navyBorder,
-          width: 1.0,
-        ),
+        shape: .circle,
+        border: .all(color: AppColors.navyBorder, width: 1.0),
       ),
       alignment: Alignment.center,
-      child: Text(
-        letter,
-        style: resolvedStyle,
-        textAlign: TextAlign.center,
-      ),
+      child: Text(letter, style: resolvedStyle, textAlign: TextAlign.center),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle defaultStyle = TextStyle(
-      fontFamily: AppTextStyles.fontFamily,
-      fontSize: radius * 1.05,
-      color: AppColors.skyBlue,
-      fontWeight: FontWeight.bold,
-    );
-
-    final TextStyle resolvedStyle = (fallbackTextStyle ?? defaultStyle)
-        .copyWith(fontFamily: AppTextStyles.fontFamily);
+    final TextStyle resolvedStyle = fallbackTextStyle != null
+        ? fallbackTextStyle!.copyWith(fontFamily: AppTextStyles.fontFamily)
+        : AppTextStyles.avatarInitial(radius * 1.05);
 
     // Si aucune image ou si c'est l'avatar par défaut de Google, appliquer notre design FFSC
     if (imageUrl == null || imageUrl!.trim().isEmpty || isDefaultGoogleAvatar(imageUrl)) {
@@ -95,8 +82,8 @@ class AppCachedAvatar extends StatelessWidget {
         width: radius * 2,
         height: radius * 2,
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+          shape: .circle,
+          image: DecorationImage(image: imageProvider, fit: .cover),
         ),
       ),
       placeholder: (context, url) => Container(

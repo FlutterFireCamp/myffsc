@@ -165,4 +165,16 @@ class AppTextStyles {
 
   static TextStyle get navLabelActive =>
       TextStyle(fontFamily: fontFamily, fontSize: 12.sp, fontWeight: .bold);
+
+  // --- Avatars & Initiales ---
+  static TextStyle avatarInitial(
+    double fontSize, {
+    Color color = AppColors.skyBlue,
+  }) =>
+      TextStyle(
+        fontFamily: fontFamily,
+        fontSize: fontSize,
+        fontWeight: FontWeight.bold,
+        color: color,
+      );
 }
