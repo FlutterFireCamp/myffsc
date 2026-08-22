@@ -17,7 +17,7 @@ class AppCachedAvatar extends StatelessWidget {
     required this.radius,
     required this.fallbackInitial,
     this.fallbackTextStyle,
-    this.backgroundColor = AppColors.skyBlue,
+    this.backgroundColor = AppColors.navyCard,
   });
 
   /// Détecte si l'URL correspond à une image générique/initiale par défaut générée par Google
@@ -55,9 +55,20 @@ class AppCachedAvatar extends StatelessWidget {
     return Container(
       width: radius * 2,
       height: radius * 2,
-      decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: AppColors.navyBorder,
+          width: 1.0,
+        ),
+      ),
       alignment: Alignment.center,
-      child: Text(letter, style: resolvedStyle, textAlign: TextAlign.center),
+      child: Text(
+        letter,
+        style: resolvedStyle,
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
@@ -65,8 +76,8 @@ class AppCachedAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextStyle defaultStyle = TextStyle(
       fontFamily: AppTextStyles.fontFamily,
-      fontSize: radius * 0.85,
-      color: Colors.white,
+      fontSize: radius * 1.05,
+      color: AppColors.skyBlue,
       fontWeight: FontWeight.bold,
     );
 
