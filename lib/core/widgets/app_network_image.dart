@@ -9,6 +9,7 @@ class AppCachedAvatar extends StatelessWidget {
   final double radius;
   final String fallbackInitial;
   final TextStyle? fallbackTextStyle;
+  final Color backgroundColor;
 
   const AppCachedAvatar({
     super.key,
@@ -16,103 +17,60 @@ class AppCachedAvatar extends StatelessWidget {
     required this.radius,
     required this.fallbackInitial,
     this.fallbackTextStyle,
+    this.backgroundColor = AppColors.skyBlue,
   });
+
+  Widget _buildFallback(TextStyle resolvedStyle) {
+    final letter = fallbackInitial.trim().isNotEmpty
+        ? fallbackInitial.trim()[0].toUpperCase()
+        : 'A';
+
+    return Container(
+      width: radius * 2,
+      height: radius * 2,
+      decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
+      alignment: Alignment.center,
+      child: Text(letter, style: resolvedStyle, textAlign: TextAlign.center),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final TextStyle defaultStyle = TextStyle(
       fontFamily: AppTextStyles.fontFamily,
-      fontSize: radius * 0.8,
+      fontSize: radius * 0.85,
       color: Colors.white,
       fontWeight: FontWeight.bold,
     );
 
-    final TextStyle resolvedStyle = (fallbackTextStyle ?? defaultStyle).copyWith(
-      fontFamily: AppTextStyles.fontFamily,
-    );
+    final TextStyle resolvedStyle = (fallbackTextStyle ?? defaultStyle)
+        .copyWith(fontFamily: AppTextStyles.fontFamily);
 
     if (imageUrl == null || imageUrl!.trim().isEmpty) {
-      return CircleAvatar(
-        radius: radius,
-        backgroundColor: AppColors.skyBlue,
-        child: Text(
-          fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
-          style: resolvedStyle,
-        ),
-      );
+      return _buildFallback(resolvedStyle);
     }
 
     return CachedNetworkImage(
       imageUrl: imageUrl!,
-      imageBuilder: (context, imageProvider) =>
-          CircleAvatar(radius: radius, backgroundImage: imageProvider),
-      placeholder: (context, url) => CircleAvatar(
-        radius: radius,
-        backgroundColor: AppColors.card,
+      imageBuilder: (context, imageProvider) => Container(
+        width: radius * 2,
+        height: radius * 2,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+        ),
+      ),
+      placeholder: (context, url) => Container(
+        width: radius * 2,
+        height: radius * 2,
+        decoration: const BoxDecoration(
+          color: AppColors.card,
+          shape: BoxShape.circle,
+        ),
+        alignment: Alignment.center,
         child: AppIcons.user(color: AppColors.skyBlue, size: radius * 1.1),
       ),
-      errorWidget: (context, url, error) => CircleAvatar(
-        radius: radius,
-        backgroundColor: AppColors.skyBlue,
-        child: Text(
-          fallbackInitial.isNotEmpty ? fallbackInitial[0].toUpperCase() : 'A',
-          style: resolvedStyle,
-        ),
-      ),
+      errorWidget: (context, url, error) => _buildFallback(resolvedStyle),
     );
-  }
-}
-
-class AppNetworkImage extends StatelessWidget {
-  final String imageUrl;
-  final double? width;
-  final double? height;
-  final BoxFit fit;
-  final BorderRadius? borderRadius;
-
-  const AppNetworkImage({
-    super.key,
-    required this.imageUrl,
-    this.width,
-    this.height,
-    this.fit = .cover,
-    this.borderRadius,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget imageWidget = CachedNetworkImage(
-      imageUrl: imageUrl,
-      width: width,
-      height: height,
-      fit: fit,
-      placeholder: (context, url) => Container(
-        width: width,
-        height: height,
-        color: AppColors.card,
-        child: Center(
-          child: AppIcons.user(
-            color: AppColors.skyBlue,
-            size: (width != null && height != null)
-                ? (width! < height! ? width! * 0.5 : height! * 0.5)
-                : 24,
-          ),
-        ),
-      ),
-      errorWidget: (context, url, error) => Container(
-        width: width,
-        height: height,
-        color: AppColors.card,
-        child: const Center(
-          child: Icon(Icons.broken_image_rounded, color: AppColors.textMuted),
-        ),
-      ),
-    );
-
-    if (borderRadius != null) {
-      return ClipRRect(borderRadius: borderRadius!, child: imageWidget);
-    }
-
-    return imageWidget;
   }
 }

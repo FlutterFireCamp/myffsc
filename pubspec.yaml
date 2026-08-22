@@ -58,5 +58,13 @@ flutter:
       fonts:
         - asset: assets/fonts/Outfit-Regular.ttf
           weight: 400
+        - asset: assets/fonts/Outfit-Regular.ttf
+          weight: 500
         - asset: assets/fonts/Outfit-SemiBold.ttf
           weight: 600
+        - asset: assets/fonts/Outfit-SemiBold.ttf
+          weight: 700
+        - asset: assets/fonts/Outfit-SemiBold.ttf
+          weight: 800
+        - asset: assets/fonts/Outfit-SemiBold.ttf
+          weight: 900
