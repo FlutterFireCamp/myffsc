@@ -73,58 +73,71 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               ? envServerClientId
               : '940039203312-dgmo6fr82npo9ts44c1vrr4f7rtild2b.apps.googleusercontent.com');
 
-      dev.log('Initializing GoogleSignIn with serverClientId ($clientIdToUse)...', name: 'AUTH_REMOTE_DS');
-      await googleSignIn.initialize(
-        serverClientId: clientIdToUse,
-      );
+      UserCredential? userCredential;
 
-      GoogleSignInAccount? googleUser;
+      // 1. Tentative avec GoogleSignIn plugin
       try {
-        googleUser = await googleSignIn.authenticate();
-      } on GoogleSignInException catch (e) {
-        if (e.code == GoogleSignInExceptionCode.canceled) {
-          dev.log('Google Sign-In cancelled by user', name: 'AUTH_REMOTE_DS');
-          throw const UserCanceledException();
-        } else if (e.code == GoogleSignInExceptionCode.clientConfigurationError) {
-          dev.log(
-            'Google Sign-In client configuration error. serverClientId must be provided in Firebase Console / WEB_CLIENT_ID env variable.',
-            name: 'AUTH_REMOTE_DS',
-            error: e,
-          );
-          throw Exception(
-            "Configuration Google Sign-In requise : veuillez vérifier le Web Client ID dans Firebase Console.",
-          );
+        dev.log('Initializing GoogleSignIn with serverClientId ($clientIdToUse)...', name: 'AUTH_REMOTE_DS');
+        await googleSignIn.initialize(
+          serverClientId: clientIdToUse,
+        );
+
+        final googleUser = await googleSignIn.authenticate();
+        final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+        String? accessToken;
+
+        try {
+          final authClient = googleUser.authorizationClient;
+          final clientAuth = await authClient.authorizationForScopes(['email', 'profile']);
+          accessToken = clientAuth?.accessToken;
+        } catch (e) {
+          dev.log('Could not retrieve accessToken for scopes: $e', name: 'AUTH_REMOTE_DS');
         }
-        rethrow;
-      }
 
-      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
-      String? accessToken;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: accessToken,
+          idToken: googleAuth.idToken,
+        );
 
-      try {
-        final authClient = googleUser.authorizationClient;
-        final clientAuth = await authClient.authorizationForScopes(['email', 'profile']);
-        accessToken = clientAuth?.accessToken;
+        userCredential = await firebaseAuth.signInWithCredential(credential);
+      } on GoogleSignInException catch (e) {
+        dev.log('GoogleSignInException: code=${e.code}, description=${e.description}', name: 'AUTH_REMOTE_DS');
+        
+        // Si Credential Manager échoue sur cet appareil, tentative de secours directe via FirebaseAuth
+        try {
+          dev.log('Tentative de repli via FirebaseAuth.signInWithProvider(GoogleAuthProvider)...', name: 'AUTH_REMOTE_DS');
+          final googleProvider = GoogleAuthProvider();
+          googleProvider.addScope('email');
+          googleProvider.addScope('profile');
+          userCredential = await firebaseAuth.signInWithProvider(googleProvider);
+        } catch (fallbackError, fallbackSt) {
+          dev.log('Erreur fallback FirebaseAuth signInWithProvider', name: 'AUTH_REMOTE_DS', error: fallbackError, stackTrace: fallbackSt);
+          if (e.code == GoogleSignInExceptionCode.canceled && (e.description == null || e.description!.isEmpty)) {
+            throw const UserCanceledException();
+          }
+          throw Exception("Échec de connexion Google (${e.code}): ${e.description ?? fallbackError.toString()}");
+        }
       } catch (e) {
-        dev.log('Could not retrieve accessToken for scopes: $e', name: 'AUTH_REMOTE_DS');
+        dev.log('Erreur GoogleSignIn générique: $e. Tentative de repli FirebaseAuth...', name: 'AUTH_REMOTE_DS');
+        try {
+          final googleProvider = GoogleAuthProvider();
+          googleProvider.addScope('email');
+          googleProvider.addScope('profile');
+          userCredential = await firebaseAuth.signInWithProvider(googleProvider);
+        } catch (fallbackError) {
+          throw Exception("Échec de l'authentification Google : $e");
+        }
       }
 
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential = await firebaseAuth.signInWithCredential(credential);
       final User? firebaseUser = userCredential.user;
-
       if (firebaseUser == null) {
         dev.log('Firebase User is null after credential sign-in', name: 'AUTH_REMOTE_DS');
         throw Exception("Échec de la récupération de l'utilisateur Firebase.");
       }
 
-      final email = firebaseUser.email ?? googleUser.email;
-      final photoUrl = firebaseUser.photoURL ?? googleUser.photoUrl;
-      final displayName = firebaseUser.displayName ?? googleUser.displayName;
+      final email = firebaseUser.email;
+      final photoUrl = firebaseUser.photoURL;
+      final displayName = firebaseUser.displayName;
 
       return await _fetchAndSyncExistingUserDoc(
         firebaseUid: firebaseUser.uid,
