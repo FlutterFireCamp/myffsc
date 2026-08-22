@@ -27,11 +27,9 @@ class AppCachedAvatar extends StatelessWidget {
       fontWeight: FontWeight.bold,
     );
 
-    final TextStyle resolvedStyle = fallbackTextStyle != null
-        ? (fallbackTextStyle!.fontFamily == null
-            ? fallbackTextStyle!.copyWith(fontFamily: AppTextStyles.fontFamily)
-            : fallbackTextStyle!)
-        : defaultStyle;
+    final TextStyle resolvedStyle = (fallbackTextStyle ?? defaultStyle).copyWith(
+      fontFamily: AppTextStyles.fontFamily,
+    );
 
     if (imageUrl == null || imageUrl!.trim().isEmpty) {
       return CircleAvatar(

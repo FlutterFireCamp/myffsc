@@ -26,7 +26,7 @@ class MainNavigationScaffold extends StatelessWidget {
     final photoUrl = currentUser?.photoUrl;
     final initial = currentUser?.firstName ?? 'A';
 
-    if (photoUrl != null && photoUrl.trim().isNotEmpty) {
+    if (currentUser != null) {
       return Container(
         padding: const EdgeInsets.all(1),
         decoration: BoxDecoration(
@@ -42,6 +42,12 @@ class MainNavigationScaffold extends StatelessWidget {
           imageUrl: photoUrl,
           radius: 11,
           fallbackInitial: initial,
+          fallbackTextStyle: TextStyle(
+            fontFamily: AppTextStyles.fontFamily,
+            fontSize: 10,
+            fontWeight: .bold,
+            color: Colors.white,
+          ),
         ),
       );
     }
