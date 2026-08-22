@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "940039203312-aqmi1fg3q531phbddj6t9pi6rt14f42h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.flutterfirecamp.app",
+            "certificate_hash": "1e7298a4f1e604e82f997e4ccafdb8212e1c7341"
+          }
+        },
+        {
           "client_id": "940039203312-drobaofkj7mh4eib1h4ta4fdobe6v9a2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "dev.flutterfirecamp.app",
             "certificate_hash": "170624f3813d0f28db70da3760333563fcaf5dde"
+          }
+        },
+        {
+          "client_id": "940039203312-natoni0no1u8s7qsivmbji264srt4mi9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.flutterfirecamp.app",
+            "certificate_hash": "bd22abf18900ac4b399f9559d316b097ab1a0e9c"
           }
         },
         {
