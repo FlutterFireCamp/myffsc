@@ -20,6 +20,33 @@ class AppCachedAvatar extends StatelessWidget {
     this.backgroundColor = AppColors.skyBlue,
   });
 
+  /// Détecte si l'URL correspond à une image générique/initiale par défaut générée par Google
+  static bool isDefaultGoogleAvatar(String? url) {
+    if (url == null || url.trim().isEmpty) return true;
+    final trimmed = url.trim();
+
+    if (trimmed.contains('googleusercontent.com')) {
+      // Anciennes URLs de silhouette par défaut
+      if (trimmed.contains('/AAAAAAAAAAI/AAAAAAAAAAA/') ||
+          trimmed.contains('default-user') ||
+          trimmed.contains('default_avatar')) {
+        return true;
+      }
+
+      // Google Identity : '/a/' (sans tiret) = initiale générée par Google
+      // '/a-/' (avec tiret) ou '/ogw/' = vraie photo de profil personnalisée
+      final uri = Uri.tryParse(trimmed);
+      if (uri != null) {
+        final path = uri.path;
+        if (path.startsWith('/a/') && !path.startsWith('/a-/')) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   Widget _buildFallback(TextStyle resolvedStyle) {
     final letter = fallbackInitial.trim().isNotEmpty
         ? fallbackInitial.trim()[0].toUpperCase()
@@ -46,7 +73,8 @@ class AppCachedAvatar extends StatelessWidget {
     final TextStyle resolvedStyle = (fallbackTextStyle ?? defaultStyle)
         .copyWith(fontFamily: AppTextStyles.fontFamily);
 
-    if (imageUrl == null || imageUrl!.trim().isEmpty) {
+    // Si aucune image ou si c'est l'avatar par défaut de Google, appliquer notre design FFSC
+    if (imageUrl == null || imageUrl!.trim().isEmpty || isDefaultGoogleAvatar(imageUrl)) {
       return _buildFallback(resolvedStyle);
     }
 
