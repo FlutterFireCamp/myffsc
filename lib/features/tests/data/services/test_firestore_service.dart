@@ -55,10 +55,72 @@ class TestFirestoreService {
     ].contains(s);
   }
 
-  /// Fetch active test scheduled strictly for today from /tests
+  /// Vérifie si le test est strictement disponible actuellement (entre startTime et endTime)
+  bool _isTestAvailableNow(String docId, Map<String, dynamic> data) {
+    if (!_isTestForToday(docId, data)) {
+      return false;
+    }
+
+    final rawDate = data['scheduledDate'] ??
+        data['date'] ??
+        data['scheduled_date'] ??
+        data['scheduledAt'];
+
+    final rawStartTime = data['startTime'] ??
+        data['start_time'] ??
+        data['start'] ??
+        data['availabilityStartGmt'] ??
+        data['time'];
+
+    final rawEndTime = data['endTime'] ??
+        data['end_time'] ??
+        data['end'] ??
+        data['availabilityEndGmt'] ??
+        data['time'];
+
+    final now = DateTime.now();
+
+    // 1. Vérification de l'heure de fin (endTime) : si dépassée, le test n'est plus accessible
+    final endDateTime = DateTimeHelper.parseDateTimeWithTime(
+      rawDate: rawDate,
+      rawTime: rawEndTime,
+      isEndTime: true,
+    );
+
+    if (endDateTime != null) {
+      if (now.isAfter(endDateTime)) {
+        dev.log(
+          'Test $docId expiré (endTime: $endDateTime vs now: $now) -> non affiché',
+          name: 'TEST_FIRESTORE_SERVICE',
+        );
+        return false;
+      }
+    }
+
+    // 2. Vérification de l'heure de début (startTime) : si dans le futur, le test n'a pas encore commencé
+    final startDateTime = DateTimeHelper.parseDateTimeWithTime(
+      rawDate: rawDate,
+      rawTime: rawStartTime,
+      isEndTime: false,
+    );
+
+    if (startDateTime != null) {
+      if (now.isBefore(startDateTime)) {
+        dev.log(
+          'Test $docId non débuté (startTime: $startDateTime vs now: $now) -> non affiché',
+          name: 'TEST_FIRESTORE_SERVICE',
+        );
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /// Fetch active test scheduled strictly for today from /tests within its valid time window
   Future<TestQuizEntity?> fetchTodayTest() async {
     try {
-      dev.log('Recherche du test du jour dans /tests...', name: 'TEST_FIRESTORE_SERVICE');
+      dev.log('Recherche du test du jour disponible dans /tests...', name: 'TEST_FIRESTORE_SERVICE');
       final snapshot = await _firestore.collection('tests').get();
 
       if (snapshot.docs.isEmpty) {
@@ -66,21 +128,21 @@ class TestFirestoreService {
         return null;
       }
 
-      // Check documents strictly matching today's date & active status
+      // Check documents strictly matching today's date, active status & current time window
       for (final doc in snapshot.docs) {
         final data = doc.data();
         final rawStatus = data['status'];
 
-        if (_isValidStatus(rawStatus) && _isTestForToday(doc.id, data)) {
+        if (_isValidStatus(rawStatus) && _isTestAvailableNow(doc.id, data)) {
           final quiz = await _parseTestQuizEntity(doc);
           if (quiz != null && quiz.questions.isNotEmpty) {
-            dev.log('Test du jour trouvé avec succès: ${quiz.title}', name: 'TEST_FIRESTORE_SERVICE');
+            dev.log('Test du jour en cours trouvé avec succès: ${quiz.title}', name: 'TEST_FIRESTORE_SERVICE');
             return quiz;
           }
         }
       }
 
-      dev.log('Aucun test prévu pour aujourd’hui dans /tests.', name: 'TEST_FIRESTORE_SERVICE');
+      dev.log('Aucun test disponible actuellement dans son créneau horaire dans /tests.', name: 'TEST_FIRESTORE_SERVICE');
       return null;
     } catch (e, stackTrace) {
       dev.log(
@@ -453,6 +515,22 @@ class TestFirestoreService {
       return null;
     }
 
+    final rawDate = data['scheduledDate'] ?? data['date'] ?? data['scheduled_date'] ?? data['scheduledAt'];
+    final rawStartTime = data['startTime'] ?? data['start_time'] ?? data['start'] ?? data['availabilityStartGmt'] ?? data['time'];
+    final rawEndTime = data['endTime'] ?? data['end_time'] ?? data['end'] ?? data['availabilityEndGmt'] ?? data['time'];
+
+    final startDt = DateTimeHelper.parseDateTimeWithTime(
+      rawDate: rawDate,
+      rawTime: rawStartTime,
+      isEndTime: false,
+    );
+
+    final endDt = DateTimeHelper.parseDateTimeWithTime(
+      rawDate: rawDate,
+      rawTime: rawEndTime,
+      isEndTime: true,
+    );
+
     return TestQuizEntity(
       id: docId,
       title: data['title'] as String? ?? "Évaluation FFSC",
@@ -464,6 +542,8 @@ class TestFirestoreService {
       totalPoints:
           (data['totalPoints'] as num?)?.toInt() ?? (questions.length * 25),
       questions: questions,
+      availabilityStartGmt: startDt,
+      availabilityEndGmt: endDt,
       status: data['status'] as String? ?? 'active',
     );
   }

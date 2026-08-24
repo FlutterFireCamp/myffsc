@@ -261,10 +261,22 @@ class ProgramItem extends Equatable {
     return createdAt;
   }
 
-  /// Checks if the program has already passed (before today midnight)
+  /// Checks if the program has already passed (taking into account the exact end time)
   bool get isPast {
     final dt = programDateTime;
     if (dt == null) return false;
+
+    if (time.trim().isNotEmpty) {
+      final endDt = DateTimeHelper.parseDateTimeWithTime(
+        rawDate: date,
+        rawTime: time,
+        isEndTime: true,
+      );
+      if (endDt != null) {
+        return DateTime.now().isAfter(endDt);
+      }
+    }
+
     final todayStart = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     return dt.isBefore(todayStart);
   }

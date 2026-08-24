@@ -120,4 +120,52 @@ class DateTimeHelper {
     final d = dt.day.toString().padLeft(2, '0');
     return "$y-$m-$d";
   }
+
+  /// Combine une date et une heure (GMT 0 ou locale) pour obtenir un DateTime local complet.
+  /// Gère les chaînes "15:00", "15h00", "15h00 - 16h00", les Timestamps, ISO strings, etc.
+  static DateTime? parseDateTimeWithTime({
+    dynamic rawDate,
+    dynamic rawTime,
+    bool isEndTime = false,
+  }) {
+    if (rawTime is Timestamp) return rawTime.toDate().toLocal();
+    if (rawTime is DateTime) return rawTime.toLocal();
+
+    if (rawTime is String) {
+      final str = rawTime.trim();
+      final iso = DateTime.tryParse(str);
+      if (iso != null && iso.year > 2000) {
+        return parseToLocal(str);
+      }
+    }
+
+    final localDate = parseToLocal(rawDate) ?? DateTime.now();
+
+    if (rawTime == null) return null;
+    final timeStr = rawTime.toString().trim();
+    if (timeStr.isEmpty) return null;
+
+    final parts = timeStr.split(RegExp(r'\s*-\s*|\s+à\s+'));
+    String targetPart =
+        isEndTime && parts.length > 1 ? parts.last.trim() : parts.first.trim();
+    targetPart = targetPart.replaceAll('h', ':').replaceAll('H', ':');
+
+    final match = RegExp(r'^(\d{1,2})(?::(\d{1,2}))?').firstMatch(targetPart);
+    if (match != null) {
+      final hours = int.parse(match.group(1)!);
+      final minutes = match.group(2) != null ? int.parse(match.group(2)!) : 0;
+
+      // Les heures dans Firestore pour FFSC sont stockées en GMT 0
+      final utcDt = DateTime.utc(
+        localDate.year,
+        localDate.month,
+        localDate.day,
+        hours,
+        minutes,
+      );
+      return utcDt.toLocal();
+    }
+
+    return null;
+  }
 }
