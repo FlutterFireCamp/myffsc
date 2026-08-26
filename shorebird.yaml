@@ -12,3 +12,8 @@ app_id: b35ab30f-35d4-4da3-b8bf-17d451dec6b0
 # https://pub.dev/packages/shorebird_code_push
 # Uncomment the following line to disable automatic updates.
 # auto_update: false
+
+# DEPLOIEMENT COMMANDS
+
+# For deploiement : shorebird release --platforms=android
+# For patch deploiement on a specific version : shorebird patch --platforms=android --release-version=X.X.X+X
