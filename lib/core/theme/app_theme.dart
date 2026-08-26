@@ -58,6 +58,9 @@ class AppTheme {
           side: BorderSide(color: AppColors.borderSubtle, width: 1),
         ),
       ),
+      snackBarTheme: const SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+      ),
       textTheme: TextTheme(
         headlineLarge: AppTextStyles.h1,
         headlineMedium: AppTextStyles.h2,

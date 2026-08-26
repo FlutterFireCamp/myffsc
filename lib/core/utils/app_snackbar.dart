@@ -10,12 +10,13 @@ class AppSnackBar {
     messenger.hideCurrentSnackBar();
     messenger.showSnackBar(
       SnackBar(
-        behavior: .fixed,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         elevation: 6,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(14)),
-          side: BorderSide(color: AppColors.incorrectBorder, width: 1.2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: const BorderSide(color: AppColors.incorrectBorder, width: 1.2),
         ),
         backgroundColor: AppColors.incorrectContainer,
         content: Row(
@@ -31,7 +32,7 @@ class AppSnackBar {
                 _sanitizeErrorMessage(message),
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.textPrimary,
-                  fontWeight: .w600,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -48,11 +49,13 @@ class AppSnackBar {
     messenger.hideCurrentSnackBar();
     messenger.showSnackBar(
       SnackBar(
-        behavior: .fixed,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         elevation: 6,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        shape: Border(
-          top: BorderSide(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(
             color: AppColors.skyBlue.withValues(alpha: 0.4),
             width: 1.2,
           ),
@@ -71,7 +74,7 @@ class AppSnackBar {
                 message,
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: AppColors.textPrimary,
-                  fontWeight: .w600,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -88,11 +91,13 @@ class AppSnackBar {
     messenger.hideCurrentSnackBar();
     messenger.showSnackBar(
       SnackBar(
-        behavior: .fixed,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         elevation: 6,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        shape: Border(
-          top: BorderSide(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+          side: BorderSide(
             color: AppColors.warningAmber.withValues(alpha: 0.5),
             width: 1.2,
           ),
