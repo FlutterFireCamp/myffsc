@@ -1,4 +1,3 @@
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -66,32 +65,21 @@ class LoginPage extends StatelessWidget {
                             crossAxisAlignment: .center,
                             children: [
                               const Spacer(),
-                              GestureDetector(
-                                onLongPress: () {
-                                  AppSnackBar.showSuccess(
-                                    context,
-                                    "Test Crashlytics déclenché. Relancez l'app pour valider la console.",
-                                  );
-                                  Future.delayed(const Duration(milliseconds: 500), () {
-                                    FirebaseCrashlytics.instance.crash();
-                                  });
-                                },
-                                child: SizedBox(
-                                  height: 22.h,
-                                  child: Image.asset(
-                                    'assets/images/logo.png',
-                                    fit: .contain,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Center(
-                                        child: Text(
-                                          "FFSC",
-                                          style: AppTextStyles.h1.copyWith(
-                                            color: AppColors.skyBlue,
-                                          ),
+                              SizedBox(
+                                height: 22.h,
+                                child: Image.asset(
+                                  'assets/images/logo.png',
+                                  fit: .contain,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Center(
+                                      child: Text(
+                                        "FFSC",
+                                        style: AppTextStyles.h1.copyWith(
+                                          color: AppColors.skyBlue,
                                         ),
-                                      );
-                                    },
-                                  ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                               SizedBox(height: 2.5.h),
