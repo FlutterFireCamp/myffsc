@@ -1,1 +1,25 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"flutterfiresummercamp","appId":"1:940039203312:android:5f10735a286a6bc0f89535","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"flutterfiresummercamp","configurations":{"android":"1:940039203312:android:5f10735a286a6bc0f89535","ios":"1:940039203312:ios:c709c11985543213f89535"}}}}}}
+﻿{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "flutterfiresummercamp",
+          "appId": "1:940039203312:android:5f10735a286a6bc0f89535",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "flutterfiresummercamp",
+          "configurations": {
+            "android": "1:940039203312:android:5f10735a286a6bc0f89535",
+            "ios": "1:940039203312:ios:c709c11985543213f89535"
+          }
+        }
+      }
+    }
+  }
+}

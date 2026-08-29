@@ -27,25 +27,32 @@ class TestBloc extends Bloc<TestEvent, TestState> {
   ) async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
-    final quiz = await _firestoreService.fetchTodayTest();
-    if (quiz == null) {
+    try {
+      final quiz = await _firestoreService.fetchTodayTest();
+      if (quiz == null) {
+        emit(state.copyWith(
+          isLoading: false,
+          activeQuiz: null,
+          isSubmittedToday: false,
+        ));
+        return;
+      }
+
+      final submission =
+          await _firestoreService.checkUserSubmission(event.userId, quiz.id);
+
       emit(state.copyWith(
         isLoading: false,
-        activeQuiz: null,
-        isSubmittedToday: false,
+        activeQuiz: quiz,
+        isSubmittedToday: submission != null,
+        previousSubmission: submission,
       ));
-      return;
+    } catch (e) {
+      emit(state.copyWith(
+        isLoading: false,
+        errorMessage: "Erreur de connexion lors du chargement de l'épreuve.",
+      ));
     }
-
-    final submission =
-        await _firestoreService.checkUserSubmission(event.userId, quiz.id);
-
-    emit(state.copyWith(
-      isLoading: false,
-      activeQuiz: quiz,
-      isSubmittedToday: submission != null,
-      previousSubmission: submission,
-    ));
   }
 
   void _onStartQuiz(
@@ -186,7 +193,7 @@ class TestBloc extends Bloc<TestEvent, TestState> {
     emit(state.copyWith(
       isSubmittingResult: false,
       submissionSuccess: success,
-      isSubmittedToday: true,
+      isSubmittedToday: success,
       qcmScore: calculatedScore,
       totalPossibleScore: totalPossible > 0 ? totalPossible : quiz.totalPoints,
     ));

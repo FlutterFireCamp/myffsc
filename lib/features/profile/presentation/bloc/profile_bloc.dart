@@ -10,8 +10,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final UpdateProfileUseCase updateProfileUseCase;
   final GetTestCorrectionDetailsUseCase getTestCorrectionDetailsUseCase;
 
-  StreamSubscription? _testHistorySubscription;
-
   ProfileBloc({
     required this.streamProfileTestHistoryUseCase,
     required this.updateProfileUseCase,
@@ -27,7 +25,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     Emitter<ProfileState> emit,
   ) async {
     dev.log('Starting watch for user test history: ${event.userId}', name: 'PROFILE_BLOC');
-    await _testHistorySubscription?.cancel();
     emit(state.copyWith(isLoadingHistory: true, historyError: null));
 
     await emit.forEach(
@@ -126,11 +123,5 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         );
       },
     );
-  }
-
-  @override
-  Future<void> close() {
-    _testHistorySubscription?.cancel();
-    return super.close();
   }
 }

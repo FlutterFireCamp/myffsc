@@ -298,9 +298,7 @@ class TestFirestoreService {
         if (q.type == 'choice' && q.correctAnswers != null && rawAns != null) {
           final intAns = rawAns is int ? rawAns : int.tryParse(rawAns.toString());
           if (intAns != null) {
-            isCorrect = q.correctAnswers!.contains(intAns) ||
-                q.correctAnswers!.contains(intAns - 1) ||
-                q.correctAnswers!.contains(intAns + 1);
+            isCorrect = q.correctAnswers!.contains(intAns);
           }
         }
 
@@ -341,15 +339,15 @@ class TestFirestoreService {
         'isGraded': !hasTextQuestions,
       };
 
-      // Safely set document with merge: true
-      await docRef.set(submissionData, SetOptions(merge: true));
-
-      // Update user total points in /users/{userId}
+      // Atomic batch commit for test submission and user totalPoints
+      final batch = _firestore.batch();
+      batch.set(docRef, submissionData, SetOptions(merge: true));
       if (score > 0) {
-        await _firestore.collection('users').doc(userId).update({
+        batch.update(_firestore.collection('users').doc(userId), {
           'totalPoints': FieldValue.increment(score),
         });
       }
+      await batch.commit();
 
       dev.log(
         'Test soumis avec succès pour $userId: score=$score, status=$evaluationStatus',

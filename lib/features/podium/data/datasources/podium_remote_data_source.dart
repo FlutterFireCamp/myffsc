@@ -82,6 +82,11 @@ class PodiumRemoteDataSourceImpl implements PodiumRemoteDataSource {
         if (ptsB != ptsA) {
           return ptsB.compareTo(ptsA);
         }
+        final lvlA = (a['level'] as num?)?.toInt() ?? 1;
+        final lvlB = (b['level'] as num?)?.toInt() ?? 1;
+        if (lvlB != lvlA) {
+          return lvlB.compareTo(lvlA);
+        }
         final nameA = (a['name'] as String? ?? '').toLowerCase();
         final nameB = (b['name'] as String? ?? '').toLowerCase();
         return nameA.compareTo(nameB);

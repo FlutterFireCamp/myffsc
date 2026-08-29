@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as dev;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../routes/route_paths.dart';
 
 /// Handler top-level pour traiter les messages FCM en arrière-plan et écran verrouillé.
 @pragma('vm:entry-point')
@@ -20,6 +22,7 @@ class NotificationService {
   final FirebaseMessaging _fcm;
   final FlutterLocalNotificationsPlugin _localNotifications;
   final FirebaseFirestore _firestore;
+  StreamSubscription<String>? _tokenRefreshSubscription;
 
   static const String _channelId = 'ffsc_live_channel';
   static const String _channelName = 'Alertes Sessions Live & Examens FFSC';
@@ -156,8 +159,9 @@ class NotificationService {
         }, SetOptions(merge: true));
       }
 
-      // Écouter les renouvellements de token
-      _fcm.onTokenRefresh.listen((newToken) async {
+      // Écouter les renouvellements de token de manière sécurisée sans fuite mémoire
+      await _tokenRefreshSubscription?.cancel();
+      _tokenRefreshSubscription = _fcm.onTokenRefresh.listen((newToken) async {
         dev.log('Token FCM renouvelé pour $userId: $newToken', name: 'NOTIFICATION_SERVICE');
         try {
           await _firestore.collection('users').doc(userId).set({
@@ -268,7 +272,7 @@ class NotificationService {
         }
       }
 
-      // 2. Si une route interne est spécifiée (ex: '/tests', '/announcements', '/programs')
+      // 2. Si une route interne est spécifiée
       if (targetRoute != null && targetRoute.isNotEmpty && onNavigate != null) {
         onNavigate(targetRoute, data);
         return;
@@ -277,11 +281,11 @@ class NotificationService {
       // 3. Fallback selon le type
       if (onNavigate != null) {
         if (type == 'new_test') {
-          onNavigate('/tests', data);
+          onNavigate(RoutePaths.tests, data);
         } else if (type == 'urgent_announcement' || type == 'announcement') {
-          onNavigate('/announcements', data);
+          onNavigate(RoutePaths.announcements, data);
         } else if (type.contains('live') || type == 'program') {
-          onNavigate('/programs', data);
+          onNavigate(RoutePaths.programs, data);
         }
       }
     } catch (e, stackTrace) {

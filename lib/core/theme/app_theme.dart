@@ -73,12 +73,15 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.skyBlue,
-          foregroundColor: AppColors.textPrimary,
+          foregroundColor: AppColors.ultraDark,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           shape: const RoundedRectangleBorder(
             borderRadius: AppRadius.circular12,
           ),
-          textStyle: AppTextStyles.button,
+          textStyle: AppTextStyles.button.copyWith(
+            color: AppColors.ultraDark,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(

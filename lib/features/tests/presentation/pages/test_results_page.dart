@@ -197,10 +197,7 @@ class TestResultsPage extends StatelessWidget {
                               ? ans
                               : int.tryParse(ans.toString());
                           if (intAns != null) {
-                            isCorrect =
-                                q.correctAnswers!.contains(intAns) ||
-                                q.correctAnswers!.contains(intAns - 1) ||
-                                q.correctAnswers!.contains(intAns + 1);
+                            isCorrect = q.correctAnswers!.contains(intAns);
                           }
                         }
                         corrections.add(
