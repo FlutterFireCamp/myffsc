@@ -2,7 +2,7 @@ name: myffsc
 description: "My FFSC - Application officielle du portail apprenant du FlutterFire Summer Camp."
 publish_to: 'none'
 
-version: 1.2.0+6
+version: 1.2.1+7
 
 environment:
   sdk: ^3.12.2
@@ -27,6 +27,7 @@ dependencies:
   firebase_messaging: ^16.6.0
   flutter_local_notifications: ^22.3.0
   flutter_markdown_plus: 1.0.12
+  firebase_crashlytics: ^5.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

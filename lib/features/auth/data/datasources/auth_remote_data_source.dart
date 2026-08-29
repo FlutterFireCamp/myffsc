@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../../../core/core.dart';
 import '../models/user_model.dart';
@@ -65,13 +66,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> signInWithGoogle() async {
     try {
       dev.log('Initiating Google Sign-In flow...', name: 'AUTH_REMOTE_DS');
+      FirebaseCrashlytics.instance.log('AUTH_DS: Initiating Google Sign-In flow');
 
       const envServerClientId = String.fromEnvironment('WEB_CLIENT_ID');
-      final clientIdToUse = (serverClientId != null && serverClientId!.isNotEmpty)
-          ? serverClientId
+      final String clientIdToUse = (serverClientId != null && serverClientId!.isNotEmpty)
+          ? serverClientId!
           : (envServerClientId.isNotEmpty
               ? envServerClientId
               : '940039203312-dgmo6fr82npo9ts44c1vrr4f7rtild2b.apps.googleusercontent.com');
+
+      FirebaseCrashlytics.instance.setCustomKey('auth_server_client_id', clientIdToUse);
 
       UserCredential? userCredential;
 
@@ -82,28 +86,49 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           serverClientId: clientIdToUse,
         );
 
+        FirebaseCrashlytics.instance.log('AUTH_DS: GoogleSignIn initialized, calling authenticate()');
         final googleUser = await googleSignIn.authenticate();
         final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
         final idToken = googleAuth.idToken;
         if (idToken == null || idToken.isEmpty) {
-          throw Exception("Impossible de récupérer le jeton d'authentification Google (idToken null).");
+          final errorMsg = "Impossible de récupérer le jeton d'authentification Google (idToken null).";
+          FirebaseCrashlytics.instance.recordError(
+            Exception(errorMsg),
+            StackTrace.current,
+            reason: 'Google idToken is null after authenticate()',
+            fatal: false,
+          );
+          throw Exception(errorMsg);
         }
 
+        FirebaseCrashlytics.instance.log('AUTH_DS: idToken retrieved, calling signInWithCredential');
         final AuthCredential credential = GoogleAuthProvider.credential(
           idToken: idToken,
         );
 
         userCredential = await firebaseAuth.signInWithCredential(credential);
-      } on GoogleSignInException catch (e) {
+      } on GoogleSignInException catch (e, stackTrace) {
         dev.log('GoogleSignInException: code=${e.code}, description=${e.description}', name: 'AUTH_REMOTE_DS');
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'GoogleSignInException [code=${e.code}, description=${e.description}]',
+          fatal: false,
+        );
         if (e.code == GoogleSignInExceptionCode.canceled) {
           throw const UserCanceledException();
         }
         throw Exception("Échec de connexion Google (${e.code}): ${e.description ?? 'Vérifiez la configuration SHA-1 dans Firebase Console'}");
-      } catch (e) {
+      } catch (e, stackTrace) {
         if (e is UserCanceledException) rethrow;
         dev.log('Erreur inattendue Google Sign-In: $e', name: 'AUTH_REMOTE_DS');
+        FirebaseCrashlytics.instance.recordError(
+          e,
+          stackTrace,
+          reason: 'Unexpected error during GoogleSignIn.authenticate()',
+          fatal: false,
+        );
         throw Exception("Échec de l'authentification Google : $e");
       }
 
@@ -117,6 +142,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final photoUrl = firebaseUser.photoURL;
       final displayName = firebaseUser.displayName;
 
+      FirebaseCrashlytics.instance.setUserIdentifier(firebaseUser.uid);
+      FirebaseCrashlytics.instance.setCustomKey('user_email', email ?? 'unknown');
+
       return await _fetchAndSyncExistingUserDoc(
         firebaseUid: firebaseUser.uid,
         email: email,
@@ -127,6 +155,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       rethrow;
     } catch (e, stackTrace) {
       dev.log('Error during signInWithGoogle', name: 'AUTH_REMOTE_DS', error: e, stackTrace: stackTrace);
+      FirebaseCrashlytics.instance.recordError(
+        e,
+        stackTrace,
+        reason: 'Fatal error in AuthRemoteDataSource.signInWithGoogle',
+        fatal: false,
+      );
       rethrow;
     }
   }
