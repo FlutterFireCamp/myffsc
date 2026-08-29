@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "940039203312-h169r4nioqcha4gcph1pr732fvoukvgm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.flutterfirecamp.app",
+            "certificate_hash": "750da6879de6447dccc87c25e2e094bbe9381d48"
+          }
+        },
+        {
           "client_id": "940039203312-natoni0no1u8s7qsivmbji264srt4mi9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
