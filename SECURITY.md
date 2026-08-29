@@ -4,7 +4,7 @@
 
 La sécurité des données de nos apprenants et mentors est une priorité absolue pour le **FlutterFire Summer Camp**.
 
-Si vous découvrez une vulnérabilité de sécurité concernant **My FFSC 💙☀️**, veuillez **NE PAS** ouvrir d'issue publique sur GitHub.
+Si vous découvrez une vulnérabilité de sécurité concernant **My FFSC**, veuillez **NE PAS** ouvrir d'issue publique sur GitHub.
 
 Envoyez plutôt un rapport privé détaillé par e-mail à l'équipe de maintenance du projet.
 

@@ -2,7 +2,7 @@
 
 ## Notre Engagement
 
-En tant que membres, contributeurs et responsables de la communauté **My FFSC 💙☀️**, nous nous engageons à faire de la participation à notre projet une expérience exempte de tout harcèlement pour tout le monde, quel que soit l'âge, la taille corporelle, le handicap, l'appartenance ethnique, l'identité et l'expression de genre, le niveau d'expérience, la nationalité, l'apparence physique, la race, la religion ou l'orientation sexuelle.
+En tant que membres, contributeurs et responsables de la communauté **My FFSC**, nous nous engageons à faire de la participation à notre projet une expérience exempte de tout harcèlement pour tout le monde, quel que soit l'âge, la taille corporelle, le handicap, l'appartenance ethnique, l'identité et l'expression de genre, le niveau d'expérience, la nationalité, l'apparence physique, la race, la religion ou l'orientation sexuelle.
 
 ## Nos Normes
 

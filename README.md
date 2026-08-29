@@ -5,68 +5,69 @@
 [![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%2B%20BLoC-blue?logo=dart)](https://bloclibrary.dev)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**My FFSC 💙☀️** est l'application portail officielle destinée aux apprenants du **FlutterFire Summer Camp**, un programme d'immersion totale de 3 mois et de mentorat intensif pour propulser les futurs leaders de la tech en Afrique Francophone.
+**My FFSC 💙☀️** est l'application portail officielle destinée aux apprenants du **FlutterFire Summer Camp**, un programme d'immersion totale et de mentorat intensif pour propulser les futurs leaders de la tech en Afrique Francophone.
 
 > **Repository Officiel** : [https://github.com/glosings0n/myffsc.git](https://github.com/glosings0n/myffsc.git)
 
 ---
 
-## 📸 Aperçu & Fonctionnalités
+## Aperçu et Fonctionnalités
 
-- 🔐 **Authentification & Contrôle d'Accès** : Authentification sécurisée via Google Sign-In avec vérification automatique des autorisations de l'apprenant. Les comptes en attente ou non autorisés sont redirigés vers un écran d'accès restreint.
-- 🖼️ **Gestion de Profil & Niveaux** : Photo de profil Google/avatar dynamique, suivi du statut d'acceptation, liens réseaux sociaux (Discord, GitHub, LinkedIn, Twitter/X) et historique complet des évaluations avec correction interactive.
-- ⚡ **Dashboard Dynamique** : Salutation personnalisée (`Salut, {First_name} 👋🏾`), suivi de progression par niveau adaptatif (Niveaux 1 à 4), résumé des points FFSC et accès rapide au programme du jour.
-- 📚 **Agenda & Programmes** : Consultation des sessions, workshops, conférences et groupes d'études avec conversion automatique des horaires GMT vers le fuseau horaire de l'appareil.
-- 📢 **Annonces en Temps Réel** : Fil d'actualité filtré par priorité (Urgent, Important, Info) et par niveau, avec support Markdown riche.
-- 🏆 **Podium & Classement** : Classement en direct des participants avec Top 3 sur socles dorés/argentés/bronzés, suivi du Top 10 et barre sticky du rang de l'utilisateur connecté.
-- 🧪 **Test & Évaluation du Jour** : Épreuve chronométrée en temps réel avec questions à choix multiples (QCM) ou ouvertes, gestion automatique du temps additionnel, détection d'arrière-plan anti-triche et soumission instantanée sur Firestore.
-- 📝 **Hub de Formulaires (Expandable FAB)** : Accès rapide aux formulaires Google officiels :
-  - 🚨 Signalements & alertes
-  - 💬 Retours sur les sessions & ateliers
-  - 💡 Idées & suggestions
-  - 🎓 Soumission de projets pour validation de certificat (Dart Niv 1, Flutter Niv 2, Firebase Niv 3)
+- **Authentification et Contrôle d'Accès** : Authentification sécurisée via Google Sign-In avec vérification automatique des autorisations de l'apprenant. Les comptes en attente ou non autorisés sont redirigés vers un écran d'accès restreint.
+- **Gestion de Profil et Niveaux** : Photo de profil Google/avatar dynamique, suivi du statut d'acceptation, liens réseaux sociaux (Discord, GitHub, LinkedIn, Twitter/X) et historique complet des évaluations avec correction interactive.
+- **Tableau de Bord Dynamique** : Salutation personnalisée, suivi de progression par niveau adaptatif (Niveaux 1 à 4), résumé des points FFSC et accès rapide au programme du jour.
+- **Agenda et Programmes** : Consultation des sessions, workshops, conférences et groupes d'études avec conversion automatique des horaires GMT vers le fuseau horaire de l'appareil.
+- **Annonces en Temps Réel** : Fil d'actualité filtré par priorité (Urgent, Important, Info) et par niveau, avec support Markdown riche.
+- **Podium et Classement** : Classement en direct des participants avec Top 3 sur socles distincts, suivi du Top 10 et barre sticky du rang de l'utilisateur connecté.
+- **Test et Évaluation du Jour** : Épreuve chronométrée en temps réel avec questions à choix multiples (QCM) ou ouvertes, gestion automatique du temps additionnel, détection d'arrière-plan anti-triche et soumission atomique sur Firestore.
+- **Hub de Formulaires** : Accès rapide aux formulaires Google officiels :
+  - Signalements et alertes
+  - Retours sur les sessions et ateliers
+  - Idées et suggestions
+  - Soumission de projets pour validation de certificat (Dart Niv 1, Flutter Niv 2, Firebase Niv 3)
 
 ---
 
-## 🏗️ Architecture du Projet
+## Architecture du Projet
 
-L'application respecte les principes stricts de la **Clean Architecture** combinée au pattern **BLoC** (*Business Logic Component*) :
+L'application respecte les principes de la **Clean Architecture** combinée au pattern **BLoC** (*Business Logic Component*) :
 
 ```text
 lib/
-├── app.dart                    # MaterialApp.router & Sizer Setup
-├── main.dart                   # Initialisation Firebase, GetIt & Point d'entrée
+├── app.dart                    # MaterialApp.router et configuration Sizer
+├── main.dart                   # Initialisation Firebase, Crashlytics, GetIt et point d'entrée
 ├── firebase_options.dart       # Configuration multi-plateformes Firebase
-├── core/                       # Ressources globales du projet
+├── core/                       # Ressources globales et transverses
 │   ├── core.dart               # Export barrel global du noyau
 │   ├── helpers/                # LevelConfig, DateTimeHelper, NetworkHelper
-│   ├── routes/                 # Navigation déclarative GoRouter
-│   ├── theme/                  # Couleurs centralisées (AppColors), Typo Outfit, AppRadius
-│   ├── di/                     # Injection de dépendance via GetIt
+│   ├── routes/                 # Navigation déclarative GoRouter et constantes RoutePaths
+│   ├── theme/                  # Couleurs (AppColors), typographie Outfit, AppRadius
+│   ├── di/                     # Injection de dépendances via GetIt
 │   ├── error/                  # Gestion fonctionnelle des erreurs (fpdart)
+│   ├── services/               # NotificationService (FCM)
 │   └── widgets/                # Composants UI partagés, EmptyState, Shimmers
 └── features/                   # Modules métiers indépendants (Data, Domain, Presentation)
-    ├── auth/                   # Connexion Google, synchronisation profil & vérification rôle
-    ├── dashboard/              # Accueil interactif & métriques
-    ├── programs/               # Agenda des sessions & filtres par type
-    ├── announcements/          # Flux d'actualités & filtres
-    ├── podium/                 # Classement général, Top 3 & Top 10
-    ├── tests/                  # Évaluation du jour, QCM chronométré & résultats
+    ├── auth/                   # Connexion Google, synchronisation profil et vérification rôle
+    ├── dashboard/              # Accueil interactif et métriques
+    ├── programs/               # Agenda des sessions et filtres par type
+    ├── announcements/          # Flux d'actualités et filtres
+    ├── podium/                 # Classement général, Top 3 et Top 10
+    ├── tests/                  # Évaluation du jour, QCM chronométré et résultats
     ├── profile/                # Profil, liens sociaux, historique d'évaluation
-    ├── forms/                  # Menu FAB d'accès aux formulaires & certificats
-    └── shared/                 # MainNavigationScaffold avec barre d'onglets persistante
+    ├── forms/                  # Menu d'accès aux formulaires et certificats
+    └── shared/                 # Navigation principale avec barre d'onglets persistante
 ```
 
 ---
 
-## 🚀 Démarrage Rapide (Installation)
+## Démarrage Rapide
 
 ### Prérequis
 
-- [Flutter SDK](https://flutter.dev/docs/get-started/install) (v3.x ou supérieure)
+- [Flutter SDK](https://flutter.dev/docs/get-started/install) (v3.29.0 ou supérieure)
 - [Dart SDK](https://dart.dev/get-dart)
-- [Firebase CLI](https://firebase.google.com/docs/cli) & [FlutterFire CLI](https://firebase.google.com/docs/flutter/setup)
-- Compte Firebase configuré
+- [Firebase CLI](https://firebase.google.com/docs/cli) et [FlutterFire CLI](https://firebase.google.com/docs/flutter/setup)
+- Projet Firebase configuré (Authentication, Firestore, Cloud Messaging, Crashlytics)
 
 ### 1. Cloner le projet
 
@@ -83,7 +84,7 @@ flutter pub get
 
 ### 3. Configurer Firebase
 
-Assurez-vous d'activer **Google Auth** et **Cloud Firestore** sur la console Firebase de votre projet, puis exécutez :
+Assurez-vous d'activer **Google Auth**, **Cloud Firestore** et **Crashlytics** sur la console Firebase de votre projet, puis exécutez :
 
 ```bash
 dart pub global activate flutterfire_cli
@@ -102,28 +103,34 @@ flutter run -d ios
 
 ---
 
-## 🧪 Tests & Analyse du Code
+## Tests et Analyse du Code
 
 Pour garantir la qualité du code et l'absence de régressions :
 
 ```bash
-# Analyse statique du code
+# Analyse statique du code (0 avertissement requis)
 flutter analyze
 
-# Lancement des tests unitaires
+# Lancement de la suite complète de tests unitaires
 flutter test
 ```
 
 ---
 
-## 🤝 Contribution au Projet Open-Source
+## Contribution au Projet Open-Source
 
 Les contributions des Google Developer Experts (GDEs), mentors, développeurs Flutter et membres de la communauté sont vivement encouragées !
 
-Consultez le fichier [CONTRIBUTING.md](CONTRIBUTING.md) pour connaître nos conventions de code, la stratégie de branches et le workflow de Pull Request.
+Consultez le fichier [CONTRIBUTING.md](CONTRIBUTING.md) pour connaître les conventions de code, la stratégie de branches et le workflow de Pull Request.
 
 ---
 
-## 📜 Licence
+## Sécurité
+
+Pour signaler une vulnérabilité de sécurité, veuillez consulter notre [Politique de Sécurité](SECURITY.md).
+
+---
+
+## Licence
 
 Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails.
