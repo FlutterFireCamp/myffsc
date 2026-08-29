@@ -116,10 +116,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           reason: 'GoogleSignInException [code=${e.code}, description=${e.description}]',
           fatal: false,
         );
-        if (e.code == GoogleSignInExceptionCode.canceled) {
+        if (e.code == GoogleSignInExceptionCode.canceled && (e.description == null || e.description!.isEmpty)) {
           throw const UserCanceledException();
         }
-        throw Exception("Échec de connexion Google (${e.code}): ${e.description ?? 'Vérifiez la configuration SHA-1 dans Firebase Console'}");
+        throw Exception("Connexion Google (${e.code}): ${e.description ?? 'Interrompue par Google Play Services'}");
       } catch (e, stackTrace) {
         if (e is UserCanceledException) rethrow;
         dev.log('Erreur inattendue Google Sign-In: $e', name: 'AUTH_REMOTE_DS');
