@@ -26,9 +26,8 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
         name: 'ANNOUNCEMENTS_BLOC',
       );
 
-      if (!event.isRefresh && state is! AnnouncementsLoadedState) {
-        emit(AnnouncementsLoadingState());
-      }
+      // Toujours émettre l'état de chargement (shimmer) pour un feedback visuel immédiat
+      emit(AnnouncementsLoadingState());
 
       final result = await getAnnouncementsUseCase(
         const GetAnnouncementsParams(
@@ -87,8 +86,8 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
       final result = await getAnnouncementsUseCase(
         GetAnnouncementsParams(
           filterType: null,
-          startAfterDoc: currentState.lastDocument,
           limit: 20,
+          startAfterDoc: currentState.lastDocument,
         ),
       );
 
@@ -98,14 +97,11 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
           emit(currentState.copyWith(isLoadingMore: false));
         },
         (data) {
-          for (final item in data.items) {
-            if (!_allAnnouncements.any((a) => a.id == item.id)) {
-              _allAnnouncements.add(item);
-            }
-          }
-          final filtered = currentState.currentFilter == null
+          _allAnnouncements.addAll(data.items);
+          final currentFilter = currentState.currentFilter;
+          final filtered = currentFilter == null
               ? _allAnnouncements
-              : _allAnnouncements.where((a) => a.type == currentState.currentFilter).toList();
+              : _allAnnouncements.where((a) => a.type == currentFilter).toList();
 
           dev.log('Total cumulé d’annonces: ${_allAnnouncements.length}, hasMore: ${data.hasMore}', name: 'ANNOUNCEMENTS_BLOC');
           emit(currentState.copyWith(
@@ -133,6 +129,8 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
   ) async {
     final currentState = state;
     if (_allAnnouncements.isNotEmpty) {
+      emit(AnnouncementsLoadingState());
+      await Future<void>.delayed(const Duration(milliseconds: 120));
       final filtered = event.filterType == null
           ? _allAnnouncements
           : _allAnnouncements.where((a) => a.type == event.filterType).toList();
@@ -149,6 +147,7 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
         ));
       }
     } else {
+      emit(AnnouncementsLoadingState());
       add(FetchAnnouncementsEvent(filterType: event.filterType, isRefresh: true));
     }
   }

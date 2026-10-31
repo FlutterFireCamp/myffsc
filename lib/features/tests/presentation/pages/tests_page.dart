@@ -61,7 +61,7 @@ class _TestsPageState extends State<TestsPage> {
 
             final quiz = state.activeQuiz;
 
-            // State 2: Aucun test disponible (Empty State centré sans ListView ni pull-to-refresh)
+            // State 2: Aucun test disponible (Bouton d'actualisation conservé uniquement dans l'AppBar)
             if (quiz == null) {
               return Center(
                 child: Padding(
@@ -75,8 +75,6 @@ class _TestsPageState extends State<TestsPage> {
                       size: AppSizes.iconXl,
                     ),
                     accentColor: AppColors.skyBlue,
-                    actionLabel: "Actualiser",
-                    onAction: _fetchTodayTest,
                   ),
                 ),
               );

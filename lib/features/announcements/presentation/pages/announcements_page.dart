@@ -37,14 +37,7 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      final state = context.read<AnnouncementsBloc>().state;
-      if (state is AnnouncementsLoadedState &&
-          state.hasMore &&
-          !state.isLoadingMore) {
-        context
-            .read<AnnouncementsBloc>()
-            .add(const LoadMoreAnnouncementsEvent());
-      }
+      context.read<AnnouncementsBloc>().add(const LoadMoreAnnouncementsEvent());
     }
   }
 
@@ -60,18 +53,12 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
     if (_selectedTypeFilter == null) {
       return AppEmptyState(
         title: "Aucune annonce disponible",
+        message: "Les communications officielles s'afficheront ici en direct.",
         icon: AppIcons.announcements(
           color: AppColors.skyBlue,
           size: AppSizes.iconXl,
         ),
         accentColor: AppColors.skyBlue,
-        actionLabel: "Actualiser",
-        onAction: () => context.read<AnnouncementsBloc>().add(
-              FetchAnnouncementsEvent(
-                filterType: _selectedTypeFilter,
-                isRefresh: true,
-              ),
-            ),
       );
     }
 
@@ -79,15 +66,9 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
 
     return AppEmptyState(
       title: "Aucune annonce pour \"${_selectedTypeFilter!.label}\"",
+      message: "Aucune communication pour cette catégorie actuellement.",
       icon: _buildCategoryIcon(_selectedTypeFilter!, categoryColor),
       accentColor: categoryColor,
-      actionLabel: "Actualiser",
-      onAction: () => context.read<AnnouncementsBloc>().add(
-            FetchAnnouncementsEvent(
-              filterType: _selectedTypeFilter,
-              isRefresh: true,
-            ),
-          ),
     );
   }
 
@@ -110,6 +91,21 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
         title: Text("Fil d'Annonces", style: AppTextStyles.h3),
         backgroundColor: AppColors.background,
         elevation: 0,
+        actions: [
+          IconButton(
+            tooltip: "Actualiser",
+            icon: AppIcons.refresh03(color: AppColors.skyBlue, size: 20),
+            onPressed: () {
+              context.read<AnnouncementsBloc>().add(
+                    FetchAnnouncementsEvent(
+                      filterType: _selectedTypeFilter,
+                      isRefresh: true,
+                    ),
+                  );
+            },
+          ),
+          SizedBox(width: 2.w),
+        ],
       ),
       body: Column(
         children: [

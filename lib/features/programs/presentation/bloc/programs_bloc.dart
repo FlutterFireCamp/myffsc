@@ -25,9 +25,8 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
         name: 'PROGRAMS_BLOC',
       );
 
-      if (!event.isRefresh && state is! ProgramsLoadedState) {
-        emit(ProgramsLoadingState());
-      }
+      // Toujours émettre l'état de chargement (shimmer) pour un feedback visuel immédiat
+      emit(ProgramsLoadingState());
 
       final result = await getUpcomingProgramsUseCase(
         const GetUpcomingProgramsParams(filterType: null),
@@ -67,6 +66,8 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     Emitter<ProgramsState> emit,
   ) async {
     if (_allPrograms.isNotEmpty) {
+      emit(ProgramsLoadingState());
+      await Future<void>.delayed(const Duration(milliseconds: 120));
       final filtered = event.filterType == null
           ? _allPrograms
           : _allPrograms.where((p) => p.type == event.filterType).toList();
@@ -75,6 +76,7 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
         currentFilter: event.filterType,
       ));
     } else {
+      emit(ProgramsLoadingState());
       add(FetchProgramsEvent(filterType: event.filterType, isRefresh: true));
     }
   }

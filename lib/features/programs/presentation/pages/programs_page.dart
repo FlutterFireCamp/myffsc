@@ -71,10 +71,9 @@ class _ProgramsPageState extends State<ProgramsPage> {
     if (_selectedTypeFilter == null) {
       return AppEmptyState(
         title: "Aucun programme disponible",
+        message: "Les sessions, workshops et conférences s'afficheront ici.",
         icon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconXl),
         accentColor: AppColors.skyBlue,
-        actionLabel: "Actualiser",
-        onAction: _refreshAll,
       );
     }
 
@@ -82,10 +81,9 @@ class _ProgramsPageState extends State<ProgramsPage> {
 
     return AppEmptyState(
       title: "Aucun programme pour \"${_selectedTypeFilter!.label}\"",
+      message: "Aucun contenu n'a encore été programmé sous cette catégorie.",
       icon: AppIcons.programs(color: categoryColor, size: AppSizes.iconXl),
       accentColor: categoryColor,
-      actionLabel: "Actualiser",
-      onAction: _refreshAll,
     );
   }
 
@@ -100,6 +98,14 @@ class _ProgramsPageState extends State<ProgramsPage> {
         ),
         backgroundColor: AppColors.background,
         elevation: 0,
+        actions: [
+          IconButton(
+            tooltip: "Actualiser",
+            icon: AppIcons.refresh03(color: AppColors.skyBlue, size: 20),
+            onPressed: _refreshAll,
+          ),
+          SizedBox(width: 2.w),
+        ],
       ),
       body: Column(
         children: [
