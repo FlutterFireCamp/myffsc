@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'firebase_options.dart';
 import 'core/core.dart';
 import 'app.dart';
@@ -22,6 +23,9 @@ void main() async {
   // Configuration active de Firebase Crashlytics
   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   await FirebaseCrashlytics.instance.sendUnsentReports();
+
+  // Configuration active de Firebase Analytics
+  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
 
   // Capturer et rapporter toutes les erreurs fatales Flutter à Firebase Crashlytics
   FlutterError.onError = (errorDetails) {

@@ -7,7 +7,7 @@
 
 **My FFSC 💙☀️** est l'application portail officielle destinée aux apprenants du **FlutterFire Summer Camp**, un programme d'immersion totale et de mentorat intensif pour propulser les futurs leaders de la tech en Afrique Francophone.
 
-> **Repository Officiel** : [https://github.com/glosings0n/myffsc.git](https://github.com/glosings0n/myffsc.git)
+> **Repository Officiel** : [https://github.com/FlutterFireCamp/myffsc.git](https://github.com/FlutterFireCamp/myffsc.git)
 
 ---
 
@@ -72,7 +72,7 @@ lib/
 ### 1. Cloner le projet
 
 ```bash
-git clone https://github.com/glosings0n/myffsc.git
+git clone https://github.com/FlutterFireCamp/myffsc.git
 cd myffsc
 ```
 

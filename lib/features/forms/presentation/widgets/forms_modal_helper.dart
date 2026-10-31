@@ -4,7 +4,8 @@ import '../../../../core/core.dart';
 
 class FormsModalHelper {
   static const String ideaUrl = 'https://forms.gle/6tQUJwNjN3ma8q6a6';
-  static const String feedbackUrl = 'https://forms.gle/m1ndUV3y9x7QLFfGA';
+  static const String feedbackUrl =
+      'https://docs.google.com/forms/d/e/1FAIpQLScu3r3O0sXE9Hz2CaZUKlW7-4P97pgUwX9KS9PGVihP8mcFIg/viewform';
   static const String reportUrl = 'https://forms.gle/uPNdw1pbjbiyJQZn9';
 
   static String getCertificateUrl(int level) {

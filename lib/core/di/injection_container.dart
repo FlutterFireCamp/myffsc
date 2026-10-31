@@ -1,11 +1,13 @@
 import 'dart:developer' as dev;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../services/analytics_service.dart';
 import '../services/notification_service.dart';
 
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
@@ -49,6 +51,7 @@ Future<void> initInjector() async {
   dev.log('Initializing Dependency Injection Container...', name: 'DI_CONTAINER');
 
   // External & Cache Configuration
+  sl.registerLazySingleton<FirebaseAnalytics>(() => FirebaseAnalytics.instance);
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn.instance);
   sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
@@ -62,6 +65,9 @@ Future<void> initInjector() async {
   sl.registerLazySingleton<FirebaseFirestore>(() => firestore);
 
   // Core Services
+  sl.registerLazySingleton<AnalyticsService>(
+    () => AnalyticsService(analytics: sl()),
+  );
   sl.registerLazySingleton<NotificationService>(
     () => NotificationService(
       fcm: sl(),

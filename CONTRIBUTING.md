@@ -25,7 +25,7 @@ Merci de votre intérêt à contribuer à **My FFSC** ! Ce projet a pour ambitio
 
 ## Workflow de Contribution
 
-1. **Forker** le repository officiel : [github.com/glosings0n/myffsc](https://github.com/glosings0n/myffsc)
+1. **Forker** le repository officiel : [github.com/FlutterFireCamp/myffsc](https://github.com/FlutterFireCamp/myffsc)
 2. **Cloner** votre fork localement :
    ```bash
    git clone https://github.com/VOTRE_PSEUDO/myffsc.git

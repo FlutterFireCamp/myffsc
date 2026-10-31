@@ -1,0 +1,7 @@
+# Fichier exemple de configuration pour la signature release Android.
+# Pour signer localement une version release, copiez ce fichier vers 'key.properties'
+# et configurez les informations de votre keystore :
+keyAlias=upload
+keyPassword=VOTRE_MOT_DE_PASSE_CLE
+storeFile=app/upload-keystore.jks
+storePassword=VOTRE_MOT_DE_PASSE_STORE

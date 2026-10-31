@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'dart:developer' as dev;
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../di/injection_container.dart';
+import '../services/analytics_service.dart';
 
 import '../../features/announcements/announcements.dart';
 import '../../features/auth/auth.dart';
@@ -34,12 +38,24 @@ class GoRouterRefreshStream extends ChangeNotifier {
 
 class RoutesConfig {
   final AuthBloc authBloc;
+  final AnalyticsService? analyticsService;
 
-  RoutesConfig({required this.authBloc});
+  RoutesConfig({
+    required this.authBloc,
+    this.analyticsService,
+  });
 
   late final GoRouter router = GoRouter(
     initialLocation: RoutePaths.checking,
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
+    observers: [
+      if (analyticsService != null)
+        analyticsService!.observer
+      else if (sl.isRegistered<AnalyticsService>())
+        sl<AnalyticsService>().observer
+      else
+        FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+    ],
     redirect: (BuildContext context, GoRouterState state) {
       final authState = authBloc.state;
       final location = state.matchedLocation;

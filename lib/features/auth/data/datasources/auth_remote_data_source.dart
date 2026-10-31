@@ -29,6 +29,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final GoogleSignIn googleSignIn;
   final FirebaseFirestore firestore;
   final String? serverClientId;
+  bool _isGoogleSignInInitialized = false;
 
   AuthRemoteDataSourceImpl({
     required this.firebaseAuth,
@@ -36,6 +37,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required this.firestore,
     this.serverClientId,
   });
+
+  Future<void> _ensureGoogleSignInInitialized(String clientId) async {
+    if (_isGoogleSignInInitialized) return;
+    try {
+      dev.log('Initializing GoogleSignIn with serverClientId ($clientId)...', name: 'AUTH_REMOTE_DS');
+      await googleSignIn.initialize(
+        serverClientId: clientId,
+      );
+      _isGoogleSignInInitialized = true;
+    } catch (e, st) {
+      dev.log('GoogleSignIn initialization warning: $e', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+    }
+  }
 
   @override
   Future<UserModel> completeProfile({
@@ -81,12 +95,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       // Authentification Google native via GoogleSignIn (Credential Manager / Google Play Services)
       try {
-        dev.log('Initializing GoogleSignIn with serverClientId ($clientIdToUse)...', name: 'AUTH_REMOTE_DS');
-        await googleSignIn.initialize(
-          serverClientId: clientIdToUse,
-        );
+        await _ensureGoogleSignInInitialized(clientIdToUse);
 
-        FirebaseCrashlytics.instance.log('AUTH_DS: GoogleSignIn initialized, calling authenticate()');
+        FirebaseCrashlytics.instance.log('AUTH_DS: GoogleSignIn ready, calling authenticate()');
         final googleUser = await googleSignIn.authenticate();
         final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
@@ -109,7 +120,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
         userCredential = await firebaseAuth.signInWithCredential(credential);
       } on GoogleSignInException catch (e, stackTrace) {
-        dev.log('GoogleSignInException: code=${e.code}, description=${e.description}', name: 'AUTH_REMOTE_DS');
+        dev.log('GoogleSignInException: code=${e.code}, description=${e.description}, details=${e.details}', name: 'AUTH_REMOTE_DS');
         FirebaseCrashlytics.instance.recordError(
           e,
           stackTrace,
@@ -119,7 +130,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         if (e.code == GoogleSignInExceptionCode.canceled && (e.description == null || e.description!.isEmpty)) {
           throw const UserCanceledException();
         }
-        throw Exception("Connexion Google (${e.code}): ${e.description ?? 'Interrompue par Google Play Services'}");
+        throw Exception("Connexion Google (${e.code}): ${e.description ?? 'Interrompue par Google Play Services. Vérifiez la configuration SHA-1 Google Play App Signing dans Firebase.'}");
       } catch (e, stackTrace) {
         if (e is UserCanceledException) rethrow;
         dev.log('Erreur inattendue Google Sign-In: $e', name: 'AUTH_REMOTE_DS');
