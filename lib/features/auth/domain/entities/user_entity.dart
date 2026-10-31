@@ -20,6 +20,7 @@ class UserEntity extends Equatable {
   final String? portfolio;
   final int totalPoints;
   final String? createdAt;
+  final String? certificateCode;
 
   const UserEntity({
     required this.id,
@@ -41,6 +42,7 @@ class UserEntity extends Equatable {
     this.portfolio,
     this.totalPoints = 0,
     this.createdAt,
+    this.certificateCode,
   });
 
   String get firstName {
@@ -54,6 +56,24 @@ class UserEntity extends Equatable {
   bool get isSuspended => status == 'suspended';
   bool get isProfileIncomplete =>
       !isDocMissing && (name.trim().isEmpty || name == 'Apprenant FFSC');
+
+  /// Indique si l'apprenant possède un certificat délivré.
+  bool get hasCertificate =>
+      certificateCode != null && certificateCode!.trim().isNotEmpty;
+
+  /// Lien officiel de vérification du certificat sur flutterfirecamp.dev.
+  /// Si un code existe : https://www.flutterfirecamp.dev/verify/{code}
+  /// Sinon : https://www.flutterfirecamp.dev/verify/
+  String get certificateVerificationUrl {
+    final code = certificateCode?.trim();
+    if (code != null && code.isNotEmpty) {
+      if (code.startsWith('http://') || code.startsWith('https://')) {
+        return code;
+      }
+      return 'https://www.flutterfirecamp.dev/verify/$code';
+    }
+    return 'https://www.flutterfirecamp.dev/verify/';
+  }
 
   @override
   List<Object?> get props => [
@@ -76,5 +96,6 @@ class UserEntity extends Equatable {
         portfolio,
         totalPoints,
         createdAt,
+        certificateCode,
       ];
 }

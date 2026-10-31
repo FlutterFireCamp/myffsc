@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../../auth/domain/entities/user_entity.dart';
+import '../../../forms/presentation/widgets/forms_modal_helper.dart';
 
 class ProfileHeaderCard extends StatelessWidget {
   final UserEntity user;
@@ -109,10 +110,51 @@ class ProfileHeaderCard extends StatelessWidget {
             ],
           ),
 
-          // Row 2: Edit Button aligned to the right (.end)
+          // Row 2: Certificate Button (if available) + Edit Button aligned
           Row(
-            mainAxisAlignment: .end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              if (user.hasCertificate)
+                InkWell(
+                  onTap: () {
+                    FormsModalHelper.openCertificateVerification(
+                      context,
+                      user: user,
+                    );
+                  },
+                  borderRadius: AppRadius.circular12,
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 2.5.w, vertical: 0.8.h),
+                    decoration: BoxDecoration(
+                      color: AppColors.certificateGreen.withValues(alpha: 0.15),
+                      borderRadius: AppRadius.circular12,
+                      border: Border.all(
+                        color:
+                            AppColors.certificateGreen.withValues(alpha: 0.4),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: 1.5.w,
+                      children: [
+                        AppIcons.badge(
+                          color: AppColors.certificateGreen,
+                          size: 14,
+                        ),
+                        Text(
+                          "Mon Certificat",
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.certificateGreen,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                const SizedBox.shrink(),
               InkWell(
                 onTap: () {
                   context.push(RoutePaths.editProfile, extra: user);

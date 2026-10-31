@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
+import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/auth_state.dart';
 import '../widgets/forms_modal_helper.dart';
@@ -15,6 +16,228 @@ class FormsPage extends StatelessWidget {
     final user = authState is AuthenticatedState ? authState.user : null;
     final userLevel = user?.level ?? 1;
 
+    return StreamBuilder<bool>(
+      stream: sl<CampConfigService>().isCampEndedStream,
+      initialData: sl<CampConfigService>().isCampEnded,
+      builder: (context, snapshot) {
+        final isCampEnded = snapshot.data ?? false;
+
+        if (isCampEnded) {
+          return _buildCampEndedView(context, user);
+        }
+
+        return _buildActiveCampView(context, userLevel);
+      },
+    );
+  }
+
+  Widget _buildCampEndedView(BuildContext context, UserEntity? user) {
+    final hasCertificate = user?.hasCertificate == true;
+    final certCode = user?.certificateCode;
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(title: const Text("Certificat & Clôture")),
+      body: ListView(
+        primary: false,
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+        children: [
+          // Banner Fin de camp
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(5.w),
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: AppRadius.circular20,
+              border: Border.all(
+                color: AppColors.certificateGreen.withValues(alpha: 0.3),
+              ),
+            ),
+            child: Row(
+              spacing: 4.w,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(3.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.certificateGreen.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
+                  ),
+                  child: AppIcons.badge(
+                    color: AppColors.certificateGreen,
+                    size: AppSizes.iconXl,
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 0.5.h,
+                    children: [
+                      Text(
+                        "Camp Officiellement Terminé 🎓",
+                        style: AppTextStyles.h3.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      Text(
+                        "Toutes les sessions et épreuves du Flutter Firebase Summer Camp sont terminées. Les formulaires de soumission sont désormais clos.",
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 3.h),
+
+          Text(
+            "Vérification d'Accréditation",
+            style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+          ),
+          SizedBox(height: 0.8.h),
+          Text(
+            hasCertificate
+                ? "Votre certificat d'accomplissement a été généré et validé par l'équipe pédagogique."
+                : "Consultez le portail officiel de vérification des certificats FFSC.",
+            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
+          ),
+          SizedBox(height: 2.5.h),
+
+          // Certificate Verification Card
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.card,
+              borderRadius: AppRadius.circular16,
+              border: Border.all(
+                color: AppColors.certificateGreen.withValues(alpha: 0.6),
+                width: 1.5,
+              ),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: AppRadius.circular16,
+              child: InkWell(
+                onTap: () => FormsModalHelper.openCertificateVerification(
+                  context,
+                  user: user,
+                ),
+                borderRadius: AppRadius.circular16,
+                child: Padding(
+                  padding: EdgeInsets.all(5.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        spacing: 3.5.w,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(3.w),
+                            decoration: BoxDecoration(
+                              color: AppColors.certificateGreen
+                                  .withValues(alpha: 0.15),
+                              borderRadius: AppRadius.circular12,
+                            ),
+                            child: AppIcons.badge(
+                              color: AppColors.certificateGreen,
+                              size: 28,
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 0.5.h,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        hasCertificate
+                                            ? "Mon Certificat Officiel"
+                                            : "Registre des Certificats",
+                                        style: AppTextStyles.titleMedium
+                                            .copyWith(
+                                          color: AppColors.textPrimary,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 2.w,
+                                        vertical: 0.4.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.certificateGreen
+                                            .withValues(alpha: 0.15),
+                                        borderRadius: AppRadius.circular8,
+                                        border: Border.all(
+                                          color: AppColors.certificateGreen
+                                              .withValues(alpha: 0.3),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        hasCertificate ? "Validé" : "Vérification",
+                                        style:
+                                            AppTextStyles.badgeSmall.copyWith(
+                                          color: AppColors.certificateGreen,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  hasCertificate
+                                      ? "Code : ${certCode?.trim()}"
+                                      : "Vérifier l'authenticité d'un certificat d'apprenant",
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: hasCertificate
+                                        ? AppColors.skyBlue
+                                        : AppColors.textSecondary,
+                                    fontWeight: hasCertificate
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 2.h),
+                      const Divider(color: AppColors.borderSubtle, height: 1),
+                      SizedBox(height: 1.5.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            hasCertificate
+                                ? "Ouvrir et vérifier mon certificat"
+                                : "Accéder à la plateforme de vérification",
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.certificateGreen,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          AppIcons.link(
+                            color: AppColors.certificateGreen,
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActiveCampView(BuildContext context, int userLevel) {
     final certTitle = FormsModalHelper.getCertificateTitle(userLevel);
     final certSubtitle = FormsModalHelper.getCertificateSubtitle(userLevel);
     final certUrl = FormsModalHelper.getCertificateUrl(userLevel);
@@ -44,7 +267,7 @@ class FormsPage extends StatelessWidget {
                   padding: EdgeInsets.all(3.w),
                   decoration: BoxDecoration(
                     color: AppColors.skyBlue.withValues(alpha: 0.15),
-                    shape: .circle,
+                    shape: BoxShape.circle,
                   ),
                   child: AppIcons.forms(
                     color: AppColors.skyBlue,
@@ -53,7 +276,7 @@ class FormsPage extends StatelessWidget {
                 ),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: .start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 0.5.h,
                     children: [
                       Text("Espace Formulaires", style: AppTextStyles.h3),
@@ -168,7 +391,7 @@ class FormsPage extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(4.5.w),
             child: Column(
-              crossAxisAlignment: .start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   spacing: 3.5.w,
@@ -183,7 +406,7 @@ class FormsPage extends StatelessWidget {
                     ),
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: .start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: 0.5.h,
                         children: [
                           Row(
@@ -193,9 +416,9 @@ class FormsPage extends StatelessWidget {
                                   title,
                                   style: AppTextStyles.titleMedium.copyWith(
                                     color: AppColors.textPrimary,
-                                    fontWeight: .bold,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  overflow: .ellipsis,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               Container(
@@ -225,7 +448,7 @@ class FormsPage extends StatelessWidget {
                               color: AppColors.textSecondary,
                             ),
                             maxLines: 2,
-                            overflow: .ellipsis,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),
@@ -236,13 +459,13 @@ class FormsPage extends StatelessWidget {
                 const Divider(color: AppColors.borderSubtle, height: 1),
                 SizedBox(height: 1.5.h),
                 Row(
-                  mainAxisAlignment: .spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "Ouvrir le formulaire externe",
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: color,
-                        fontWeight: .w600,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     AppIcons.link(color: color, size: 18),

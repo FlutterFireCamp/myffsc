@@ -1,4 +1,4 @@
-﻿rules_version = '2';
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -28,9 +28,9 @@ service cloud.firestore {
         && request.resource.data.totalPoints == 0
         && request.resource.data.level == 1;
 
-      // Mise à jour de profil par l'apprenant : interdiction formelle d'altérer les privilèges ou les scores
+      // Mise à jour de profil par l'apprenant : interdiction formelle d'altérer les privilèges, scores ou certificats
       allow update: if isOwner(userId)
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status', 'totalPoints', 'level', 'email'])
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status', 'totalPoints', 'level', 'email', 'certificateCode', 'certificateUrl', 'certificate'])
         || isStaff();
 
       allow delete: if isStaff();
@@ -61,7 +61,12 @@ service cloud.firestore {
       allow write: if isStaff();
     }
 
-    // 5. Collection CONFIG : Données sensibles (emails participants, tokens)
+    // 5. Collection CONFIG : Données sensibles (emails participants, tokens) et paramètres du camp
+    match /config/camp-settings {
+      allow read: if isAuthenticated();
+      allow write: if isStaff();
+    }
+
     match /config/{configDoc} {
       allow read, write: if isStaff();
     }

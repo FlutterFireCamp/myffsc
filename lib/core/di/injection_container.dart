@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../services/analytics_service.dart';
+import '../services/camp_config_service.dart';
 import '../services/notification_service.dart';
 
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
@@ -74,6 +75,9 @@ Future<void> initInjector() async {
       localNotifications: sl(),
       firestore: sl(),
     ),
+  );
+  sl.registerLazySingleton<CampConfigService>(
+    () => CampConfigService(firestore: sl()),
   );
 
   // Data Sources & Services

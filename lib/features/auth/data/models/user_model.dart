@@ -21,6 +21,7 @@ class UserModel extends UserEntity {
     super.portfolio,
     super.totalPoints,
     super.createdAt,
+    super.certificateCode,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String id) {
@@ -44,6 +45,10 @@ class UserModel extends UserEntity {
       portfolio: map['portfolio'] as String?,
       totalPoints: (map['totalPoints'] as num?)?.toInt() ?? 0,
       createdAt: map['createdAt']?.toString(),
+      certificateCode: map['certificateCode'] as String? ??
+          map['certificateId'] as String? ??
+          map['certificate'] as String? ??
+          map['certificateUrl'] as String?,
     );
   }
 
@@ -67,6 +72,52 @@ class UserModel extends UserEntity {
       'portfolio': portfolio,
       'totalPoints': totalPoints,
       'createdAt': createdAt,
+      if (certificateCode != null) 'certificateCode': certificateCode,
     };
+  }
+
+  UserModel copyWith({
+    String? name,
+    String? email,
+    String? role,
+    int? level,
+    String? status,
+    String? country,
+    String? town,
+    String? community,
+    String? hub,
+    String? discordUsername,
+    String? gender,
+    String? photoUrl,
+    String? github,
+    String? linkedin,
+    String? x,
+    String? portfolio,
+    int? totalPoints,
+    String? createdAt,
+    String? certificateCode,
+  }) {
+    return UserModel(
+      id: id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      role: role ?? this.role,
+      level: level ?? this.level,
+      status: status ?? this.status,
+      country: country ?? this.country,
+      town: town ?? this.town,
+      community: community ?? this.community,
+      hub: hub ?? this.hub,
+      discordUsername: discordUsername ?? this.discordUsername,
+      gender: gender ?? this.gender,
+      photoUrl: photoUrl ?? this.photoUrl,
+      github: github ?? this.github,
+      linkedin: linkedin ?? this.linkedin,
+      x: x ?? this.x,
+      portfolio: portfolio ?? this.portfolio,
+      totalPoints: totalPoints ?? this.totalPoints,
+      createdAt: createdAt ?? this.createdAt,
+      certificateCode: certificateCode ?? this.certificateCode,
+    );
   }
 }
