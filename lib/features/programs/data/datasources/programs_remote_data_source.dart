@@ -20,23 +20,21 @@ class ProgramsRemoteDataSourceImpl implements ProgramsRemoteDataSource {
         name: 'PROGRAMS_REMOTE_DS',
       );
 
-      Query<Map<String, dynamic>> query = firestore.collection('programs');
-
-      if (filterType != null) {
-        query = query.where('type', isEqualTo: filterType.toDbString());
-      }
-
-      final querySnapshot = await query.get();
+      final querySnapshot = await firestore.collection('programs').get();
 
       if (querySnapshot.docs.isEmpty) {
         dev.log('Aucun document trouvé dans /programs', name: 'PROGRAMS_REMOTE_DS');
         return [];
       }
 
-      final items = querySnapshot.docs
+      var items = querySnapshot.docs
           .map((doc) => ProgramItem.fromFirestore(doc))
           .where((item) => !item.isPast)
           .toList();
+
+      if (filterType != null) {
+        items = items.where((item) => item.type == filterType).toList();
+      }
 
       // Tri croissant : la session la plus proche à venir en premier
       items.sort((a, b) {

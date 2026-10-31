@@ -27,13 +27,10 @@ class AnnouncementsRemoteDataSourceImpl implements AnnouncementsRemoteDataSource
         name: 'ANNOUNCEMENTS_REMOTE_DS',
       );
 
+      // Requête sans filtre composite 'where' pour éviter l'obligation d'index composite Firestore (type + createdAt)
       Query<Map<String, dynamic>> query = firestore
           .collection('announcements')
           .orderBy('createdAt', descending: true);
-
-      if (filterType != null) {
-        query = query.where('type', isEqualTo: filterType.toDbString());
-      }
 
       if (startAfterDoc != null) {
         query = query.startAfterDocument(startAfterDoc);
@@ -43,9 +40,13 @@ class AnnouncementsRemoteDataSourceImpl implements AnnouncementsRemoteDataSource
 
       final querySnapshot = await query.get();
 
-      final items = querySnapshot.docs
+      var items = querySnapshot.docs
           .map((doc) => AnnouncementItem.fromFirestore(doc))
           .toList();
+
+      if (filterType != null) {
+        items = items.where((item) => item.type == filterType).toList();
+      }
 
       final hasMore = querySnapshot.docs.length >= limit;
       final lastDoc = querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;

@@ -1,11 +1,13 @@
 import 'dart:developer' as dev;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/entities/program_item.dart';
 import '../../domain/usecases/programs_usecases.dart';
 import 'programs_event.dart';
 import 'programs_state.dart';
 
 class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
   final GetUpcomingProgramsUseCase getUpcomingProgramsUseCase;
+  List<ProgramItem> _allPrograms = [];
 
   ProgramsBloc({required this.getUpcomingProgramsUseCase})
       : super(ProgramsInitialState()) {
@@ -28,7 +30,7 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
       }
 
       final result = await getUpcomingProgramsUseCase(
-        GetUpcomingProgramsParams(filterType: event.filterType),
+        const GetUpcomingProgramsParams(filterType: null),
       );
 
       result.fold(
@@ -37,9 +39,14 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
           emit(ProgramsErrorState(failure.message));
         },
         (programs) {
-          dev.log('${programs.length} programmes chargés avec succès', name: 'PROGRAMS_BLOC');
+          _allPrograms = programs;
+          final filtered = event.filterType == null
+              ? _allPrograms
+              : _allPrograms.where((p) => p.type == event.filterType).toList();
+
+          dev.log('${filtered.length} programmes chargés avec succès (filtre: ${event.filterType?.label ?? "Tous"})', name: 'PROGRAMS_BLOC');
           emit(ProgramsLoadedState(
-            programs: programs,
+            programs: filtered,
             currentFilter: event.filterType,
           ));
         },
@@ -59,6 +66,16 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
     FilterProgramsEvent event,
     Emitter<ProgramsState> emit,
   ) async {
-    add(FetchProgramsEvent(filterType: event.filterType, isRefresh: true));
+    if (_allPrograms.isNotEmpty) {
+      final filtered = event.filterType == null
+          ? _allPrograms
+          : _allPrograms.where((p) => p.type == event.filterType).toList();
+      emit(ProgramsLoadedState(
+        programs: filtered,
+        currentFilter: event.filterType,
+      ));
+    } else {
+      add(FetchProgramsEvent(filterType: event.filterType, isRefresh: true));
+    }
   }
 }

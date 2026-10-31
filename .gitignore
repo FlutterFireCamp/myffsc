@@ -54,3 +54,6 @@ app.*.map.json
 upload-keystore.jks
 android/app/upload-keystore.jks
 
+
+.kotlin/
+android/.kotlin/

@@ -1,11 +1,13 @@
 import 'dart:developer' as dev;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/entities/announcement_item.dart';
 import '../../domain/usecases/announcements_usecases.dart';
 import 'announcements_event.dart';
 import 'announcements_state.dart';
 
 class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
   final GetAnnouncementsUseCase getAnnouncementsUseCase;
+  List<AnnouncementItem> _allAnnouncements = [];
 
   AnnouncementsBloc({required this.getAnnouncementsUseCase})
       : super(AnnouncementsInitialState()) {
@@ -29,9 +31,9 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
       }
 
       final result = await getAnnouncementsUseCase(
-        GetAnnouncementsParams(
-          filterType: event.filterType,
-          limit: 10,
+        const GetAnnouncementsParams(
+          filterType: null,
+          limit: 30,
         ),
       );
 
@@ -41,9 +43,14 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
           emit(AnnouncementsErrorState(failure.message));
         },
         (data) {
-          dev.log('${data.items.length} annonce(s) chargée(s), hasMore: ${data.hasMore}', name: 'ANNOUNCEMENTS_BLOC');
+          _allAnnouncements = data.items;
+          final filtered = event.filterType == null
+              ? _allAnnouncements
+              : _allAnnouncements.where((a) => a.type == event.filterType).toList();
+
+          dev.log('${filtered.length} annonce(s) affichée(s) sur ${_allAnnouncements.length}, hasMore: ${data.hasMore}', name: 'ANNOUNCEMENTS_BLOC');
           emit(AnnouncementsLoadedState(
-            announcements: data.items,
+            announcements: filtered,
             hasMore: data.hasMore,
             lastDocument: data.lastDocument,
             currentFilter: event.filterType,
@@ -79,9 +86,9 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
 
       final result = await getAnnouncementsUseCase(
         GetAnnouncementsParams(
-          filterType: currentState.currentFilter,
+          filterType: null,
           startAfterDoc: currentState.lastDocument,
-          limit: 10,
+          limit: 20,
         ),
       );
 
@@ -91,10 +98,18 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
           emit(currentState.copyWith(isLoadingMore: false));
         },
         (data) {
-          final updatedList = List.of(currentState.announcements)..addAll(data.items);
-          dev.log('Total cumulé d’annonces: ${updatedList.length}, hasMore: ${data.hasMore}', name: 'ANNOUNCEMENTS_BLOC');
+          for (final item in data.items) {
+            if (!_allAnnouncements.any((a) => a.id == item.id)) {
+              _allAnnouncements.add(item);
+            }
+          }
+          final filtered = currentState.currentFilter == null
+              ? _allAnnouncements
+              : _allAnnouncements.where((a) => a.type == currentState.currentFilter).toList();
+
+          dev.log('Total cumulé d’annonces: ${_allAnnouncements.length}, hasMore: ${data.hasMore}', name: 'ANNOUNCEMENTS_BLOC');
           emit(currentState.copyWith(
-            announcements: updatedList,
+            announcements: filtered,
             hasMore: data.hasMore,
             lastDocument: data.lastDocument,
             isLoadingMore: false,
@@ -116,6 +131,25 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
     FilterAnnouncementsEvent event,
     Emitter<AnnouncementsState> emit,
   ) async {
-    add(FetchAnnouncementsEvent(filterType: event.filterType, isRefresh: true));
+    final currentState = state;
+    if (_allAnnouncements.isNotEmpty) {
+      final filtered = event.filterType == null
+          ? _allAnnouncements
+          : _allAnnouncements.where((a) => a.type == event.filterType).toList();
+      if (currentState is AnnouncementsLoadedState) {
+        emit(currentState.copyWith(
+          announcements: filtered,
+          currentFilter: event.filterType,
+        ));
+      } else {
+        emit(AnnouncementsLoadedState(
+          announcements: filtered,
+          hasMore: false,
+          currentFilter: event.filterType,
+        ));
+      }
+    } else {
+      add(FetchAnnouncementsEvent(filterType: event.filterType, isRefresh: true));
+    }
   }
 }
