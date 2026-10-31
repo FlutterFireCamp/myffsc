@@ -174,10 +174,28 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
                   userAnsData['userAnswer'])
             : "-1";
 
-        final earnedScore =
+        int earnedScore =
             (userAnsData?['score'] as num?)?.toInt() ??
             (userAnsData?['earnedScore'] as num?)?.toInt() ??
             0;
+
+        if (earnedScore == 0 && mainQ != null && studentAns != "-1") {
+          if (mainQ.checkIsAnswerCorrect(studentAns)) {
+            earnedScore = mainQ.actualPoints;
+          }
+        } else if (earnedScore == 0 && userAnsData != null) {
+          if (userAnsData['isCorrect'] == true || userAnsData['correct'] == true) {
+            earnedScore = (userAnsData['maxScore'] as num?)?.toInt() ??
+                (userAnsData['points'] as num?)?.toInt() ??
+                25;
+          } else if (userAnsData['expectedAnswer'] != null &&
+              userAnsData['expectedAnswer'].toString().trim().isNotEmpty &&
+              userAnsData['expectedAnswer'].toString().trim() == studentAns.toString().trim()) {
+            earnedScore = (userAnsData['maxScore'] as num?)?.toInt() ??
+                (userAnsData['points'] as num?)?.toInt() ??
+                25;
+          }
+        }
 
         final expectedAns =
             userAnsData?['expectedAnswer']?.toString() ??
@@ -223,9 +241,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
             type: questionType,
             studentAnswer: studentAns,
             earnedScore: earnedScore,
-            maxScore: mainQ?.points ??
+            maxScore: mainQ?.actualPoints ??
                 (userAnsData?['maxScore'] as num?)?.toInt() ??
-                100,
+                (userAnsData?['points'] as num?)?.toInt() ??
+                25,
             expectedAnswer: expectedAns,
             options: questionOptions,
             correctAnswers: correctAnswers,

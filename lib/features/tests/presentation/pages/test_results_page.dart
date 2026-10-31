@@ -31,8 +31,24 @@ class TestResultsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final percentage = totalPossibleScore > 0
-        ? ((qcmScore / totalPossibleScore) * 100).round()
+    final actualTotalPossible =
+        (totalPossibleScore > 0 && totalPossibleScore != 500)
+            ? totalPossibleScore
+            : quiz.calculatedTotalPoints;
+
+    int actualScore = qcmScore;
+    if (actualScore == 0) {
+      for (int i = 0; i < quiz.questions.length; i++) {
+        final q = quiz.questions[i];
+        final ans = userAnswers[i];
+        if (ans != null && q.checkIsAnswerCorrect(ans)) {
+          actualScore += q.actualPoints;
+        }
+      }
+    }
+
+    final percentage = actualTotalPossible > 0
+        ? ((actualScore / actualTotalPossible) * 100).round()
         : 0;
 
     final isPassed = percentage >= 50;
@@ -124,7 +140,7 @@ class TestResultsPage extends StatelessWidget {
                                 ),
                                 SizedBox(height: 0.4.h),
                                 Text(
-                                  "$qcmScore / $totalPossibleScore Pts",
+                                  "$actualScore / $actualTotalPossible Pts",
                                   style: AppTextStyles.h1.copyWith(
                                     color: AppColors.skyBlue,
                                     fontWeight: .bold,
@@ -189,17 +205,7 @@ class TestResultsPage extends StatelessWidget {
                       for (int i = 0; i < quiz.questions.length; i++) {
                         final q = quiz.questions[i];
                         final ans = userAnswers[i];
-                        bool isCorrect = false;
-                        if (q.type == 'choice' &&
-                            q.correctAnswers != null &&
-                            ans != null) {
-                          final intAns = ans is int
-                              ? ans
-                              : int.tryParse(ans.toString());
-                          if (intAns != null) {
-                            isCorrect = q.correctAnswers!.contains(intAns);
-                          }
-                        }
+                        final isCorrect = ans != null && q.checkIsAnswerCorrect(ans);
                         corrections.add(
                           UserQuestionCorrection(
                             index: i,
@@ -208,8 +214,8 @@ class TestResultsPage extends StatelessWidget {
                             statement: q.statement,
                             type: q.type,
                             studentAnswer: ans != null ? ans.toString() : "-1",
-                            earnedScore: isCorrect ? q.points : 0,
-                            maxScore: q.points > 0 ? q.points : 25,
+                            earnedScore: isCorrect ? q.actualPoints : 0,
+                            maxScore: q.actualPoints,
                             options: q.options,
                             correctAnswers: q.correctAnswers,
                             explanation: q.explanation,
@@ -221,8 +227,8 @@ class TestResultsPage extends StatelessWidget {
                         context,
                         quizTitle: quiz.title,
                         dateFormatted: DateTimeHelper.formatYmd(DateTime.now()),
-                        totalScore: qcmScore,
-                        totalPossibleScore: totalPossibleScore,
+                        totalScore: actualScore,
+                        totalPossibleScore: actualTotalPossible,
                         status: "Corrigé",
                         questions: corrections,
                       );

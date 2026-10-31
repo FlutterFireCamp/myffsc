@@ -21,21 +21,32 @@ class TestAlreadySubmittedCard extends StatelessWidget {
     this.status = "Corrigé",
   });
 
+  int get _displayScore {
+    if (score > 0) return score;
+    int sum = 0;
+    for (int i = 0; i < quiz.questions.length; i++) {
+      final q = quiz.questions[i];
+      final ans = userAnswersMap[i];
+      if (ans != null && q.checkIsAnswerCorrect(ans)) {
+        sum += q.actualPoints;
+      }
+    }
+    return sum;
+  }
+
+  int get _displayTotalPossible {
+    if (totalPossibleScore > 0 && totalPossibleScore != 500) {
+      return totalPossibleScore;
+    }
+    return quiz.calculatedTotalPoints;
+  }
+
   void _handleViewDetails(BuildContext context) {
     final List<UserQuestionCorrection> corrections = [];
     for (int i = 0; i < quiz.questions.length; i++) {
       final q = quiz.questions[i];
       final ans = userAnswersMap[i];
-      bool isCorrect = false;
-      if (q.type == 'choice' && q.correctAnswers != null && ans != null) {
-        final intAns = ans is int ? ans : int.tryParse(ans.toString());
-        if (intAns != null) {
-          isCorrect =
-              q.correctAnswers!.contains(intAns) ||
-              q.correctAnswers!.contains(intAns - 1) ||
-              q.correctAnswers!.contains(intAns + 1);
-        }
-      }
+      final isCorrect = ans != null && q.checkIsAnswerCorrect(ans);
       corrections.add(
         UserQuestionCorrection(
           index: i,
@@ -44,8 +55,8 @@ class TestAlreadySubmittedCard extends StatelessWidget {
           statement: q.statement,
           type: q.type,
           studentAnswer: ans != null ? ans.toString() : "-1",
-          earnedScore: isCorrect ? q.points : 0,
-          maxScore: q.points > 0 ? q.points : 25,
+          earnedScore: isCorrect ? q.actualPoints : 0,
+          maxScore: q.actualPoints,
           options: q.options,
           correctAnswers: q.correctAnswers,
           explanation: q.explanation,
@@ -57,8 +68,8 @@ class TestAlreadySubmittedCard extends StatelessWidget {
       context,
       quizTitle: quiz.title,
       dateFormatted: DateTimeHelper.formatYmd(DateTime.now()),
-      totalScore: score,
-      totalPossibleScore: totalPossibleScore,
+      totalScore: _displayScore,
+      totalPossibleScore: _displayTotalPossible,
       status: status,
       questions: corrections,
     );
@@ -146,7 +157,7 @@ class TestAlreadySubmittedCard extends StatelessWidget {
             mainAxisAlignment: .spaceBetween,
             children: [
               Text(
-                "$score / $totalPossibleScore pts",
+                "$_displayScore / $_displayTotalPossible pts",
                 style: AppTextStyles.titleMedium.copyWith(
                   color: AppColors.skyBlue,
                   fontWeight: .bold,

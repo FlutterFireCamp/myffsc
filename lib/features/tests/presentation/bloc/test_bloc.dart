@@ -7,6 +7,7 @@ import 'test_state.dart';
 class TestBloc extends Bloc<TestEvent, TestState> {
   final TestFirestoreService _firestoreService;
   Timer? _timer;
+  String? _currentUserId;
 
   TestBloc({TestFirestoreService? firestoreService})
       : _firestoreService = firestoreService ?? TestFirestoreService(),
@@ -25,6 +26,7 @@ class TestBloc extends Bloc<TestEvent, TestState> {
     FetchTodayTestEvent event,
     Emitter<TestState> emit,
   ) async {
+    _currentUserId = event.userId;
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
     try {
@@ -131,6 +133,9 @@ class TestBloc extends Bloc<TestEvent, TestState> {
       // Last question -> submit
       _timer?.cancel();
       emit(state.copyWith(isQuizActive: false, isQuizFinished: true));
+      if (_currentUserId != null && _currentUserId!.isNotEmpty) {
+        add(FinishQuizEvent(userId: _currentUserId!));
+      }
     }
   }
 
@@ -138,6 +143,7 @@ class TestBloc extends Bloc<TestEvent, TestState> {
     AppBackgroundSwitchedEvent event,
     Emitter<TestState> emit,
   ) {
+    _currentUserId = event.userId;
     if (!state.isQuizActive) return;
 
     final newCount = state.tabSwitchCount + 1;
@@ -157,6 +163,7 @@ class TestBloc extends Bloc<TestEvent, TestState> {
 
     final quiz = state.activeQuiz;
     if (quiz == null) return;
+    if (state.isSubmittingResult) return;
 
     emit(state.copyWith(
       isQuizActive: false,
@@ -164,22 +171,24 @@ class TestBloc extends Bloc<TestEvent, TestState> {
       isSubmittingResult: true,
     ));
 
-    // Calculate auto QCM score (25 pts per correct QCM)
+    // Calculate dynamic evaluation score based on question points and correctness
     int calculatedScore = 0;
     int totalPossible = 0;
 
     for (int i = 0; i < quiz.questions.length; i++) {
       final q = quiz.questions[i];
-      if (q.type == 'choice') {
-        totalPossible += 25;
-        final userAnswer = state.userAnswersMap[i];
-        if (userAnswer != null &&
-            q.correctAnswers != null &&
-            q.correctAnswers!.contains(userAnswer)) {
-          calculatedScore += 25;
-        }
+      final qPoints = q.actualPoints;
+      totalPossible += qPoints;
+
+      final userAnswer = state.userAnswersMap[i];
+      if (userAnswer != null && q.checkIsAnswerCorrect(userAnswer)) {
+        calculatedScore += qPoints;
       }
     }
+
+    final finalTotalPossible = totalPossible > 0
+        ? totalPossible
+        : quiz.calculatedTotalPoints;
 
     final success = await _firestoreService.submitTestResult(
       userId: event.userId,
@@ -195,7 +204,7 @@ class TestBloc extends Bloc<TestEvent, TestState> {
       submissionSuccess: success,
       isSubmittedToday: success,
       qcmScore: calculatedScore,
-      totalPossibleScore: totalPossible > 0 ? totalPossible : quiz.totalPoints,
+      totalPossibleScore: finalTotalPossible,
     ));
   }
 

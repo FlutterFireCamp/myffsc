@@ -289,39 +289,46 @@ class TestFirestoreService {
 
       // Build structured answers list matching [{ questionId, questionText, score, studentAnswer, expectedAnswer }]
       final List<Map<String, dynamic>> answersList = [];
+      int calculatedTotalPossible = 0;
+      int calculatedScore = 0;
+
       for (int i = 0; i < quiz.questions.length; i++) {
         final q = quiz.questions[i];
         final rawAns = userAnswers[i];
         final studentAnsStr = rawAns != null ? rawAns.toString() : "-1";
+        final qPoints = q.actualPoints;
+        calculatedTotalPossible += qPoints;
 
-        bool isCorrect = false;
-        if (q.type == 'choice' && q.correctAnswers != null && rawAns != null) {
-          final intAns = rawAns is int ? rawAns : int.tryParse(rawAns.toString());
-          if (intAns != null) {
-            isCorrect = q.correctAnswers!.contains(intAns);
-          }
-        }
+        final isCorrect = q.checkIsAnswerCorrect(rawAns);
+        final questionScore = isCorrect ? qPoints : 0;
+        calculatedScore += questionScore;
 
-        final questionScore = isCorrect ? q.points : 0;
-        final expectedAnswerStr = (q.options != null && q.correctAnswers != null && q.correctAnswers!.isNotEmpty)
-            ? (q.correctAnswers!.first < q.options!.length ? q.options![q.correctAnswers!.first] : "")
+        final expectedAnswerStr = (q.options != null &&
+                q.correctAnswers != null &&
+                q.correctAnswers!.isNotEmpty)
+            ? (q.correctAnswers!.first < q.options!.length
+                ? q.options![q.correctAnswers!.first]
+                : "")
             : (q.expectedText ?? "");
 
         answersList.add({
           'questionId': q.id,
           'questionText': q.title,
           'score': questionScore,
+          'maxScore': qPoints,
+          'points': qPoints,
+          'isCorrect': isCorrect,
           'studentAnswer': studentAnsStr,
           'expectedAnswer': expectedAnswerStr,
         });
       }
 
-      final totalPossible = quiz.questions
-              .where((q) => q.type == 'choice')
-              .length *
-          25;
+      final finalTotalPossible = calculatedTotalPossible > 0
+          ? calculatedTotalPossible
+          : quiz.calculatedTotalPoints;
+      final finalScore = score > 0 ? score : calculatedScore;
 
-      final hasTextQuestions = quiz.questions.any((q) => q.type != 'choice');
+      final hasTextQuestions = quiz.questions.any((q) => !q.isChoice);
       final String evaluationStatus = hasTextQuestions ? "EN ATTENTE" : "CORRIGÉ";
 
       final submissionData = {
@@ -329,8 +336,8 @@ class TestFirestoreService {
         'quizTitle': quiz.title,
         'submittedAt': FieldValue.serverTimestamp(),
         'date': _todayDateFormatted,
-        'score': score,
-        'totalPossibleScore': totalPossible > 0 ? totalPossible : quiz.totalPoints,
+        'score': finalScore,
+        'totalPossibleScore': finalTotalPossible,
         'timeSpentSeconds': timeSpentSeconds,
         'tabSwitchCount': tabSwitchCount,
         'answers': answersList,
@@ -342,15 +349,15 @@ class TestFirestoreService {
       // Atomic batch commit for test submission and user totalPoints
       final batch = _firestore.batch();
       batch.set(docRef, submissionData, SetOptions(merge: true));
-      if (score > 0) {
+      if (finalScore > 0) {
         batch.update(_firestore.collection('users').doc(userId), {
-          'totalPoints': FieldValue.increment(score),
+          'totalPoints': FieldValue.increment(finalScore),
         });
       }
       await batch.commit();
 
       dev.log(
-        'Test soumis avec succès pour $userId: score=$score, status=$evaluationStatus',
+        'Test soumis avec succès pour $userId: score=$finalScore (total=$finalTotalPossible), status=$evaluationStatus',
         name: 'TEST_FIRESTORE_SERVICE',
       );
 
@@ -464,15 +471,30 @@ class TestFirestoreService {
         parsedCorrectAnswers = (qData['correctAnswers'] as List).map((e) {
           if (e is num) return e.toInt();
           final parsed = int.tryParse(e.toString());
-          return parsed ?? 0;
+          if (parsed != null) return parsed;
+          final str = e.toString().trim().toUpperCase();
+          if (str.length == 1) {
+            final code = str.codeUnitAt(0) - 65;
+            if (code >= 0 && code < 26) return code;
+          }
+          return 0;
         }).toList();
       } else if (qData['correctAnswer'] != null) {
         if (qData['correctAnswer'] is num) {
           parsedCorrectAnswers = [(qData['correctAnswer'] as num).toInt()];
         } else {
-          final parsed = int.tryParse(qData['correctAnswer'].toString());
+          final str = qData['correctAnswer'].toString().trim();
+          final parsed = int.tryParse(str);
           if (parsed != null) {
             parsedCorrectAnswers = [parsed];
+          } else if (str.length == 1 && RegExp(r'[A-Za-z]').hasMatch(str)) {
+            final code = str.toUpperCase().codeUnitAt(0) - 65;
+            parsedCorrectAnswers = [code];
+          } else if (options != null && options.isNotEmpty) {
+            final idx = options.indexWhere((opt) => opt.trim().toLowerCase() == str.toLowerCase());
+            if (idx != -1) {
+              parsedCorrectAnswers = [idx];
+            }
           }
         }
       }
@@ -488,11 +510,20 @@ class TestFirestoreService {
           qData['expectedAnswer'] as String? ??
           qData['reponseAttendue'] as String?;
 
+      final rawType = (qData['type'] as String?)?.toLowerCase().trim() ?? '';
+      final isChoiceQuestion = rawType == 'choice' ||
+          rawType == 'qcm' ||
+          rawType == 'multiple' ||
+          rawType == 'single' ||
+          rawType == 'choix' ||
+          (options != null && options.isNotEmpty);
+      final normalizedType = isChoiceQuestion ? 'choice' : (rawType.isNotEmpty ? rawType : 'open');
+
       questions.add(QuestionItemEntity(
         id: qData['id'] as String? ?? 'q_$i',
         title: title,
         statement: statement,
-        type: qData['type'] as String? ?? (options != null && options.isNotEmpty ? 'choice' : 'open'),
+        type: normalizedType,
         level: (qData['level'] as num?)?.toInt() ?? 1,
         modules: parsedModules,
         points: (qData['points'] as num?)?.toInt() ?? 25,
@@ -537,8 +568,13 @@ class TestFirestoreService {
       totalDurationMinutes: (data['totalDurationMinutes'] as num?)?.toInt() ??
           (data['durationMinutes'] as num?)?.toInt() ??
           10,
-      totalPoints:
-          (data['totalPoints'] as num?)?.toInt() ?? (questions.length * 25),
+      totalPoints: () {
+        final parsed = (data['totalPoints'] as num?)?.toInt();
+        if (parsed != null && parsed > 0 && parsed != 500) {
+          return parsed;
+        }
+        return questions.fold<int>(0, (acc, q) => acc + q.actualPoints);
+      }(),
       questions: questions,
       availabilityStartGmt: startDt,
       availabilityEndGmt: endDt,

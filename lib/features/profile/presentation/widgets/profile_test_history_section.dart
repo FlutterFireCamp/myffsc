@@ -28,7 +28,7 @@ class ProfileTestHistorySection extends StatelessWidget {
       quizTitle: item.quizTitle,
       dateFormatted: item.dateStr,
       totalScore: item.score,
-      totalPossibleScore: item.totalPossibleScore,
+      totalPossibleScore: item.displayTotalPossibleScore,
       status: item.status,
       questionsFuture: questionsFuture,
     );
@@ -231,7 +231,7 @@ class ProfileTestHistorySection extends StatelessWidget {
                             mainAxisAlignment: .spaceBetween,
                             children: [
                               Text(
-                                "${item.score} / ${item.totalPossibleScore} pts",
+                                "${item.score} / ${item.displayTotalPossibleScore} pts",
                                 style: AppTextStyles.titleMedium.copyWith(
                                   color: AppColors.skyBlue,
                                   fontWeight: .bold,

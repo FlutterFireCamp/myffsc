@@ -88,6 +88,26 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
     }
   }
 
+  int get _computedTotalScore {
+    if (widget.totalScore > 0) return widget.totalScore;
+    if (_questions != null && _questions!.isNotEmpty) {
+      final sum = _questions!.fold<int>(0, (acc, q) => acc + q.earnedScore);
+      if (sum > 0) return sum;
+    }
+    return widget.totalScore;
+  }
+
+  int get _computedTotalPossibleScore {
+    if (widget.totalPossibleScore > 0 && widget.totalPossibleScore != 500) {
+      return widget.totalPossibleScore;
+    }
+    if (_questions != null && _questions!.isNotEmpty) {
+      final sum = _questions!.fold<int>(0, (acc, q) => acc + q.maxScore);
+      if (sum > 0) return sum;
+    }
+    return 100;
+  }
+
   @override
   Widget build(BuildContext context) {
     final questions = _questions ?? [];
@@ -177,7 +197,7 @@ class _TestCorrectionBottomSheetState extends State<TestCorrectionBottomSheet> {
               spacing: 0.6.h,
               children: [
                 Text(
-                  "${widget.totalScore} / ${widget.totalPossibleScore} pts",
+                  "$_computedTotalScore / $_computedTotalPossibleScore pts",
                   style: AppTextStyles.h2.copyWith(
                     color: Colors.white,
                     fontWeight: .bold,

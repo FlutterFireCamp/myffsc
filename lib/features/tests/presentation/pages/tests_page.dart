@@ -48,24 +48,29 @@ class _TestsPageState extends State<TestsPage> {
               context.read<TestBloc>().add(FetchTodayTestEvent(userId: userId));
             },
           ),
-          SizedBox(width: 2.w),
         ],
       ),
       body: SafeArea(
-        child: BlocBuilder<TestBloc, TestState>(
+        child: BlocConsumer<TestBloc, TestState>(
+          listener: (context, state) {
+            if (state.errorMessage != null) {
+              AppSnackBar.showError(context, state.errorMessage!);
+            }
+          },
           builder: (context, state) {
-            // State 1: Chargement
+            // State 1: Shimmer Loading Skeleton
             if (state.isLoading) {
               return const TestsShimmer();
             }
 
             final quiz = state.activeQuiz;
 
-            // State 2: Aucun test disponible (Bouton d'actualisation conservé uniquement dans l'AppBar)
+            // State 2: Aucune évaluation programmée / disponible
             if (quiz == null) {
               return Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: 6.w),
                   child: AppEmptyState(
                     title: "Aucune évaluation disponible",
                     message:
@@ -82,13 +87,72 @@ class _TestsPageState extends State<TestsPage> {
 
             // State 3: Déjà soumis aujourd'hui (Already Submitted State)
             if (state.isSubmittedToday) {
-              final score =
-                  state.previousSubmission?['score'] as int? ?? state.qcmScore;
-              final totalPossible =
-                  state.previousSubmission?['totalPossibleScore'] as int? ??
-                  state.totalPossibleScore;
+              final prevData = state.previousSubmission;
+
+              // Extract or reconstruct user answers map
+              final Map<int, dynamic> userAnswers =
+                  Map<int, dynamic>.from(state.userAnswersMap);
+              if (userAnswers.isEmpty && prevData?['answers'] != null) {
+                final prevAnswers = prevData!['answers'];
+                if (prevAnswers is List) {
+                  for (int i = 0; i < prevAnswers.length; i++) {
+                    final item = prevAnswers[i];
+                    if (item is Map) {
+                      userAnswers[i] = item['studentAnswer'] ??
+                          item['answer'] ??
+                          item['userAnswer'];
+                    } else {
+                      userAnswers[i] = item;
+                    }
+                  }
+                } else if (prevAnswers is Map) {
+                  int i = 0;
+                  for (final val in prevAnswers.values) {
+                    if (val is Map) {
+                      userAnswers[i] = val['studentAnswer'] ??
+                          val['answer'] ??
+                          val['userAnswer'];
+                    } else {
+                      userAnswers[i] = val;
+                    }
+                    i++;
+                  }
+                }
+              }
+
+              // Extract score safely
+              int score = (prevData?['score'] as num?)?.toInt() ??
+                  (prevData?['totalScore'] as num?)?.toInt() ??
+                  (prevData?['points'] as num?)?.toInt() ??
+                  state.qcmScore;
+
+              if (score == 0 && prevData?['answers'] != null) {
+                final prevAnswers = prevData!['answers'];
+                if (prevAnswers is List) {
+                  for (final item in prevAnswers) {
+                    if (item is Map) {
+                      score += (item['score'] as num?)?.toInt() ??
+                          (item['earnedScore'] as num?)?.toInt() ??
+                          (item['isCorrect'] == true
+                              ? ((item['points'] as num?)?.toInt() ?? 25)
+                              : 0);
+                    }
+                  }
+                }
+              }
+
+              // Extract total possible score (never 500)
+              final rawTotalPossible =
+                  (prevData?['totalPossibleScore'] as num?)?.toInt() ??
+                      (prevData?['totalPoints'] as num?)?.toInt();
+              final totalPossible = (rawTotalPossible != null &&
+                      rawTotalPossible > 0 &&
+                      rawTotalPossible != 500)
+                  ? rawTotalPossible
+                  : quiz.calculatedTotalPoints;
+
               final status =
-                  state.previousSubmission?['status']?.toString() ?? "Corrigé";
+                  prevData?['status']?.toString() ?? "Corrigé";
 
               return SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
@@ -96,7 +160,7 @@ class _TestsPageState extends State<TestsPage> {
                   quiz: quiz,
                   score: score,
                   totalPossibleScore: totalPossible,
-                  userAnswersMap: state.userAnswersMap,
+                  userAnswersMap: userAnswers,
                   status: status,
                 ),
               );

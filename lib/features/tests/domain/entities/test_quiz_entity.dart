@@ -24,6 +24,15 @@ class TestQuizEntity extends Equatable {
     this.status = 'active',
   });
 
+  /// Dynamically calculated total points based on questions (never defaults to 500)
+  int get calculatedTotalPoints {
+    if (totalPoints > 0 && totalPoints != 500) return totalPoints;
+    if (questions.isNotEmpty) {
+      return questions.fold<int>(0, (sum, q) => sum + q.actualPoints);
+    }
+    return 100;
+  }
+
   /// Converts GMT availability to user's local phone time string
   String get localAvailabilityRangeText {
     // Default GMT window: 12:00 GMT to 14:00 GMT if not explicitly provided
