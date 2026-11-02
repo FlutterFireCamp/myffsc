@@ -145,7 +145,7 @@ class FormsPage extends StatelessWidget {
                                   color: AppColors.skyBlue.withValues(alpha: 0.15),
                                   borderRadius: AppRadius.circular12,
                                 ),
-                                child: AppIcons.trophy(
+                                child: AppIcons.certificate(
                                   color: AppColors.skyBlue,
                                   size: 28,
                                 ),
@@ -361,7 +361,7 @@ class FormsPage extends StatelessWidget {
             context: context,
             title: certTitle,
             subtitle: certSubtitle,
-            icon: AppIcons.badge(color: AppColors.certificateGreen, size: 24),
+            icon: AppIcons.certificate(color: AppColors.certificateGreen, size: 24),
             color: AppColors.certificateGreen,
             url: certUrl,
             badgeText: "Certification",

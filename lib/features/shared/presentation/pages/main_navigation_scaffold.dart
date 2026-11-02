@@ -54,7 +54,14 @@ class MainNavigationScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: navigationShell.currentIndex == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop && navigationShell.currentIndex != 0) {
+          navigationShell.goBranch(0);
+        }
+      },
+      child: Scaffold(
       backgroundColor: AppColors.background,
       body: navigationShell,
       floatingActionButton: StreamBuilder<bool>(
@@ -85,7 +92,7 @@ class MainNavigationScaffold extends StatelessWidget {
               tooltip: currentUser?.hasCertificate == true
                   ? "Vérifier mon certificat"
                   : "Portail de vérification",
-              child: AppIcons.trophy(color: Colors.white, size: AppSizes.iconLg),
+              child: AppIcons.certificate(color: Colors.white, size: AppSizes.iconLg),
             );
           }
 
@@ -121,7 +128,7 @@ class MainNavigationScaffold extends StatelessWidget {
                 onPressed: () {
                   FormsModalHelper.openCertificateForm(context, userLevel);
                 },
-                icon: AppIcons.badge(
+                icon: AppIcons.certificate(
                     color: Colors.white, size: AppSizes.iconMd),
                 color: AppColors.certificateGreen,
               ),
@@ -218,6 +225,7 @@ class MainNavigationScaffold extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
     );
   }

@@ -138,7 +138,7 @@ class ProfileHeaderCard extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       spacing: 1.5.w,
                       children: [
-                        AppIcons.badge(
+                        AppIcons.certificate(
                           color: AppColors.certificateGreen,
                           size: 14,
                         ),

@@ -86,8 +86,11 @@ class AppIcons {
   static Widget send({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedSent, color: color, size: size);
 
+  static Widget certificate({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedCertificate01, color: color, size: size);
+
   static Widget badge({Color color = Colors.white, double size = 24.0}) =>
-      HugeIcon(icon: HugeIcons.strokeRoundedAward01, color: color, size: size);
+      certificate(color: color, size: size);
 
   static Widget star({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedStar, color: color, size: size);
