@@ -397,37 +397,17 @@ class _TestTakingPageState extends State<TestTakingPage>
                                     ],
                                   ),
                                 ),
-                                TextField(
+                                AppTextField(
                                   controller: _textAnswerController,
-                                  enabled:
-                                      !_isAnswerSubmittedForCurrentQuestion,
+                                  enabled: !_isAnswerSubmittedForCurrentQuestion,
                                   maxLines: 6,
                                   enableInteractiveSelection: false,
                                   style: AppTextStyles.bodyMedium.copyWith(
                                     color: AppColors.textPrimary,
                                     fontFamily: 'monospace',
                                   ),
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        "Saisissez votre code Dart ou votre réponse rédigée ici...",
-                                    hintStyle: AppTextStyles.bodyMedium
-                                        .copyWith(color: AppColors.textMuted),
-                                    filled: true,
-                                    fillColor: AppColors.card,
-                                    border: const OutlineInputBorder(
-                                      borderRadius: AppRadius.circular12,
-                                      borderSide: BorderSide(
-                                        color: AppColors.borderSubtle,
-                                      ),
-                                    ),
-                                    focusedBorder: const OutlineInputBorder(
-                                      borderRadius: AppRadius.circular12,
-                                      borderSide: BorderSide(
-                                        color: AppColors.skyBlue,
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                  ),
+                                  hintText: "Saisissez votre code Dart ou votre réponse rédigée ici...",
+                                  hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
                                 ),
                               ],
                             ),

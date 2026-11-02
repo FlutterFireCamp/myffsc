@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer' as dev;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,44 +13,88 @@ import 'app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Lock orientation strictly to portrait mode
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // Configuration active de Firebase Crashlytics
-  await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  await FirebaseCrashlytics.instance.sendUnsentReports();
-
-  // Configuration active de Firebase Analytics
-  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
-
-  // Capturer et rapporter toutes les erreurs fatales Flutter à Firebase Crashlytics
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
-
-  // Capturer les erreurs asynchrones non gérées
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
-
-  await initInjector();
-
+  // 1. Verrouiller strictement l'orientation en mode portrait
   try {
-    await sl<NotificationService>().initialize();
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  } catch (e) {
+    dev.log('SystemChrome orientation lock error: $e', name: 'MAIN');
+  }
+
+  // 2. Initialiser Firebase Core
+  try {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   } catch (e, stackTrace) {
     dev.log(
-      'Erreur lors de l’initialisation de NotificationService dans main()',
+      'Firebase.initializeApp error: $e',
       name: 'MAIN',
       error: e,
       stackTrace: stackTrace,
     );
   }
 
+  // 3. Configuration sécurisée de Firebase Crashlytics
+  try {
+    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    unawaited(FirebaseCrashlytics.instance.sendUnsentReports().catchError((e) {
+      dev.log('Crashlytics sendUnsentReports notice: $e', name: 'MAIN');
+    }));
+
+    FlutterError.onError = (errorDetails) {
+      try {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      } catch (_) {}
+    };
+
+    PlatformDispatcher.instance.onError = (error, stack) {
+      try {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      } catch (_) {}
+      return true;
+    };
+  } catch (e) {
+    dev.log('Crashlytics initialization error: $e', name: 'MAIN');
+  }
+
+  // 4. Vérifier la disponibilité de Firebase Analytics sans risquer de bloquer main()
+  bool isAnalyticsSupported = false;
+  try {
+    await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
+    isAnalyticsSupported = true;
+    dev.log('Firebase Analytics initialisé avec succès', name: 'MAIN');
+  } catch (e) {
+    dev.log(
+      'Firebase Analytics non supporté sur ce binaire natif (support rétro-compatible Shorebird): $e',
+      name: 'MAIN',
+    );
+  }
+
+  // 5. Initialiser les dépendances (GetIt)
+  try {
+    await initInjector(isAnalyticsSupported: isAnalyticsSupported);
+  } catch (e, stackTrace) {
+    dev.log(
+      'initInjector error: $e',
+      name: 'MAIN',
+      error: e,
+      stackTrace: stackTrace,
+    );
+  }
+
+  // 6. Initialiser le service de notifications
+  try {
+    await sl<NotificationService>().initialize();
+  } catch (e, stackTrace) {
+    dev.log(
+      'NotificationService initialization error: $e',
+      name: 'MAIN',
+      error: e,
+      stackTrace: stackTrace,
+    );
+  }
+
+  // 7. Lancement garanti de l'application UI
   runApp(const MyFFSCApp());
 }

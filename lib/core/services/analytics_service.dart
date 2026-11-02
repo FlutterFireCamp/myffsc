@@ -3,22 +3,33 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 /// Service centralisé pour le suivi analytique Firebase et les événements personnalisés.
 class AnalyticsService {
-  final FirebaseAnalytics _analytics;
+  final FirebaseAnalytics? analytics;
+  final bool isAvailable;
 
-  AnalyticsService({FirebaseAnalytics? analytics})
-      : _analytics = analytics ?? FirebaseAnalytics.instance;
+  AnalyticsService({
+    this.analytics,
+    this.isAvailable = true,
+  });
 
-  /// Retourne l'observateur pour GoRouter et le Navigator.
-  FirebaseAnalyticsObserver get observer =>
-      FirebaseAnalyticsObserver(analytics: _analytics);
+  /// Retourne l'observateur pour GoRouter et le Navigator de manière sécurisée.
+  FirebaseAnalyticsObserver? get observer {
+    if (!isAvailable || analytics == null) return null;
+    try {
+      return FirebaseAnalyticsObserver(analytics: analytics!);
+    } catch (e) {
+      dev.log('Impossible d’initialiser FirebaseAnalyticsObserver: $e', name: 'ANALYTICS_SERVICE');
+      return null;
+    }
+  }
 
   /// Enregistre un événement personnalisé.
   Future<void> logEvent({
     required String name,
     Map<String, Object>? parameters,
   }) async {
+    if (!isAvailable || analytics == null) return;
     try {
-      await _analytics.logEvent(
+      await analytics!.logEvent(
         name: name,
         parameters: parameters,
       );
@@ -41,8 +52,9 @@ class AnalyticsService {
     required String screenName,
     String? screenClass,
   }) async {
+    if (!isAvailable || analytics == null) return;
     try {
-      await _analytics.logScreenView(
+      await analytics!.logScreenView(
         screenName: screenName,
         screenClass: screenClass,
       );
@@ -62,8 +74,9 @@ class AnalyticsService {
 
   /// Associe l'identifiant de l'utilisateur connecté aux logs analytiques.
   Future<void> setUserId(String? userId) async {
+    if (!isAvailable || analytics == null) return;
     try {
-      await _analytics.setUserId(id: userId);
+      await analytics!.setUserId(id: userId);
       dev.log('User ID Analytics défini: $userId', name: 'ANALYTICS_SERVICE');
     } catch (e, stackTrace) {
       dev.log(
@@ -80,8 +93,9 @@ class AnalyticsService {
     required String name,
     required String? value,
   }) async {
+    if (!isAvailable || analytics == null) return;
     try {
-      await _analytics.setUserProperty(name: name, value: value);
+      await analytics!.setUserProperty(name: name, value: value);
       dev.log(
         'Propriété utilisateur définie: $name = $value',
         name: 'ANALYTICS_SERVICE',
@@ -98,8 +112,9 @@ class AnalyticsService {
 
   /// Enregistre la connexion d'un apprenant.
   Future<void> logLogin({String loginMethod = 'google'}) async {
+    if (!isAvailable || analytics == null) return;
     try {
-      await _analytics.logLogin(loginMethod: loginMethod);
+      await analytics!.logLogin(loginMethod: loginMethod);
       dev.log(
         'Connexion consignée via $loginMethod',
         name: 'ANALYTICS_SERVICE',

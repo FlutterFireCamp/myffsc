@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../theme/theme.dart';
+import 'app_text_field.dart';
 
 class AppDropdownField extends StatelessWidget {
   final String? label;
@@ -225,45 +226,22 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
               ),
               SizedBox(height: 1.h),
 
-              // Optional Search Field
+              // Optional Search Field with AppTextField
               if (isSearchable) ...[
-                TextField(
+                AppTextField(
                   controller: _searchController,
                   onChanged: _filter,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textPrimary,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: "Rechercher...",
-                    hintStyle: AppTextStyles.bodyMedium.copyWith(
+                  hintText: "Rechercher...",
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.all(3.w),
+                    child: AppIcons.search(
+                      size: 18,
                       color: AppColors.textMuted,
                     ),
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.all(3.w),
-                      child: AppIcons.search(
-                        size: 18,
-                        color: AppColors.textMuted,
-                      ),
-                    ),
-                    filled: true,
-                    fillColor: AppColors.card,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 3.w,
-                      vertical: 1.2.h,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: AppRadius.circular12,
-                      borderSide: const BorderSide(
-                        color: AppColors.borderSubtle,
-                      ),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderRadius: AppRadius.circular12,
-                      borderSide: BorderSide(
-                        color: AppColors.skyBlue,
-                        width: 1.5,
-                      ),
-                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 3.w,
+                    vertical: 1.2.h,
                   ),
                 ),
                 SizedBox(height: 1.5.h),

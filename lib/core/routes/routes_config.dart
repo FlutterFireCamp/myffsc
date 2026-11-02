@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer' as dev;
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -49,12 +48,10 @@ class RoutesConfig {
     initialLocation: RoutePaths.checking,
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
     observers: [
-      if (analyticsService != null)
-        analyticsService!.observer
-      else if (sl.isRegistered<AnalyticsService>())
-        sl<AnalyticsService>().observer
-      else
-        FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+      if (analyticsService?.observer != null)
+        analyticsService!.observer!
+      else if (sl.isRegistered<AnalyticsService>() && sl<AnalyticsService>().observer != null)
+        sl<AnalyticsService>().observer!,
     ],
     redirect: (BuildContext context, GoRouterState state) {
       final authState = authBloc.state;

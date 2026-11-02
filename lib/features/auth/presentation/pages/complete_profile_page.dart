@@ -182,21 +182,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         ),
                         SizedBox(height: 1.5.h),
 
-                        Text(
-                          "Nom complet (Nom & Prénom) *",
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        SizedBox(height: 0.8.h),
-                        TextFormField(
+                        AppTextField(
+                          label: "Nom complet (Nom & Prénom) *",
                           controller: _nameController,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: "Ex: Georges Byona",
-                          ),
+                          hintText: "Ex: Georges Byona",
                           validator: (val) =>
                               (val == null || val.trim().isEmpty)
                               ? "Veuillez entrer votre nom complet."
@@ -204,21 +193,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         ),
                         SizedBox(height: 2.h),
 
-                        Text(
-                          "Nom d'utilisateur Discord *",
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        SizedBox(height: 0.8.h),
-                        TextFormField(
+                        AppTextField(
+                          label: "Nom d'utilisateur Discord *",
                           controller: _discordController,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: "Ex: georges_dev",
-                          ),
+                          hintText: "Ex: georges_dev",
                           validator: (val) =>
                               (val == null || val.trim().isEmpty)
                               ? "Veuillez entrer votre pseudo Discord."
@@ -253,21 +231,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         ),
                         SizedBox(height: 2.h),
 
-                        Text(
-                          "Ville de résidence (Optionnel)",
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                        SizedBox(height: 0.8.h),
-                        TextFormField(
+                        AppTextField(
+                          label: "Ville de résidence (Optionnel)",
                           controller: _townController,
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.textPrimary,
-                          ),
-                          decoration: const InputDecoration(
-                            hintText: "Ex: Goma, Abidjan, Yaoundé...",
-                          ),
+                          hintText: "Ex: Goma, Abidjan, Yaoundé...",
                         ),
                         SizedBox(height: 2.h),
 

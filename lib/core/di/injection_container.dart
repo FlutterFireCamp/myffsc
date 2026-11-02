@@ -48,26 +48,42 @@ import '../../features/tests/presentation/bloc/test_bloc.dart';
 
 final sl = GetIt.instance;
 
-Future<void> initInjector() async {
+Future<void> initInjector({bool isAnalyticsSupported = true}) async {
   dev.log('Initializing Dependency Injection Container...', name: 'DI_CONTAINER');
 
   // External & Cache Configuration
-  sl.registerLazySingleton<FirebaseAnalytics>(() => FirebaseAnalytics.instance);
+  if (isAnalyticsSupported) {
+    try {
+      sl.registerLazySingleton<FirebaseAnalytics>(() => FirebaseAnalytics.instance);
+    } catch (e) {
+      dev.log('FirebaseAnalytics registration skipped: $e', name: 'DI_CONTAINER');
+    }
+  }
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn.instance);
   sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
   sl.registerLazySingleton<FlutterLocalNotificationsPlugin>(() => FlutterLocalNotificationsPlugin());
   
-  final firestore = FirebaseFirestore.instance;
-  firestore.settings = const Settings(
-    persistenceEnabled: true,
-    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-  );
-  sl.registerLazySingleton<FirebaseFirestore>(() => firestore);
+  try {
+    final firestore = FirebaseFirestore.instance;
+    firestore.settings = const Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    );
+    sl.registerLazySingleton<FirebaseFirestore>(() => firestore);
+  } catch (e) {
+    dev.log('Firestore settings assignment notice: $e', name: 'DI_CONTAINER');
+    sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+  }
 
   // Core Services
   sl.registerLazySingleton<AnalyticsService>(
-    () => AnalyticsService(analytics: sl()),
+    () => AnalyticsService(
+      analytics: (isAnalyticsSupported && sl.isRegistered<FirebaseAnalytics>())
+          ? sl<FirebaseAnalytics>()
+          : null,
+      isAvailable: isAnalyticsSupported,
+    ),
   );
   sl.registerLazySingleton<NotificationService>(
     () => NotificationService(

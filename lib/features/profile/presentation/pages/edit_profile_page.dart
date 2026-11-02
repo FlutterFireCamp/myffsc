@@ -199,21 +199,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   SizedBox(height: 1.5.h),
 
                   // Nom Complet
-                  Text(
-                    "Nom complet *",
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
+                  AppTextField(
+                    label: "Nom complet *",
                     controller: _nameController,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "Votre nom complet",
-                    ),
+                    hintText: "Votre nom complet",
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
                         return "Le nom complet est obligatoire";
@@ -224,19 +213,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   SizedBox(height: 1.5.h),
 
                   // Pseudo Discord
-                  Text(
-                    "Pseudo Discord *",
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
+                  AppTextField(
+                    label: "Pseudo Discord *",
                     controller: _discordController,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                    decoration: const InputDecoration(hintText: "ex: username"),
+                    hintText: "ex: username",
                     validator: (val) {
                       if (val == null || val.trim().isEmpty) {
                         return "Le pseudo Discord est obligatoire";
@@ -288,21 +268,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   SizedBox(height: 1.5.h),
 
                   // Ville
-                  Text(
-                    "Ville",
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
+                  AppTextField(
+                    label: "Ville",
                     controller: _townController,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "ex: Goma, Kinshasa, Paris...",
-                    ),
+                    hintText: "ex: Goma, Kinshasa, Paris...",
                   ),
                   SizedBox(height: 1.5.h),
 
@@ -331,78 +300,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   SizedBox(height: 1.5.h),
 
                   // GitHub
-                  Text(
-                    "Profil GitHub",
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
+                  AppTextField(
+                    label: "Profil GitHub",
                     controller: _githubController,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "ex: https://github.com/votre_profil",
-                    ),
+                    hintText: "ex: https://github.com/votre_profil",
                   ),
                   SizedBox(height: 1.5.h),
 
                   // LinkedIn
-                  Text(
-                    "Profil LinkedIn",
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
+                  AppTextField(
+                    label: "Profil LinkedIn",
                     controller: _linkedinController,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "ex: https://linkedin.com/in/votre_profil",
-                    ),
+                    hintText: "ex: https://linkedin.com/in/votre_profil",
                   ),
                   SizedBox(height: 1.5.h),
 
                   // X / Twitter
-                  Text(
-                    "Profil X (Twitter)",
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
+                  AppTextField(
+                    label: "Profil X (Twitter)",
                     controller: _xController,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "ex: https://x.com/votre_profil",
-                    ),
+                    hintText: "ex: https://x.com/votre_profil",
                   ),
                   SizedBox(height: 1.5.h),
 
                   // Portfolio
-                  Text(
-                    "Portfolio / Site Web",
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                  SizedBox(height: 0.8.h),
-                  TextFormField(
+                  AppTextField(
+                    label: "Portfolio / Site Web",
                     controller: _portfolioController,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
-                    decoration: const InputDecoration(
-                      hintText: "ex: https://monsite.dev",
-                    ),
+                    hintText: "ex: https://monsite.dev",
                   ),
                   SizedBox(height: 4.h),
                 ],

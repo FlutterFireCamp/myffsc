@@ -18,7 +18,17 @@ void main() {
     test('returns a valid FirebaseAnalyticsObserver', () {
       final observer = service.observer;
       expect(observer, isA<FirebaseAnalyticsObserver>());
-      expect(observer.analytics, equals(mockAnalytics));
+      expect(observer!.analytics, equals(mockAnalytics));
+    });
+
+    test('returns null observer and safely does nothing when isAvailable is false', () async {
+      final disabledService = AnalyticsService(analytics: null, isAvailable: false);
+      expect(disabledService.observer, isNull);
+      await disabledService.logEvent(name: 'custom_event');
+      await disabledService.logScreenView(screenName: 'Screen');
+      await disabledService.setUserId('123');
+      await disabledService.setUserProperty(name: 'a', value: 'b');
+      await disabledService.logLogin();
     });
 
     test('logEvent delegates to FirebaseAnalytics.logEvent', () async {
