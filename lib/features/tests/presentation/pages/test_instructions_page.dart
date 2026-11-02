@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/test_quiz_entity.dart';
@@ -20,6 +21,19 @@ class TestInstructionsPage extends StatelessWidget {
         title: const Text("Consignes & Règlement"),
         backgroundColor: AppColors.background,
         elevation: 0,
+        leading: IconButton(
+          icon: AppIcons.chevronLeft(
+            color: AppColors.textPrimary,
+            size: 24,
+          ),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(RoutePaths.tests);
+            }
+          },
+        ),
       ),
       body: SafeArea(
         child: Column(

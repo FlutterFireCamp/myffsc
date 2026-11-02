@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_dimensions.dart';
+import 'app_icons.dart';
 import 'app_text_styles.dart';
 
 class AppTheme {
@@ -29,6 +30,16 @@ class AppTheme {
         surfaceContainerLowest: AppColors.ultraDark,
         error: AppColors.errorText,
         onError: AppColors.textPrimary,
+      ),
+      actionIconTheme: ActionIconThemeData(
+        backButtonIconBuilder: (BuildContext context) => AppIcons.chevronLeft(
+          size: 24,
+          color: AppColors.textPrimary,
+        ),
+        closeButtonIconBuilder: (BuildContext context) => AppIcons.cancel(
+          size: 24,
+          color: AppColors.textPrimary,
+        ),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,

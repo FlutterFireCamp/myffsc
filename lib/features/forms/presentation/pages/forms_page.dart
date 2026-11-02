@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
 import '../../../auth/domain/entities/user_entity.dart';
@@ -41,7 +42,22 @@ class FormsPage extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.background,
-          appBar: AppBar(title: const Text("Certificat & Clôture")),
+          appBar: AppBar(
+            title: const Text("Certificat & Clôture"),
+            leading: IconButton(
+              icon: AppIcons.chevronLeft(
+                color: AppColors.textPrimary,
+                size: 24,
+              ),
+              onPressed: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go(RoutePaths.dashboard);
+                }
+              },
+            ),
+          ),
           body: ListView(
             primary: false,
             padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
@@ -256,7 +272,22 @@ class FormsPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text("Formulaires Officiels")),
+      appBar: AppBar(
+        title: const Text("Formulaires Officiels"),
+        leading: IconButton(
+          icon: AppIcons.chevronLeft(
+            color: AppColors.textPrimary,
+            size: 24,
+          ),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(RoutePaths.dashboard);
+            }
+          },
+        ),
+      ),
       body: ListView(
         primary: false,
         padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),

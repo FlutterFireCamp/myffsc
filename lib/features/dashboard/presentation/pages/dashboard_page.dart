@@ -34,7 +34,7 @@ class _DashboardPageState extends State<DashboardPage> {
       urlString.startsWith('http') ? urlString : 'https://$urlString',
     );
     try {
-      if (!await launchUrl(url, mode: .externalApplication)) {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
         if (mounted) {
           AppSnackBar.showError(
             context,
@@ -65,6 +65,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
     void handlePrograms() => context.go('/programs');
     void handleAnnouncements() => context.go('/announcements');
+    void handlePodium() => context.go('/podium');
+    void handleProfile() => context.pushNamed(RouteNames.profile);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -95,7 +97,7 @@ class _DashboardPageState extends State<DashboardPage> {
               child: MouseRegion(
                 cursor: SystemMouseCursors.click,
                 child: Column(
-                  crossAxisAlignment: .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "Salut, ${currentUser.firstName} 👋🏾",
@@ -144,13 +146,13 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           SizedBox(height: 2.5.h),
 
-          // 2. Programme du jour ou à venir (BlocBuilder ciblé)
+          // 2. Programme (si existant) & Actions Rapides
           BlocBuilder<DashboardBloc, DashboardState>(
             builder: (context, state) {
               if (state is DashboardLoadingState ||
                   state is DashboardInitialState) {
                 return Column(
-                  crossAxisAlignment: .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AppShimmer(
                       child: AppShimmerBox(
@@ -170,62 +172,130 @@ class _DashboardPageState extends State<DashboardPage> {
                   : null;
 
               return Column(
-                crossAxisAlignment: .start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Section Programme (uniquement si un programme est prévu)
+                  if (todayProgram != null) ...[
+                    Text(
+                      todayProgram.isToday
+                          ? "Programme du jour"
+                          : "Programme à venir",
+                      style: AppTextStyles.titleLarge,
+                    ),
+                    SizedBox(height: 1.h),
+                    TodayProgramCard(
+                      program: todayProgram,
+                      onLaunchUrl: _launchExternalUrl,
+                    ),
+                    SizedBox(height: 2.5.h),
+                  ],
+
+                  // Section Aujourd'hui dans le Camp
                   Text(
-                    (todayProgram != null && todayProgram.isToday)
-                        ? "Programme du jour"
-                        : "Programme à venir",
+                    "Aujourd'hui dans le Camp",
                     style: AppTextStyles.titleLarge,
                   ),
                   SizedBox(height: 1.h),
-                  todayProgram == null
-                      ? const AppEmptyState(
-                          title: "Aucun programme prévu aujourd'hui",
-                          message:
-                              "Consultez l'onglet Programmes pour découvrir les prochaines sessions.",
-                        )
-                      : TodayProgramCard(
-                          program: todayProgram,
-                          onLaunchUrl: _launchExternalUrl,
+
+                  // Si programme disponible -> 2 cartes épurées
+                  if (todayProgram != null)
+                    Row(
+                      spacing: 3.w,
+                      children: [
+                        Expanded(
+                          child: QuickActionCard(
+                            title: "Programmes",
+                            subtitle: "Sessions & ateliers",
+                            icon: AppIcons.programs(
+                              color: AppColors.skyBlue,
+                              size: AppSizes.iconLg,
+                            ),
+                            backgroundColor: AppColors.skyBlue,
+                            onTap: handlePrograms,
+                          ),
                         ),
+                        Expanded(
+                          child: QuickActionCard(
+                            title: "Annonces",
+                            subtitle: "Actualités & infos",
+                            icon: AppIcons.announcements(
+                              color: AppColors.certificateGreen,
+                              size: AppSizes.iconLg,
+                            ),
+                            backgroundColor: AppColors.certificateGreen,
+                            onTap: handleAnnouncements,
+                          ),
+                        ),
+                      ],
+                    )
+                  // Si AUCUN programme -> Grille 2x2 avec les 4 options
+                  else
+                    Column(
+                      children: [
+                        Row(
+                          spacing: 3.w,
+                          children: [
+                            Expanded(
+                              child: QuickActionCard(
+                                title: "Programmes",
+                                subtitle: "Sessions & ateliers",
+                                icon: AppIcons.programs(
+                                  color: AppColors.skyBlue,
+                                  size: AppSizes.iconLg,
+                                ),
+                                backgroundColor: AppColors.skyBlue,
+                                onTap: handlePrograms,
+                              ),
+                            ),
+                            Expanded(
+                              child: QuickActionCard(
+                                title: "Podium",
+                                subtitle: "Classement du camp",
+                                icon: AppIcons.trophy(
+                                  color: AppColors.firebaseYellow,
+                                  size: AppSizes.iconLg,
+                                ),
+                                backgroundColor: AppColors.firebaseYellow,
+                                onTap: handlePodium,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 1.5.h),
+                        Row(
+                          spacing: 3.w,
+                          children: [
+                            Expanded(
+                              child: QuickActionCard(
+                                title: "Annonces",
+                                subtitle: "Actualités & infos",
+                                icon: AppIcons.announcements(
+                                  color: AppColors.certificateGreen,
+                                  size: AppSizes.iconLg,
+                                ),
+                                backgroundColor: AppColors.certificateGreen,
+                                onTap: handleAnnouncements,
+                              ),
+                            ),
+                            Expanded(
+                              child: QuickActionCard(
+                                title: "Historique",
+                                subtitle: "Profil & soumissions",
+                                icon: AppIcons.time(
+                                  color: AppColors.purpleConference,
+                                  size: AppSizes.iconLg,
+                                ),
+                                backgroundColor: AppColors.purpleConference,
+                                onTap: handleProfile,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                 ],
               );
             },
-          ),
-          SizedBox(height: 2.5.h),
-
-          // 3. Quick Actions Header & 2 Cards (Programmes & Annonces)
-          Text("Aujourd'hui dans le Camp", style: AppTextStyles.titleLarge),
-          SizedBox(height: 1.h),
-          Row(
-            spacing: 3.w,
-            children: [
-              Expanded(
-                child: QuickActionCard(
-                  title: "Programmes",
-                  subtitle: "Agenda complet",
-                  icon: AppIcons.programs(
-                    color: AppColors.skyBlue,
-                    size: AppSizes.iconLg,
-                  ),
-                  backgroundColor: AppColors.skyBlue,
-                  onTap: handlePrograms,
-                ),
-              ),
-              Expanded(
-                child: QuickActionCard(
-                  title: "Annonces",
-                  subtitle: "Fil d'actualité",
-                  icon: AppIcons.announcements(
-                    color: AppColors.skyBlue,
-                    size: AppSizes.iconLg,
-                  ),
-                  backgroundColor: AppColors.skyBlue,
-                  onTap: handleAnnouncements,
-                ),
-              ),
-            ],
           ),
         ],
       ),

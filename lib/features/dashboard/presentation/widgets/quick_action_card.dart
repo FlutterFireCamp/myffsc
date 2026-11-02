@@ -24,7 +24,7 @@ class QuickActionCard extends StatelessWidget {
       onTap: onTap,
       borderRadius: AppRadius.circular16,
       child: Container(
-        padding: EdgeInsets.all(4.w),
+        padding: EdgeInsets.all(3.5.w),
         decoration: BoxDecoration(
           color: AppColors.card,
           borderRadius: AppRadius.circular16,
@@ -32,23 +32,36 @@ class QuickActionCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: .start,
+          mainAxisSize: MainAxisSize.min,
           spacing: 0.8.h,
           children: [
             Container(
-              padding: EdgeInsets.all(2.5.w),
+              padding: EdgeInsets.all(2.w),
               decoration: BoxDecoration(
                 color: backgroundColor.withValues(alpha: 0.15),
                 borderRadius: AppRadius.circular12,
+                border: Border.all(
+                  color: backgroundColor.withValues(alpha: 0.3),
+                  width: 1,
+                ),
               ),
               child: icon,
             ),
             Text(
               title,
-              style: AppTextStyles.titleMedium,
+              style: AppTextStyles.titleMedium.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             Text(
               subtitle,
-              style: AppTextStyles.bodySmall,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

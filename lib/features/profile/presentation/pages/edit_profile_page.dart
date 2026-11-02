@@ -154,6 +154,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
             title: const Text("Éditer mon profil"),
             backgroundColor: AppColors.background,
             elevation: 0,
+            leading: IconButton(
+              icon: AppIcons.chevronLeft(
+                color: AppColors.textPrimary,
+                size: 24,
+              ),
+              onPressed: () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go(RoutePaths.profile);
+                }
+              },
+            ),
             actions: [
               TextButton(
                 onPressed: isSubmitting ? null : _submitChanges,
