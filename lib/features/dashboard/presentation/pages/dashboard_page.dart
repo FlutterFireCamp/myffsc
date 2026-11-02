@@ -74,20 +74,37 @@ class _DashboardPageState extends State<DashboardPage> {
         title: Row(
           spacing: 3.w,
           children: [
-            AppAvatar(
-              imageUrl: currentUser.photoUrl,
-              radius: 20,
-              fallbackInitial: currentUser.firstName,
-            ),
-            Column(
-              crossAxisAlignment: .start,
-              children: [
-                Text(
-                  "Salut, ${currentUser.firstName} 👋🏾",
-                  style: AppTextStyles.h3,
+            GestureDetector(
+              onTap: () => context.pushNamed(RouteNames.profile),
+              behavior: HitTestBehavior.opaque,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Tooltip(
+                  message: "Mon profil",
+                  child: AppAvatar(
+                    imageUrl: currentUser.photoUrl,
+                    radius: 20,
+                    fallbackInitial: currentUser.firstName,
+                  ),
                 ),
-                Text("Apprenant FFSC 💙☀️", style: AppTextStyles.bodySmall),
-              ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () => context.pushNamed(RouteNames.profile),
+              behavior: HitTestBehavior.opaque,
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: Column(
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text(
+                      "Salut, ${currentUser.firstName} 👋🏾",
+                      style: AppTextStyles.h3,
+                    ),
+                    Text("Apprenant FFSC 💙☀️", style: AppTextStyles.bodySmall),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

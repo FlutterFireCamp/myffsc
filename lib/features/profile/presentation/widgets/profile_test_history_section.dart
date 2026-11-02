@@ -70,13 +70,7 @@ class ProfileTestHistorySection extends StatelessWidget {
 
         final allHistory = state.testHistory;
         final totalCount = allHistory.length;
-        // Display at most 2 tests in profile
-        final displayedHistory = allHistory.take(2).toList();
-        final displayedCount = displayedHistory.length;
-
-        final countBadgeText = totalCount > 0
-            ? "($displayedCount/$totalCount)"
-            : "";
+        final countBadgeText = totalCount > 0 ? "($totalCount)" : "";
 
         return Column(
           crossAxisAlignment: .start,
@@ -103,7 +97,7 @@ class ProfileTestHistorySection extends StatelessWidget {
             ),
             SizedBox(height: 1.h),
 
-            if (displayedHistory.isEmpty)
+            if (allHistory.isEmpty)
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.h),
                 decoration: BoxDecoration(
@@ -128,18 +122,22 @@ class ProfileTestHistorySection extends StatelessWidget {
               )
             else
               Expanded(
-                child: ListView.separated(
-                  // Only scrolls when history count is >= 2, otherwise stays static
-                  physics: displayedHistory.length > 1
-                      ? const AlwaysScrollableScrollPhysics(
-                          parent: BouncingScrollPhysics(),
-                        )
-                      : const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.only(bottom: 12.h),
-                  itemCount: displayedHistory.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 1.2.h),
-                  itemBuilder: (context, index) {
-                    final item = displayedHistory[index];
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    // Chaque carte mesure environ 120px avec son séparateur
+                    final approximateContentHeight = allHistory.length * 120.0;
+                    final isHeightExceeded = approximateContentHeight > constraints.maxHeight;
+
+                    return ListView.separated(
+                      // Défilement actif UNIQUEMENT si la hauteur du contenu dépasse l'espace disponible
+                      physics: isHeightExceeded
+                          ? const ClampingScrollPhysics()
+                          : const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.only(bottom: 2.5.h),
+                      itemCount: allHistory.length,
+                      separatorBuilder: (context, index) => SizedBox(height: 1.2.h),
+                      itemBuilder: (context, index) {
+                        final item = allHistory[index];
 
                     // Status: only 'pending' is EN ATTENTE (Yellow), everything else is CORRIGÉ (Green)
                     final rawStatus = item.status.trim().toLowerCase();
@@ -260,6 +258,8 @@ class ProfileTestHistorySection extends StatelessWidget {
                         ],
                       ),
                     );
+                  },
+                );
                   },
                 ),
               ),

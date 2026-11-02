@@ -116,6 +116,12 @@ class AppIcons {
   static Widget refresh03({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedRefresh03, color: color, size: size);
 
+  static Widget arrowLeft({Color color = Colors.white, double size = 24.0}) =>
+      HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01, color: color, size: size);
+
+  static Widget chevronLeft({Color color = Colors.white, double size = 24.0}) =>
+      arrowLeft(color: color, size: size);
+
   static Widget arrowRight({Color color = Colors.white, double size = 24.0}) =>
       HugeIcon(icon: HugeIcons.strokeRoundedArrowRight01, color: color, size: size);
 

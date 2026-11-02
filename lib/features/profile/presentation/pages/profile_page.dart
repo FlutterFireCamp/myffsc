@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/core.dart';
@@ -53,6 +54,20 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        leading: IconButton(
+          tooltip: "Retour",
+          icon: AppIcons.chevronLeft(
+            color: AppColors.textPrimary,
+            size: AppSizes.iconMd,
+          ),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go(RoutePaths.dashboard);
+            }
+          },
+        ),
         title: const Text("Profil"),
         backgroundColor: AppColors.background,
         elevation: 0,
@@ -78,23 +93,26 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(width: 2.w),
         ],
       ),
-      body: Padding(
-        padding: .symmetric(horizontal: 5.w),
-        child: Column(
-          spacing: 1.5.h,
-          children: [
-            // 1. User Header Card (Fixed - Not scrollable)
-            ProfileHeaderCard(user: currentUser),
+      body: SafeArea(
+        bottom: true,
+        child: Padding(
+          padding: .symmetric(horizontal: 5.w),
+          child: Column(
+            spacing: 1.5.h,
+            children: [
+              // 1. User Header Card (Fixed - Not scrollable)
+              ProfileHeaderCard(user: currentUser),
 
-            // 2. Social Links Bar (Fixed - Not scrollable)
-            ProfileSocialLinksBar(user: currentUser),
+              // 2. Social Links Bar (Fixed - Not scrollable)
+              ProfileSocialLinksBar(user: currentUser),
 
-            // 3. Metrics Summary Card (Fixed - Not scrollable)
-            ProfileMetricsCard(user: currentUser),
-            SizedBox(height: 0.5.h),
-            // 4. Test History Section (Header fixed, only boxes scroll when >= 2)
-            Expanded(child: ProfileTestHistorySection(userId: currentUser.id)),
-          ],
+              // 3. Metrics Summary Card (Fixed - Not scrollable)
+              ProfileMetricsCard(user: currentUser),
+              SizedBox(height: 0.5.h),
+              // 4. Test History Section (Scrollable only if content height exceeds container)
+              Expanded(child: ProfileTestHistorySection(userId: currentUser.id)),
+            ],
+          ),
         ),
       ),
     );

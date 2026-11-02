@@ -153,6 +153,11 @@ class RoutesConfig {
         builder: (context, state) => const FormsPage(),
       ),
       GoRoute(
+        name: RouteNames.profile,
+        path: RoutePaths.profile,
+        builder: (context, state) => const ProfilePage(),
+      ),
+      GoRoute(
         name: RouteNames.editProfile,
         path: RoutePaths.editProfile,
         builder: (context, state) {
@@ -214,15 +219,6 @@ class RoutesConfig {
                 name: RouteNames.podium,
                 path: RoutePaths.podium,
                 builder: (context, state) => const PodiumPage(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                name: RouteNames.profile,
-                path: RoutePaths.profile,
-                builder: (context, state) => const ProfilePage(),
               ),
             ],
           ),
