@@ -16,7 +16,7 @@ class ProgramFilterTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: .horizontal,
+      scrollDirection: Axis.horizontal,
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
       child: Row(
         spacing: 2.w,
@@ -31,30 +31,35 @@ class ProgramFilterTabs extends StatelessWidget {
             label: "Sessions",
             isSelected: selectedTypeFilter == ProgramType.session,
             badgeColor: ProgramType.session.badgeColor,
+            iconBuilder: (color) => AppIcons.video(color: color, size: 16),
             onTap: () => onSelectFilter(ProgramType.session),
           ),
           _buildFilterTab(
             label: "Workshops",
             isSelected: selectedTypeFilter == ProgramType.workshop,
             badgeColor: ProgramType.workshop.badgeColor,
+            iconBuilder: (color) => AppIcons.star(color: color, size: 16),
             onTap: () => onSelectFilter(ProgramType.workshop),
           ),
           _buildFilterTab(
             label: "Conférences",
             isSelected: selectedTypeFilter == ProgramType.conference,
             badgeColor: ProgramType.conference.badgeColor,
+            iconBuilder: (color) => AppIcons.userGroup(color: color, size: 16),
             onTap: () => onSelectFilter(ProgramType.conference),
           ),
           _buildFilterTab(
             label: "Groupes d'étude",
             isSelected: selectedTypeFilter == ProgramType.studyGroup,
             badgeColor: ProgramType.studyGroup.badgeColor,
+            iconBuilder: (color) => AppIcons.userGroup(color: color, size: 16),
             onTap: () => onSelectFilter(ProgramType.studyGroup),
           ),
           _buildFilterTab(
             label: "Évaluation",
             isSelected: selectedTypeFilter == ProgramType.test,
             badgeColor: ProgramType.test.badgeColor,
+            iconBuilder: (color) => AppIcons.tests(color: color, size: 16),
             onTap: () => onSelectFilter(ProgramType.test),
           ),
         ],
@@ -66,9 +71,13 @@ class ProgramFilterTabs extends StatelessWidget {
     required String label,
     required bool isSelected,
     required Color badgeColor,
+    Widget Function(Color color)? iconBuilder,
     required VoidCallback onTap,
   }) {
     final textColor =
+        isSelected ? AppColors.activeTabText : AppColors.textSecondary;
+
+    final iconColor =
         isSelected ? AppColors.activeTabText : AppColors.textSecondary;
 
     return InkWell(
@@ -87,12 +96,19 @@ class ProgramFilterTabs extends StatelessWidget {
             width: isSelected ? 1.5 : 1.0,
           ),
         ),
-        child: Text(
-          label,
-          style: AppTextStyles.tabLabel.copyWith(
-            color: textColor,
-            fontWeight: isSelected ? .bold : .w500,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 1.5.w,
+          children: [
+            if (iconBuilder != null) iconBuilder(iconColor),
+            Text(
+              label,
+              style: AppTextStyles.tabLabel.copyWith(
+                color: textColor,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       ),
     );
