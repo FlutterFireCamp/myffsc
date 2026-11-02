@@ -305,6 +305,34 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         dev.log('Erreur lors du déclenchement syncUserFcmToken', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
       }
 
+      // Résolution du certificat dans la collection 'certificates' si absent du profil
+      if (data['certificateCode'] == null && data['certificateId'] == null) {
+        try {
+          var certSnap = await firestore
+              .collection('certificates')
+              .where('recipientUid', isEqualTo: docId)
+              .limit(1)
+              .get();
+
+          if (certSnap.docs.isEmpty && email != null && email.isNotEmpty) {
+            certSnap = await firestore
+                .collection('certificates')
+                .where('recipientEmail', isEqualTo: email.trim().toLowerCase())
+                .limit(1)
+                .get();
+          }
+
+          if (certSnap.docs.isNotEmpty) {
+            final certData = certSnap.docs.first.data();
+            final certCode = certData['certificateId']?.toString() ?? certSnap.docs.first.id;
+            data['certificateCode'] = certCode;
+            dev.log('Certificat trouvé pour $email dans "certificates": $certCode', name: 'AUTH_REMOTE_DS');
+          }
+        } catch (e) {
+          dev.log('Notice: résolution du certificat: $e', name: 'AUTH_REMOTE_DS');
+        }
+      }
+
       return UserModel.fromMap(data, docId);
     }
 

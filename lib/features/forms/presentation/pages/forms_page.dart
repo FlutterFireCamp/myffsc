@@ -32,208 +32,220 @@ class FormsPage extends StatelessWidget {
   }
 
   Widget _buildCampEndedView(BuildContext context, UserEntity? user) {
-    final hasCertificate = user?.hasCertificate == true;
-    final certCode = user?.certificateCode;
+    return FutureBuilder<String?>(
+      future: FormsModalHelper.resolveUserCertificateCode(user),
+      initialData: user?.certificateCode,
+      builder: (context, snapshot) {
+        final certCode = snapshot.data ?? user?.certificateCode;
+        final hasCertificate = certCode != null && certCode.trim().isNotEmpty;
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text("Certificat & Clôture")),
-      body: ListView(
-        primary: false,
-        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-        children: [
-          // Banner Fin de camp
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(5.w),
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: AppRadius.circular20,
-              border: Border.all(
-                color: AppColors.certificateGreen.withValues(alpha: 0.3),
-              ),
-            ),
-            child: Row(
-              spacing: 4.w,
-              children: [
-                Container(
-                  padding: EdgeInsets.all(3.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.certificateGreen.withValues(alpha: 0.15),
-                    shape: BoxShape.circle,
-                  ),
-                  child: AppIcons.badge(
-                    color: AppColors.certificateGreen,
-                    size: AppSizes.iconXl,
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(title: const Text("Certificat & Clôture")),
+          body: ListView(
+            primary: false,
+            padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+            children: [
+              // Banner Fin de camp
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(5.w),
+                decoration: BoxDecoration(
+                  color: AppColors.card,
+                  borderRadius: AppRadius.circular20,
+                  border: Border.all(
+                    color: AppColors.skyBlue.withValues(alpha: 0.3),
                   ),
                 ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 0.5.h,
-                    children: [
-                      Text(
-                        "Camp Officiellement Terminé 🎓",
-                        style: AppTextStyles.h3.copyWith(
-                          color: AppColors.textPrimary,
-                        ),
+                child: Row(
+                  spacing: 4.w,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(3.w),
+                      decoration: BoxDecoration(
+                        color: AppColors.skyBlue.withValues(alpha: 0.15),
+                        shape: BoxShape.circle,
                       ),
-                      Text(
-                        "Toutes les sessions et épreuves du Flutter Firebase Summer Camp sont terminées. Les formulaires de soumission sont désormais clos.",
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                      child: AppIcons.trophy(
+                        color: AppColors.skyBlue,
+                        size: AppSizes.iconXl,
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 3.h),
-
-          Text(
-            "Vérification d'Accréditation",
-            style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
-          ),
-          SizedBox(height: 0.8.h),
-          Text(
-            hasCertificate
-                ? "Votre certificat d'accomplissement a été généré et validé par l'équipe pédagogique."
-                : "Consultez le portail officiel de vérification des certificats FFSC.",
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
-          ),
-          SizedBox(height: 2.5.h),
-
-          // Certificate Verification Card
-          Container(
-            decoration: BoxDecoration(
-              color: AppColors.card,
-              borderRadius: AppRadius.circular16,
-              border: Border.all(
-                color: AppColors.certificateGreen.withValues(alpha: 0.6),
-                width: 1.5,
-              ),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              borderRadius: AppRadius.circular16,
-              child: InkWell(
-                onTap: () => FormsModalHelper.openCertificateVerification(
-                  context,
-                  user: user,
-                ),
-                borderRadius: AppRadius.circular16,
-                child: Padding(
-                  padding: EdgeInsets.all(5.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        spacing: 3.5.w,
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 0.5.h,
                         children: [
-                          Container(
-                            padding: EdgeInsets.all(3.w),
-                            decoration: BoxDecoration(
-                              color: AppColors.certificateGreen
-                                  .withValues(alpha: 0.15),
-                              borderRadius: AppRadius.circular12,
-                            ),
-                            child: AppIcons.badge(
-                              color: AppColors.certificateGreen,
-                              size: 28,
+                          Text(
+                            "Camp Officiellement Terminé 🎓",
+                            style: AppTextStyles.h3.copyWith(
+                              color: AppColors.textPrimary,
                             ),
                           ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 0.5.h,
-                              children: [
-                                Row(
+                          Text(
+                            "Toutes les sessions et épreuves du Flutter Firebase Summer Camp sont terminées. Les formulaires de soumission sont désormais clos.",
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 3.h),
+
+              Text(
+                "Vérification d'Accréditation",
+                style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+              ),
+              SizedBox(height: 0.8.h),
+              Text(
+                hasCertificate
+                    ? "Votre certificat d'accomplissement a été généré et validé par l'équipe pédagogique."
+                    : "Consultez le portail officiel de vérification des certificats FFSC.",
+                style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
+              ),
+              SizedBox(height: 2.5.h),
+
+              // Certificate Verification Card
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.card,
+                  borderRadius: AppRadius.circular16,
+                  border: Border.all(
+                    color: hasCertificate
+                        ? AppColors.skyBlue
+                        : AppColors.borderSubtle,
+                    width: hasCertificate ? 1.5 : 1,
+                  ),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  borderRadius: AppRadius.circular16,
+                  child: InkWell(
+                    onTap: () => FormsModalHelper.openCertificateVerification(
+                      context,
+                      user: user,
+                      certificateCode: certCode,
+                    ),
+                    borderRadius: AppRadius.circular16,
+                    child: Padding(
+                      padding: EdgeInsets.all(5.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            spacing: 3.5.w,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(3.w),
+                                decoration: BoxDecoration(
+                                  color: AppColors.skyBlue.withValues(alpha: 0.15),
+                                  borderRadius: AppRadius.circular12,
+                                ),
+                                child: AppIcons.trophy(
+                                  color: AppColors.skyBlue,
+                                  size: 28,
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  spacing: 0.5.h,
                                   children: [
-                                    Expanded(
-                                      child: Text(
-                                        hasCertificate
-                                            ? "Mon Certificat Officiel"
-                                            : "Registre des Certificats",
-                                        style: AppTextStyles.titleMedium
-                                            .copyWith(
-                                          color: AppColors.textPrimary,
-                                          fontWeight: FontWeight.bold,
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            hasCertificate
+                                                ? "Mon Certificat Officiel"
+                                                : "Registre des Certificats",
+                                            style: AppTextStyles.titleMedium.copyWith(
+                                              color: AppColors.textPrimary,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 2.w,
+                                            vertical: 0.4.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: (hasCertificate
+                                                    ? AppColors.skyBlue
+                                                    : AppColors.cardHover)
+                                                .withValues(alpha: 0.15),
+                                            borderRadius: AppRadius.circular8,
+                                            border: Border.all(
+                                              color: (hasCertificate
+                                                      ? AppColors.skyBlue
+                                                      : AppColors.borderSubtle)
+                                                  .withValues(alpha: 0.3),
+                                            ),
+                                          ),
+                                          child: Text(
+                                            hasCertificate ? "Validé" : "Vérification",
+                                            style: AppTextStyles.badgeSmall.copyWith(
+                                              color: hasCertificate
+                                                  ? AppColors.skyBlue
+                                                  : AppColors.textSecondary,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 2.w,
-                                        vertical: 0.4.h,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.certificateGreen
-                                            .withValues(alpha: 0.15),
-                                        borderRadius: AppRadius.circular8,
-                                        border: Border.all(
-                                          color: AppColors.certificateGreen
-                                              .withValues(alpha: 0.3),
-                                        ),
-                                      ),
-                                      child: Text(
-                                        hasCertificate ? "Validé" : "Vérification",
-                                        style:
-                                            AppTextStyles.badgeSmall.copyWith(
-                                          color: AppColors.certificateGreen,
-                                        ),
+                                    Text(
+                                      hasCertificate
+                                          ? "Code : ${certCode.trim()}"
+                                          : "Vérifier l'authenticité d'un certificat d'apprenant",
+                                      style: AppTextStyles.bodySmall.copyWith(
+                                        color: hasCertificate
+                                            ? AppColors.skyBlue
+                                            : AppColors.textSecondary,
+                                        fontWeight: hasCertificate
+                                            ? FontWeight.w600
+                                            : FontWeight.normal,
                                       ),
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  hasCertificate
-                                      ? "Code : ${certCode?.trim()}"
-                                      : "Vérifier l'authenticité d'un certificat d'apprenant",
-                                  style: AppTextStyles.bodySmall.copyWith(
-                                    color: hasCertificate
-                                        ? AppColors.skyBlue
-                                        : AppColors.textSecondary,
-                                    fontWeight: hasCertificate
-                                        ? FontWeight.w600
-                                        : FontWeight.normal,
-                                  ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 2.h),
+                          const Divider(color: AppColors.borderSubtle, height: 1),
+                          SizedBox(height: 1.5.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                hasCertificate
+                                    ? "Ouvrir et vérifier mon certificat"
+                                    : "Accéder à la plateforme de vérification",
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: AppColors.skyBlue,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                              ],
-                            ),
+                              ),
+                              AppIcons.link(
+                                color: AppColors.skyBlue,
+                                size: 18,
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 2.h),
-                      const Divider(color: AppColors.borderSubtle, height: 1),
-                      SizedBox(height: 1.5.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            hasCertificate
-                                ? "Ouvrir et vérifier mon certificat"
-                                : "Accéder à la plateforme de vérification",
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.certificateGreen,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          AppIcons.link(
-                            color: AppColors.certificateGreen,
-                            size: 18,
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

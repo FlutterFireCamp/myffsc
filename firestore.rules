@@ -70,5 +70,11 @@ service cloud.firestore {
     match /config/{configDoc} {
       allow read, write: if isStaff();
     }
+
+    // 6. Collection CERTIFICATES : Certificats d'accomplissement délivrés aux participants
+    match /certificates/{certificateId} {
+      allow read: if isAuthenticated();
+      allow write: if isStaff();
+    }
   }
 }

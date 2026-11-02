@@ -30,7 +30,7 @@ class MainNavigationScaffold extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(1),
         decoration: BoxDecoration(
-          shape: .circle,
+          shape: BoxShape.circle,
           border: Border.all(
             color: isActive
                 ? AppColors.skyBlue
@@ -78,14 +78,14 @@ class MainNavigationScaffold extends StatelessWidget {
                   user: currentUser,
                 );
               },
-              backgroundColor: AppColors.certificateGreen,
+              backgroundColor: AppColors.skyBlue,
               foregroundColor: Colors.white,
               elevation: 4,
               shape: const CircleBorder(),
               tooltip: currentUser?.hasCertificate == true
                   ? "Vérifier mon certificat"
                   : "Portail de vérification",
-              child: AppIcons.badge(color: Colors.white, size: AppSizes.iconLg),
+              child: AppIcons.trophy(color: Colors.white, size: AppSizes.iconLg),
             );
           }
 
@@ -129,7 +129,7 @@ class MainNavigationScaffold extends StatelessWidget {
           );
         },
       ),
-      floatingActionButtonLocation: .endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           color: AppColors.ultraDark,
@@ -146,7 +146,7 @@ class MainNavigationScaffold extends StatelessWidget {
           child: BottomNavigationBar(
             currentIndex: navigationShell.currentIndex,
             onTap: _onTap,
-            type: .fixed,
+            type: BottomNavigationBarType.fixed,
             backgroundColor: AppColors.ultraDark,
             selectedItemColor: AppColors.skyBlue,
             unselectedItemColor: AppColors.textMuted,
