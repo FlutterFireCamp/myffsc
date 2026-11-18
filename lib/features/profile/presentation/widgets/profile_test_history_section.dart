@@ -126,7 +126,8 @@ class ProfileTestHistorySection extends StatelessWidget {
                   builder: (context, constraints) {
                     // Chaque carte mesure environ 120px avec son séparateur
                     final approximateContentHeight = allHistory.length * 120.0;
-                    final isHeightExceeded = approximateContentHeight > constraints.maxHeight;
+                    final isHeightExceeded =
+                        approximateContentHeight > constraints.maxHeight;
 
                     return ListView.separated(
                       // Défilement actif UNIQUEMENT si la hauteur du contenu dépasse l'espace disponible
@@ -135,131 +136,134 @@ class ProfileTestHistorySection extends StatelessWidget {
                           : const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.only(bottom: 2.5.h),
                       itemCount: allHistory.length,
-                      separatorBuilder: (context, index) => SizedBox(height: 1.2.h),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 1.2.h),
                       itemBuilder: (context, index) {
                         final item = allHistory[index];
 
-                    // Status: only 'pending' is EN ATTENTE (Yellow), everything else is CORRIGÉ (Green)
-                    final rawStatus = item.status.trim().toLowerCase();
-                    final isPending = rawStatus == 'pending';
+                        // Status: only 'pending' is EN ATTENTE (Yellow), everything else is CORRIGÉ (Green)
+                        final rawStatus = item.status.trim().toLowerCase();
+                        final isPending = rawStatus == 'pending';
 
-                    final badgeLabel = isPending ? "En Attente" : "Corrigé";
-                    final badgeColor = isPending
-                        ? AppColors.firebaseYellow
-                        : AppColors.correctText;
-                    final badgeBg = isPending
-                        ? AppColors.firebaseYellow.withValues(alpha: 0.15)
-                        : AppColors.successGreen.withValues(alpha: 0.15);
-                    final badgeBorder = isPending
-                        ? AppColors.firebaseYellow.withValues(alpha: 0.4)
-                        : AppColors.successGreen.withValues(alpha: 0.3);
+                        final badgeLabel = isPending ? "En Attente" : "Corrigé";
+                        final badgeColor = isPending
+                            ? AppColors.firebaseYellow
+                            : AppColors.correctText;
+                        final badgeBg = isPending
+                            ? AppColors.firebaseYellow.withValues(alpha: 0.15)
+                            : AppColors.successGreen.withValues(alpha: 0.15);
+                        final badgeBorder = isPending
+                            ? AppColors.firebaseYellow.withValues(alpha: 0.4)
+                            : AppColors.successGreen.withValues(alpha: 0.3);
 
-                    return Container(
-                      padding: EdgeInsets.all(4.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.card,
-                        borderRadius: AppRadius.circular16,
-                        border: Border.all(
-                          color: AppColors.borderSubtle,
-                          width: 1.2,
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: .start,
-                        children: [
-                          // Top Row: Title + Date (Left) & Badge (Right)
-                          Row(
-                            mainAxisAlignment: .spaceBetween,
-                            crossAxisAlignment: .start,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: .start,
-                                  spacing: 0.4.h,
-                                  children: [
-                                    Text(
-                                      item.quizTitle,
-                                      style: AppTextStyles.titleMedium.copyWith(
-                                        color: AppColors.textPrimary,
-                                        fontWeight: .bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Date : ${item.dateStr}",
-                                      style: AppTextStyles.bodySmall.copyWith(
-                                        color: AppColors.textSecondary,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Badge matching Home Session badge size and style
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 2.w,
-                                  vertical: 0.3.h,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: badgeBg,
-                                  borderRadius: AppRadius.circular6,
-                                  border: Border.all(color: badgeBorder),
-                                ),
-                                child: Text(
-                                  badgeLabel,
-                                  style: AppTextStyles.badge.copyWith(
-                                    color: badgeColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          // Divider Line
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 1.2.h),
-                            child: const Divider(
+                        return Container(
+                          padding: EdgeInsets.all(4.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.card,
+                            borderRadius: AppRadius.circular16,
+                            border: Border.all(
                               color: AppColors.borderSubtle,
-                              height: 1,
-                              thickness: 0.8,
+                              width: 1.2,
                             ),
                           ),
-
-                          // Bottom Row: Score (Left) & Voir détails TextButton (Right)
-                          Row(
-                            mainAxisAlignment: .spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: .start,
                             children: [
-                              Text(
-                                "${item.score} / ${item.displayTotalPossibleScore} pts",
-                                style: AppTextStyles.titleMedium.copyWith(
-                                  color: AppColors.skyBlue,
-                                  fontWeight: .bold,
+                              // Top Row: Title + Date (Left) & Badge (Right)
+                              Row(
+                                mainAxisAlignment: .spaceBetween,
+                                crossAxisAlignment: .start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: .start,
+                                      spacing: 0.4.h,
+                                      children: [
+                                        Text(
+                                          item.quizTitle,
+                                          style: AppTextStyles.titleMedium
+                                              .copyWith(
+                                                color: AppColors.textPrimary,
+                                                fontWeight: .bold,
+                                              ),
+                                        ),
+                                        Text(
+                                          "Date : ${item.dateStr}",
+                                          style: AppTextStyles.bodySmall
+                                              .copyWith(
+                                                color: AppColors.textSecondary,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  // Badge matching Home Session badge size and style
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 2.w,
+                                      vertical: 0.3.h,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: badgeBg,
+                                      borderRadius: AppRadius.circular6,
+                                      border: Border.all(color: badgeBorder),
+                                    ),
+                                    child: Text(
+                                      badgeLabel,
+                                      style: AppTextStyles.badge.copyWith(
+                                        color: badgeColor,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              // Divider Line
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 1.2.h),
+                                child: const Divider(
+                                  color: AppColors.borderSubtle,
+                                  height: 1,
+                                  thickness: 0.8,
                                 ),
                               ),
-                              TextButton(
-                                onPressed: () =>
-                                    _handleViewDetails(context, item),
-                                style: TextButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 2.w,
-                                    vertical: 0.5.h,
+
+                              // Bottom Row: Score (Left) & Voir détails TextButton (Right)
+                              Row(
+                                mainAxisAlignment: .spaceBetween,
+                                children: [
+                                  Text(
+                                    "${item.score} / ${item.displayTotalPossibleScore} pts",
+                                    style: AppTextStyles.titleMedium.copyWith(
+                                      color: AppColors.skyBlue,
+                                      fontWeight: .bold,
+                                    ),
                                   ),
-                                  minimumSize: Size.zero,
-                                  tapTargetSize: .shrinkWrap,
-                                ),
-                                child: Text(
-                                  "Voir détails",
-                                  style: AppTextStyles.buttonSmall.copyWith(
-                                    color: AppColors.skyBlue,
+                                  TextButton(
+                                    onPressed: () =>
+                                        _handleViewDetails(context, item),
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 2.w,
+                                        vertical: 0.5.h,
+                                      ),
+                                      minimumSize: Size.zero,
+                                      tapTargetSize: .shrinkWrap,
+                                    ),
+                                    child: Text(
+                                      "Voir détails",
+                                      style: AppTextStyles.buttonSmall.copyWith(
+                                        color: AppColors.skyBlue,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     );
-                  },
-                );
                   },
                 ),
               ),

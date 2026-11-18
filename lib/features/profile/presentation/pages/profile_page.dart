@@ -110,7 +110,9 @@ class _ProfilePageState extends State<ProfilePage> {
               ProfileMetricsCard(user: currentUser),
               SizedBox(height: 0.5.h),
               // 4. Test History Section (Scrollable only if content height exceeds container)
-              Expanded(child: ProfileTestHistorySection(userId: currentUser.id)),
+              Expanded(
+                child: ProfileTestHistorySection(userId: currentUser.id),
+              ),
             ],
           ),
         ),

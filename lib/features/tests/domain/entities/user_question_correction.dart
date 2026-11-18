@@ -30,7 +30,8 @@ class UserQuestionCorrection extends Equatable {
   });
 
   bool get isCorrect => earnedScore >= maxScore && earnedScore > 0;
-  bool get isChoice => type == 'choice' && options != null && options!.isNotEmpty;
+  bool get isChoice =>
+      type == 'choice' && options != null && options!.isNotEmpty;
 
   /// Returns the effective statement to display (statement or title)
   String get displayStatement {
@@ -42,17 +43,17 @@ class UserQuestionCorrection extends Equatable {
 
   @override
   List<Object?> get props => [
-        index,
-        questionId,
-        title,
-        statement,
-        type,
-        studentAnswer,
-        expectedAnswer,
-        earnedScore,
-        maxScore,
-        options,
-        correctAnswers,
-        explanation,
-      ];
+    index,
+    questionId,
+    title,
+    statement,
+    type,
+    studentAnswer,
+    expectedAnswer,
+    earnedScore,
+    maxScore,
+    options,
+    correctAnswers,
+    explanation,
+  ];
 }

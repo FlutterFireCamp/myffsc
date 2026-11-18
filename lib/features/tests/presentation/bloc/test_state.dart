@@ -76,28 +76,29 @@ class TestState extends Equatable {
       isSubmittingResult: isSubmittingResult ?? this.isSubmittingResult,
       submissionSuccess: submissionSuccess ?? this.submissionSuccess,
       errorMessage: errorMessage,
-      totalTimeSpentSeconds: totalTimeSpentSeconds ?? this.totalTimeSpentSeconds,
+      totalTimeSpentSeconds:
+          totalTimeSpentSeconds ?? this.totalTimeSpentSeconds,
     );
   }
 
   @override
   List<Object?> get props => [
-        isLoading,
-        activeQuiz,
-        isSubmittedToday,
-        previousSubmission,
-        isQuizActive,
-        isQuizFinished,
-        currentQuestionIndex,
-        remainingSeconds,
-        bonusTimeBank,
-        userAnswersMap,
-        tabSwitchCount,
-        qcmScore,
-        totalPossibleScore,
-        isSubmittingResult,
-        submissionSuccess,
-        errorMessage,
-        totalTimeSpentSeconds,
-      ];
+    isLoading,
+    activeQuiz,
+    isSubmittedToday,
+    previousSubmission,
+    isQuizActive,
+    isQuizFinished,
+    currentQuestionIndex,
+    remainingSeconds,
+    bonusTimeBank,
+    userAnswersMap,
+    tabSwitchCount,
+    qcmScore,
+    totalPossibleScore,
+    isSubmittingResult,
+    submissionSuccess,
+    errorMessage,
+    totalTimeSpentSeconds,
+  ];
 }

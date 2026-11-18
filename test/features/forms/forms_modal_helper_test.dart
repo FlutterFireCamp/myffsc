@@ -17,7 +17,9 @@ void main() {
         'https://www.flutterfirecamp.dev/verify/',
       );
       expect(
-        FormsModalHelper.getVerificationUrl('https://custom.domain.com/cert/123'),
+        FormsModalHelper.getVerificationUrl(
+          'https://custom.domain.com/cert/123',
+        ),
         'https://custom.domain.com/cert/123',
       );
     });

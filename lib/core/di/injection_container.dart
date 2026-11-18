@@ -49,21 +49,31 @@ import '../../features/tests/presentation/bloc/test_bloc.dart';
 final sl = GetIt.instance;
 
 Future<void> initInjector({bool isAnalyticsSupported = true}) async {
-  dev.log('Initializing Dependency Injection Container...', name: 'DI_CONTAINER');
+  dev.log(
+    'Initializing Dependency Injection Container...',
+    name: 'DI_CONTAINER',
+  );
 
   // External & Cache Configuration
   if (isAnalyticsSupported) {
     try {
-      sl.registerLazySingleton<FirebaseAnalytics>(() => FirebaseAnalytics.instance);
+      sl.registerLazySingleton<FirebaseAnalytics>(
+        () => FirebaseAnalytics.instance,
+      );
     } catch (e) {
-      dev.log('FirebaseAnalytics registration skipped: $e', name: 'DI_CONTAINER');
+      dev.log(
+        'FirebaseAnalytics registration skipped: $e',
+        name: 'DI_CONTAINER',
+      );
     }
   }
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<GoogleSignIn>(() => GoogleSignIn.instance);
   sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
-  sl.registerLazySingleton<FlutterLocalNotificationsPlugin>(() => FlutterLocalNotificationsPlugin());
-  
+  sl.registerLazySingleton<FlutterLocalNotificationsPlugin>(
+    () => FlutterLocalNotificationsPlugin(),
+  );
+
   try {
     final firestore = FirebaseFirestore.instance;
     firestore.settings = const Settings(
@@ -73,7 +83,9 @@ Future<void> initInjector({bool isAnalyticsSupported = true}) async {
     sl.registerLazySingleton<FirebaseFirestore>(() => firestore);
   } catch (e) {
     dev.log('Firestore settings assignment notice: $e', name: 'DI_CONTAINER');
-    sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+    sl.registerLazySingleton<FirebaseFirestore>(
+      () => FirebaseFirestore.instance,
+    );
   }
 
   // Core Services
@@ -173,21 +185,14 @@ Future<void> initInjector({bool isAnalyticsSupported = true}) async {
       getTestCorrectionDetailsUseCase: sl(),
     ),
   );
-  sl.registerFactory(
-    () => ProgramsBloc(getUpcomingProgramsUseCase: sl()),
-  );
-  sl.registerFactory(
-    () => DashboardBloc(getTodayOrNextProgramUseCase: sl()),
-  );
-  sl.registerFactory(
-    () => AnnouncementsBloc(getAnnouncementsUseCase: sl()),
-  );
-  sl.registerFactory(
-    () => PodiumBloc(getLeaderboardUseCase: sl()),
-  );
-  sl.registerFactory(
-    () => TestBloc(firestoreService: sl()),
-  );
+  sl.registerFactory(() => ProgramsBloc(getUpcomingProgramsUseCase: sl()));
+  sl.registerFactory(() => DashboardBloc(getTodayOrNextProgramUseCase: sl()));
+  sl.registerFactory(() => AnnouncementsBloc(getAnnouncementsUseCase: sl()));
+  sl.registerFactory(() => PodiumBloc(getLeaderboardUseCase: sl()));
+  sl.registerFactory(() => TestBloc(firestoreService: sl()));
 
-  dev.log('Dependency Injection Container initialized successfully', name: 'DI_CONTAINER');
+  dev.log(
+    'Dependency Injection Container initialized successfully',
+    name: 'DI_CONTAINER',
+  );
 }

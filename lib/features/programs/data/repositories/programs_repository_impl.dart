@@ -11,9 +11,13 @@ class ProgramsRepositoryImpl implements ProgramsRepository {
   ProgramsRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, List<ProgramItem>>> getUpcomingPrograms({ProgramType? filterType}) async {
+  Future<Either<Failure, List<ProgramItem>>> getUpcomingPrograms({
+    ProgramType? filterType,
+  }) async {
     try {
-      final result = await remoteDataSource.getUpcomingPrograms(filterType: filterType);
+      final result = await remoteDataSource.getUpcomingPrograms(
+        filterType: filterType,
+      );
       return Right(result);
     } catch (e, stackTrace) {
       dev.log(
@@ -22,7 +26,9 @@ class ProgramsRepositoryImpl implements ProgramsRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure("Impossible de charger les programmes : ${e.toString()}"));
+      return Left(
+        ServerFailure("Impossible de charger les programmes : ${e.toString()}"),
+      );
     }
   }
 
@@ -38,7 +44,11 @@ class ProgramsRepositoryImpl implements ProgramsRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure("Impossible de charger le programme du jour : ${e.toString()}"));
+      return Left(
+        ServerFailure(
+          "Impossible de charger le programme du jour : ${e.toString()}",
+        ),
+      );
     }
   }
 }

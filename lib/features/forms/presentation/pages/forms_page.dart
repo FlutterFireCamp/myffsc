@@ -121,7 +121,9 @@ class FormsPage extends StatelessWidget {
                 hasCertificate
                     ? "Votre certificat d'accomplissement a été généré et validé par l'équipe pédagogique."
                     : "Consultez le portail officiel de vérification des certificats FFSC.",
-                style: AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.textMuted,
+                ),
               ),
               SizedBox(height: 2.5.h),
 
@@ -158,7 +160,9 @@ class FormsPage extends StatelessWidget {
                               Container(
                                 padding: EdgeInsets.all(3.w),
                                 decoration: BoxDecoration(
-                                  color: AppColors.skyBlue.withValues(alpha: 0.15),
+                                  color: AppColors.skyBlue.withValues(
+                                    alpha: 0.15,
+                                  ),
                                   borderRadius: AppRadius.circular12,
                                 ),
                                 child: AppIcons.certificate(
@@ -178,10 +182,11 @@ class FormsPage extends StatelessWidget {
                                             hasCertificate
                                                 ? "Mon Certificat Officiel"
                                                 : "Registre des Certificats",
-                                            style: AppTextStyles.titleMedium.copyWith(
-                                              color: AppColors.textPrimary,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            style: AppTextStyles.titleMedium
+                                                .copyWith(
+                                                  color: AppColors.textPrimary,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                           ),
                                         ),
                                         Container(
@@ -190,25 +195,31 @@ class FormsPage extends StatelessWidget {
                                             vertical: 0.4.h,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: (hasCertificate
-                                                    ? AppColors.skyBlue
-                                                    : AppColors.cardHover)
-                                                .withValues(alpha: 0.15),
+                                            color:
+                                                (hasCertificate
+                                                        ? AppColors.skyBlue
+                                                        : AppColors.cardHover)
+                                                    .withValues(alpha: 0.15),
                                             borderRadius: AppRadius.circular8,
                                             border: Border.all(
-                                              color: (hasCertificate
-                                                      ? AppColors.skyBlue
-                                                      : AppColors.borderSubtle)
-                                                  .withValues(alpha: 0.3),
+                                              color:
+                                                  (hasCertificate
+                                                          ? AppColors.skyBlue
+                                                          : AppColors
+                                                                .borderSubtle)
+                                                      .withValues(alpha: 0.3),
                                             ),
                                           ),
                                           child: Text(
-                                            hasCertificate ? "Validé" : "Vérification",
-                                            style: AppTextStyles.badgeSmall.copyWith(
-                                              color: hasCertificate
-                                                  ? AppColors.skyBlue
-                                                  : AppColors.textSecondary,
-                                            ),
+                                            hasCertificate
+                                                ? "Validé"
+                                                : "Vérification",
+                                            style: AppTextStyles.badgeSmall
+                                                .copyWith(
+                                                  color: hasCertificate
+                                                      ? AppColors.skyBlue
+                                                      : AppColors.textSecondary,
+                                                ),
                                           ),
                                         ),
                                       ],
@@ -232,7 +243,10 @@ class FormsPage extends StatelessWidget {
                             ],
                           ),
                           SizedBox(height: 2.h),
-                          const Divider(color: AppColors.borderSubtle, height: 1),
+                          const Divider(
+                            color: AppColors.borderSubtle,
+                            height: 1,
+                          ),
                           SizedBox(height: 1.5.h),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -246,10 +260,7 @@ class FormsPage extends StatelessWidget {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              AppIcons.link(
-                                color: AppColors.skyBlue,
-                                size: 18,
-                              ),
+                              AppIcons.link(color: AppColors.skyBlue, size: 18),
                             ],
                           ),
                         ],
@@ -275,10 +286,7 @@ class FormsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Formulaires Officiels"),
         leading: IconButton(
-          icon: AppIcons.chevronLeft(
-            color: AppColors.textPrimary,
-            size: 24,
-          ),
+          icon: AppIcons.chevronLeft(color: AppColors.textPrimary, size: 24),
           onPressed: () {
             if (context.canPop()) {
               context.pop();
@@ -392,7 +400,10 @@ class FormsPage extends StatelessWidget {
             context: context,
             title: certTitle,
             subtitle: certSubtitle,
-            icon: AppIcons.certificate(color: AppColors.certificateGreen, size: 24),
+            icon: AppIcons.certificate(
+              color: AppColors.certificateGreen,
+              size: 24,
+            ),
             color: AppColors.certificateGreen,
             url: certUrl,
             badgeText: "Certification",

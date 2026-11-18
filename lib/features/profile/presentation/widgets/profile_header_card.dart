@@ -122,9 +122,7 @@ class ProfileHeaderCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.skyBlue.withValues(alpha: 0.15),
                   borderRadius: AppRadius.circular12,
-                  border: .all(
-                    color: AppColors.skyBlue.withValues(alpha: 0.3),
-                  ),
+                  border: .all(color: AppColors.skyBlue.withValues(alpha: 0.3)),
                 ),
                 child: AppIcons.edit(color: AppColors.skyBlue, size: 14),
               ),

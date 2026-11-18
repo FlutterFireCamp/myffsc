@@ -98,7 +98,10 @@ class FormsModalHelper {
         final data = doc.data();
         final certId = (data['certificateId'] ?? doc.id).toString();
         _resolvedCertificatesCache[user.id] = certId;
-        dev.log('Certificat trouvé via recipientUid ($certId)', name: 'FORMS_MODAL_HELPER');
+        dev.log(
+          'Certificat trouvé via recipientUid ($certId)',
+          name: 'FORMS_MODAL_HELPER',
+        );
         return certId;
       }
 
@@ -115,12 +118,18 @@ class FormsModalHelper {
           final data = doc.data();
           final certId = (data['certificateId'] ?? doc.id).toString();
           _resolvedCertificatesCache[user.id] = certId;
-          dev.log('Certificat trouvé via recipientEmail ($certId)', name: 'FORMS_MODAL_HELPER');
+          dev.log(
+            'Certificat trouvé via recipientEmail ($certId)',
+            name: 'FORMS_MODAL_HELPER',
+          );
           return certId;
         }
       }
     } catch (e) {
-      dev.log('Notice: résolution du certificat dans "certificates": $e', name: 'FORMS_MODAL_HELPER');
+      dev.log(
+        'Notice: résolution du certificat dans "certificates": $e',
+        name: 'FORMS_MODAL_HELPER',
+      );
     }
 
     return null;

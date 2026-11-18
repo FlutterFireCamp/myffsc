@@ -5,10 +5,7 @@ import '../theme/theme.dart';
 class AppShimmer extends StatefulWidget {
   final Widget child;
 
-  const AppShimmer({
-    super.key,
-    required this.child,
-  });
+  const AppShimmer({super.key, required this.child});
 
   @override
   State<AppShimmer> createState() => _AppShimmerState();
@@ -93,11 +90,7 @@ class AppShimmerCircle extends StatelessWidget {
   final double radius;
   final Color? color;
 
-  const AppShimmerCircle({
-    super.key,
-    required this.radius,
-    this.color,
-  });
+  const AppShimmerCircle({super.key, required this.radius, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -188,10 +181,7 @@ class AppCardShimmer extends StatelessWidget {
 class AppListShimmer extends StatelessWidget {
   final int itemCount;
 
-  const AppListShimmer({
-    super.key,
-    this.itemCount = 4,
-  });
+  const AppListShimmer({super.key, this.itemCount = 4});
 
   @override
   Widget build(BuildContext context) {

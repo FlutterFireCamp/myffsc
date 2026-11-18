@@ -97,11 +97,11 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
             icon: AppIcons.refresh03(color: AppColors.skyBlue, size: 20),
             onPressed: () {
               context.read<AnnouncementsBloc>().add(
-                    FetchAnnouncementsEvent(
-                      filterType: _selectedTypeFilter,
-                      isRefresh: true,
-                    ),
-                  );
+                FetchAnnouncementsEvent(
+                  filterType: _selectedTypeFilter,
+                  isRefresh: true,
+                ),
+              );
             },
           ),
           SizedBox(width: 2.w),
@@ -135,11 +135,11 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                     accentColor: AppColors.alertRed,
                     actionLabel: "Réessayer",
                     onAction: () => context.read<AnnouncementsBloc>().add(
-                          FetchAnnouncementsEvent(
-                            filterType: _selectedTypeFilter,
-                            isRefresh: true,
-                          ),
-                        ),
+                      FetchAnnouncementsEvent(
+                        filterType: _selectedTypeFilter,
+                        isRefresh: true,
+                      ),
+                    ),
                   );
                 }
 
@@ -153,17 +153,17 @@ class _AnnouncementsPageState extends State<AnnouncementsPage> {
                     color: AppColors.skyBlue,
                     onRefresh: () async {
                       context.read<AnnouncementsBloc>().add(
-                            FetchAnnouncementsEvent(
-                              filterType: _selectedTypeFilter,
-                              isRefresh: true,
-                            ),
-                          );
+                        FetchAnnouncementsEvent(
+                          filterType: _selectedTypeFilter,
+                          isRefresh: true,
+                        ),
+                      );
                     },
                     child: ListView.separated(
                       controller: _scrollController,
                       padding: EdgeInsets.all(4.w),
-                      itemCount: announcements.length +
-                          (state.isLoadingMore ? 1 : 0),
+                      itemCount:
+                          announcements.length + (state.isLoadingMore ? 1 : 0),
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 2.h),
                       itemBuilder: (context, index) {

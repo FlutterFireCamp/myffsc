@@ -33,17 +33,20 @@ class NotificationService {
     FirebaseMessaging? fcm,
     FlutterLocalNotificationsPlugin? localNotifications,
     FirebaseFirestore? firestore,
-  })  : _fcm = fcm ?? FirebaseMessaging.instance,
-        _localNotifications =
-            localNotifications ?? FlutterLocalNotificationsPlugin(),
-        _firestore = firestore ?? FirebaseFirestore.instance;
+  }) : _fcm = fcm ?? FirebaseMessaging.instance,
+       _localNotifications =
+           localNotifications ?? FlutterLocalNotificationsPlugin(),
+       _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Initialise les écouteurs FCM, les canaux de notifications locaux et les permissions.
   Future<void> initialize({
     Function(String route, Map<String, dynamic>? arguments)? onNavigate,
   }) async {
     try {
-      dev.log('Initialisation du NotificationService...', name: 'NOTIFICATION_SERVICE');
+      dev.log(
+        'Initialisation du NotificationService...',
+        name: 'NOTIFICATION_SERVICE',
+      );
 
       // 1. Enregistrement du background message handler FCM
       FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
@@ -57,7 +60,10 @@ class NotificationService {
           provisional: false,
         );
       } catch (e) {
-        dev.log('Avertissement FCM requestPermission: $e', name: 'NOTIFICATION_SERVICE');
+        dev.log(
+          'Avertissement FCM requestPermission: $e',
+          name: 'NOTIFICATION_SERVICE',
+        );
       }
 
       // 3. Configuration des notifications locales pour le premier plan
@@ -83,7 +89,8 @@ class NotificationService {
       // 4. Création du canal Android haute importance et demande permission native Android 13+
       final androidPlugin = _localNotifications
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
       if (androidPlugin != null) {
         try {
@@ -130,7 +137,10 @@ class NotificationService {
         _handleMessageAction(initialMessage.data, onNavigate: onNavigate);
       }
 
-      dev.log('NotificationService initialisé avec succès', name: 'NOTIFICATION_SERVICE');
+      dev.log(
+        'NotificationService initialisé avec succès',
+        name: 'NOTIFICATION_SERVICE',
+      );
     } catch (e, stackTrace) {
       dev.log(
         'Erreur critique lors de l’initialisation du NotificationService',
@@ -148,11 +158,17 @@ class NotificationService {
       try {
         token = await _fcm.getToken();
       } catch (e) {
-        dev.log('Impossible de récupérer le token FCM pour l’instant: $e', name: 'NOTIFICATION_SERVICE');
+        dev.log(
+          'Impossible de récupérer le token FCM pour l’instant: $e',
+          name: 'NOTIFICATION_SERVICE',
+        );
       }
 
       if (token != null && token.isNotEmpty) {
-        dev.log('Enregistrement du token FCM pour l’utilisateur $userId: $token', name: 'NOTIFICATION_SERVICE');
+        dev.log(
+          'Enregistrement du token FCM pour l’utilisateur $userId: $token',
+          name: 'NOTIFICATION_SERVICE',
+        );
         await _firestore.collection('users').doc(userId).set({
           'fcmToken': token,
           'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
@@ -161,24 +177,33 @@ class NotificationService {
 
       // Écouter les renouvellements de token de manière sécurisée sans fuite mémoire
       await _tokenRefreshSubscription?.cancel();
-      _tokenRefreshSubscription = _fcm.onTokenRefresh.listen((newToken) async {
-        dev.log('Token FCM renouvelé pour $userId: $newToken', name: 'NOTIFICATION_SERVICE');
-        try {
-          await _firestore.collection('users').doc(userId).set({
-            'fcmToken': newToken,
-            'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
-          }, SetOptions(merge: true));
-        } catch (e, stackTrace) {
+      _tokenRefreshSubscription = _fcm.onTokenRefresh.listen(
+        (newToken) async {
           dev.log(
-            'Erreur mise à jour du token FCM renouvelé',
+            'Token FCM renouvelé pour $userId: $newToken',
             name: 'NOTIFICATION_SERVICE',
-            error: e,
-            stackTrace: stackTrace,
           );
-        }
-      }, onError: (err) {
-        dev.log('Erreur stream onTokenRefresh: $err', name: 'NOTIFICATION_SERVICE');
-      });
+          try {
+            await _firestore.collection('users').doc(userId).set({
+              'fcmToken': newToken,
+              'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
+            }, SetOptions(merge: true));
+          } catch (e, stackTrace) {
+            dev.log(
+              'Erreur mise à jour du token FCM renouvelé',
+              name: 'NOTIFICATION_SERVICE',
+              error: e,
+              stackTrace: stackTrace,
+            );
+          }
+        },
+        onError: (err) {
+          dev.log(
+            'Erreur stream onTokenRefresh: $err',
+            name: 'NOTIFICATION_SERVICE',
+          );
+        },
+      );
     } catch (e, stackTrace) {
       dev.log(
         'Erreur lors de la synchronisation du token FCM pour $userId',
@@ -196,7 +221,10 @@ class NotificationService {
       final data = message.data;
 
       final title = notification?.title ?? data['title'] ?? 'Session Live FFSC';
-      final body = notification?.body ?? data['body'] ?? 'Une nouvelle session commence.';
+      final body =
+          notification?.body ??
+          data['body'] ??
+          'Une nouvelle session commence.';
 
       const androidDetails = AndroidNotificationDetails(
         _channelId,
@@ -259,7 +287,10 @@ class NotificationService {
       final liveUrl = data['liveUrl'] as String? ?? data['meetUrl'] as String?;
       final targetRoute = data['route'] as String?;
 
-      dev.log('Traitement de l’action de notification: type=$type, liveUrl=$liveUrl, route=$targetRoute', name: 'NOTIFICATION_SERVICE');
+      dev.log(
+        'Traitement de l’action de notification: type=$type, liveUrl=$liveUrl, route=$targetRoute',
+        name: 'NOTIFICATION_SERVICE',
+      );
 
       // 1. Si c'est une notification de session Live directe avec URL Meet
       if (liveUrl != null && liveUrl.trim().isNotEmpty) {

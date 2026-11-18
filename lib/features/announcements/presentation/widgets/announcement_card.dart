@@ -6,10 +6,7 @@ import '../../domain/entities/announcement_item.dart';
 class AnnouncementCard extends StatelessWidget {
   final AnnouncementItem item;
 
-  const AnnouncementCard({
-    super.key,
-    required this.item,
-  });
+  const AnnouncementCard({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +61,9 @@ class AnnouncementCard extends StatelessWidget {
           SizedBox(height: 1.h),
           Text(
             item.description,
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
           SizedBox(height: 2.h),
           Row(
@@ -76,7 +75,9 @@ class AnnouncementCard extends StatelessWidget {
                   AppIcons.calendar(size: 14, color: AppColors.textMuted),
                   Text(
                     item.formattedFrenchDate,
-                    style: AppTextStyles.caption.copyWith(color: AppColors.textMuted),
+                    style: AppTextStyles.caption.copyWith(
+                      color: AppColors.textMuted,
+                    ),
                   ),
                 ],
               ),

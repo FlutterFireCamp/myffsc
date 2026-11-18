@@ -7,11 +7,7 @@ void main() {
   Widget buildTestableWidget(Widget child) {
     return Sizer(
       builder: (context, orientation, deviceType) {
-        return MaterialApp(
-          home: Scaffold(
-            body: child,
-          ),
-        );
+        return MaterialApp(home: Scaffold(body: child));
       },
     );
   }
@@ -63,10 +59,7 @@ void main() {
         buildTestableWidget(
           Column(
             children: [
-              AppTextField(
-                focusNode: focusNode,
-                hintText: 'Input',
-              ),
+              AppTextField(focusNode: focusNode, hintText: 'Input'),
               const SizedBox(height: 50),
               const Text('Outside Area'),
             ],

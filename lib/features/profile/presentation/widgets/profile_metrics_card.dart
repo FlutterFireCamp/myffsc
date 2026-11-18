@@ -71,10 +71,7 @@ class _ProfileMetricsCardState extends State<ProfileMetricsCard> {
             child: _MetricItem(
               title: "Points",
               value: "${widget.user.totalPoints} pts",
-              icon: AppIcons.star(
-                color: AppColors.gold,
-                size: AppSizes.iconLg,
-              ),
+              icon: AppIcons.star(color: AppColors.gold, size: AppSizes.iconLg),
             ),
           ),
           Container(width: 1, height: 35, color: AppColors.borderSubtle),

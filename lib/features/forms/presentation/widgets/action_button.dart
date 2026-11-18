@@ -31,10 +31,7 @@ class ActionButton extends StatelessWidget {
     );
 
     if (tooltip != null && tooltip!.isNotEmpty) {
-      return Tooltip(
-        message: tooltip!,
-        child: buttonWidget,
-      );
+      return Tooltip(message: tooltip!, child: buttonWidget);
     }
 
     return buttonWidget;

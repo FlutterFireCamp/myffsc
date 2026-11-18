@@ -24,12 +24,22 @@ class QuestionItemModel extends QuestionItemEntity {
       title: map['title'] as String? ?? '',
       type: map['type'] as String? ?? 'choice',
       level: (map['level'] as num?)?.toInt() ?? 1,
-      modules: (map['modules'] as List<dynamic>?)?.map((e) => (e as num).toInt()).toList() ?? [1],
+      modules:
+          (map['modules'] as List<dynamic>?)
+              ?.map((e) => (e as num).toInt())
+              .toList() ??
+          [1],
       points: (map['points'] as num?)?.toInt() ?? 10,
       timingSeconds: (map['timingSeconds'] as num?)?.toInt(),
-      options: (map['options'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
-      correctAnswers: (map['correctAnswers'] as List<dynamic>?)?.map((e) => (e as num).toInt()).toList(),
-      optionExplanations: (map['optionExplanations'] as List<dynamic>?)?.map((e) => e.toString()).toList(),
+      options: (map['options'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
+      correctAnswers: (map['correctAnswers'] as List<dynamic>?)
+          ?.map((e) => (e as num).toInt())
+          .toList(),
+      optionExplanations: (map['optionExplanations'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
       expectedText: map['expectedText'] as String?,
       explanation: map['explanation'] as String?,
       createdAt: map['createdAt']?.toString(),

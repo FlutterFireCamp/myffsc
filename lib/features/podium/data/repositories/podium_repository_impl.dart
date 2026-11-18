@@ -28,7 +28,9 @@ class PodiumRepositoryImpl implements PodiumRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure("Impossible de charger le classement : ${e.toString()}"));
+      return Left(
+        ServerFailure("Impossible de charger le classement : ${e.toString()}"),
+      );
     }
   }
 }

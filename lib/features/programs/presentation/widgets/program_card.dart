@@ -8,17 +8,15 @@ class ProgramCard extends StatelessWidget {
   final ProgramItem item;
   final ValueChanged<String?> onLaunchUrl;
 
-  const ProgramCard({
-    super.key,
-    required this.item,
-    required this.onLaunchUrl,
-  });
+  const ProgramCard({super.key, required this.item, required this.onLaunchUrl});
 
   @override
   Widget build(BuildContext context) {
-    final hasLive = (item.sessionUrl != null && item.sessionUrl!.trim().isNotEmpty) ||
+    final hasLive =
+        (item.sessionUrl != null && item.sessionUrl!.trim().isNotEmpty) ||
         item.type == ProgramType.test;
-    final hasReplay = item.replayUrl != null && item.replayUrl!.trim().isNotEmpty;
+    final hasReplay =
+        item.replayUrl != null && item.replayUrl!.trim().isNotEmpty;
 
     final badgeColor = item.type.badgeColor;
     final cardBgColor = item.type.cardBgColor;
@@ -80,7 +78,9 @@ class ProgramCard extends StatelessWidget {
           SizedBox(height: 0.8.h),
           Text(
             item.description,
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.textSecondary,
+            ),
           ),
           SizedBox(height: 2.h),
 
@@ -160,11 +160,19 @@ class ProgramCard extends StatelessWidget {
                         ),
                       ),
                       icon: isTest
-                          ? AppIcons.tests(size: AppSizes.iconSm, color: badgeColor)
-                          : AppIcons.video(size: AppSizes.iconSm, color: badgeColor),
+                          ? AppIcons.tests(
+                              size: AppSizes.iconSm,
+                              color: badgeColor,
+                            )
+                          : AppIcons.video(
+                              size: AppSizes.iconSm,
+                              color: badgeColor,
+                            ),
                       label: Text(
                         isTest ? "Rejoindre le Test" : "Rejoindre Live",
-                        style: AppTextStyles.buttonSmall.copyWith(color: badgeColor),
+                        style: AppTextStyles.buttonSmall.copyWith(
+                          color: badgeColor,
+                        ),
                       ),
                     ),
                   ),
@@ -179,10 +187,15 @@ class ProgramCard extends StatelessWidget {
                           borderRadius: AppRadius.circular10,
                         ),
                       ),
-                      icon: AppIcons.video(size: AppSizes.iconSm, color: AppColors.textPrimary),
+                      icon: AppIcons.video(
+                        size: AppSizes.iconSm,
+                        color: AppColors.textPrimary,
+                      ),
                       label: Text(
                         "Replay",
-                        style: AppTextStyles.buttonSmall.copyWith(color: AppColors.textPrimary),
+                        style: AppTextStyles.buttonSmall.copyWith(
+                          color: AppColors.textPrimary,
+                        ),
                       ),
                     ),
                   ),

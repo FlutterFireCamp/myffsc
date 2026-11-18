@@ -1,5 +1,6 @@
 # My FFSC 💙☀️ - Portail Apprenant FlutterFire Summer Camp
 
+[![Flutter CI](https://github.com/FlutterFireCamp/myffsc/actions/workflows/ci.yml/badge.svg)](https://github.com/FlutterFireCamp/myffsc/actions)
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter)](https://flutter.dev)
 [![Firebase](https://img.shields.io/badge/Firebase-Core%20%7C%20Auth%20%7C%20Firestore-FFCA28?logo=firebase)](https://firebase.google.com)
 [![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20%2B%20BLoC-blue?logo=dart)](https://bloclibrary.dev)
@@ -11,7 +12,19 @@
 
 ---
 
-## Aperçu et Fonctionnalités
+## 📱 Aperçu de l'Application
+
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" width="31%" alt="Tableau de bord dynamique" />
+  &nbsp;
+  <img src="docs/screenshots/announcements.png" width="31%" alt="Fil d'annonces en temps réel" />
+  &nbsp;
+  <img src="docs/screenshots/podium.png" width="31%" alt="Podium et classement général" />
+</p>
+
+---
+
+## Fonctionnalités Clés
 
 - **Authentification et Contrôle d'Accès** : Authentification sécurisée via Google Sign-In avec vérification automatique des autorisations de l'apprenant. Les comptes en attente ou non autorisés sont redirigés vers un écran d'accès restreint.
 - **Gestion de Profil et Niveaux** : Photo de profil Google/avatar dynamique, suivi du statut d'acceptation, liens réseaux sociaux (Discord, GitHub, LinkedIn, Twitter/X) et historique complet des évaluations avec correction interactive.
@@ -20,11 +33,7 @@
 - **Annonces en Temps Réel** : Fil d'actualité filtré par priorité (Urgent, Important, Info) et par niveau, avec support Markdown riche.
 - **Podium et Classement** : Classement en direct des participants avec Top 3 sur socles distincts, suivi du Top 10 et barre sticky du rang de l'utilisateur connecté.
 - **Test et Évaluation du Jour** : Épreuve chronométrée en temps réel avec questions à choix multiples (QCM) ou ouvertes, gestion automatique du temps additionnel, détection d'arrière-plan anti-triche et soumission atomique sur Firestore.
-- **Hub de Formulaires** : Accès rapide aux formulaires Google officiels :
-  - Signalements et alertes
-  - Retours sur les sessions et ateliers
-  - Idées et suggestions
-  - Soumission de projets pour validation de certificat (Dart Niv 1, Flutter Niv 2, Firebase Niv 3)
+- **Hub de Formulaires & Certificats** : Accès rapide aux formulaires officiels (signalements, retours de sessions, suggestions) et validation des certificats.
 
 ---
 
@@ -82,14 +91,21 @@ cd myffsc
 flutter pub get
 ```
 
-### 3. Configurer Firebase
+### 3. Configurer Firebase pour le développement
 
-Assurez-vous d'activer **Google Auth**, **Cloud Firestore** et **Crashlytics** sur la console Firebase de votre projet, puis exécutez :
+Le dépôt contient des modèles de configuration prêts à l'emploi :
+- `lib/firebase_options.dart.example`
+- `android/app/google-services.json.example`
+- `ios/Runner/GoogleService-Info.plist.example`
+
+Pour lier votre propre projet Firebase de test ou développement :
 
 ```bash
 dart pub global activate flutterfire_cli
 flutterfire configure --project=YOUR_FIREBASE_PROJECT_ID
 ```
+
+Activez **Google Auth**, **Cloud Firestore** et **Crashlytics** sur votre console Firebase.
 
 ### 4. Lancer l'application
 
@@ -103,15 +119,18 @@ flutter run -d ios
 
 ---
 
-## Tests et Analyse du Code
+## Tests, Formatage et Analyse du Code
 
-Pour garantir la qualité du code et l'absence de régressions :
+Pour garantir la qualité du code et l'absence de régressions lors des contributions :
 
 ```bash
+# Vérifier la conformité du formatage standard Dart
+dart format --output=none --set-exit-if-changed .
+
 # Analyse statique du code (0 avertissement requis)
 flutter analyze
 
-# Lancement de la suite complète de tests unitaires
+# Lancement de la suite complète de tests unitaires et BLoC
 flutter test
 ```
 
@@ -127,7 +146,7 @@ Consultez le fichier [CONTRIBUTING.md](CONTRIBUTING.md) pour connaître les conv
 
 ## Sécurité
 
-Pour signaler une vulnérabilité de sécurité, veuillez consulter notre [Politique de Sécurité](SECURITY.md).
+Pour signaler une vulnérabilité de sécurité, envoyez un rapport privé à **hello@flutterfirecamp.dev** ou consultez notre [Politique de Sécurité](SECURITY.md).
 
 ---
 

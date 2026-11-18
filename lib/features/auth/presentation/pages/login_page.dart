@@ -164,12 +164,15 @@ class LoginPage extends StatelessWidget {
                                               },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: AppColors.skyBlue,
-                                          foregroundColor: const Color(0xFF070A13),
+                                          foregroundColor: const Color(
+                                            0xFF070A13,
+                                          ),
                                           disabledBackgroundColor: AppColors
                                               .skyBlue
                                               .withValues(alpha: 0.65),
-                                          disabledForegroundColor:
-                                              const Color(0xFF070A13),
+                                          disabledForegroundColor: const Color(
+                                            0xFF070A13,
+                                          ),
                                           padding: EdgeInsets.symmetric(
                                             vertical: 1.8.h,
                                           ),
@@ -180,7 +183,8 @@ class LoginPage extends StatelessWidget {
                                         ),
                                         child: isLoading
                                             ? Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   const SizedBox(
                                                     width: 22,
@@ -188,7 +192,9 @@ class LoginPage extends StatelessWidget {
                                                     child:
                                                         CircularProgressIndicator(
                                                           strokeWidth: 2.5,
-                                                          color: Color(0xFF070A13),
+                                                          color: Color(
+                                                            0xFF070A13,
+                                                          ),
                                                         ),
                                                   ),
                                                   SizedBox(width: 3.w),
@@ -196,17 +202,23 @@ class LoginPage extends StatelessWidget {
                                                     "Connexion en cours...",
                                                     style: AppTextStyles.button
                                                         .copyWith(
-                                                          color: const Color(0xFF070A13),
-                                                          fontWeight: FontWeight.bold,
+                                                          color: const Color(
+                                                            0xFF070A13,
+                                                          ),
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                         ),
                                                   ),
                                                 ],
                                               )
                                             : Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   AppIcons.google(
-                                                    color: const Color(0xFF070A13),
+                                                    color: const Color(
+                                                      0xFF070A13,
+                                                    ),
                                                     size: 20,
                                                   ),
                                                   SizedBox(width: 3.w),
@@ -214,8 +226,11 @@ class LoginPage extends StatelessWidget {
                                                     "Continuer avec Google",
                                                     style: AppTextStyles.button
                                                         .copyWith(
-                                                          color: const Color(0xFF070A13),
-                                                          fontWeight: FontWeight.bold,
+                                                          color: const Color(
+                                                            0xFF070A13,
+                                                          ),
+                                                          fontWeight:
+                                                              FontWeight.bold,
                                                         ),
                                                   ),
                                                 ],
@@ -225,7 +240,8 @@ class LoginPage extends StatelessWidget {
                                     SizedBox(height: 2.h),
                                     Center(
                                       child: InkWell(
-                                        onTap: () => _launchPrivacyPolicy(context),
+                                        onTap: () =>
+                                            _launchPrivacyPolicy(context),
                                         borderRadius: AppRadius.circular8,
                                         child: Padding(
                                           padding: EdgeInsets.symmetric(

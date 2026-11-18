@@ -8,7 +8,7 @@ class PodiumBloc extends Bloc<PodiumEvent, PodiumState> {
   final GetLeaderboardUseCase getLeaderboardUseCase;
 
   PodiumBloc({required this.getLeaderboardUseCase})
-      : super(PodiumInitialState()) {
+    : super(PodiumInitialState()) {
     on<FetchLeaderboardEvent>(_onFetchLeaderboard);
   }
 
@@ -35,7 +35,10 @@ class PodiumBloc extends Bloc<PodiumEvent, PodiumState> {
 
       result.fold(
         (failure) {
-          dev.log('Échec de FetchLeaderboard: ${failure.message}', name: 'PODIUM_BLOC');
+          dev.log(
+            'Échec de FetchLeaderboard: ${failure.message}',
+            name: 'PODIUM_BLOC',
+          );
           emit(PodiumErrorState(failure.message));
         },
         (data) {

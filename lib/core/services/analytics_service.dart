@@ -6,10 +6,7 @@ class AnalyticsService {
   final FirebaseAnalytics? analytics;
   final bool isAvailable;
 
-  AnalyticsService({
-    this.analytics,
-    this.isAvailable = true,
-  });
+  AnalyticsService({this.analytics, this.isAvailable = true});
 
   /// Retourne l'observateur pour GoRouter et le Navigator de manière sécurisée.
   FirebaseAnalyticsObserver? get observer {
@@ -17,7 +14,10 @@ class AnalyticsService {
     try {
       return FirebaseAnalyticsObserver(analytics: analytics!);
     } catch (e) {
-      dev.log('Impossible d’initialiser FirebaseAnalyticsObserver: $e', name: 'ANALYTICS_SERVICE');
+      dev.log(
+        'Impossible d’initialiser FirebaseAnalyticsObserver: $e',
+        name: 'ANALYTICS_SERVICE',
+      );
       return null;
     }
   }
@@ -29,10 +29,7 @@ class AnalyticsService {
   }) async {
     if (!isAvailable || analytics == null) return;
     try {
-      await analytics!.logEvent(
-        name: name,
-        parameters: parameters,
-      );
+      await analytics!.logEvent(name: name, parameters: parameters);
       dev.log(
         'Événement Analytics consigné: $name | Paramètres: $parameters',
         name: 'ANALYTICS_SERVICE',
@@ -136,10 +133,7 @@ class AnalyticsService {
   }) async {
     await logEvent(
       name: 'test_started',
-      parameters: {
-        'test_id': testId,
-        'test_title': testTitle,
-      },
+      parameters: {'test_id': testId, 'test_title': testTitle},
     );
   }
 
@@ -168,10 +162,7 @@ class AnalyticsService {
   }) async {
     await logEvent(
       name: 'form_submitted',
-      parameters: {
-        'form_id': formId,
-        'form_title': formTitle,
-      },
+      parameters: {'form_id': formId, 'form_title': formTitle},
     );
   }
 }

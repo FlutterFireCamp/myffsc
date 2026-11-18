@@ -220,7 +220,13 @@ class ProgramItem extends Equatable {
         int hours = int.parse(match.group(1)!);
         int minutes = match.group(2) != null ? int.parse(match.group(2)!) : 0;
 
-        DateTime utcDateTime = DateTime.utc(now.year, now.month, now.day, hours, minutes);
+        DateTime utcDateTime = DateTime.utc(
+          now.year,
+          now.month,
+          now.day,
+          hours,
+          minutes,
+        );
         DateTime localDateTime = utcDateTime.toLocal();
 
         final formattedHour = localDateTime.hour.toString().padLeft(2, '0');
@@ -277,7 +283,11 @@ class ProgramItem extends Equatable {
       }
     }
 
-    final todayStart = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    final todayStart = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    );
     return dt.isBefore(todayStart);
   }
 
@@ -289,7 +299,9 @@ class ProgramItem extends Equatable {
     return dt.year == now.year && dt.month == now.month && dt.day == now.day;
   }
 
-  factory ProgramItem.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
+  factory ProgramItem.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final data = doc.data() ?? {};
     DateTime? parsedCreatedAt;
     if (data['createdAt'] is Timestamp) {
@@ -324,22 +336,24 @@ class ProgramItem extends Equatable {
       'replayUrl': replayUrl,
       'location': location,
       'speaker': speaker,
-      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      'createdAt': createdAt != null
+          ? Timestamp.fromDate(createdAt!)
+          : FieldValue.serverTimestamp(),
     };
   }
 
   @override
   List<Object?> get props => [
-        id,
-        type,
-        title,
-        description,
-        date,
-        time,
-        sessionUrl,
-        replayUrl,
-        location,
-        speaker,
-        createdAt,
-      ];
+    id,
+    type,
+    title,
+    description,
+    date,
+    time,
+    sessionUrl,
+    replayUrl,
+    location,
+    speaker,
+    createdAt,
+  ];
 }

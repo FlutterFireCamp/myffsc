@@ -39,17 +39,17 @@ class _ProgramsPageState extends State<ProgramsPage> {
 
   void _refreshAll() {
     context.read<ProgramsBloc>().add(
-          FetchProgramsEvent(
-            filterType: _selectedTypeFilter,
-            isRefresh: true,
-          ),
-        );
-    context
-        .read<DashboardBloc>()
-        .add(const FetchDashboardDataEvent(isRefresh: true));
+      FetchProgramsEvent(filterType: _selectedTypeFilter, isRefresh: true),
+    );
+    context.read<DashboardBloc>().add(
+      const FetchDashboardDataEvent(isRefresh: true),
+    );
   }
 
-  Future<void> _launchExternalUrl(BuildContext context, String? urlString) async {
+  Future<void> _launchExternalUrl(
+    BuildContext context,
+    String? urlString,
+  ) async {
     if (urlString == null || urlString.trim().isEmpty) return;
     final Uri url = Uri.parse(
       urlString.startsWith('http') ? urlString : 'https://$urlString',
@@ -57,7 +57,10 @@ class _ProgramsPageState extends State<ProgramsPage> {
     try {
       if (!await launchUrl(url, mode: .externalApplication)) {
         if (context.mounted) {
-          AppSnackBar.showError(context, "Impossible d'ouvrir le lien : $urlString");
+          AppSnackBar.showError(
+            context,
+            "Impossible d'ouvrir le lien : $urlString",
+          );
         }
       }
     } catch (e) {
@@ -72,7 +75,10 @@ class _ProgramsPageState extends State<ProgramsPage> {
       return AppEmptyState(
         title: "Aucun programme disponible",
         message: "Les sessions, workshops et conférences s'afficheront ici.",
-        icon: AppIcons.programs(color: AppColors.skyBlue, size: AppSizes.iconXl),
+        icon: AppIcons.programs(
+          color: AppColors.skyBlue,
+          size: AppSizes.iconXl,
+        ),
         accentColor: AppColors.skyBlue,
       );
     }
@@ -92,10 +98,7 @@ class _ProgramsPageState extends State<ProgramsPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(
-          "Programmes & Agenda",
-          style: AppTextStyles.h3,
-        ),
+        title: Text("Programmes & Agenda", style: AppTextStyles.h3),
         backgroundColor: AppColors.background,
         elevation: 0,
         actions: [
@@ -119,7 +122,8 @@ class _ProgramsPageState extends State<ProgramsPage> {
           Expanded(
             child: BlocBuilder<ProgramsBloc, ProgramsState>(
               builder: (context, state) {
-                if (state is ProgramsLoadingState || state is ProgramsInitialState) {
+                if (state is ProgramsLoadingState ||
+                    state is ProgramsInitialState) {
                   return const ProgramsShimmer();
                 }
 
@@ -127,7 +131,10 @@ class _ProgramsPageState extends State<ProgramsPage> {
                   return AppEmptyState(
                     title: "Erreur de chargement",
                     message: state.message,
-                    icon: AppIcons.warning(color: AppColors.alertRed, size: AppSizes.iconXl),
+                    icon: AppIcons.warning(
+                      color: AppColors.alertRed,
+                      size: AppSizes.iconXl,
+                    ),
                     accentColor: AppColors.alertRed,
                     actionLabel: "Réessayer",
                     onAction: _refreshAll,
@@ -146,12 +153,14 @@ class _ProgramsPageState extends State<ProgramsPage> {
                     child: ListView.separated(
                       padding: EdgeInsets.all(4.w),
                       itemCount: programs.length,
-                      separatorBuilder: (context, index) => SizedBox(height: 2.h),
+                      separatorBuilder: (context, index) =>
+                          SizedBox(height: 2.h),
                       itemBuilder: (context, index) {
                         final item = programs[index];
                         return ProgramCard(
                           item: item,
-                          onLaunchUrl: (url) => _launchExternalUrl(context, url),
+                          onLaunchUrl: (url) =>
+                              _launchExternalUrl(context, url),
                         );
                       },
                     ),

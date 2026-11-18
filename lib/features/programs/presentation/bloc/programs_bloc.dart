@@ -10,7 +10,7 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
   List<ProgramItem> _allPrograms = [];
 
   ProgramsBloc({required this.getUpcomingProgramsUseCase})
-      : super(ProgramsInitialState()) {
+    : super(ProgramsInitialState()) {
     on<FetchProgramsEvent>(_onFetchPrograms);
     on<FilterProgramsEvent>(_onFilterPrograms);
   }
@@ -34,7 +34,10 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
 
       result.fold(
         (failure) {
-          dev.log('Échec de FetchPrograms: ${failure.message}', name: 'PROGRAMS_BLOC');
+          dev.log(
+            'Échec de FetchPrograms: ${failure.message}',
+            name: 'PROGRAMS_BLOC',
+          );
           emit(ProgramsErrorState(failure.message));
         },
         (programs) {
@@ -43,11 +46,16 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
               ? _allPrograms
               : _allPrograms.where((p) => p.type == event.filterType).toList();
 
-          dev.log('${filtered.length} programmes chargés avec succès (filtre: ${event.filterType?.label ?? "Tous"})', name: 'PROGRAMS_BLOC');
-          emit(ProgramsLoadedState(
-            programs: filtered,
-            currentFilter: event.filterType,
-          ));
+          dev.log(
+            '${filtered.length} programmes chargés avec succès (filtre: ${event.filterType?.label ?? "Tous"})',
+            name: 'PROGRAMS_BLOC',
+          );
+          emit(
+            ProgramsLoadedState(
+              programs: filtered,
+              currentFilter: event.filterType,
+            ),
+          );
         },
       );
     } catch (e, stackTrace) {
@@ -71,10 +79,12 @@ class ProgramsBloc extends Bloc<ProgramsEvent, ProgramsState> {
       final filtered = event.filterType == null
           ? _allPrograms
           : _allPrograms.where((p) => p.type == event.filterType).toList();
-      emit(ProgramsLoadedState(
-        programs: filtered,
-        currentFilter: event.filterType,
-      ));
+      emit(
+        ProgramsLoadedState(
+          programs: filtered,
+          currentFilter: event.filterType,
+        ),
+      );
     } else {
       emit(ProgramsLoadingState());
       add(FetchProgramsEvent(filterType: event.filterType, isRefresh: true));

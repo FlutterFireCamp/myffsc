@@ -42,8 +42,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '940039203312',
     projectId: 'flutterfiresummercamp',
     storageBucket: 'flutterfiresummercamp.firebasestorage.app',
-    androidClientId: '940039203312-rd842fs3j1sg5sm216m8ugebavb5hc55.apps.googleusercontent.com',
-    iosClientId: '940039203312-ea9sdpin97d71proch1c8uu0v9id7rai.apps.googleusercontent.com',
+    androidClientId:
+        '940039203312-rd842fs3j1sg5sm216m8ugebavb5hc55.apps.googleusercontent.com',
+    iosClientId:
+        '940039203312-ea9sdpin97d71proch1c8uu0v9id7rai.apps.googleusercontent.com',
     iosBundleId: 'dev.flutterfirecamp.app',
   );
 }

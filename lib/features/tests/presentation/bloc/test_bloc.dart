@@ -10,8 +10,8 @@ class TestBloc extends Bloc<TestEvent, TestState> {
   String? _currentUserId;
 
   TestBloc({TestFirestoreService? firestoreService})
-      : _firestoreService = firestoreService ?? TestFirestoreService(),
-        super(const TestState()) {
+    : _firestoreService = firestoreService ?? TestFirestoreService(),
+      super(const TestState()) {
     on<FetchTodayTestEvent>(_onFetchTodayTest);
     on<StartQuizEvent>(_onStartQuiz);
     on<AnswerQuestionEvent>(_onAnswerQuestion);
@@ -32,87 +32,87 @@ class TestBloc extends Bloc<TestEvent, TestState> {
     try {
       final quiz = await _firestoreService.fetchTodayTest();
       if (quiz == null) {
-        emit(state.copyWith(
-          isLoading: false,
-          activeQuiz: null,
-          isSubmittedToday: false,
-        ));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            activeQuiz: null,
+            isSubmittedToday: false,
+          ),
+        );
         return;
       }
 
-      final submission =
-          await _firestoreService.checkUserSubmission(event.userId, quiz.id);
+      final submission = await _firestoreService.checkUserSubmission(
+        event.userId,
+        quiz.id,
+      );
 
-      emit(state.copyWith(
-        isLoading: false,
-        activeQuiz: quiz,
-        isSubmittedToday: submission != null,
-        previousSubmission: submission,
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          activeQuiz: quiz,
+          isSubmittedToday: submission != null,
+          previousSubmission: submission,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        isLoading: false,
-        errorMessage: "Erreur de connexion lors du chargement de l'épreuve.",
-      ));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: "Erreur de connexion lors du chargement de l'épreuve.",
+        ),
+      );
     }
   }
 
-  void _onStartQuiz(
-    StartQuizEvent event,
-    Emitter<TestState> emit,
-  ) {
+  void _onStartQuiz(StartQuizEvent event, Emitter<TestState> emit) {
     if (state.activeQuiz == null || state.activeQuiz!.questions.isEmpty) return;
 
     _timer?.cancel();
     final firstQuestion = state.activeQuiz!.questions.first;
     final baseSeconds = firstQuestion.timingSeconds ?? 60;
 
-    emit(state.copyWith(
-      isQuizActive: true,
-      isQuizFinished: false,
-      currentQuestionIndex: 0,
-      remainingSeconds: baseSeconds,
-      bonusTimeBank: 0,
-      userAnswersMap: {},
-      tabSwitchCount: 0,
-      totalTimeSpentSeconds: 0,
-    ));
+    emit(
+      state.copyWith(
+        isQuizActive: true,
+        isQuizFinished: false,
+        currentQuestionIndex: 0,
+        remainingSeconds: baseSeconds,
+        bonusTimeBank: 0,
+        userAnswersMap: {},
+        tabSwitchCount: 0,
+        totalTimeSpentSeconds: 0,
+      ),
+    );
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       add(const TimerTickEvent());
     });
   }
 
-  void _onTimerTick(
-    TimerTickEvent event,
-    Emitter<TestState> emit,
-  ) {
+  void _onTimerTick(TimerTickEvent event, Emitter<TestState> emit) {
     if (!state.isQuizActive) return;
 
     if (state.remainingSeconds > 0) {
-      emit(state.copyWith(
-        remainingSeconds: state.remainingSeconds - 1,
-        totalTimeSpentSeconds: state.totalTimeSpentSeconds + 1,
-      ));
+      emit(
+        state.copyWith(
+          remainingSeconds: state.remainingSeconds - 1,
+          totalTimeSpentSeconds: state.totalTimeSpentSeconds + 1,
+        ),
+      );
     } else {
       // Time up for current question -> advance or finish
       add(const NextQuestionEvent());
     }
   }
 
-  void _onAnswerQuestion(
-    AnswerQuestionEvent event,
-    Emitter<TestState> emit,
-  ) {
+  void _onAnswerQuestion(AnswerQuestionEvent event, Emitter<TestState> emit) {
     final updatedAnswers = Map<int, dynamic>.from(state.userAnswersMap);
     updatedAnswers[event.questionIndex] = event.answer;
     emit(state.copyWith(userAnswersMap: updatedAnswers));
   }
 
-  void _onNextQuestion(
-    NextQuestionEvent event,
-    Emitter<TestState> emit,
-  ) {
+  void _onNextQuestion(NextQuestionEvent event, Emitter<TestState> emit) {
     final quiz = state.activeQuiz;
     if (quiz == null) return;
 
@@ -124,11 +124,13 @@ class TestBloc extends Bloc<TestEvent, TestState> {
       final nextQuestion = quiz.questions[nextIndex];
       final nextBaseSeconds = nextQuestion.timingSeconds ?? 60;
 
-      emit(state.copyWith(
-        currentQuestionIndex: nextIndex,
-        remainingSeconds: nextBaseSeconds + newBonusBank,
-        bonusTimeBank: newBonusBank,
-      ));
+      emit(
+        state.copyWith(
+          currentQuestionIndex: nextIndex,
+          remainingSeconds: nextBaseSeconds + newBonusBank,
+          bonusTimeBank: newBonusBank,
+        ),
+      );
     } else {
       // Last question -> submit
       _timer?.cancel();
@@ -165,11 +167,13 @@ class TestBloc extends Bloc<TestEvent, TestState> {
     if (quiz == null) return;
     if (state.isSubmittingResult) return;
 
-    emit(state.copyWith(
-      isQuizActive: false,
-      isQuizFinished: true,
-      isSubmittingResult: true,
-    ));
+    emit(
+      state.copyWith(
+        isQuizActive: false,
+        isQuizFinished: true,
+        isSubmittingResult: true,
+      ),
+    );
 
     // Calculate dynamic evaluation score based on question points and correctness
     int calculatedScore = 0;
@@ -199,29 +203,30 @@ class TestBloc extends Bloc<TestEvent, TestState> {
       tabSwitchCount: state.tabSwitchCount,
     );
 
-    emit(state.copyWith(
-      isSubmittingResult: false,
-      submissionSuccess: success,
-      isSubmittedToday: success,
-      qcmScore: calculatedScore,
-      totalPossibleScore: finalTotalPossible,
-    ));
+    emit(
+      state.copyWith(
+        isSubmittingResult: false,
+        submissionSuccess: success,
+        isSubmittedToday: success,
+        qcmScore: calculatedScore,
+        totalPossibleScore: finalTotalPossible,
+      ),
+    );
   }
 
-  void _onResetQuiz(
-    ResetQuizEvent event,
-    Emitter<TestState> emit,
-  ) {
+  void _onResetQuiz(ResetQuizEvent event, Emitter<TestState> emit) {
     _timer?.cancel();
-    emit(state.copyWith(
-      isQuizActive: false,
-      isQuizFinished: false,
-      currentQuestionIndex: 0,
-      remainingSeconds: 60,
-      bonusTimeBank: 0,
-      userAnswersMap: {},
-      tabSwitchCount: 0,
-    ));
+    emit(
+      state.copyWith(
+        isQuizActive: false,
+        isQuizFinished: false,
+        currentQuestionIndex: 0,
+        remainingSeconds: 60,
+        bonusTimeBank: 0,
+        userAnswersMap: {},
+        tabSwitchCount: 0,
+      ),
+    );
   }
 
   @override

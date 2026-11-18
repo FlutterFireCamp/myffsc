@@ -27,7 +27,9 @@ class CourseSessionModel extends ProgramItem {
       replayUrl: map['replayUrl'] as String?,
       location: map['location'] as String?,
       speaker: map['speaker'] as String?,
-      createdAt: map['createdAt'] != null ? DateTime.tryParse(map['createdAt'].toString()) : null,
+      createdAt: map['createdAt'] != null
+          ? DateTime.tryParse(map['createdAt'].toString())
+          : null,
     );
   }
 }

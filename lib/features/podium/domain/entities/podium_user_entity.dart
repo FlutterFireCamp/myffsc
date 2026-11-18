@@ -54,16 +54,16 @@ class PodiumUserEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        photoUrl,
-        country,
-        community,
-        hub,
-        totalPoints,
-        level,
-        rank,
-      ];
+    id,
+    name,
+    photoUrl,
+    country,
+    community,
+    hub,
+    totalPoints,
+    level,
+    rank,
+  ];
 }
 
 class LeaderboardData extends Equatable {
@@ -81,9 +81,9 @@ class LeaderboardData extends Equatable {
 
   @override
   List<Object?> get props => [
-        topUsers,
-        totalParticipants,
-        currentUserRank,
-        currentUserPodiumData,
-      ];
+    topUsers,
+    totalParticipants,
+    currentUserRank,
+    currentUserPodiumData,
+  ];
 }

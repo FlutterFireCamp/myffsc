@@ -8,7 +8,9 @@ import '../models/user_model.dart';
 
 class UserCanceledException implements Exception {
   final String message;
-  const UserCanceledException([this.message = "Connexion Google annulée par l'utilisateur."]);
+  const UserCanceledException([
+    this.message = "Connexion Google annulée par l'utilisateur.",
+  ]);
 
   @override
   String toString() => message;
@@ -41,13 +43,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> _ensureGoogleSignInInitialized(String clientId) async {
     if (_isGoogleSignInInitialized) return;
     try {
-      dev.log('Initializing GoogleSignIn with serverClientId ($clientId)...', name: 'AUTH_REMOTE_DS');
-      await googleSignIn.initialize(
-        serverClientId: clientId,
+      dev.log(
+        'Initializing GoogleSignIn with serverClientId ($clientId)...',
+        name: 'AUTH_REMOTE_DS',
       );
+      await googleSignIn.initialize(serverClientId: clientId);
       _isGoogleSignInInitialized = true;
     } catch (e, st) {
-      dev.log('GoogleSignIn initialization warning: $e', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+      dev.log(
+        'GoogleSignIn initialization warning: $e',
+        name: 'AUTH_REMOTE_DS',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -57,7 +65,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required Map<String, dynamic> data,
   }) async {
     try {
-      dev.log('Completing profile for user $userId in Firestore...', name: 'AUTH_REMOTE_DS');
+      dev.log(
+        'Completing profile for user $userId in Firestore...',
+        name: 'AUTH_REMOTE_DS',
+      );
       final updatePayload = Map<String, dynamic>.from(data);
       updatePayload['updatedAt'] = FieldValue.serverTimestamp();
 
@@ -71,7 +82,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       return UserModel.fromMap(updatedSnap.data()!, updatedSnap.id);
     } catch (e, st) {
-      dev.log('Error completing profile', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+      dev.log(
+        'Error completing profile',
+        name: 'AUTH_REMOTE_DS',
+        error: e,
+        stackTrace: st,
+      );
       rethrow;
     }
   }
@@ -80,16 +96,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> signInWithGoogle() async {
     try {
       dev.log('Initiating Google Sign-In flow...', name: 'AUTH_REMOTE_DS');
-      FirebaseCrashlytics.instance.log('AUTH_DS: Initiating Google Sign-In flow');
+      FirebaseCrashlytics.instance.log(
+        'AUTH_DS: Initiating Google Sign-In flow',
+      );
 
       const envServerClientId = String.fromEnvironment('WEB_CLIENT_ID');
-      final String clientIdToUse = (serverClientId != null && serverClientId!.isNotEmpty)
+      final String clientIdToUse =
+          (serverClientId != null && serverClientId!.isNotEmpty)
           ? serverClientId!
           : (envServerClientId.isNotEmpty
-              ? envServerClientId
-              : '940039203312-dgmo6fr82npo9ts44c1vrr4f7rtild2b.apps.googleusercontent.com');
+                ? envServerClientId
+                : '940039203312-dgmo6fr82npo9ts44c1vrr4f7rtild2b.apps.googleusercontent.com');
 
-      FirebaseCrashlytics.instance.setCustomKey('auth_server_client_id', clientIdToUse);
+      FirebaseCrashlytics.instance.setCustomKey(
+        'auth_server_client_id',
+        clientIdToUse,
+      );
 
       UserCredential? userCredential;
 
@@ -97,13 +119,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       try {
         await _ensureGoogleSignInInitialized(clientIdToUse);
 
-        FirebaseCrashlytics.instance.log('AUTH_DS: GoogleSignIn ready, calling authenticate()');
+        FirebaseCrashlytics.instance.log(
+          'AUTH_DS: GoogleSignIn ready, calling authenticate()',
+        );
         final googleUser = await googleSignIn.authenticate();
         final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
         final idToken = googleAuth.idToken;
         if (idToken == null || idToken.isEmpty) {
-          final errorMsg = "Impossible de récupérer le jeton d'authentification Google (idToken null).";
+          final errorMsg =
+              "Impossible de récupérer le jeton d'authentification Google (idToken null).";
           FirebaseCrashlytics.instance.recordError(
             Exception(errorMsg),
             StackTrace.current,
@@ -113,24 +138,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           throw Exception(errorMsg);
         }
 
-        FirebaseCrashlytics.instance.log('AUTH_DS: idToken retrieved, calling signInWithCredential');
+        FirebaseCrashlytics.instance.log(
+          'AUTH_DS: idToken retrieved, calling signInWithCredential',
+        );
         final AuthCredential credential = GoogleAuthProvider.credential(
           idToken: idToken,
         );
 
         userCredential = await firebaseAuth.signInWithCredential(credential);
       } on GoogleSignInException catch (e, stackTrace) {
-        dev.log('GoogleSignInException: code=${e.code}, description=${e.description}, details=${e.details}', name: 'AUTH_REMOTE_DS');
+        dev.log(
+          'GoogleSignInException: code=${e.code}, description=${e.description}, details=${e.details}',
+          name: 'AUTH_REMOTE_DS',
+        );
         FirebaseCrashlytics.instance.recordError(
           e,
           stackTrace,
-          reason: 'GoogleSignInException [code=${e.code}, description=${e.description}]',
+          reason:
+              'GoogleSignInException [code=${e.code}, description=${e.description}]',
           fatal: false,
         );
-        if (e.code == GoogleSignInExceptionCode.canceled && (e.description == null || e.description!.isEmpty)) {
+        if (e.code == GoogleSignInExceptionCode.canceled &&
+            (e.description == null || e.description!.isEmpty)) {
           throw const UserCanceledException();
         }
-        throw Exception("Connexion Google (${e.code}): ${e.description ?? 'Interrompue par Google Play Services. Vérifiez la configuration SHA-1 Google Play App Signing dans Firebase.'}");
+        throw Exception(
+          "Connexion Google (${e.code}): ${e.description ?? 'Interrompue par Google Play Services. Vérifiez la configuration SHA-1 Google Play App Signing dans Firebase.'}",
+        );
       } catch (e, stackTrace) {
         if (e is UserCanceledException) rethrow;
         dev.log('Erreur inattendue Google Sign-In: $e', name: 'AUTH_REMOTE_DS');
@@ -145,7 +179,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       final User? firebaseUser = userCredential.user;
       if (firebaseUser == null) {
-        dev.log('Firebase User is null after credential sign-in', name: 'AUTH_REMOTE_DS');
+        dev.log(
+          'Firebase User is null after credential sign-in',
+          name: 'AUTH_REMOTE_DS',
+        );
         throw Exception("Échec de la récupération de l'utilisateur Firebase.");
       }
 
@@ -154,7 +191,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final displayName = firebaseUser.displayName;
 
       FirebaseCrashlytics.instance.setUserIdentifier(firebaseUser.uid);
-      FirebaseCrashlytics.instance.setCustomKey('user_email', email ?? 'unknown');
+      FirebaseCrashlytics.instance.setCustomKey(
+        'user_email',
+        email ?? 'unknown',
+      );
 
       return await _fetchAndSyncExistingUserDoc(
         firebaseUid: firebaseUser.uid,
@@ -165,7 +205,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on UserCanceledException {
       rethrow;
     } catch (e, stackTrace) {
-      dev.log('Error during signInWithGoogle', name: 'AUTH_REMOTE_DS', error: e, stackTrace: stackTrace);
+      dev.log(
+        'Error during signInWithGoogle',
+        name: 'AUTH_REMOTE_DS',
+        error: e,
+        stackTrace: stackTrace,
+      );
       FirebaseCrashlytics.instance.recordError(
         e,
         stackTrace,
@@ -192,7 +237,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         googlePhotoUrl: firebaseUser.photoURL,
       );
     } catch (e, stackTrace) {
-      dev.log('Error fetching getCurrentUser', name: 'AUTH_REMOTE_DS', error: e, stackTrace: stackTrace);
+      dev.log(
+        'Error fetching getCurrentUser',
+        name: 'AUTH_REMOTE_DS',
+        error: e,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }
@@ -203,22 +253,38 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     final normalizedEmail = email.trim().toLowerCase();
 
     try {
-      dev.log('Vérification de $normalizedEmail dans config/participants-emails...', name: 'AUTH_REMOTE_DS');
+      dev.log(
+        'Vérification de $normalizedEmail dans config/participants-emails...',
+        name: 'AUTH_REMOTE_DS',
+      );
 
-      final docSnap = await firestore.collection('config').doc('participants-emails').get();
+      final docSnap = await firestore
+          .collection('config')
+          .doc('participants-emails')
+          .get();
       if (docSnap.exists && docSnap.data() != null) {
         final data = docSnap.data()!;
         final rawEmails = data['emails'];
         if (rawEmails is List) {
-          final isFound = rawEmails.any((e) => e.toString().trim().toLowerCase() == normalizedEmail);
+          final isFound = rawEmails.any(
+            (e) => e.toString().trim().toLowerCase() == normalizedEmail,
+          );
           if (isFound) {
-            dev.log('E-mail $normalizedEmail confirmé dans config/participants-emails (emails)', name: 'AUTH_REMOTE_DS');
+            dev.log(
+              'E-mail $normalizedEmail confirmé dans config/participants-emails (emails)',
+              name: 'AUTH_REMOTE_DS',
+            );
             return true;
           }
         }
       }
     } catch (e, st) {
-      dev.log('Erreur lors de la vérification dans config/participants-emails', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+      dev.log(
+        'Erreur lors de la vérification dans config/participants-emails',
+        name: 'AUTH_REMOTE_DS',
+        error: e,
+        stackTrace: st,
+      );
     }
 
     return false;
@@ -249,7 +315,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     // 2. Recherche secondaire : Document avec ID matching firebaseUid dans /users
     DocumentSnapshot<Map<String, dynamic>>? docByIdSnap;
     if (existingDoc == null) {
-      final docSnap = await firestore.collection('users').doc(firebaseUid).get();
+      final docSnap = await firestore
+          .collection('users')
+          .doc(firebaseUid)
+          .get();
       if (docSnap.exists && docSnap.data() != null) {
         docByIdSnap = docSnap;
       }
@@ -263,7 +332,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     final data = existingDoc != null
         ? Map<String, dynamic>.from(existingDoc.data())
-        : (docByIdSnap != null ? Map<String, dynamic>.from(docByIdSnap.data()!) : null);
+        : (docByIdSnap != null
+              ? Map<String, dynamic>.from(docByIdSnap.data()!)
+              : null);
 
     final docId = existingDoc != null
         ? existingDoc.id
@@ -274,8 +345,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final updates = <String, dynamic>{};
 
       // Si l'e-mail est dans la liste de configuration des participants et que le statut est en attente ou absent
-      if (isParticipantInConfig && (data['status'] == 'pending' || data['status'] == 'not_found')) {
-        dev.log('Validation automatique du statut utilisateur à "accepted" grâce à config/participants-emails', name: 'AUTH_REMOTE_DS');
+      if (isParticipantInConfig &&
+          (data['status'] == 'pending' || data['status'] == 'not_found')) {
+        dev.log(
+          'Validation automatique du statut utilisateur à "accepted" grâce à config/participants-emails',
+          name: 'AUTH_REMOTE_DS',
+        );
         updates['status'] = 'accepted';
         data['status'] = 'accepted';
       }
@@ -283,7 +358,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       // Synchronisation photo de profil Google
       if (googlePhotoUrl != null && googlePhotoUrl.isNotEmpty) {
         if (data['photoUrl'] != googlePhotoUrl) {
-          dev.log('Mise à jour photoUrl dans le document utilisateur ($docId)', name: 'AUTH_REMOTE_DS');
+          dev.log(
+            'Mise à jour photoUrl dans le document utilisateur ($docId)',
+            name: 'AUTH_REMOTE_DS',
+          );
           updates['photoUrl'] = googlePhotoUrl;
           data['photoUrl'] = googlePhotoUrl;
         }
@@ -294,7 +372,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await docRefToUpdate.update(updates);
       }
 
-      dev.log('Document utilisateur synchronisé pour $email ($docId)', name: 'AUTH_REMOTE_DS');
+      dev.log(
+        'Document utilisateur synchronisé pour $email ($docId)',
+        name: 'AUTH_REMOTE_DS',
+      );
 
       // Synchronisation asynchrone du token FCM
       try {
@@ -302,7 +383,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           sl<NotificationService>().syncUserFcmToken(docId);
         }
       } catch (e, st) {
-        dev.log('Erreur lors du déclenchement syncUserFcmToken', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+        dev.log(
+          'Erreur lors du déclenchement syncUserFcmToken',
+          name: 'AUTH_REMOTE_DS',
+          error: e,
+          stackTrace: st,
+        );
       }
 
       // Résolution du certificat dans la collection 'certificates' si absent du profil
@@ -324,12 +410,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
           if (certSnap.docs.isNotEmpty) {
             final certData = certSnap.docs.first.data();
-            final certCode = certData['certificateId']?.toString() ?? certSnap.docs.first.id;
+            final certCode =
+                certData['certificateId']?.toString() ?? certSnap.docs.first.id;
             data['certificateCode'] = certCode;
-            dev.log('Certificat trouvé pour $email dans "certificates": $certCode', name: 'AUTH_REMOTE_DS');
+            dev.log(
+              'Certificat trouvé pour $email dans "certificates": $certCode',
+              name: 'AUTH_REMOTE_DS',
+            );
           }
         } catch (e) {
-          dev.log('Notice: résolution du certificat: $e', name: 'AUTH_REMOTE_DS');
+          dev.log(
+            'Notice: résolution du certificat: $e',
+            name: 'AUTH_REMOTE_DS',
+          );
         }
       }
 
@@ -338,7 +431,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     // Cas 2 : Aucun document dans /users mais l'e-mail EST dans config/participants-emails
     if (isParticipantInConfig) {
-      dev.log('Création du document initial pour le participant $email ($firebaseUid) avec statut accepted', name: 'AUTH_REMOTE_DS');
+      dev.log(
+        'Création du document initial pour le participant $email ($firebaseUid) avec statut accepted',
+        name: 'AUTH_REMOTE_DS',
+      );
       final newUserData = <String, dynamic>{
         'name': displayName ?? 'Apprenant FFSC',
         'email': email ?? '',
@@ -358,7 +454,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           sl<NotificationService>().syncUserFcmToken(firebaseUid);
         }
       } catch (e, st) {
-        dev.log('Erreur lors du déclenchement syncUserFcmToken', name: 'AUTH_REMOTE_DS', error: e, stackTrace: st);
+        dev.log(
+          'Erreur lors du déclenchement syncUserFcmToken',
+          name: 'AUTH_REMOTE_DS',
+          error: e,
+          stackTrace: st,
+        );
       }
 
       return UserModel(
@@ -399,7 +500,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await firebaseAuth.signOut();
       dev.log('User signed out successfully', name: 'AUTH_REMOTE_DS');
     } catch (e, stackTrace) {
-      dev.log('Error during signOut', name: 'AUTH_REMOTE_DS', error: e, stackTrace: stackTrace);
+      dev.log(
+        'Error during signOut',
+        name: 'AUTH_REMOTE_DS',
+        error: e,
+        stackTrace: stackTrace,
+      );
       rethrow;
     }
   }

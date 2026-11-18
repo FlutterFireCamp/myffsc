@@ -12,7 +12,10 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(
-      const GetLeaderboardParams(currentUserId: 'user_1', currentUserPoints: 100),
+      const GetLeaderboardParams(
+        currentUserId: 'user_1',
+        currentUserPoints: 100,
+      ),
     );
   });
 
@@ -44,25 +47,22 @@ void main() {
     blocTest<PodiumBloc, PodiumState>(
       'emits [PodiumLoadingState, PodiumLoadedState] when leaderboard is fetched successfully',
       build: () {
-        when(() => mockGetLeaderboardUseCase(any()))
-            .thenAnswer((_) async => const Right(tLeaderboardData));
+        when(
+          () => mockGetLeaderboardUseCase(any()),
+        ).thenAnswer((_) async => const Right(tLeaderboardData));
         return podiumBloc;
       },
-      act: (bloc) => bloc.add(const FetchLeaderboardEvent(
-        currentUserId: 'user_1',
-        currentUserPoints: 250,
-      )),
+      act: (bloc) => bloc.add(
+        const FetchLeaderboardEvent(
+          currentUserId: 'user_1',
+          currentUserPoints: 250,
+        ),
+      ),
       expect: () => [
         isA<PodiumLoadingState>(),
-        isA<PodiumLoadedState>().having(
-          (s) => s.data.totalParticipants,
-          'totalParticipants',
-          370,
-        ).having(
-          (s) => s.data.currentUserRank,
-          'currentUserRank',
-          1,
-        ),
+        isA<PodiumLoadedState>()
+            .having((s) => s.data.totalParticipants, 'totalParticipants', 370)
+            .having((s) => s.data.currentUserRank, 'currentUserRank', 1),
       ],
     );
   });

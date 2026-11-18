@@ -170,11 +170,10 @@ class AppTextStyles {
   static TextStyle avatarInitial(
     double fontSize, {
     Color color = AppColors.skyBlue,
-  }) =>
-      TextStyle(
-        fontFamily: fontFamily,
-        fontSize: fontSize,
-        fontWeight: FontWeight.bold,
-        color: color,
-      );
+  }) => TextStyle(
+    fontFamily: fontFamily,
+    fontSize: fontSize,
+    fontWeight: FontWeight.bold,
+    color: color,
+  );
 }

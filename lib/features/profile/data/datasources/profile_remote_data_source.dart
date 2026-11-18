@@ -30,29 +30,32 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Stream<List<UserTestHistoryModel>> streamUserTestHistory(String userId) {
-    dev.log('Streaming test history for user: $userId', name: 'PROFILE_REMOTE_DS');
+    dev.log(
+      'Streaming test history for user: $userId',
+      name: 'PROFILE_REMOTE_DS',
+    );
     return firestore
         .collection('users')
         .doc(userId)
         .collection('tests')
         .snapshots()
         .map((snapshot) {
-      final list = snapshot.docs.map((doc) {
-        return UserTestHistoryModel.fromFirestore(
-          docId: doc.id,
-          data: doc.data(),
-        );
-      }).toList();
+          final list = snapshot.docs.map((doc) {
+            return UserTestHistoryModel.fromFirestore(
+              docId: doc.id,
+              data: doc.data(),
+            );
+          }).toList();
 
-      // Sort by date descending
-      list.sort((a, b) {
-        final dateComp = b.dateStr.compareTo(a.dateStr);
-        if (dateComp != 0) return dateComp;
-        return b.docId.compareTo(a.docId);
-      });
+          // Sort by date descending
+          list.sort((a, b) {
+            final dateComp = b.dateStr.compareTo(a.dateStr);
+            if (dateComp != 0) return dateComp;
+            return b.docId.compareTo(a.docId);
+          });
 
-      return list;
-    });
+          return list;
+        });
   }
 
   @override
@@ -61,13 +64,21 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     required Map<String, dynamic> data,
   }) async {
     try {
-      dev.log('Updating profile in Firestore for user $userId', name: 'PROFILE_REMOTE_DS');
+      dev.log(
+        'Updating profile in Firestore for user $userId',
+        name: 'PROFILE_REMOTE_DS',
+      );
       final updateData = Map<String, dynamic>.from(data);
       updateData['updatedAt'] = FieldValue.serverTimestamp();
 
       await firestore.collection('users').doc(userId).update(updateData);
     } catch (e, st) {
-      dev.log('Error updating profile in Firestore', name: 'PROFILE_REMOTE_DS', error: e, stackTrace: st);
+      dev.log(
+        'Error updating profile in Firestore',
+        name: 'PROFILE_REMOTE_DS',
+        error: e,
+        stackTrace: st,
+      );
       rethrow;
     }
   }
@@ -80,7 +91,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     required dynamic rawAnswers,
   }) async {
     try {
-      dev.log('Fetching test correction details for docId: $docId, quizId: $quizId', name: 'PROFILE_REMOTE_DS');
+      dev.log(
+        'Fetching test correction details for docId: $docId, quizId: $quizId',
+        name: 'PROFILE_REMOTE_DS',
+      );
       TestQuizEntity? mainQuiz;
       try {
         mainQuiz = await testFirestoreService.fetchTestBySubmission(
@@ -113,10 +127,12 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           ..sort((a, b) {
             final matchA = RegExp(r'\d+').firstMatch(a.toString());
             final matchB = RegExp(r'\d+').firstMatch(b.toString());
-            final intA =
-                matchA != null ? (int.tryParse(matchA.group(0)!) ?? 0) : 0;
-            final intB =
-                matchB != null ? (int.tryParse(matchB.group(0)!) ?? 0) : 0;
+            final intA = matchA != null
+                ? (int.tryParse(matchA.group(0)!) ?? 0)
+                : 0;
+            final intB = matchB != null
+                ? (int.tryParse(matchB.group(0)!) ?? 0)
+                : 0;
             if (intA != intB) return intA.compareTo(intB);
             return a.toString().compareTo(b.toString());
           });
@@ -142,8 +158,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       final List<UserQuestionCorrection> corrections = [];
       final int questionCount =
           mainQuiz != null && mainQuiz.questions.isNotEmpty
-              ? mainQuiz.questions.length
-              : userAnswersList.length;
+          ? mainQuiz.questions.length
+          : userAnswersList.length;
 
       for (int i = 0; i < questionCount; i++) {
         final mainQ = (mainQuiz != null && i < mainQuiz.questions.length)
@@ -166,7 +182,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
             }
           }
         }
-        userAnsData ??= (i < userAnswersList.length ? userAnswersList[i] : null);
+        userAnsData ??= (i < userAnswersList.length
+            ? userAnswersList[i]
+            : null);
 
         final studentAns = userAnsData != null
             ? (userAnsData['studentAnswer'] ??
@@ -184,14 +202,18 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
             earnedScore = mainQ.actualPoints;
           }
         } else if (earnedScore == 0 && userAnsData != null) {
-          if (userAnsData['isCorrect'] == true || userAnsData['correct'] == true) {
-            earnedScore = (userAnsData['maxScore'] as num?)?.toInt() ??
+          if (userAnsData['isCorrect'] == true ||
+              userAnsData['correct'] == true) {
+            earnedScore =
+                (userAnsData['maxScore'] as num?)?.toInt() ??
                 (userAnsData['points'] as num?)?.toInt() ??
                 25;
           } else if (userAnsData['expectedAnswer'] != null &&
               userAnsData['expectedAnswer'].toString().trim().isNotEmpty &&
-              userAnsData['expectedAnswer'].toString().trim() == studentAns.toString().trim()) {
-            earnedScore = (userAnsData['maxScore'] as num?)?.toInt() ??
+              userAnsData['expectedAnswer'].toString().trim() ==
+                  studentAns.toString().trim()) {
+            earnedScore =
+                (userAnsData['maxScore'] as num?)?.toInt() ??
                 (userAnsData['points'] as num?)?.toInt() ??
                 25;
           }
@@ -208,29 +230,33 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
             ? mainQ.title
             : (userAnsData?['questionText'] as String? ?? "Question ${i + 1}");
 
-        final questionStatement = (mainQ != null && (mainQ.statement?.isNotEmpty ?? false))
+        final questionStatement =
+            (mainQ != null && (mainQ.statement?.isNotEmpty ?? false))
             ? mainQ.statement
             : (userAnsData?['statement'] as String? ??
                   userAnsData?['question'] as String? ??
                   questionTitle);
 
-        final questionOptions = mainQ?.options ??
+        final questionOptions =
+            mainQ?.options ??
             (userAnsData?['options'] as List?)
                 ?.map((e) => e.toString())
                 .toList() ??
             [];
 
-        final questionType = mainQ?.type ??
+        final questionType =
+            mainQ?.type ??
             (userAnsData?['type'] as String? ??
                 (questionOptions.isNotEmpty ? 'choice' : 'open'));
 
-        final correctAnswers = mainQ?.correctAnswers ??
+        final correctAnswers =
+            mainQ?.correctAnswers ??
             (userAnsData?['correctAnswers'] as List?)
                 ?.map((e) => (e as num).toInt())
                 .toList();
 
-        final explanation = mainQ?.explanation ??
-            userAnsData?['explanation'] as String?;
+        final explanation =
+            mainQ?.explanation ?? userAnsData?['explanation'] as String?;
 
         corrections.add(
           UserQuestionCorrection(
@@ -241,7 +267,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
             type: questionType,
             studentAnswer: studentAns,
             earnedScore: earnedScore,
-            maxScore: mainQ?.actualPoints ??
+            maxScore:
+                mainQ?.actualPoints ??
                 (userAnsData?['maxScore'] as num?)?.toInt() ??
                 (userAnsData?['points'] as num?)?.toInt() ??
                 25,
@@ -255,7 +282,12 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
       return corrections;
     } catch (e, st) {
-      dev.log('Error getting test correction details', name: 'PROFILE_REMOTE_DS', error: e, stackTrace: st);
+      dev.log(
+        'Error getting test correction details',
+        name: 'PROFILE_REMOTE_DS',
+        error: e,
+        stackTrace: st,
+      );
       rethrow;
     }
   }

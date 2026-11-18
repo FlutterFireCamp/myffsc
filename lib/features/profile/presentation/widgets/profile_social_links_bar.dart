@@ -11,7 +11,8 @@ class ProfileSocialLinksBar extends StatelessWidget {
   const ProfileSocialLinksBar({super.key, required this.user});
 
   bool get hasSocialLinks =>
-      (user.discordUsername != null && user.discordUsername!.trim().isNotEmpty) ||
+      (user.discordUsername != null &&
+          user.discordUsername!.trim().isNotEmpty) ||
       (user.github != null && user.github!.trim().isNotEmpty) ||
       (user.linkedin != null && user.linkedin!.trim().isNotEmpty) ||
       (user.x != null && user.x!.trim().isNotEmpty) ||
@@ -49,10 +50,7 @@ class ProfileSocialLinksBar extends StatelessWidget {
     } else {
       await Clipboard.setData(ClipboardData(text: val));
       if (context.mounted) {
-        AppSnackBar.showSuccess(
-          context,
-          "Pseudo Discord copié : $val",
-        );
+        AppSnackBar.showSuccess(context, "Pseudo Discord copié : $val");
       }
     }
   }
@@ -66,7 +64,8 @@ class ProfileSocialLinksBar extends StatelessWidget {
       spacing: 2.5.w,
       children: [
         // 1. Discord (Au premier rang)
-        if (user.discordUsername != null && user.discordUsername!.trim().isNotEmpty)
+        if (user.discordUsername != null &&
+            user.discordUsername!.trim().isNotEmpty)
           _buildSocialIconButton(
             icon: AppIcons.discord(size: 16),
             tooltip: "Discord : ${user.discordUsername}",

@@ -16,10 +16,7 @@ class ProgramsLoadedState extends ProgramsState {
   final List<ProgramItem> programs;
   final ProgramType? currentFilter;
 
-  const ProgramsLoadedState({
-    required this.programs,
-    this.currentFilter,
-  });
+  const ProgramsLoadedState({required this.programs, this.currentFilter});
 
   @override
   List<Object?> get props => [programs, currentFilter];

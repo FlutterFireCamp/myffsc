@@ -31,7 +31,9 @@ class AnnouncementsRepositoryImpl implements AnnouncementsRepository {
         error: e,
         stackTrace: stackTrace,
       );
-      return Left(ServerFailure("Impossible de charger les annonces : ${e.toString()}"));
+      return Left(
+        ServerFailure("Impossible de charger les annonces : ${e.toString()}"),
+      );
     }
   }
 }

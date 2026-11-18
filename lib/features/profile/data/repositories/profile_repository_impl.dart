@@ -22,13 +22,23 @@ class ProfileRepositoryImpl implements ProfileRepository {
             (models) => Right(models),
           )
           .handleError((e, st) {
-            dev.log('ProfileRepository.streamUserTestHistory failed', name: 'PROFILE_REPO', error: e, stackTrace: st);
+            dev.log(
+              'ProfileRepository.streamUserTestHistory failed',
+              name: 'PROFILE_REPO',
+              error: e,
+              stackTrace: st,
+            );
             return Left<Failure, List<UserTestHistoryEntity>>(
               ServerFailure(e.toString()),
             );
           });
     } catch (e, st) {
-      dev.log('ProfileRepository.streamUserTestHistory catch error', name: 'PROFILE_REPO', error: e, stackTrace: st);
+      dev.log(
+        'ProfileRepository.streamUserTestHistory catch error',
+        name: 'PROFILE_REPO',
+        error: e,
+        stackTrace: st,
+      );
       return Stream.value(Left(ServerFailure(e.toString())));
     }
   }
@@ -42,13 +52,19 @@ class ProfileRepositoryImpl implements ProfileRepository {
       await remoteDataSource.updateProfile(userId: userId, data: data);
       return const Right(null);
     } catch (e, st) {
-      dev.log('ProfileRepository.updateProfile failed', name: 'PROFILE_REPO', error: e, stackTrace: st);
+      dev.log(
+        'ProfileRepository.updateProfile failed',
+        name: 'PROFILE_REPO',
+        error: e,
+        stackTrace: st,
+      );
       return Left(ServerFailure(e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, List<UserQuestionCorrection>>> getTestCorrectionDetails({
+  Future<Either<Failure, List<UserQuestionCorrection>>>
+  getTestCorrectionDetails({
     required String? quizId,
     required String dateStr,
     required String docId,
@@ -63,7 +79,12 @@ class ProfileRepositoryImpl implements ProfileRepository {
       );
       return Right(list);
     } catch (e, st) {
-      dev.log('ProfileRepository.getTestCorrectionDetails failed', name: 'PROFILE_REPO', error: e, stackTrace: st);
+      dev.log(
+        'ProfileRepository.getTestCorrectionDetails failed',
+        name: 'PROFILE_REPO',
+        error: e,
+        stackTrace: st,
+      );
       return Left(ServerFailure(e.toString()));
     }
   }

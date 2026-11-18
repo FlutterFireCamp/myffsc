@@ -32,14 +32,10 @@ class AppTheme {
         onError: AppColors.textPrimary,
       ),
       actionIconTheme: ActionIconThemeData(
-        backButtonIconBuilder: (BuildContext context) => AppIcons.chevronLeft(
-          size: 24,
-          color: AppColors.textPrimary,
-        ),
-        closeButtonIconBuilder: (BuildContext context) => AppIcons.cancel(
-          size: 24,
-          color: AppColors.textPrimary,
-        ),
+        backButtonIconBuilder: (BuildContext context) =>
+            AppIcons.chevronLeft(size: 24, color: AppColors.textPrimary),
+        closeButtonIconBuilder: (BuildContext context) =>
+            AppIcons.cancel(size: 24, color: AppColors.textPrimary),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background,

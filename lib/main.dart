@@ -25,7 +25,9 @@ void main() async {
 
   // 2. Initialiser Firebase Core
   try {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   } catch (e, stackTrace) {
     dev.log(
       'Firebase.initializeApp error: $e',
@@ -38,9 +40,11 @@ void main() async {
   // 3. Configuration sécurisée de Firebase Crashlytics
   try {
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    unawaited(FirebaseCrashlytics.instance.sendUnsentReports().catchError((e) {
-      dev.log('Crashlytics sendUnsentReports notice: $e', name: 'MAIN');
-    }));
+    unawaited(
+      FirebaseCrashlytics.instance.sendUnsentReports().catchError((e) {
+        dev.log('Crashlytics sendUnsentReports notice: $e', name: 'MAIN');
+      }),
+    );
 
     FlutterError.onError = (errorDetails) {
       try {

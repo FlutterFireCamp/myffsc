@@ -46,12 +46,12 @@ class AnnouncementsLoadedState extends AnnouncementsState {
 
   @override
   List<Object?> get props => [
-        announcements,
-        hasMore,
-        isLoadingMore,
-        currentFilter,
-        lastDocument,
-      ];
+    announcements,
+    hasMore,
+    isLoadingMore,
+    currentFilter,
+    lastDocument,
+  ];
 }
 
 class AnnouncementsErrorState extends AnnouncementsState {

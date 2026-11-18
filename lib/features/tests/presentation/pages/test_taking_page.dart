@@ -399,15 +399,19 @@ class _TestTakingPageState extends State<TestTakingPage>
                                 ),
                                 AppTextField(
                                   controller: _textAnswerController,
-                                  enabled: !_isAnswerSubmittedForCurrentQuestion,
+                                  enabled:
+                                      !_isAnswerSubmittedForCurrentQuestion,
                                   maxLines: 6,
                                   enableInteractiveSelection: false,
                                   style: AppTextStyles.bodyMedium.copyWith(
                                     color: AppColors.textPrimary,
                                     fontFamily: 'monospace',
                                   ),
-                                  hintText: "Saisissez votre code Dart ou votre réponse rédigée ici...",
-                                  hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
+                                  hintText:
+                                      "Saisissez votre code Dart ou votre réponse rédigée ici...",
+                                  hintStyle: AppTextStyles.bodyMedium.copyWith(
+                                    color: AppColors.textMuted,
+                                  ),
                                 ),
                               ],
                             ),

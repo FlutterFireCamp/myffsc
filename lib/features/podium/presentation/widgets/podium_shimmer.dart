@@ -69,7 +69,12 @@ class PodiumShimmer extends StatelessWidget {
         // 2. Leaderboard List Rows (Ranks 4+)
         Expanded(
           child: ListView.separated(
-            padding: EdgeInsets.only(left: 5.w, right: 5.w, top: 0.5.h, bottom: 4.h),
+            padding: EdgeInsets.only(
+              left: 5.w,
+              right: 5.w,
+              top: 0.5.h,
+              bottom: 4.h,
+            ),
             itemCount: 4,
             separatorBuilder: (context, index) => SizedBox(height: 1.2.h),
             itemBuilder: (context, index) => Container(

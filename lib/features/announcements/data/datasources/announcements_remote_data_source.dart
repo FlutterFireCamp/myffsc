@@ -10,7 +10,8 @@ abstract class AnnouncementsRemoteDataSource {
   });
 }
 
-class AnnouncementsRemoteDataSourceImpl implements AnnouncementsRemoteDataSource {
+class AnnouncementsRemoteDataSourceImpl
+    implements AnnouncementsRemoteDataSource {
   final FirebaseFirestore firestore;
 
   AnnouncementsRemoteDataSourceImpl({required this.firestore});
@@ -49,7 +50,9 @@ class AnnouncementsRemoteDataSourceImpl implements AnnouncementsRemoteDataSource
       }
 
       final hasMore = querySnapshot.docs.length >= limit;
-      final lastDoc = querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
+      final lastDoc = querySnapshot.docs.isNotEmpty
+          ? querySnapshot.docs.last
+          : null;
 
       dev.log(
         '${items.length} annonce(s) chargée(s), hasMore: $hasMore',

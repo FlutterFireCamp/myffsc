@@ -24,7 +24,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     WatchProfileTestHistoryEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    dev.log('Starting watch for user test history: ${event.userId}', name: 'PROFILE_BLOC');
+    dev.log(
+      'Starting watch for user test history: ${event.userId}',
+      name: 'PROFILE_BLOC',
+    );
     emit(state.copyWith(isLoadingHistory: true, historyError: null));
 
     await emit.forEach(
@@ -43,7 +46,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         );
       },
       onError: (error, stackTrace) {
-        dev.log('Error watching test history', name: 'PROFILE_BLOC', error: error, stackTrace: stackTrace);
+        dev.log(
+          'Error watching test history',
+          name: 'PROFILE_BLOC',
+          error: error,
+          stackTrace: stackTrace,
+        );
         return state.copyWith(
           isLoadingHistory: false,
           historyError: error.toString(),
@@ -56,8 +64,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     UpdateProfileSubmittedEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    dev.log('Submitting profile update for user: ${event.userId}', name: 'PROFILE_BLOC');
-    emit(state.copyWith(updateStatus: ProfileUpdateStatus.loading, updateError: null));
+    dev.log(
+      'Submitting profile update for user: ${event.userId}',
+      name: 'PROFILE_BLOC',
+    );
+    emit(
+      state.copyWith(
+        updateStatus: ProfileUpdateStatus.loading,
+        updateError: null,
+      ),
+    );
 
     final result = await updateProfileUseCase(
       UpdateProfileParams(userId: event.userId, data: event.data),
@@ -65,7 +81,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     result.fold(
       (failure) {
-        dev.log('Profile update failed: ${failure.message}', name: 'PROFILE_BLOC');
+        dev.log(
+          'Profile update failed: ${failure.message}',
+          name: 'PROFILE_BLOC',
+        );
         emit(
           state.copyWith(
             updateStatus: ProfileUpdateStatus.failure,
@@ -84,7 +103,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     FetchTestCorrectionDetailsEvent event,
     Emitter<ProfileState> emit,
   ) async {
-    dev.log('Fetching test correction details: ${event.docId}', name: 'PROFILE_BLOC');
+    dev.log(
+      'Fetching test correction details: ${event.docId}',
+      name: 'PROFILE_BLOC',
+    );
     emit(
       state.copyWith(
         isLoadingCorrection: true,
@@ -104,7 +126,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     result.fold(
       (failure) {
-        dev.log('Fetch test correction details failed: ${failure.message}', name: 'PROFILE_BLOC');
+        dev.log(
+          'Fetch test correction details failed: ${failure.message}',
+          name: 'PROFILE_BLOC',
+        );
         emit(
           state.copyWith(
             isLoadingCorrection: false,
@@ -113,7 +138,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         );
       },
       (corrections) {
-        dev.log('Fetch test correction details success: ${corrections.length} questions', name: 'PROFILE_BLOC');
+        dev.log(
+          'Fetch test correction details success: ${corrections.length} questions',
+          name: 'PROFILE_BLOC',
+        );
         emit(
           state.copyWith(
             isLoadingCorrection: false,

@@ -13,7 +13,9 @@ class ProgramsRemoteDataSourceImpl implements ProgramsRemoteDataSource {
   ProgramsRemoteDataSourceImpl({required this.firestore});
 
   @override
-  Future<List<ProgramItem>> getUpcomingPrograms({ProgramType? filterType}) async {
+  Future<List<ProgramItem>> getUpcomingPrograms({
+    ProgramType? filterType,
+  }) async {
     try {
       dev.log(
         'Récupération des programmes avec filtre: ${filterType?.label ?? "Tous"}',
@@ -23,7 +25,10 @@ class ProgramsRemoteDataSourceImpl implements ProgramsRemoteDataSource {
       final querySnapshot = await firestore.collection('programs').get();
 
       if (querySnapshot.docs.isEmpty) {
-        dev.log('Aucun document trouvé dans /programs', name: 'PROGRAMS_REMOTE_DS');
+        dev.log(
+          'Aucun document trouvé dans /programs',
+          name: 'PROGRAMS_REMOTE_DS',
+        );
         return [];
       }
 
@@ -72,9 +77,7 @@ class ProgramsRemoteDataSourceImpl implements ProgramsRemoteDataSource {
       );
 
       // 1. Récupération des programmes actifs
-      final querySnapshot = await firestore
-          .collection('programs')
-          .get();
+      final querySnapshot = await firestore.collection('programs').get();
 
       if (querySnapshot.docs.isEmpty) {
         return null;

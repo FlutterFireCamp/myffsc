@@ -20,10 +20,7 @@ class UpdateProfileParams extends Equatable {
   final String userId;
   final Map<String, dynamic> data;
 
-  const UpdateProfileParams({
-    required this.userId,
-    required this.data,
-  });
+  const UpdateProfileParams({required this.userId, required this.data});
 
   @override
   List<Object?> get props => [userId, data];
@@ -36,10 +33,7 @@ class UpdateProfileUseCase implements UseCase<void, UpdateProfileParams> {
 
   @override
   Future<Either<Failure, void>> call(UpdateProfileParams params) {
-    return repository.updateProfile(
-      userId: params.userId,
-      data: params.data,
-    );
+    return repository.updateProfile(userId: params.userId, data: params.data);
   }
 }
 
@@ -61,7 +55,8 @@ class GetTestCorrectionDetailsParams extends Equatable {
 }
 
 class GetTestCorrectionDetailsUseCase
-    implements UseCase<List<UserQuestionCorrection>, GetTestCorrectionDetailsParams> {
+    implements
+        UseCase<List<UserQuestionCorrection>, GetTestCorrectionDetailsParams> {
   final ProfileRepository repository;
 
   GetTestCorrectionDetailsUseCase(this.repository);

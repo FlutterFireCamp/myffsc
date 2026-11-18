@@ -45,7 +45,8 @@ class UserModel extends UserEntity {
       portfolio: map['portfolio'] as String?,
       totalPoints: (map['totalPoints'] as num?)?.toInt() ?? 0,
       createdAt: map['createdAt']?.toString(),
-      certificateCode: map['certificateCode'] as String? ??
+      certificateCode:
+          map['certificateCode'] as String? ??
           map['certificateId'] as String? ??
           map['certificate'] as String? ??
           map['certificateUrl'] as String?,

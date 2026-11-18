@@ -22,10 +22,7 @@ class TestInstructionsPage extends StatelessWidget {
         backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: AppIcons.chevronLeft(
-            color: AppColors.textPrimary,
-            size: 24,
-          ),
+          icon: AppIcons.chevronLeft(color: AppColors.textPrimary, size: 24),
           onPressed: () {
             if (context.canPop()) {
               context.pop();

@@ -78,12 +78,14 @@ class QuestionItemEntity extends Equatable {
 
       // If expectedText matches an option, find its canonical 0-based index
       if (options != null) {
-        final expectedIdx = options!
-            .indexWhere((opt) => opt.trim().toLowerCase() == expLower);
+        final expectedIdx = options!.indexWhere(
+          (opt) => opt.trim().toLowerCase() == expLower,
+        );
         if (expectedIdx != -1) {
           if (intAns != null && intAns == expectedIdx) return true;
           // Check letter 'A' -> 0, 'B' -> 1
-          if (userAnsStr.length == 1 && RegExp(r'[A-Za-z]').hasMatch(userAnsStr)) {
+          if (userAnsStr.length == 1 &&
+              RegExp(r'[A-Za-z]').hasMatch(userAnsStr)) {
             final letterIdx = userAnsStr.toUpperCase().codeUnitAt(0) - 65;
             if (letterIdx == expectedIdx) return true;
           }
@@ -137,20 +139,20 @@ class QuestionItemEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        statement,
-        type,
-        level,
-        modules,
-        points,
-        timingSeconds,
-        options,
-        correctAnswers,
-        optionExplanations,
-        expectedText,
-        explanation,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    title,
+    statement,
+    type,
+    level,
+    modules,
+    points,
+    timingSeconds,
+    options,
+    correctAnswers,
+    optionExplanations,
+    expectedText,
+    explanation,
+    createdAt,
+    updatedAt,
+  ];
 }

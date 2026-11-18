@@ -9,7 +9,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final GetTodayOrNextProgramUseCase getTodayOrNextProgramUseCase;
 
   DashboardBloc({required this.getTodayOrNextProgramUseCase})
-      : super(DashboardInitialState()) {
+    : super(DashboardInitialState()) {
     on<FetchDashboardDataEvent>(_onFetchDashboardData);
   }
 
@@ -31,7 +31,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
       result.fold(
         (failure) {
-          dev.log('Échec de FetchDashboardData: ${failure.message}', name: 'DASHBOARD_BLOC');
+          dev.log(
+            'Échec de FetchDashboardData: ${failure.message}',
+            name: 'DASHBOARD_BLOC',
+          );
           emit(DashboardErrorState(failure.message));
         },
         (todayProgram) {

@@ -130,10 +130,14 @@ class AppSnackBar {
   static String _sanitizeErrorMessage(String rawError) {
     final lower = rawError.toLowerCase();
 
-    if (lower.contains('network') || lower.contains('socket') || lower.contains('connection')) {
+    if (lower.contains('network') ||
+        lower.contains('socket') ||
+        lower.contains('connection')) {
       return "Problème de connexion. Veuillez vérifier votre réseau Internet.";
     }
-    if (lower.contains('user-not-found') || lower.contains('wrong-password') || lower.contains('invalid-credential')) {
+    if (lower.contains('user-not-found') ||
+        lower.contains('wrong-password') ||
+        lower.contains('invalid-credential')) {
       return "Identifiants incorrects. Veuillez vérifier vos informations de connexion.";
     }
     if (lower.contains('permission-denied') || lower.contains('unauthorized')) {
@@ -142,7 +146,8 @@ class AppSnackBar {
     if (lower.contains('too-many-requests')) {
       return "Trop de tentatives. Veuillez patienter quelques minutes avant de réessayer.";
     }
-    if (lower.contains('configuration') || lower.contains('clientconfigurationerror')) {
+    if (lower.contains('configuration') ||
+        lower.contains('clientconfigurationerror')) {
       return "Un problème de configuration est survenu. Veuillez contacter le support.";
     }
     if (lower.contains('cancel') || lower.contains('annul')) {

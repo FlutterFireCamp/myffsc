@@ -62,19 +62,22 @@ class PodiumRemoteDataSourceImpl implements PodiumRemoteDataSource {
       }
 
       // Extraction et tri en mémoire pour garantir un classement parfait même sans index Firestore
-      final List<Map<String, dynamic>> rawDocs = querySnapshot.docs.map((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
-        return data;
-      }).where((d) {
-        // Filtrer les étudiants acceptés si possible, sinon garder les rôles 'student'
-        final status = d['status'] as String?;
-        final role = d['role'] as String?;
-        if (status != null && status.isNotEmpty) {
-          return status == 'accepted';
-        }
-        return role == null || role == 'student';
-      }).toList();
+      final List<Map<String, dynamic>> rawDocs = querySnapshot.docs
+          .map((doc) {
+            final data = doc.data();
+            data['id'] = doc.id;
+            return data;
+          })
+          .where((d) {
+            // Filtrer les étudiants acceptés si possible, sinon garder les rôles 'student'
+            final status = d['status'] as String?;
+            final role = d['role'] as String?;
+            if (status != null && status.isNotEmpty) {
+              return status == 'accepted';
+            }
+            return role == null || role == 'student';
+          })
+          .toList();
 
       rawDocs.sort((a, b) {
         final ptsA = (a['totalPoints'] as num?)?.toInt() ?? 0;

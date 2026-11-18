@@ -14,35 +14,44 @@ void main() {
       expect(result.toUtc().minute, equals(30));
     });
 
-    test('parseToLocal with Firestore Timestamp should convert to local DateTime', () {
-      final timestamp = Timestamp.fromDate(DateTime.utc(2026, 8, 18, 10, 0));
-      final result = DateTimeHelper.parseToLocal(timestamp);
+    test(
+      'parseToLocal with Firestore Timestamp should convert to local DateTime',
+      () {
+        final timestamp = Timestamp.fromDate(DateTime.utc(2026, 8, 18, 10, 0));
+        final result = DateTimeHelper.parseToLocal(timestamp);
 
-      expect(result, isNotNull);
-      expect(result!.isUtc, isFalse);
-      expect(result.toUtc().hour, equals(10));
-    });
+        expect(result, isNotNull);
+        expect(result!.isUtc, isFalse);
+        expect(result.toUtc().hour, equals(10));
+      },
+    );
 
-    test('parseToLocal with YYYY-MM-DD string should return valid local DateTime', () {
-      const ymdString = "2026-08-18";
-      final result = DateTimeHelper.parseToLocal(ymdString);
+    test(
+      'parseToLocal with YYYY-MM-DD string should return valid local DateTime',
+      () {
+        const ymdString = "2026-08-18";
+        final result = DateTimeHelper.parseToLocal(ymdString);
 
-      expect(result, isNotNull);
-      expect(result!.year, equals(2026));
-      expect(result.month, equals(8));
-      expect(result.day, equals(18));
-    });
+        expect(result, isNotNull);
+        expect(result!.year, equals(2026));
+        expect(result.month, equals(8));
+        expect(result.day, equals(18));
+      },
+    );
 
-    test('isToday returns true for today date and false for past/future date', () {
-      final now = DateTime.now();
-      expect(DateTimeHelper.isToday(now), isTrue);
+    test(
+      'isToday returns true for today date and false for past/future date',
+      () {
+        final now = DateTime.now();
+        expect(DateTimeHelper.isToday(now), isTrue);
 
-      final yesterday = now.subtract(const Duration(days: 1));
-      expect(DateTimeHelper.isToday(yesterday), isFalse);
+        final yesterday = now.subtract(const Duration(days: 1));
+        expect(DateTimeHelper.isToday(yesterday), isFalse);
 
-      final tomorrow = now.add(const Duration(days: 1));
-      expect(DateTimeHelper.isToday(tomorrow), isFalse);
-    });
+        final tomorrow = now.add(const Duration(days: 1));
+        expect(DateTimeHelper.isToday(tomorrow), isFalse);
+      },
+    );
 
     test('isPast correctly checks if date has passed', () {
       final pastDate = DateTime.now().subtract(const Duration(hours: 2));

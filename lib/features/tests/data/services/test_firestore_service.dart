@@ -8,13 +8,14 @@ class TestFirestoreService {
   final FirebaseFirestore _firestore;
 
   TestFirestoreService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   String get _todayDateFormatted => DateTimeHelper.formatYmd(DateTime.now());
 
   /// Returns true if date corresponds strictly to today
   bool _isTestForToday(String docId, Map<String, dynamic> data) {
-    final rawDate = data['scheduledDate'] ??
+    final rawDate =
+        data['scheduledDate'] ??
         data['date'] ??
         data['scheduled_date'] ??
         data['scheduledAt'];
@@ -51,7 +52,7 @@ class TestFirestoreService {
       'ongoing',
       'available',
       'true',
-      '1'
+      '1',
     ].contains(s);
   }
 
@@ -61,18 +62,21 @@ class TestFirestoreService {
       return false;
     }
 
-    final rawDate = data['scheduledDate'] ??
+    final rawDate =
+        data['scheduledDate'] ??
         data['date'] ??
         data['scheduled_date'] ??
         data['scheduledAt'];
 
-    final rawStartTime = data['startTime'] ??
+    final rawStartTime =
+        data['startTime'] ??
         data['start_time'] ??
         data['start'] ??
         data['availabilityStartGmt'] ??
         data['time'];
 
-    final rawEndTime = data['endTime'] ??
+    final rawEndTime =
+        data['endTime'] ??
         data['end_time'] ??
         data['end'] ??
         data['availabilityEndGmt'] ??
@@ -120,11 +124,17 @@ class TestFirestoreService {
   /// Fetch active test scheduled strictly for today from /tests within its valid time window
   Future<TestQuizEntity?> fetchTodayTest() async {
     try {
-      dev.log('Recherche du test du jour disponible dans /tests...', name: 'TEST_FIRESTORE_SERVICE');
+      dev.log(
+        'Recherche du test du jour disponible dans /tests...',
+        name: 'TEST_FIRESTORE_SERVICE',
+      );
       final snapshot = await _firestore.collection('tests').get();
 
       if (snapshot.docs.isEmpty) {
-        dev.log('Aucun document trouvé dans la collection /tests.', name: 'TEST_FIRESTORE_SERVICE');
+        dev.log(
+          'Aucun document trouvé dans la collection /tests.',
+          name: 'TEST_FIRESTORE_SERVICE',
+        );
         return null;
       }
 
@@ -136,13 +146,19 @@ class TestFirestoreService {
         if (_isValidStatus(rawStatus) && _isTestAvailableNow(doc.id, data)) {
           final quiz = await _parseTestQuizEntity(doc);
           if (quiz != null && quiz.questions.isNotEmpty) {
-            dev.log('Test du jour en cours trouvé avec succès: ${quiz.title}', name: 'TEST_FIRESTORE_SERVICE');
+            dev.log(
+              'Test du jour en cours trouvé avec succès: ${quiz.title}',
+              name: 'TEST_FIRESTORE_SERVICE',
+            );
             return quiz;
           }
         }
       }
 
-      dev.log('Aucun test disponible actuellement dans son créneau horaire dans /tests.', name: 'TEST_FIRESTORE_SERVICE');
+      dev.log(
+        'Aucun test disponible actuellement dans son créneau horaire dans /tests.',
+        name: 'TEST_FIRESTORE_SERVICE',
+      );
       return null;
     } catch (e, stackTrace) {
       dev.log(
@@ -169,7 +185,10 @@ class TestFirestoreService {
 
       // 1. Check direct quizId in /tests if given
       if (quizId != null && quizId.trim().isNotEmpty) {
-        final doc = await _firestore.collection('tests').doc(quizId.trim()).get();
+        final doc = await _firestore
+            .collection('tests')
+            .doc(quizId.trim())
+            .get();
         if (doc.exists) {
           final parsed = await _parseTestQuizEntity(doc);
           if (parsed != null && parsed.questions.isNotEmpty) return parsed;
@@ -197,12 +216,17 @@ class TestFirestoreService {
       final snapshot = await _firestore.collection('tests').get();
       for (final d in snapshot.docs) {
         final data = d.data();
-        final docDate = (data['date'] ?? data['scheduledDate'] ?? data['scheduled_date'])?.toString();
+        final docDate =
+            (data['date'] ?? data['scheduledDate'] ?? data['scheduled_date'])
+                ?.toString();
         if (d.id == quizId ||
             d.id == dateTarget ||
             (dateTarget != null && d.id.contains(dateTarget)) ||
-            (dateTarget != null && docDate != null && docDate.contains(dateTarget)) ||
-            (quizId != null && (d.id.contains(quizId) || quizId.contains(d.id)))) {
+            (dateTarget != null &&
+                docDate != null &&
+                docDate.contains(dateTarget)) ||
+            (quizId != null &&
+                (d.id.contains(quizId) || quizId.contains(d.id)))) {
           final parsed = await _parseTestQuizEntity(d);
           if (parsed != null && parsed.questions.isNotEmpty) return parsed;
         }
@@ -231,11 +255,16 @@ class TestFirestoreService {
 
   /// Check if user has already submitted the test today under /users/{userId}/tests/{quizId}_{YYYY-MM-DD}
   Future<Map<String, dynamic>?> checkUserSubmission(
-      String userId, String quizId) async {
+    String userId,
+    String quizId,
+  ) async {
     try {
       final docId = "${quizId}_$_todayDateFormatted";
-      final docRef =
-          _firestore.collection('users').doc(userId).collection('tests').doc(docId);
+      final docRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('tests')
+          .doc(docId);
 
       final snapshot = await docRef.get();
       if (snapshot.exists && snapshot.data() != null) {
@@ -277,13 +306,19 @@ class TestFirestoreService {
   }) async {
     try {
       final docId = "${quiz.id}_$_todayDateFormatted";
-      final docRef =
-          _firestore.collection('users').doc(userId).collection('tests').doc(docId);
+      final docRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('tests')
+          .doc(docId);
 
       // Check if doc already exists to prevent duplicate submission
       final existingDoc = await docRef.get();
       if (existingDoc.exists && (existingDoc.data()?['submitted'] == true)) {
-        dev.log('Test déjà soumis aujourd’hui pour $userId (docId: $docId)', name: 'TEST_FIRESTORE_SERVICE');
+        dev.log(
+          'Test déjà soumis aujourd’hui pour $userId (docId: $docId)',
+          name: 'TEST_FIRESTORE_SERVICE',
+        );
         return true;
       }
 
@@ -303,12 +338,13 @@ class TestFirestoreService {
         final questionScore = isCorrect ? qPoints : 0;
         calculatedScore += questionScore;
 
-        final expectedAnswerStr = (q.options != null &&
+        final expectedAnswerStr =
+            (q.options != null &&
                 q.correctAnswers != null &&
                 q.correctAnswers!.isNotEmpty)
             ? (q.correctAnswers!.first < q.options!.length
-                ? q.options![q.correctAnswers!.first]
-                : "")
+                  ? q.options![q.correctAnswers!.first]
+                  : "")
             : (q.expectedText ?? "");
 
         answersList.add({
@@ -329,7 +365,9 @@ class TestFirestoreService {
       final finalScore = score > 0 ? score : calculatedScore;
 
       final hasTextQuestions = quiz.questions.any((q) => !q.isChoice);
-      final String evaluationStatus = hasTextQuestions ? "EN ATTENTE" : "CORRIGÉ";
+      final String evaluationStatus = hasTextQuestions
+          ? "EN ATTENTE"
+          : "CORRIGÉ";
 
       final submissionData = {
         'quizId': quiz.id,
@@ -374,7 +412,8 @@ class TestFirestoreService {
   }
 
   Future<TestQuizEntity?> _parseTestQuizEntity(
-      DocumentSnapshot<Map<String, dynamic>> doc) async {
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) async {
     final data = doc.data() ?? {};
     final docId = doc.id;
 
@@ -387,10 +426,12 @@ class TestFirestoreService {
         ..sort((a, b) {
           final matchA = RegExp(r'\d+').firstMatch(a.toString());
           final matchB = RegExp(r'\d+').firstMatch(b.toString());
-          final intA =
-              matchA != null ? (int.tryParse(matchA.group(0)!) ?? 0) : 0;
-          final intB =
-              matchB != null ? (int.tryParse(matchB.group(0)!) ?? 0) : 0;
+          final intA = matchA != null
+              ? (int.tryParse(matchA.group(0)!) ?? 0)
+              : 0;
+          final intB = matchB != null
+              ? (int.tryParse(matchB.group(0)!) ?? 0)
+              : 0;
           if (intA != intB) return intA.compareTo(intB);
           return a.toString().compareTo(b.toString());
         });
@@ -404,25 +445,30 @@ class TestFirestoreService {
       if (rawQuestions[i] is! Map) continue;
       final qData = Map<String, dynamic>.from(rawQuestions[i] as Map);
 
-      String statement = qData['statement'] as String? ??
+      String statement =
+          qData['statement'] as String? ??
           qData['enonce'] as String? ??
           qData['description'] as String? ??
           '';
 
-      String title = qData['title'] as String? ??
+      String title =
+          qData['title'] as String? ??
           qData['question'] as String? ??
           qData['label'] as String? ??
           '';
 
-      final contextStr = qData['context'] as String? ??
+      final contextStr =
+          qData['context'] as String? ??
           qData['contexte'] as String? ??
           qData['scenario'] as String?;
 
       if (contextStr != null && contextStr.trim().isNotEmpty) {
         if (statement.isNotEmpty) {
-          statement = "**Contexte :**\n${contextStr.trim()}\n\n**Énoncé :**\n$statement";
+          statement =
+              "**Contexte :**\n${contextStr.trim()}\n\n**Énoncé :**\n$statement";
         } else if (title.isNotEmpty) {
-          statement = "**Contexte :**\n${contextStr.trim()}\n\n**Énoncé :**\n$title";
+          statement =
+              "**Contexte :**\n${contextStr.trim()}\n\n**Énoncé :**\n$title";
         } else {
           statement = "**Contexte :**\n${contextStr.trim()}";
         }
@@ -444,7 +490,8 @@ class TestFirestoreService {
       if (qData['options'] is List) {
         options = (qData['options'] as List).map((e) {
           if (e is Map) {
-            return (e['text'] ?? e['option'] ?? e['title'] ?? e.toString()).toString();
+            return (e['text'] ?? e['option'] ?? e['title'] ?? e.toString())
+                .toString();
           }
           return e.toString();
         }).toList();
@@ -459,7 +506,11 @@ class TestFirestoreService {
         options = sortedOptKeys.map((k) {
           final val = optMap[k];
           if (val is Map) {
-            return (val['text'] ?? val['option'] ?? val['title'] ?? val.toString()).toString();
+            return (val['text'] ??
+                    val['option'] ??
+                    val['title'] ??
+                    val.toString())
+                .toString();
           }
           return val.toString();
         }).toList();
@@ -491,7 +542,9 @@ class TestFirestoreService {
             final code = str.toUpperCase().codeUnitAt(0) - 65;
             parsedCorrectAnswers = [code];
           } else if (options != null && options.isNotEmpty) {
-            final idx = options.indexWhere((opt) => opt.trim().toLowerCase() == str.toLowerCase());
+            final idx = options.indexWhere(
+              (opt) => opt.trim().toLowerCase() == str.toLowerCase(),
+            );
             if (idx != -1) {
               parsedCorrectAnswers = [idx];
             }
@@ -502,51 +555,74 @@ class TestFirestoreService {
       List<int> parsedModules = [1];
       if (qData['modules'] is List) {
         parsedModules = (qData['modules'] as List)
-            .map((e) => (e is num) ? e.toInt() : (int.tryParse(e.toString()) ?? 1))
+            .map(
+              (e) => (e is num) ? e.toInt() : (int.tryParse(e.toString()) ?? 1),
+            )
             .toList();
       }
 
-      final expectedText = qData['expectedText'] as String? ??
+      final expectedText =
+          qData['expectedText'] as String? ??
           qData['expectedAnswer'] as String? ??
           qData['reponseAttendue'] as String?;
 
       final rawType = (qData['type'] as String?)?.toLowerCase().trim() ?? '';
-      final isChoiceQuestion = rawType == 'choice' ||
+      final isChoiceQuestion =
+          rawType == 'choice' ||
           rawType == 'qcm' ||
           rawType == 'multiple' ||
           rawType == 'single' ||
           rawType == 'choix' ||
           (options != null && options.isNotEmpty);
-      final normalizedType = isChoiceQuestion ? 'choice' : (rawType.isNotEmpty ? rawType : 'open');
+      final normalizedType = isChoiceQuestion
+          ? 'choice'
+          : (rawType.isNotEmpty ? rawType : 'open');
 
-      questions.add(QuestionItemEntity(
-        id: qData['id'] as String? ?? 'q_$i',
-        title: title,
-        statement: statement,
-        type: normalizedType,
-        level: (qData['level'] as num?)?.toInt() ?? 1,
-        modules: parsedModules,
-        points: (qData['points'] as num?)?.toInt() ?? 25,
-        timingSeconds: (qData['timingSeconds'] as num?)?.toInt() ??
-            (qData['duration'] as num?)?.toInt() ??
-            60,
-        options: options,
-        correctAnswers: parsedCorrectAnswers,
-        optionExplanations: (qData['optionExplanations'] as List<dynamic>?)
-            ?.map((e) => e.toString())
-            .toList(),
-        expectedText: expectedText,
-        explanation: qData['explanation'] as String?,
-      ));
+      questions.add(
+        QuestionItemEntity(
+          id: qData['id'] as String? ?? 'q_$i',
+          title: title,
+          statement: statement,
+          type: normalizedType,
+          level: (qData['level'] as num?)?.toInt() ?? 1,
+          modules: parsedModules,
+          points: (qData['points'] as num?)?.toInt() ?? 25,
+          timingSeconds:
+              (qData['timingSeconds'] as num?)?.toInt() ??
+              (qData['duration'] as num?)?.toInt() ??
+              60,
+          options: options,
+          correctAnswers: parsedCorrectAnswers,
+          optionExplanations: (qData['optionExplanations'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList(),
+          expectedText: expectedText,
+          explanation: qData['explanation'] as String?,
+        ),
+      );
     }
 
     if (questions.isEmpty) {
       return null;
     }
 
-    final rawDate = data['scheduledDate'] ?? data['date'] ?? data['scheduled_date'] ?? data['scheduledAt'];
-    final rawStartTime = data['startTime'] ?? data['start_time'] ?? data['start'] ?? data['availabilityStartGmt'] ?? data['time'];
-    final rawEndTime = data['endTime'] ?? data['end_time'] ?? data['end'] ?? data['availabilityEndGmt'] ?? data['time'];
+    final rawDate =
+        data['scheduledDate'] ??
+        data['date'] ??
+        data['scheduled_date'] ??
+        data['scheduledAt'];
+    final rawStartTime =
+        data['startTime'] ??
+        data['start_time'] ??
+        data['start'] ??
+        data['availabilityStartGmt'] ??
+        data['time'];
+    final rawEndTime =
+        data['endTime'] ??
+        data['end_time'] ??
+        data['end'] ??
+        data['availabilityEndGmt'] ??
+        data['time'];
 
     final startDt = DateTimeHelper.parseDateTimeWithTime(
       rawDate: rawDate,
@@ -563,9 +639,10 @@ class TestFirestoreService {
     return TestQuizEntity(
       id: docId,
       title: data['title'] as String? ?? "Évaluation FFSC",
-      description: data['description'] as String? ??
-          "Évaluation officielle FFSC.",
-      totalDurationMinutes: (data['totalDurationMinutes'] as num?)?.toInt() ??
+      description:
+          data['description'] as String? ?? "Évaluation officielle FFSC.",
+      totalDurationMinutes:
+          (data['totalDurationMinutes'] as num?)?.toInt() ??
           (data['durationMinutes'] as num?)?.toInt() ??
           10,
       totalPoints: () {

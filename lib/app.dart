@@ -20,24 +20,12 @@ class MyFFSCApp extends StatelessWidget {
         BlocProvider<AuthBloc>(
           create: (_) => sl<AuthBloc>()..add(CheckAuthEvent()),
         ),
-        BlocProvider<TestBloc>(
-          create: (_) => sl<TestBloc>(),
-        ),
-        BlocProvider<ProgramsBloc>(
-          create: (_) => sl<ProgramsBloc>(),
-        ),
-        BlocProvider<DashboardBloc>(
-          create: (_) => sl<DashboardBloc>(),
-        ),
-        BlocProvider<AnnouncementsBloc>(
-          create: (_) => sl<AnnouncementsBloc>(),
-        ),
-        BlocProvider<PodiumBloc>(
-          create: (_) => sl<PodiumBloc>(),
-        ),
-        BlocProvider<ProfileBloc>(
-          create: (_) => sl<ProfileBloc>(),
-        ),
+        BlocProvider<TestBloc>(create: (_) => sl<TestBloc>()),
+        BlocProvider<ProgramsBloc>(create: (_) => sl<ProgramsBloc>()),
+        BlocProvider<DashboardBloc>(create: (_) => sl<DashboardBloc>()),
+        BlocProvider<AnnouncementsBloc>(create: (_) => sl<AnnouncementsBloc>()),
+        BlocProvider<PodiumBloc>(create: (_) => sl<PodiumBloc>()),
+        BlocProvider<ProfileBloc>(create: (_) => sl<ProfileBloc>()),
       ],
       child: Sizer(
         builder: (context, orientation, deviceType) {

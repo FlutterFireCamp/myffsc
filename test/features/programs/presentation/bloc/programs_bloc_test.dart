@@ -4,7 +4,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:myffsc/features/programs/programs.dart';
 
-class MockGetUpcomingProgramsUseCase extends Mock implements GetUpcomingProgramsUseCase {}
+class MockGetUpcomingProgramsUseCase extends Mock
+    implements GetUpcomingProgramsUseCase {}
 
 void main() {
   late MockGetUpcomingProgramsUseCase mockGetUpcomingProgramsUseCase;
@@ -39,8 +40,9 @@ void main() {
     blocTest<ProgramsBloc, ProgramsState>(
       'emits [ProgramsLoadingState, ProgramsLoadedState] when programs are fetched successfully',
       build: () {
-        when(() => mockGetUpcomingProgramsUseCase(any()))
-            .thenAnswer((_) async => const Right([tProgram]));
+        when(
+          () => mockGetUpcomingProgramsUseCase(any()),
+        ).thenAnswer((_) async => const Right([tProgram]));
         return programsBloc;
       },
       act: (bloc) => bloc.add(const FetchProgramsEvent()),

@@ -6,7 +6,9 @@ La sécurité des données de nos apprenants et mentors est une priorité absolu
 
 Si vous découvrez une vulnérabilité de sécurité concernant **My FFSC**, veuillez **NE PAS** ouvrir d'issue publique sur GitHub.
 
-Envoyez plutôt un rapport privé détaillé par e-mail à l'équipe de maintenance du projet.
+Envoyez plutôt un rapport privé détaillé par e-mail à l'équipe de maintenance du projet à l'adresse : **[hello@flutterfirecamp.dev](mailto:hello@flutterfirecamp.dev)**.
+
+Vous pouvez également soumettre un rapport privé via les [Advisories de Sécurité GitHub](https://github.com/FlutterFireCamp/myffsc/security/advisories/new).
 
 ### Ce que doit contenir votre signalement :
 - Une description claire du problème ou du vecteur d'attaque.

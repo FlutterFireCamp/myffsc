@@ -4,7 +4,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:myffsc/features/announcements/announcements.dart';
 
-class MockGetAnnouncementsUseCase extends Mock implements GetAnnouncementsUseCase {}
+class MockGetAnnouncementsUseCase extends Mock
+    implements GetAnnouncementsUseCase {}
 
 void main() {
   late MockGetAnnouncementsUseCase mockGetAnnouncementsUseCase;
@@ -44,22 +45,17 @@ void main() {
     blocTest<AnnouncementsBloc, AnnouncementsState>(
       'emits [AnnouncementsLoadingState, AnnouncementsLoadedState] on FetchAnnouncementsEvent',
       build: () {
-        when(() => mockGetAnnouncementsUseCase(any()))
-            .thenAnswer((_) async => const Right(tResult));
+        when(
+          () => mockGetAnnouncementsUseCase(any()),
+        ).thenAnswer((_) async => const Right(tResult));
         return announcementsBloc;
       },
       act: (bloc) => bloc.add(const FetchAnnouncementsEvent()),
       expect: () => [
         isA<AnnouncementsLoadingState>(),
-        isA<AnnouncementsLoadedState>().having(
-          (s) => s.announcements.length,
-          'announcements.length',
-          1,
-        ).having(
-          (s) => s.hasMore,
-          'hasMore',
-          false,
-        ),
+        isA<AnnouncementsLoadedState>()
+            .having((s) => s.announcements.length, 'announcements.length', 1)
+            .having((s) => s.hasMore, 'hasMore', false),
       ],
     );
   });

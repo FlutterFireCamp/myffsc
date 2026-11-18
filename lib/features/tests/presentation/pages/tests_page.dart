@@ -90,15 +90,17 @@ class _TestsPageState extends State<TestsPage> {
               final prevData = state.previousSubmission;
 
               // Extract or reconstruct user answers map
-              final Map<int, dynamic> userAnswers =
-                  Map<int, dynamic>.from(state.userAnswersMap);
+              final Map<int, dynamic> userAnswers = Map<int, dynamic>.from(
+                state.userAnswersMap,
+              );
               if (userAnswers.isEmpty && prevData?['answers'] != null) {
                 final prevAnswers = prevData!['answers'];
                 if (prevAnswers is List) {
                   for (int i = 0; i < prevAnswers.length; i++) {
                     final item = prevAnswers[i];
                     if (item is Map) {
-                      userAnswers[i] = item['studentAnswer'] ??
+                      userAnswers[i] =
+                          item['studentAnswer'] ??
                           item['answer'] ??
                           item['userAnswer'];
                     } else {
@@ -109,7 +111,8 @@ class _TestsPageState extends State<TestsPage> {
                   int i = 0;
                   for (final val in prevAnswers.values) {
                     if (val is Map) {
-                      userAnswers[i] = val['studentAnswer'] ??
+                      userAnswers[i] =
+                          val['studentAnswer'] ??
                           val['answer'] ??
                           val['userAnswer'];
                     } else {
@@ -121,7 +124,8 @@ class _TestsPageState extends State<TestsPage> {
               }
 
               // Extract score safely
-              int score = (prevData?['score'] as num?)?.toInt() ??
+              int score =
+                  (prevData?['score'] as num?)?.toInt() ??
                   (prevData?['totalScore'] as num?)?.toInt() ??
                   (prevData?['points'] as num?)?.toInt() ??
                   state.qcmScore;
@@ -131,7 +135,8 @@ class _TestsPageState extends State<TestsPage> {
                 if (prevAnswers is List) {
                   for (final item in prevAnswers) {
                     if (item is Map) {
-                      score += (item['score'] as num?)?.toInt() ??
+                      score +=
+                          (item['score'] as num?)?.toInt() ??
                           (item['earnedScore'] as num?)?.toInt() ??
                           (item['isCorrect'] == true
                               ? ((item['points'] as num?)?.toInt() ?? 25)
@@ -144,15 +149,15 @@ class _TestsPageState extends State<TestsPage> {
               // Extract total possible score (never 500)
               final rawTotalPossible =
                   (prevData?['totalPossibleScore'] as num?)?.toInt() ??
-                      (prevData?['totalPoints'] as num?)?.toInt();
-              final totalPossible = (rawTotalPossible != null &&
+                  (prevData?['totalPoints'] as num?)?.toInt();
+              final totalPossible =
+                  (rawTotalPossible != null &&
                       rawTotalPossible > 0 &&
                       rawTotalPossible != 500)
                   ? rawTotalPossible
                   : quiz.calculatedTotalPoints;
 
-              final status =
-                  prevData?['status']?.toString() ?? "Corrigé";
+              final status = prevData?['status']?.toString() ?? "Corrigé";
 
               return SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),

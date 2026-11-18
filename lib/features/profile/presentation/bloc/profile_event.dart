@@ -20,10 +20,7 @@ class UpdateProfileSubmittedEvent extends ProfileEvent {
   final String userId;
   final Map<String, dynamic> data;
 
-  const UpdateProfileSubmittedEvent({
-    required this.userId,
-    required this.data,
-  });
+  const UpdateProfileSubmittedEvent({required this.userId, required this.data});
 
   @override
   List<Object?> get props => [userId, data];

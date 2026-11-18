@@ -18,13 +18,16 @@ class GetLeaderboardParams extends Equatable {
   List<Object?> get props => [currentUserId, currentUserPoints];
 }
 
-class GetLeaderboardUseCase implements UseCase<LeaderboardData, GetLeaderboardParams> {
+class GetLeaderboardUseCase
+    implements UseCase<LeaderboardData, GetLeaderboardParams> {
   final PodiumRepository repository;
 
   GetLeaderboardUseCase(this.repository);
 
   @override
-  Future<Either<Failure, LeaderboardData>> call(GetLeaderboardParams params) async {
+  Future<Either<Failure, LeaderboardData>> call(
+    GetLeaderboardParams params,
+  ) async {
     return await repository.getLeaderboard(
       currentUserId: params.currentUserId,
       currentUserPoints: params.currentUserPoints,

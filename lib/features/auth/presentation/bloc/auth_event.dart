@@ -17,10 +17,7 @@ class CompleteProfileEvent extends AuthEvent {
   final String userId;
   final Map<String, dynamic> data;
 
-  const CompleteProfileEvent({
-    required this.userId,
-    required this.data,
-  });
+  const CompleteProfileEvent({required this.userId, required this.data});
 
   @override
   List<Object?> get props => [userId, data];

@@ -36,7 +36,8 @@ class TestQuizEntity extends Equatable {
   /// Converts GMT availability to user's local phone time string
   String get localAvailabilityRangeText {
     // Default GMT window: 12:00 GMT to 14:00 GMT if not explicitly provided
-    final startGmt = availabilityStartGmt ??
+    final startGmt =
+        availabilityStartGmt ??
         DateTime.utc(
           DateTime.now().year,
           DateTime.now().month,
@@ -45,7 +46,8 @@ class TestQuizEntity extends Equatable {
           0,
         );
 
-    final endGmt = availabilityEndGmt ??
+    final endGmt =
+        availabilityEndGmt ??
         DateTime.utc(
           DateTime.now().year,
           DateTime.now().month,
@@ -84,14 +86,14 @@ class TestQuizEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        description,
-        totalDurationMinutes,
-        totalPoints,
-        questions,
-        availabilityStartGmt,
-        availabilityEndGmt,
-        status,
-      ];
+    id,
+    title,
+    description,
+    totalDurationMinutes,
+    totalPoints,
+    questions,
+    availabilityStartGmt,
+    availabilityEndGmt,
+    status,
+  ];
 }

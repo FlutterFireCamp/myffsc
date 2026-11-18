@@ -319,8 +319,9 @@ class _AppDropdownModalSheetState extends State<_AppDropdownModalSheet> {
                       color: isSelected
                           ? AppColors.skyBlue
                           : AppColors.textPrimary,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
                     ),
                   ),
                 ),

@@ -30,7 +30,9 @@ class DateTimeHelper {
         if (parsedIso != null) {
           // Si la chaîne n'avait pas de suffixe 'Z' ou offset, on s'assure de l'interpréter en UTC
           // avant de convertir en heure locale du device.
-          if (!str.endsWith('Z') && !str.contains('+') && !str.contains('-', 10)) {
+          if (!str.endsWith('Z') &&
+              !str.contains('+') &&
+              !str.contains('-', 10)) {
             final utcDate = DateTime.utc(
               parsedIso.year,
               parsedIso.month,
@@ -99,8 +101,18 @@ class DateTimeHelper {
   /// Formate une date en chaîne lisible locale (ex: "18 août 2026").
   static String formatFrenchDate(DateTime dt) {
     const months = [
-      'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-      'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+      'janvier',
+      'février',
+      'mars',
+      'avril',
+      'mai',
+      'juin',
+      'juillet',
+      'août',
+      'septembre',
+      'octobre',
+      'novembre',
+      'décembre',
     ];
     final monthName = months[dt.month - 1];
     return "${dt.day} $monthName ${dt.year}";
@@ -146,8 +158,9 @@ class DateTimeHelper {
     if (timeStr.isEmpty) return null;
 
     final parts = timeStr.split(RegExp(r'\s*-\s*|\s+à\s+'));
-    String targetPart =
-        isEndTime && parts.length > 1 ? parts.last.trim() : parts.first.trim();
+    String targetPart = isEndTime && parts.length > 1
+        ? parts.last.trim()
+        : parts.first.trim();
     targetPart = targetPart.replaceAll('h', ':').replaceAll('H', ':');
 
     final match = RegExp(r'^(\d{1,2})(?::(\d{1,2}))?').firstMatch(targetPart);

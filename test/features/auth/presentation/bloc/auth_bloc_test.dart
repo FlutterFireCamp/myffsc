@@ -10,8 +10,13 @@ import 'package:myffsc/features/auth/presentation/bloc/auth_event.dart';
 import 'package:myffsc/features/auth/presentation/bloc/auth_state.dart';
 
 class MockGetCurrentUserUseCase extends Mock implements GetCurrentUserUseCase {}
-class MockSignInWithGoogleUseCase extends Mock implements SignInWithGoogleUseCase {}
-class MockCompleteProfileUseCase extends Mock implements CompleteProfileUseCase {}
+
+class MockSignInWithGoogleUseCase extends Mock
+    implements SignInWithGoogleUseCase {}
+
+class MockCompleteProfileUseCase extends Mock
+    implements CompleteProfileUseCase {}
+
 class MockSignOutUseCase extends Mock implements SignOutUseCase {}
 
 void main() {
@@ -23,7 +28,9 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(NoParams());
-    registerFallbackValue(const CompleteProfileParams(userId: 'test', data: {}));
+    registerFallbackValue(
+      const CompleteProfileParams(userId: 'test', data: {}),
+    );
   });
 
   setUp(() {
@@ -67,8 +74,9 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits [AuthLoadingState, AuthenticatedState] when user is accepted',
       build: () {
-        when(() => mockGetCurrentUserUseCase(any()))
-            .thenAnswer((_) async => const Right(tAcceptedUser));
+        when(
+          () => mockGetCurrentUserUseCase(any()),
+        ).thenAnswer((_) async => const Right(tAcceptedUser));
         return authBloc;
       },
       act: (bloc) => bloc.add(CheckAuthEvent()),
@@ -85,29 +93,25 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits [AuthLoadingState, UnauthorizedState] when user is pending / not accepted',
       build: () {
-        when(() => mockGetCurrentUserUseCase(any()))
-            .thenAnswer((_) async => const Right(tUnauthorizedUser));
+        when(
+          () => mockGetCurrentUserUseCase(any()),
+        ).thenAnswer((_) async => const Right(tUnauthorizedUser));
         return authBloc;
       },
       act: (bloc) => bloc.add(CheckAuthEvent()),
-      expect: () => [
-        isA<AuthLoadingState>(),
-        isA<UnauthorizedState>(),
-      ],
+      expect: () => [isA<AuthLoadingState>(), isA<UnauthorizedState>()],
     );
 
     blocTest<AuthBloc, AuthState>(
       'emits [AuthLoadingState, UnauthenticatedState] when no user is logged in',
       build: () {
-        when(() => mockGetCurrentUserUseCase(any()))
-            .thenAnswer((_) async => const Right(null));
+        when(
+          () => mockGetCurrentUserUseCase(any()),
+        ).thenAnswer((_) async => const Right(null));
         return authBloc;
       },
       act: (bloc) => bloc.add(CheckAuthEvent()),
-      expect: () => [
-        isA<AuthLoadingState>(),
-        isA<UnauthenticatedState>(),
-      ],
+      expect: () => [isA<AuthLoadingState>(), isA<UnauthenticatedState>()],
     );
   });
 
@@ -115,18 +119,18 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits [AuthLoadingState, AuthenticatedState] when completeProfile is successful and user is authorized',
       build: () {
-        when(() => mockCompleteProfileUseCase(any()))
-            .thenAnswer((_) async => const Right(tAcceptedUser));
+        when(
+          () => mockCompleteProfileUseCase(any()),
+        ).thenAnswer((_) async => const Right(tAcceptedUser));
         return authBloc;
       },
-      act: (bloc) => bloc.add(const CompleteProfileEvent(
-        userId: 'user_123',
-        data: {'name': 'Jean Dupont'},
-      )),
-      expect: () => [
-        isA<AuthLoadingState>(),
-        isA<AuthenticatedState>(),
-      ],
+      act: (bloc) => bloc.add(
+        const CompleteProfileEvent(
+          userId: 'user_123',
+          data: {'name': 'Jean Dupont'},
+        ),
+      ),
+      expect: () => [isA<AuthLoadingState>(), isA<AuthenticatedState>()],
     );
   });
 
@@ -134,15 +138,13 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       'emits [AuthLoadingState, UnauthenticatedState] on successful sign out',
       build: () {
-        when(() => mockSignOutUseCase(any()))
-            .thenAnswer((_) async => const Right(null));
+        when(
+          () => mockSignOutUseCase(any()),
+        ).thenAnswer((_) async => const Right(null));
         return authBloc;
       },
       act: (bloc) => bloc.add(SignOutRequested()),
-      expect: () => [
-        isA<AuthLoadingState>(),
-        isA<UnauthenticatedState>(),
-      ],
+      expect: () => [isA<AuthLoadingState>(), isA<UnauthenticatedState>()],
     );
   });
 }

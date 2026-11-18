@@ -24,21 +24,22 @@ class UserTestHistoryEntity extends Equatable {
   /// Sanitized total possible score avoiding invalid 500 fallbacks
   int get displayTotalPossibleScore =>
       (totalPossibleScore > 0 && totalPossibleScore != 500)
-          ? totalPossibleScore
-          : 100;
+      ? totalPossibleScore
+      : 100;
 
-  double get percentage =>
-      displayTotalPossibleScore > 0 ? (score / displayTotalPossibleScore) * 100 : 0.0;
+  double get percentage => displayTotalPossibleScore > 0
+      ? (score / displayTotalPossibleScore) * 100
+      : 0.0;
 
   @override
   List<Object?> get props => [
-        docId,
-        quizTitle,
-        dateStr,
-        score,
-        totalPossibleScore,
-        status,
-        quizId,
-        rawAnswers,
-      ];
+    docId,
+    quizTitle,
+    dateStr,
+    score,
+    totalPossibleScore,
+    status,
+    quizId,
+    rawAnswers,
+  ];
 }

@@ -29,7 +29,8 @@ class GetAnnouncementsUseCase
 
   @override
   Future<Either<Failure, PaginatedAnnouncementsResult>> call(
-      GetAnnouncementsParams params) async {
+    GetAnnouncementsParams params,
+  ) async {
     return await repository.getAnnouncements(
       filterType: params.filterType,
       startAfterDoc: params.startAfterDoc,

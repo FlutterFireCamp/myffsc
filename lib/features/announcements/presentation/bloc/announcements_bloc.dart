@@ -10,7 +10,7 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
   List<AnnouncementItem> _allAnnouncements = [];
 
   AnnouncementsBloc({required this.getAnnouncementsUseCase})
-      : super(AnnouncementsInitialState()) {
+    : super(AnnouncementsInitialState()) {
     on<FetchAnnouncementsEvent>(_onFetchAnnouncements);
     on<LoadMoreAnnouncementsEvent>(_onLoadMoreAnnouncements);
     on<FilterAnnouncementsEvent>(_onFilterAnnouncements);
@@ -30,30 +30,37 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
       emit(AnnouncementsLoadingState());
 
       final result = await getAnnouncementsUseCase(
-        const GetAnnouncementsParams(
-          filterType: null,
-          limit: 30,
-        ),
+        const GetAnnouncementsParams(filterType: null, limit: 30),
       );
 
       result.fold(
         (failure) {
-          dev.log('Échec de FetchAnnouncements: ${failure.message}', name: 'ANNOUNCEMENTS_BLOC');
+          dev.log(
+            'Échec de FetchAnnouncements: ${failure.message}',
+            name: 'ANNOUNCEMENTS_BLOC',
+          );
           emit(AnnouncementsErrorState(failure.message));
         },
         (data) {
           _allAnnouncements = data.items;
           final filtered = event.filterType == null
               ? _allAnnouncements
-              : _allAnnouncements.where((a) => a.type == event.filterType).toList();
+              : _allAnnouncements
+                    .where((a) => a.type == event.filterType)
+                    .toList();
 
-          dev.log('${filtered.length} annonce(s) affichée(s) sur ${_allAnnouncements.length}, hasMore: ${data.hasMore}', name: 'ANNOUNCEMENTS_BLOC');
-          emit(AnnouncementsLoadedState(
-            announcements: filtered,
-            hasMore: data.hasMore,
-            lastDocument: data.lastDocument,
-            currentFilter: event.filterType,
-          ));
+          dev.log(
+            '${filtered.length} annonce(s) affichée(s) sur ${_allAnnouncements.length}, hasMore: ${data.hasMore}',
+            name: 'ANNOUNCEMENTS_BLOC',
+          );
+          emit(
+            AnnouncementsLoadedState(
+              announcements: filtered,
+              hasMore: data.hasMore,
+              lastDocument: data.lastDocument,
+              currentFilter: event.filterType,
+            ),
+          );
         },
       );
     } catch (e, stackTrace) {
@@ -93,7 +100,10 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
 
       result.fold(
         (failure) {
-          dev.log('Échec de LoadMoreAnnouncements: ${failure.message}', name: 'ANNOUNCEMENTS_BLOC');
+          dev.log(
+            'Échec de LoadMoreAnnouncements: ${failure.message}',
+            name: 'ANNOUNCEMENTS_BLOC',
+          );
           emit(currentState.copyWith(isLoadingMore: false));
         },
         (data) {
@@ -101,15 +111,22 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
           final currentFilter = currentState.currentFilter;
           final filtered = currentFilter == null
               ? _allAnnouncements
-              : _allAnnouncements.where((a) => a.type == currentFilter).toList();
+              : _allAnnouncements
+                    .where((a) => a.type == currentFilter)
+                    .toList();
 
-          dev.log('Total cumulé d’annonces: ${_allAnnouncements.length}, hasMore: ${data.hasMore}', name: 'ANNOUNCEMENTS_BLOC');
-          emit(currentState.copyWith(
-            announcements: filtered,
-            hasMore: data.hasMore,
-            lastDocument: data.lastDocument,
-            isLoadingMore: false,
-          ));
+          dev.log(
+            'Total cumulé d’annonces: ${_allAnnouncements.length}, hasMore: ${data.hasMore}',
+            name: 'ANNOUNCEMENTS_BLOC',
+          );
+          emit(
+            currentState.copyWith(
+              announcements: filtered,
+              hasMore: data.hasMore,
+              lastDocument: data.lastDocument,
+              isLoadingMore: false,
+            ),
+          );
         },
       );
     } catch (e, stackTrace) {
@@ -135,20 +152,26 @@ class AnnouncementsBloc extends Bloc<AnnouncementsEvent, AnnouncementsState> {
           ? _allAnnouncements
           : _allAnnouncements.where((a) => a.type == event.filterType).toList();
       if (currentState is AnnouncementsLoadedState) {
-        emit(currentState.copyWith(
-          announcements: filtered,
-          currentFilter: event.filterType,
-        ));
+        emit(
+          currentState.copyWith(
+            announcements: filtered,
+            currentFilter: event.filterType,
+          ),
+        );
       } else {
-        emit(AnnouncementsLoadedState(
-          announcements: filtered,
-          hasMore: false,
-          currentFilter: event.filterType,
-        ));
+        emit(
+          AnnouncementsLoadedState(
+            announcements: filtered,
+            hasMore: false,
+            currentFilter: event.filterType,
+          ),
+        );
       }
     } else {
       emit(AnnouncementsLoadingState());
-      add(FetchAnnouncementsEvent(filterType: event.filterType, isRefresh: true));
+      add(
+        FetchAnnouncementsEvent(filterType: event.filterType, isRefresh: true),
+      );
     }
   }
 }

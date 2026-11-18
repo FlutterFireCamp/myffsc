@@ -12,7 +12,7 @@ class CampConfigService {
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? _subscription;
 
   CampConfigService({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   /// Indique immédiatement si le camp est officiellement terminé (valeur en cache).
   bool get isCampEnded => _isCampEnded;
@@ -37,28 +37,28 @@ class CampConfigService {
           .doc('camp-settings')
           .snapshots()
           .listen(
-        (docSnap) {
-          final isEnded = _extractIsCampEnded(docSnap);
-          _isCampEnded = isEnded;
-          dev.log(
-            'Mise à jour config/camp-settings -> isCampEnded = $isEnded',
-            name: 'CAMP_CONFIG_SERVICE',
+            (docSnap) {
+              final isEnded = _extractIsCampEnded(docSnap);
+              _isCampEnded = isEnded;
+              dev.log(
+                'Mise à jour config/camp-settings -> isCampEnded = $isEnded',
+                name: 'CAMP_CONFIG_SERVICE',
+              );
+              if (_controller != null && !_controller!.isClosed) {
+                _controller!.add(isEnded);
+              }
+            },
+            onError: (e) {
+              dev.log(
+                'Erreur écoute config/camp-settings (fallback: $_isCampEnded)',
+                name: 'CAMP_CONFIG_SERVICE',
+                error: e,
+              );
+              if (_controller != null && !_controller!.isClosed) {
+                _controller!.add(_isCampEnded);
+              }
+            },
           );
-          if (_controller != null && !_controller!.isClosed) {
-            _controller!.add(isEnded);
-          }
-        },
-        onError: (e) {
-          dev.log(
-            'Erreur écoute config/camp-settings (fallback: $_isCampEnded)',
-            name: 'CAMP_CONFIG_SERVICE',
-            error: e,
-          );
-          if (_controller != null && !_controller!.isClosed) {
-            _controller!.add(_isCampEnded);
-          }
-        },
-      );
     } catch (e) {
       dev.log(
         'Impossible de souscrire aux snapshots de config/camp-settings',
@@ -76,8 +76,10 @@ class CampConfigService {
   /// Récupération ponctuelle de la configuration du camp.
   Future<bool> checkIsCampEnded() async {
     try {
-      final docSnap =
-          await _firestore.collection('config').doc('camp-settings').get();
+      final docSnap = await _firestore
+          .collection('config')
+          .doc('camp-settings')
+          .get();
       _isCampEnded = _extractIsCampEnded(docSnap);
       if (_controller != null && !_controller!.isClosed) {
         _controller!.add(_isCampEnded);

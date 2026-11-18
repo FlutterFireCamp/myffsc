@@ -28,7 +28,9 @@ class AppRadius {
   static const BorderRadius circular24 = BorderRadius.all(Radius.circular(r24));
   static const BorderRadius circular28 = BorderRadius.all(Radius.circular(r28));
   static const BorderRadius circular32 = BorderRadius.all(Radius.circular(r32));
-  static const BorderRadius top28 = BorderRadius.vertical(top: Radius.circular(r28));
+  static const BorderRadius top28 = BorderRadius.vertical(
+    top: Radius.circular(r28),
+  );
 }
 
 /// Centralized Icon and Spacing Sizes.

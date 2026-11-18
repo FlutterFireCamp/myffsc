@@ -144,7 +144,8 @@ class AppDataConstants {
 
     // Si le nom contient déjà un drapeau emoji (caractères régionaux ou map lookup)
     for (final entry in countryFlags.entries) {
-      if (countryName.contains(entry.key) || countryName.contains(entry.value)) {
+      if (countryName.contains(entry.key) ||
+          countryName.contains(entry.value)) {
         return entry.value;
       }
     }

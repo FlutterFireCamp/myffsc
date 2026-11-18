@@ -6,8 +6,9 @@ class NetworkHelper {
   /// Checks if device has active internet connectivity by performing a DNS lookup.
   static Future<bool> hasInternetConnection() async {
     try {
-      final result = await InternetAddress.lookup('google.com')
-          .timeout(const Duration(seconds: 4));
+      final result = await InternetAddress.lookup(
+        'google.com',
+      ).timeout(const Duration(seconds: 4));
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         return true;
       }

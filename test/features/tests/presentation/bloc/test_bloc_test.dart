@@ -1,4 +1,4 @@
-﻿import 'package:bloc_test/bloc_test.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:myffsc/features/tests/data/services/test_firestore_service.dart';
@@ -60,10 +60,15 @@ void main() {
     blocTest<TestBloc, TestState>(
       'emits [isLoading: true, activeQuiz: tQuiz] when today test exists',
       build: () {
-        when(() => mockFirestoreService.fetchTodayTest())
-            .thenAnswer((_) async => tQuiz);
-        when(() => mockFirestoreService.checkUserSubmission('user_123', 'quiz_day_1'))
-            .thenAnswer((_) async => null);
+        when(
+          () => mockFirestoreService.fetchTodayTest(),
+        ).thenAnswer((_) async => tQuiz);
+        when(
+          () => mockFirestoreService.checkUserSubmission(
+            'user_123',
+            'quiz_day_1',
+          ),
+        ).thenAnswer((_) async => null);
         return testBloc;
       },
       act: (bloc) => bloc.add(const FetchTodayTestEvent(userId: 'user_123')),
@@ -80,8 +85,9 @@ void main() {
     blocTest<TestBloc, TestState>(
       'emits [isLoading: true, activeQuiz: null] when no test exists today',
       build: () {
-        when(() => mockFirestoreService.fetchTodayTest())
-            .thenAnswer((_) async => null);
+        when(
+          () => mockFirestoreService.fetchTodayTest(),
+        ).thenAnswer((_) async => null);
         return testBloc;
       },
       act: (bloc) => bloc.add(const FetchTodayTestEvent(userId: 'user_123')),
@@ -114,13 +120,10 @@ void main() {
       'records user answer on AnswerQuestionEvent',
       seed: () => const TestState(activeQuiz: tQuiz, isQuizActive: true),
       build: () => testBloc,
-      act: (bloc) => bloc.add(const AnswerQuestionEvent(questionIndex: 0, answer: 1)),
+      act: (bloc) =>
+          bloc.add(const AnswerQuestionEvent(questionIndex: 0, answer: 1)),
       expect: () => [
-        isA<TestState>().having(
-          (s) => s.userAnswersMap[0],
-          'answer for q0',
-          1,
-        ),
+        isA<TestState>().having((s) => s.userAnswersMap[0], 'answer for q0', 1),
       ],
     );
 
@@ -129,9 +132,7 @@ void main() {
       seed: () => const TestState(isQuizActive: true, isQuizFinished: true),
       build: () => testBloc,
       act: (bloc) => bloc.add(ResetQuizEvent()),
-      expect: () => [
-        const TestState(),
-      ],
+      expect: () => [const TestState()],
     );
   });
 }

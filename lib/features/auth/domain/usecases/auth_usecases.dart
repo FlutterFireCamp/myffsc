@@ -29,25 +29,20 @@ class CompleteProfileParams extends Equatable {
   final String userId;
   final Map<String, dynamic> data;
 
-  const CompleteProfileParams({
-    required this.userId,
-    required this.data,
-  });
+  const CompleteProfileParams({required this.userId, required this.data});
 
   @override
   List<Object?> get props => [userId, data];
 }
 
-class CompleteProfileUseCase implements UseCase<UserEntity, CompleteProfileParams> {
+class CompleteProfileUseCase
+    implements UseCase<UserEntity, CompleteProfileParams> {
   final AuthRepository repository;
   CompleteProfileUseCase(this.repository);
 
   @override
   Future<Either<Failure, UserEntity>> call(CompleteProfileParams params) {
-    return repository.completeProfile(
-      userId: params.userId,
-      data: params.data,
-    );
+    return repository.completeProfile(userId: params.userId, data: params.data);
   }
 }
 

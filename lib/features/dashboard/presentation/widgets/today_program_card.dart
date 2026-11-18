@@ -69,9 +69,7 @@ class TodayProgramCard extends StatelessWidget {
                       ),
                       child: Text(
                         program.type.label,
-                        style: AppTextStyles.badge.copyWith(
-                          color: badgeColor,
-                        ),
+                        style: AppTextStyles.badge.copyWith(color: badgeColor),
                       ),
                     ),
                     Text(

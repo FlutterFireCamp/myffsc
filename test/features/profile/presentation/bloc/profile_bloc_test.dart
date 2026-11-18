@@ -65,9 +65,9 @@ void main() {
     blocTest<ProfileBloc, ProfileState>(
       'emits updated testHistory when stream succeeds',
       build: () {
-        when(() => mockStreamHistory(any())).thenAnswer(
-          (_) => Stream.value(const Right([tHistoryItem])),
-        );
+        when(
+          () => mockStreamHistory(any()),
+        ).thenAnswer((_) => Stream.value(const Right([tHistoryItem])));
         return profileBloc;
       },
       act: (bloc) => bloc.add(const WatchProfileTestHistoryEvent('user_123')),
@@ -103,14 +103,17 @@ void main() {
     blocTest<ProfileBloc, ProfileState>(
       'emits [loading, success] on successful profile update',
       build: () {
-        when(() => mockUpdateProfile(any()))
-            .thenAnswer((_) async => const Right(null));
+        when(
+          () => mockUpdateProfile(any()),
+        ).thenAnswer((_) async => const Right(null));
         return profileBloc;
       },
-      act: (bloc) => bloc.add(const UpdateProfileSubmittedEvent(
-        userId: 'user_123',
-        data: {'town': 'Goma'},
-      )),
+      act: (bloc) => bloc.add(
+        const UpdateProfileSubmittedEvent(
+          userId: 'user_123',
+          data: {'town': 'Goma'},
+        ),
+      ),
       expect: () => [
         const ProfileState(updateStatus: ProfileUpdateStatus.loading),
         const ProfileState(updateStatus: ProfileUpdateStatus.success),
@@ -120,14 +123,17 @@ void main() {
     blocTest<ProfileBloc, ProfileState>(
       'emits [loading, failure] on failed profile update',
       build: () {
-        when(() => mockUpdateProfile(any()))
-            .thenAnswer((_) async => const Left(ServerFailure('Network error')));
+        when(
+          () => mockUpdateProfile(any()),
+        ).thenAnswer((_) async => const Left(ServerFailure('Network error')));
         return profileBloc;
       },
-      act: (bloc) => bloc.add(const UpdateProfileSubmittedEvent(
-        userId: 'user_123',
-        data: {'town': 'Goma'},
-      )),
+      act: (bloc) => bloc.add(
+        const UpdateProfileSubmittedEvent(
+          userId: 'user_123',
+          data: {'town': 'Goma'},
+        ),
+      ),
       expect: () => [
         const ProfileState(updateStatus: ProfileUpdateStatus.loading),
         const ProfileState(
@@ -153,16 +159,19 @@ void main() {
     blocTest<ProfileBloc, ProfileState>(
       'emits [isLoadingCorrection: true, isLoadingCorrection: false with data] on success',
       build: () {
-        when(() => mockGetCorrection(any()))
-            .thenAnswer((_) async => const Right([tCorrection]));
+        when(
+          () => mockGetCorrection(any()),
+        ).thenAnswer((_) async => const Right([tCorrection]));
         return profileBloc;
       },
-      act: (bloc) => bloc.add(const FetchTestCorrectionDetailsEvent(
-        quizId: 'quiz_1',
-        dateStr: '2026-08-20',
-        docId: 'doc_1',
-        rawAnswers: null,
-      )),
+      act: (bloc) => bloc.add(
+        const FetchTestCorrectionDetailsEvent(
+          quizId: 'quiz_1',
+          dateStr: '2026-08-20',
+          docId: 'doc_1',
+          rawAnswers: null,
+        ),
+      ),
       expect: () => [
         const ProfileState(isLoadingCorrection: true),
         const ProfileState(

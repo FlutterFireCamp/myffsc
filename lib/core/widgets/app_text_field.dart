@@ -73,49 +73,55 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveDecoration = (decoration ?? const InputDecoration()).copyWith(
-      hintText: hintText ?? decoration?.hintText,
-      hintStyle: hintStyle ??
-          decoration?.hintStyle ??
-          AppTextStyles.bodySmall.copyWith(
-            color: AppColors.textMuted,
-          ),
-      prefixIcon: prefixIcon ?? decoration?.prefixIcon,
-      suffixIcon: suffixIcon ?? decoration?.suffixIcon,
-      filled: decoration?.filled ?? true,
-      fillColor: fillColor ?? decoration?.fillColor ?? AppColors.card,
-      contentPadding: contentPadding ??
-          decoration?.contentPadding ??
-          EdgeInsets.symmetric(
-            horizontal: 4.w,
-            vertical: maxLines > 1 ? 1.6.h : 1.4.h,
-          ),
-      border: decoration?.border ??
-          const OutlineInputBorder(
-            borderRadius: AppRadius.circular12,
-            borderSide: BorderSide(color: AppColors.borderSubtle),
-          ),
-      enabledBorder: decoration?.enabledBorder ??
-          const OutlineInputBorder(
-            borderRadius: AppRadius.circular12,
-            borderSide: BorderSide(color: AppColors.borderSubtle),
-          ),
-      focusedBorder: decoration?.focusedBorder ??
-          const OutlineInputBorder(
-            borderRadius: AppRadius.circular12,
-            borderSide: BorderSide(color: AppColors.skyBlue, width: 1.5),
-          ),
-      errorBorder: decoration?.errorBorder ??
-          const OutlineInputBorder(
-            borderRadius: AppRadius.circular12,
-            borderSide: BorderSide(color: AppColors.errorText, width: 1.2),
-          ),
-      focusedErrorBorder: decoration?.focusedErrorBorder ??
-          const OutlineInputBorder(
-            borderRadius: AppRadius.circular12,
-            borderSide: BorderSide(color: AppColors.errorText, width: 1.5),
-          ),
-    );
+    final effectiveDecoration = (decoration ?? const InputDecoration())
+        .copyWith(
+          hintText: hintText ?? decoration?.hintText,
+          hintStyle:
+              hintStyle ??
+              decoration?.hintStyle ??
+              AppTextStyles.bodySmall.copyWith(color: AppColors.textMuted),
+          prefixIcon: prefixIcon ?? decoration?.prefixIcon,
+          suffixIcon: suffixIcon ?? decoration?.suffixIcon,
+          filled: decoration?.filled ?? true,
+          fillColor: fillColor ?? decoration?.fillColor ?? AppColors.card,
+          contentPadding:
+              contentPadding ??
+              decoration?.contentPadding ??
+              EdgeInsets.symmetric(
+                horizontal: 4.w,
+                vertical: maxLines > 1 ? 1.6.h : 1.4.h,
+              ),
+          border:
+              decoration?.border ??
+              const OutlineInputBorder(
+                borderRadius: AppRadius.circular12,
+                borderSide: BorderSide(color: AppColors.borderSubtle),
+              ),
+          enabledBorder:
+              decoration?.enabledBorder ??
+              const OutlineInputBorder(
+                borderRadius: AppRadius.circular12,
+                borderSide: BorderSide(color: AppColors.borderSubtle),
+              ),
+          focusedBorder:
+              decoration?.focusedBorder ??
+              const OutlineInputBorder(
+                borderRadius: AppRadius.circular12,
+                borderSide: BorderSide(color: AppColors.skyBlue, width: 1.5),
+              ),
+          errorBorder:
+              decoration?.errorBorder ??
+              const OutlineInputBorder(
+                borderRadius: AppRadius.circular12,
+                borderSide: BorderSide(color: AppColors.errorText, width: 1.2),
+              ),
+          focusedErrorBorder:
+              decoration?.focusedErrorBorder ??
+              const OutlineInputBorder(
+                borderRadius: AppRadius.circular12,
+                borderSide: BorderSide(color: AppColors.errorText, width: 1.5),
+              ),
+        );
 
     final field = TextFormField(
       controller: controller,
@@ -138,15 +144,15 @@ class AppTextField extends StatelessWidget {
       autovalidateMode: autovalidateMode,
       enableInteractiveSelection: enableInteractiveSelection,
       // Automatic tap-outside handling to unfocus and close keyboard
-      onTapOutside: onTapOutside ??
+      onTapOutside:
+          onTapOutside ??
           (PointerDownEvent event) {
             FocusScope.of(context).unfocus();
             FocusManager.instance.primaryFocus?.unfocus();
           },
-      style: style ??
-          AppTextStyles.bodyMedium.copyWith(
-            color: AppColors.textPrimary,
-          ),
+      style:
+          style ??
+          AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
       decoration: effectiveDecoration,
     );
 

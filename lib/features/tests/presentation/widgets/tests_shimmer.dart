@@ -63,7 +63,10 @@ class TestsShimmer extends StatelessWidget {
 
                 // Schedule time box
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 3.w,
+                    vertical: 1.2.h,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.background,
                     borderRadius: AppRadius.circular8,

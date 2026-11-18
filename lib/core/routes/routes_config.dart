@@ -24,8 +24,8 @@ class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
     _subscription = stream.asBroadcastStream().listen(
-          (dynamic _) => notifyListeners(),
-        );
+      (dynamic _) => notifyListeners(),
+    );
   }
 
   @override
@@ -39,10 +39,7 @@ class RoutesConfig {
   final AuthBloc authBloc;
   final AnalyticsService? analyticsService;
 
-  RoutesConfig({
-    required this.authBloc,
-    this.analyticsService,
-  });
+  RoutesConfig({required this.authBloc, this.analyticsService});
 
   late final GoRouter router = GoRouter(
     initialLocation: RoutePaths.checking,
@@ -50,7 +47,8 @@ class RoutesConfig {
     observers: [
       if (analyticsService?.observer != null)
         analyticsService!.observer!
-      else if (sl.isRegistered<AnalyticsService>() && sl<AnalyticsService>().observer != null)
+      else if (sl.isRegistered<AnalyticsService>() &&
+          sl<AnalyticsService>().observer != null)
         sl<AnalyticsService>().observer!,
     ],
     redirect: (BuildContext context, GoRouterState state) {
@@ -69,7 +67,10 @@ class RoutesConfig {
 
       if (authState is AuthInitialState) {
         if (!isChecking) {
-          dev.log('Displaying access checking page for initial state', name: 'ROUTER');
+          dev.log(
+            'Displaying access checking page for initial state',
+            name: 'ROUTER',
+          );
           return RoutePaths.checking;
         }
         return null;
@@ -85,7 +86,10 @@ class RoutesConfig {
 
       if (authState is UnauthenticatedState || authState is AuthErrorState) {
         if (!isLoggingIn) {
-          dev.log('Redirecting unauthenticated user to ${RoutePaths.login}', name: 'ROUTER');
+          dev.log(
+            'Redirecting unauthenticated user to ${RoutePaths.login}',
+            name: 'ROUTER',
+          );
           return RoutePaths.login;
         }
         return null;
@@ -93,7 +97,10 @@ class RoutesConfig {
 
       if (authState is ProfileIncompleteState) {
         if (!isCompletingProfile) {
-          dev.log('Redirecting user with incomplete profile to ${RoutePaths.completeProfile}', name: 'ROUTER');
+          dev.log(
+            'Redirecting user with incomplete profile to ${RoutePaths.completeProfile}',
+            name: 'ROUTER',
+          );
           return RoutePaths.completeProfile;
         }
         return null;
@@ -101,15 +108,25 @@ class RoutesConfig {
 
       if (authState is UnauthorizedState) {
         if (!isUnauthorized) {
-          dev.log('Redirecting unauthorized user to ${RoutePaths.unauthorized}', name: 'ROUTER');
+          dev.log(
+            'Redirecting unauthorized user to ${RoutePaths.unauthorized}',
+            name: 'ROUTER',
+          );
           return RoutePaths.unauthorized;
         }
         return null;
       }
 
       if (authState is AuthenticatedState) {
-        if (isLoggingIn || isUnauthorized || isChecking || isCompletingProfile || location == '/') {
-          dev.log('Redirecting authenticated user to ${RoutePaths.dashboard}', name: 'ROUTER');
+        if (isLoggingIn ||
+            isUnauthorized ||
+            isChecking ||
+            isCompletingProfile ||
+            location == '/') {
+          dev.log(
+            'Redirecting authenticated user to ${RoutePaths.dashboard}',
+            name: 'ROUTER',
+          );
           return RoutePaths.dashboard;
         }
       }
@@ -162,7 +179,8 @@ class RoutesConfig {
         path: RoutePaths.editProfile,
         builder: (context, state) {
           final user = state.extra as UserEntity?;
-          final currentUser = user ??
+          final currentUser =
+              user ??
               (authBloc.state is AuthenticatedState
                   ? (authBloc.state as AuthenticatedState).user
                   : null);

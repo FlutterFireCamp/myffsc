@@ -43,13 +43,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           dev.log('User is null -> UnauthenticatedState', name: 'AUTH_BLOC');
           emit(UnauthenticatedState());
         } else if (user.isProfileIncomplete) {
-          dev.log('User profile incomplete -> ProfileIncompleteState (${user.email})', name: 'AUTH_BLOC');
+          dev.log(
+            'User profile incomplete -> ProfileIncompleteState (${user.email})',
+            name: 'AUTH_BLOC',
+          );
           emit(ProfileIncompleteState(user));
         } else if (user.isAuthorized) {
-          dev.log('User authorized -> AuthenticatedState (${user.name})', name: 'AUTH_BLOC');
+          dev.log(
+            'User authorized -> AuthenticatedState (${user.name})',
+            name: 'AUTH_BLOC',
+          );
           emit(AuthenticatedState(user));
         } else {
-          dev.log('User unauthorized -> UnauthorizedState (${user.name})', name: 'AUTH_BLOC');
+          dev.log(
+            'User unauthorized -> UnauthorizedState (${user.name})',
+            name: 'AUTH_BLOC',
+          );
           emit(UnauthorizedState(user));
         }
       },
@@ -70,7 +79,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (user) {
         if (user != null) {
           if (user.isAuthorized) {
-            dev.log('SilentRefresh: updated AuthenticatedState (${user.name})', name: 'AUTH_BLOC');
+            dev.log(
+              'SilentRefresh: updated AuthenticatedState (${user.name})',
+              name: 'AUTH_BLOC',
+            );
             emit(AuthenticatedState(user));
           } else if (user.isProfileIncomplete) {
             emit(ProfileIncompleteState(user));
@@ -93,22 +105,37 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) {
         if (failure is UserCanceledFailure) {
-          dev.log('SignInWithGoogle cancelled by user -> emit UnauthenticatedState', name: 'AUTH_BLOC');
+          dev.log(
+            'SignInWithGoogle cancelled by user -> emit UnauthenticatedState',
+            name: 'AUTH_BLOC',
+          );
           emit(UnauthenticatedState());
         } else {
-          dev.log('SignInWithGoogle failed: ${failure.message}', name: 'AUTH_BLOC');
+          dev.log(
+            'SignInWithGoogle failed: ${failure.message}',
+            name: 'AUTH_BLOC',
+          );
           emit(AuthErrorState(failure.message));
         }
       },
       (user) {
         if (user.isProfileIncomplete) {
-          dev.log('Sign-In success & profile incomplete -> ProfileIncompleteState (${user.email})', name: 'AUTH_BLOC');
+          dev.log(
+            'Sign-In success & profile incomplete -> ProfileIncompleteState (${user.email})',
+            name: 'AUTH_BLOC',
+          );
           emit(ProfileIncompleteState(user));
         } else if (user.isAuthorized) {
-          dev.log('Sign-In success & authorized -> AuthenticatedState (${user.name})', name: 'AUTH_BLOC');
+          dev.log(
+            'Sign-In success & authorized -> AuthenticatedState (${user.name})',
+            name: 'AUTH_BLOC',
+          );
           emit(AuthenticatedState(user));
         } else {
-          dev.log('Sign-In success & unauthorized -> UnauthorizedState (${user.name})', name: 'AUTH_BLOC');
+          dev.log(
+            'Sign-In success & unauthorized -> UnauthorizedState (${user.name})',
+            name: 'AUTH_BLOC',
+          );
           emit(UnauthorizedState(user));
         }
       },
@@ -119,7 +146,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     CompleteProfileEvent event,
     Emitter<AuthState> emit,
   ) async {
-    dev.log('Handling CompleteProfileEvent for userId: ${event.userId}', name: 'AUTH_BLOC');
+    dev.log(
+      'Handling CompleteProfileEvent for userId: ${event.userId}',
+      name: 'AUTH_BLOC',
+    );
     emit(AuthLoadingState());
     final result = await completeProfileUseCase(
       CompleteProfileParams(userId: event.userId, data: event.data),
@@ -127,18 +157,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     result.fold(
       (failure) {
-        dev.log('CompleteProfile failed: ${failure.message}', name: 'AUTH_BLOC');
+        dev.log(
+          'CompleteProfile failed: ${failure.message}',
+          name: 'AUTH_BLOC',
+        );
         emit(AuthErrorState(failure.message));
       },
       (user) {
         if (user.isProfileIncomplete) {
-          dev.log('CompleteProfile success but still incomplete -> ProfileIncompleteState', name: 'AUTH_BLOC');
+          dev.log(
+            'CompleteProfile success but still incomplete -> ProfileIncompleteState',
+            name: 'AUTH_BLOC',
+          );
           emit(ProfileIncompleteState(user));
         } else if (user.isAuthorized) {
-          dev.log('CompleteProfile success & authorized -> AuthenticatedState (${user.name})', name: 'AUTH_BLOC');
+          dev.log(
+            'CompleteProfile success & authorized -> AuthenticatedState (${user.name})',
+            name: 'AUTH_BLOC',
+          );
           emit(AuthenticatedState(user));
         } else {
-          dev.log('CompleteProfile success & unauthorized -> UnauthorizedState (${user.name})', name: 'AUTH_BLOC');
+          dev.log(
+            'CompleteProfile success & unauthorized -> UnauthorizedState (${user.name})',
+            name: 'AUTH_BLOC',
+          );
           emit(UnauthorizedState(user));
         }
       },

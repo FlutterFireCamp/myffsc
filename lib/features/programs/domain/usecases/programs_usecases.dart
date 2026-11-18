@@ -14,13 +14,16 @@ class GetUpcomingProgramsParams extends Equatable {
   List<Object?> get props => [filterType];
 }
 
-class GetUpcomingProgramsUseCase implements UseCase<List<ProgramItem>, GetUpcomingProgramsParams> {
+class GetUpcomingProgramsUseCase
+    implements UseCase<List<ProgramItem>, GetUpcomingProgramsParams> {
   final ProgramsRepository repository;
 
   GetUpcomingProgramsUseCase(this.repository);
 
   @override
-  Future<Either<Failure, List<ProgramItem>>> call(GetUpcomingProgramsParams params) async {
+  Future<Either<Failure, List<ProgramItem>>> call(
+    GetUpcomingProgramsParams params,
+  ) async {
     return await repository.getUpcomingPrograms(filterType: params.filterType);
   }
 }

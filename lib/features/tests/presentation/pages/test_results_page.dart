@@ -33,8 +33,8 @@ class TestResultsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final actualTotalPossible =
         (totalPossibleScore > 0 && totalPossibleScore != 500)
-            ? totalPossibleScore
-            : quiz.calculatedTotalPoints;
+        ? totalPossibleScore
+        : quiz.calculatedTotalPoints;
 
     int actualScore = qcmScore;
     if (actualScore == 0) {
@@ -205,7 +205,8 @@ class TestResultsPage extends StatelessWidget {
                       for (int i = 0; i < quiz.questions.length; i++) {
                         final q = quiz.questions[i];
                         final ans = userAnswers[i];
-                        final isCorrect = ans != null && q.checkIsAnswerCorrect(ans);
+                        final isCorrect =
+                            ans != null && q.checkIsAnswerCorrect(ans);
                         corrections.add(
                           UserQuestionCorrection(
                             index: i,

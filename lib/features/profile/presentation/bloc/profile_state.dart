@@ -51,13 +51,13 @@ class ProfileState extends Equatable {
 
   @override
   List<Object?> get props => [
-        isLoadingHistory,
-        testHistory,
-        historyError,
-        updateStatus,
-        updateError,
-        isLoadingCorrection,
-        correctionDetails,
-        correctionError,
-      ];
+    isLoadingHistory,
+    testHistory,
+    historyError,
+    updateStatus,
+    updateError,
+    isLoadingCorrection,
+    correctionDetails,
+    correctionError,
+  ];
 }
